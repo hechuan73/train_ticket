@@ -1,0 +1,17 @@
+{
+	"name": "rest-service-external",
+	"version": "0.0.1",
+	"keywords": "javascript, nodejs",
+	"engines": {
+		"node": "8.1.0"
+	},
+	"private": true,
+	"scripts": {
+		"start": "node rest-service-external.js"
+	},
+	"dependencies": {
+		"express": "latest",
+		"async": "latest"
+	},
+	"false": {}
+}
