@@ -43,16 +43,16 @@ public class SeatServiceImpl implements SeatService {
             System.out.println("[SeatService] TrainNumber start with other capital");
             //调用微服务，查询获得车次的所有站点信息
             routeResult = restTemplate.getForObject(
-                    "http://ts-travel2-service:16346/travel/getRouteByTripId/" + seatRequest.getTrainNumber() ,GetRouteResult.class);
+                    "http://ts-travel2-service:16346/travel2/getRouteByTripId/" + seatRequest.getTrainNumber() ,GetRouteResult.class);
             System.out.println("[SeatService distributeSeat] The result of getRouteResult is " + routeResult.getMessage());
 
             //调用微服务，查询获得余票信息：该车次指定座型已售Ticket的set集合
             leftTicketInfo = restTemplate.postForObject(
-                    "http://ts-order-other-service:12032/order/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
+                    "http://ts-order-other-service:12032/orderOther/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
 
             //调用微服务，查询该车次指定座型总数量
             trainTypeResult = restTemplate.getForObject(
-                    "http://ts-travel2-service:16346/travel/getTrainTypeByTripId/" + seatRequest.getTrainNumber(), GetTrainTypeResult.class);
+                    "http://ts-travel2-service:16346/travel2/getTrainTypeByTripId/" + seatRequest.getTrainNumber(), GetTrainTypeResult.class);
             System.out.println("[SeatService distributeSeat] The result of getTrainTypeResult is " + trainTypeResult.getMessage());
         }
 
