@@ -97,40 +97,9 @@ class GetVoucherHandler(tornado.web.RequestHandler):
         finally:
             conn.close()
 
-    def get(self):
-        #往voucher表中插入报销凭证
-        config = {
-            'host':'ts-voucher-mysql',
-            'port':3306,
-            'user':'root',
-            'password':'root',
-            'db':'voucherservice'
-        }
-        conn = pymysql.connect(**config)
-        cur = conn.cursor()
-        #插入语句
-        sql = 'INSERT INTO voucher (order_id,travelDate,travelTime,contactName,trainNumber,seatClass,seatNumber,startStation,destStation,price)VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-        try:
-            cur.execute(sql,('1',"2017-10-18","10:58:00","lab401","D3301",1,"31","ShangHai","BeiJing",379))
-            conn.commit()
-        finally:
-            pass
-
-        self.write(self.fetchVoucherByOrderId('5ad7750b-a68b-49c0-a8c0-32776b067703'))
-
-class TestHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("testing")
-
-class Test1Handler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("testing ------ 2")
-
 def make_app():
     return tornado.web.Application([
-        (r"/getVoucher", GetVoucherHandler),
-        (r"/test", TestHandler),
-        (r"/test1", Test1Handler),
+        (r"/getVoucher", GetVoucherHandler)
     ])
 
 def initDatabase():
@@ -144,14 +113,36 @@ def initDatabase():
     connect = pymysql.connect(**config)
     cur = connect.cursor()
     #创建db
-    sql = "CREATE SCHEMA IF NOT EXISTS `voucherservice` ; "
+    sql = "CREATE SCHEMA IF NOT EXISTS voucherservice;"
     try:
         cur.execute(sql)
         connect.commit()
     finally:
         pass
 
-    sql = "use voucherservice;CREATE TABLE if not exists `voucherservice`.`voucher` (`voucher_id` INT NOT NULL AUTO_INCREMENT,`order_id` VARCHAR(1024) NOT NULL,`travelDate` VARCHAR(1024) NOT NULL,`travelTime` VARCHAR(1024) NOT NULL,`contactName` VARCHAR(1024) NOT NULL,`trainNumber` VARCHAR(1024) NOT NULL,`seatClass` INT NOT NULL,`seatNumber` VARCHAR(1024) NOT NULL,`startStation` VARCHAR(1024) NOT NULL,`destStation` VARCHAR(1024) NOT NULL,`price` FLOAT NOT NULL,PRIMARY KEY (`voucher_id`));"
+    #Use the database
+    sql = "use voucherservice;"
+    try:
+        cur.execute(sql)
+        connect.commit()
+    finally:
+        pass
+
+    #Create the table
+    sql = """
+    CREATE TABLE if not exists voucherservice.voucher (
+    voucher_id INT NOT NULL AUTO_INCREMENT,
+    order_id VARCHAR(1024) NOT NULL,
+    travelDate VARCHAR(1024) NOT NULL,
+    travelTime VARCHAR(1024) NOT NULL,
+    contactName VARCHAR(1024) NOT NULL,
+    trainNumber VARCHAR(1024) NOT NULL,
+    seatClass INT NOT NULL,
+    seatNumber VARCHAR(1024) NOT NULL,
+    startStation VARCHAR(1024) NOT NULL,
+    destStation VARCHAR(1024) NOT NULL,
+    price FLOAT NOT NULL,
+    PRIMARY KEY (voucher_id));"""
     try:
         cur.execute(sql)
         connect.commit()
