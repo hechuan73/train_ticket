@@ -1,1 +1,0 @@
-1.需要安装tornado和pymysql依赖
