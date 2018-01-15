@@ -105,4 +105,9 @@ public class testServiceTicketOffice {
             Assert.assertEquals(false, flag);
         }
     }
+
+    @AfterClass
+    public void tearDown() throws Exception {
+        driver.quit();
+    }
 }

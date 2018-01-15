@@ -88,4 +88,9 @@ public class TestServiceSSO {
 
         Assert.assertEquals(true, (newRows.size() == rows.size() - 1));
     }
+
+    @AfterClass
+    public void tearDown() throws Exception {
+        driver.quit();
+    }
 }

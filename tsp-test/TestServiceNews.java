@@ -47,4 +47,9 @@ public class TestServiceNews {
             Assert.assertEquals(true, (rows == null || rows.isEmpty()));
         }
     }
+
+    @AfterClass
+    public void tearDown() throws Exception {
+        driver.quit();
+    }
 }
