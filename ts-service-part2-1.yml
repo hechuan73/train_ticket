@@ -234,7 +234,7 @@ spec:
   ports:
     - port: 12032
   selector:
-   app: tts-order-other-service
+   app: ts-order-other-service
 
 ---
 
