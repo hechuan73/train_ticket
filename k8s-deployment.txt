@@ -1,29 +1,27 @@
 
 
-在master节点上输入 按顺序
+steps:
 
-1. part1是部署所有的数据库服务，包括mongo和mysql等
+1. databases:
        kubectl create -f ts-deployment-part1.yml
        kubectl create -f ts-service-part1.yml
-   这一步执行完以后稍微等一等，等它们都跑起来在部署后边的
-       kubectl get pods 查看部署的状态
+   
+       kubectl get pods 
 
-2. 部署完数据库之后开始部署除了UI以外的其他服务
-   这里把part2拆成两份仅仅是为了避免文件太长，没其他意思
+2. microserivces:
        kubectl create -f ts-deployment-part2-1.yml
        kubectl create -f ts-deployment-part2-2.yml
        kubectl create -f ts-service-part2-1.yml
        kubectl create -f ts-service-part2-2.yml
-   类似的，使用 kubectl get pods 查看部署的状态
 
-3. 最后部署ui-dashboard
+3. ui:
        kubectl create -f ts-deployment-part3.yml
        kubectl create -f ts-service-part3.yml
 
-4.如果想要删除Deployment或者Service的话，使用下面的命令
-       kubectl delete -f ./ts-service-part3.yml    -f这个命令表示删除掉./ts-service-part3.yml里描述的服务
+4. delete services:
+       kubectl delete -f ./ts-service-part3.yml    
 
-  deployment的删除也是类似的
+  delete deployments:
        kubectl delete -f ./ts-service-part3.yml
        kubectl delete -f ./ts-deployment-part3.yml
 
@@ -36,6 +34,6 @@
        kubectl delete -f ./ts-service-part1.yml
        kubectl delete -f ./ts-deployment-part1.yml
 
-5.要是看到pods或者deployment,Service的报错的话可以用下面的指令看看出了什么情况
-       kubectl logs ts-sso-service-896060255-wr736    比如这条指令是看pod名为ts-sso-service-896060255-wr736的日志
-       kubectl describe service ts-ui-dashboard       这条指令是看Service名为ts-ui-dashboard发生了什么情况
+5. logs
+       kubectl logs ts-sso-service-896060255-wr736    
+       kubectl describe service ts-ui-dashboard       
