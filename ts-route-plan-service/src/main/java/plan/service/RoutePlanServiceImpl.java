@@ -15,7 +15,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
     @Override
     public RoutePlanResults searchCheapestResult(GetRoutePlanInfo info) {
 
-        //1.暴力取出travel-service和travle2-service的所有结果
+
         QueryInfo queryInfo = new QueryInfo();
         queryInfo.setStartingPlace(info.getFormStationName());
         queryInfo.setEndPlace(info.getToStationName());
@@ -24,7 +24,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
         ArrayList<TripResponse> highSpeed = getTripFromHighSpeedTravelServive(queryInfo);
         ArrayList<TripResponse> normalTrain = getTripFromNormalTrainTravelService(queryInfo);
 
-        //2.按照二等座位结果排序
+
         ArrayList<TripResponse> finalResult = new ArrayList<>();
         finalResult.addAll(highSpeed);
         finalResult.addAll(normalTrain);
@@ -76,7 +76,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
     @Override
     public RoutePlanResults searchQuickestResult(GetRoutePlanInfo info) {
 
-        //1.暴力取出travel-service和travel2-service的所有结果
+
         QueryInfo queryInfo = new QueryInfo();
         queryInfo.setStartingPlace(info.getFormStationName());
         queryInfo.setEndPlace(info.getToStationName());
@@ -85,7 +85,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
         ArrayList<TripResponse> highSpeed = getTripFromHighSpeedTravelServive(queryInfo);
         ArrayList<TripResponse> normalTrain = getTripFromNormalTrainTravelService(queryInfo);
 
-        //2.按照时间排序
+
         ArrayList<TripResponse> finalResult = new ArrayList<>();
 //        finalResult.addAll(highSpeed);
 //        finalResult.addAll(normalTrain);
@@ -147,7 +147,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
         String fromStationId = queryForStationId(info.getFormStationName());
         String toStationId = queryForStationId(info.getToStationName());
         System.out.println("From Id:" + fromStationId + " To:" + toStationId);
-        //1.获取这个经过这两个车站的路线
+
         GetRouteByStartAndTerminalInfo searchRouteInfo =
                 new GetRouteByStartAndTerminalInfo(fromStationId,toStationId);
         GetRoutesListlResult routeResult = restTemplate.postForObject(
@@ -155,14 +155,14 @@ public class RoutePlanServiceImpl implements RoutePlanService{
                 searchRouteInfo, GetRoutesListlResult.class);
         ArrayList<Route> routeList = routeResult.getRoutes();
         System.out.println("[Route Plan Service] Candidate Route Number:" + routeList.size());
-        //2.计算这两个车站之间有多少停靠站
+
         ArrayList<Integer> gapList = new ArrayList<>();
         for(int i = 0; i < routeList.size(); i++){
             int indexStart = routeList.get(i).getStations().indexOf(fromStationId);
             int indexEnd = routeList.get(i).getStations().indexOf(toStationId);
             gapList.add(indexEnd - indexStart);
         }
-        //3.挑选出最少停靠站的几条路线
+
         ArrayList<String> resultRoutes = new ArrayList<>();
         for(int i = 0; i < Math.min(info.getNum(),routeList.size()); i++){
             int minIndex = 0;
@@ -176,7 +176,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
             resultRoutes.add(routeList.get(minIndex).getId());
             routeList.remove(minIndex);
         }
-        //4.根据路线，去travel或者travel2获取这些车次信息
+
         GetTripsByRouteIdInfo getTripInfo = new GetTripsByRouteIdInfo();
         getTripInfo.setRouteIds(resultRoutes);
         GetTripsByRouteIdResult resultTravel = restTemplate.postForObject(
@@ -186,7 +186,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
         GetTripsByRouteIdResult resultTravel2 = restTemplate.postForObject(
                 "http://ts-travel2-service:16346/travel2/getTripsByRouteId",
                 getTripInfo,GetTripsByRouteIdResult.class);
-            //合并查询结果
+
         ArrayList<ArrayList<Trip>> finalTripResult = new ArrayList<>();
         ArrayList<ArrayList<Trip>> travelTrips = resultTravel.getTripsSet();
         ArrayList<ArrayList<Trip>> travel2Trips = resultTravel2.getTripsSet();
@@ -196,7 +196,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
             finalTripResult.add(tempList);
         }
         System.out.println("[Route Plan Service] Trips Num:" + finalTripResult.size());
-        //5.再根据这些车次信息获取其价格和停靠站信息
+
         ArrayList<Trip> trips = new ArrayList<>();
         for(ArrayList<Trip> tempTrips : finalTripResult){
             trips.addAll(tempTrips);
@@ -235,7 +235,7 @@ public class RoutePlanServiceImpl implements RoutePlanService{
             unit.setEndTime(tripResponse.getEndTime());
             unit.setPriceForFirstClassSeat(tripResponse.getPriceForConfortClass());
             unit.setPriceForSecondClassSeat(tripResponse.getPriceForEconomyClass());
-            //根据routeid去拿路线图
+
             String routeId = trip.getRouteId();
             Route tripRoute = getRouteByRouteId(routeId);
             unit.setStopStations(tripRoute.getStations());
@@ -298,7 +298,6 @@ public class RoutePlanServiceImpl implements RoutePlanService{
     }
 
     private ArrayList<String> getStationList(String tripId){
-        //首先获取
 
         String path;
         if(tripId.charAt(0) == 'G' || tripId.charAt(0) == 'D'){

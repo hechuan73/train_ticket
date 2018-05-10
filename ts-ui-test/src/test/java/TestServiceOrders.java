@@ -11,9 +11,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by ZDH on 2017/7/20.
- */
+
 public class TestServiceOrders {
     private WebDriver driver;
     private String baseUrl;

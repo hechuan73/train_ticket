@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 import train.domain.Information;
 import train.service.TrainService;
 
-/**
- * Created by Chenjie Xu on 2017/6/5.
- */
+
 @Component
 public class InitData implements CommandLineRunner{
 

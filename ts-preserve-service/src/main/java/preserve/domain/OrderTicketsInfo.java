@@ -10,7 +10,7 @@ public class OrderTicketsInfo {
 
     private int seatType;
 
-    private Date date;//具体到哪一天
+    private Date date;
 
     private String from;
 

@@ -10,9 +10,7 @@ import train.service.TrainService;
 import java.util.List;
 
 
-/**
- * Created by Chenjie Xu on 2017/5/8.
- */
+
 @RestController
 public class TrainController {
 

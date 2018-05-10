@@ -14,7 +14,7 @@ public class OrderTicketsInfo {
 
     private String accountId;
 
-    private Date date;//具体到哪一天
+    private Date date;
 
     private String from;
 

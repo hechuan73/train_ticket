@@ -2,9 +2,7 @@ package fdse.microservice.domain;
 
 import javax.management.Query;
 
-/**
- * Created by Administrator on 2017/6/26.
- */
+
 public class QueryPriceInfo {
     private String startingPlaceId;
     private String endPlaceId;

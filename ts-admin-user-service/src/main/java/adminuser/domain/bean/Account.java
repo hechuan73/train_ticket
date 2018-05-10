@@ -3,14 +3,10 @@ package adminuser.domain.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.UUID;
 
-@Document(collection = "accounts")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
-    @Id
     private UUID id;
 
     private String password;

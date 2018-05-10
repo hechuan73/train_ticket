@@ -1,8 +1,6 @@
 package notification.service;
 
-/**
- * Created by Wenyi on 2017/6/19.
- */
+
 import javax.mail.internet.MimeMessage;
 
 import notification.domain.Mail;

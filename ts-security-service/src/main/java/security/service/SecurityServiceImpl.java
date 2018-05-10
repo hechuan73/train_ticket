@@ -88,7 +88,7 @@ public class SecurityServiceImpl implements SecurityService{
     @Override
     public CheckResult check(CheckInfo info){
         CheckResult result = new CheckResult();
-        //1.获取自己过去一小时的订单数和总有效票数
+
         System.out.println("[Security Service][Get Order Num Info]");
         GetOrderInfoForSecurity infoOrder = new GetOrderInfoForSecurity();
         infoOrder.setAccountId(info.getAccountId());
@@ -97,7 +97,7 @@ public class SecurityServiceImpl implements SecurityService{
         GetOrderInfoForSecurityResult orderOtherResult = getSecurityOrderOtherInfoFromOrder(infoOrder);
         int orderInOneHour = orderOtherResult.getOrderNumInLastOneHour() + orderResult.getOrderNumInLastOneHour();
         int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderOtherResult.getOrderNumOfValidOrder();
-        //2.获取关键配置信息
+
         System.out.println("[Security Service][Get Security Config Info]");
         SecurityConfig configMaxInHour = securityRepository.findByName("max_order_1_hour");
         SecurityConfig configMaxNotUse = securityRepository.findByName("max_order_not_use");

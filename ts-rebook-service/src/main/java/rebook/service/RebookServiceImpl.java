@@ -55,7 +55,7 @@ public class RebookServiceImpl implements RebookService{
             return rebookResult;
         }
 
-        //查询当前时间和旧订单乘车时间，根据时间来判断能否改签，发车两小时后不能改签
+
         if(!checkTime(order.getTravelDate(),order.getTravelTime())){
             rebookResult.setStatus(false);
             rebookResult.setMessage("You can only change the ticket before the train start or within 2 hours after the train start.");
@@ -63,8 +63,7 @@ public class RebookServiceImpl implements RebookService{
             return rebookResult;
         }
 
-        //改签不能更换出发地和目的地，只能更改车次、席位、时间
-        //查询座位余票信息和车次的详情
+
         GetTripAllDetailInfo gtdi = new GetTripAllDetailInfo();
         gtdi.setFrom(queryForStationName(order.getFrom()));
         gtdi.setTo(queryForStationName(order.getTo()));
@@ -97,8 +96,7 @@ public class RebookServiceImpl implements RebookService{
         }
         Trip trip = gtdr.getTrip();
 
-        //处理差价，多退少补
-        //退掉原有的票，让其他人可以订到对应的位置
+
 //        QueryPriceInfo queryPriceInfo = new QueryPriceInfo();
 //        queryPriceInfo.setStartingPlaceId(order.getFrom());
 //        queryPriceInfo.setEndPlaceId(order.getTo());
@@ -136,7 +134,7 @@ public class RebookServiceImpl implements RebookService{
             //do nothing
             return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken);
         }else{
-            //补差价
+
             String difference = priceNew.subtract(priceOld).toString();
             rebookResult.setStatus(false);
             rebookResult.setMessage("Please pay the different money!");
@@ -209,7 +207,6 @@ public class RebookServiceImpl implements RebookService{
 
     private RebookResult updateOrder(Order order, RebookInfo info, GetTripAllDetailResult gtdr,String ticketPrice, String loginId, String loginToken){
         RebookResult rebookResult = new RebookResult();
-        //4.修改原有订单 设置order的各个信息
         Trip trip = gtdr.getTrip();
         String oldTripId = order.getTrainNumber();
         order.setTrainNumber(info.getTripId());
@@ -245,8 +242,6 @@ public class RebookServiceImpl implements RebookService{
 //        }
 
 
-        //更新订单信息
-        //原订单和新订单如果分别位于高铁动车和其他订单，应该删掉原订单，在另一边新建，用新的id
         if((tripGD(oldTripId) && tripGD(info.getTripId())) || (!tripGD(oldTripId) && !tripGD(info.getTripId()))){
             ChangeOrderInfo changeOrderInfo = new ChangeOrderInfo();
             changeOrderInfo.setLoginToken(loginToken);
@@ -264,13 +259,13 @@ public class RebookServiceImpl implements RebookService{
                 return rebookResult;
             }
         }else{
-            //删掉原有订单
+
             deleteOrder(order.getId().toString(), oldTripId);
-            //在另一边创建新订单
+
             createOrder(order,loginToken,order.getTrainNumber());
             rebookResult.setStatus(true);
             rebookResult.setMessage("Success!");
-            rebookResult.setOrder(order); //order id是不对的，因为新创建的时候，会创建新的order id
+            rebookResult.setOrder(order);
             return rebookResult;
         }
     }
@@ -393,7 +388,7 @@ public class RebookServiceImpl implements RebookService{
 
     private QueryOrderResult getOrderByRebookInfo(RebookInfo info){
         QueryOrderResult queryOrderResult;
-        //改签只能改签一次，查询订单状态来判断是否已经改签过
+
         if(info.getOldTripId().startsWith("G") || info.getOldTripId().startsWith("D")){
             queryOrderResult = restTemplate.postForObject(
                     "http://ts-order-service:12031/order/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);

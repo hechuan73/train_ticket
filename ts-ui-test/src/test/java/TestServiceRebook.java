@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by ZDH on 2017/7/20.
- */
+
 public class TestServiceRebook {
     private WebDriver driver;
     private String baseUrl;

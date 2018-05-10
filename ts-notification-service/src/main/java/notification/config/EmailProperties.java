@@ -1,8 +1,6 @@
 package notification.config;
 
-/**
- * Created by Wenyi on 2017/6/19.
- */
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

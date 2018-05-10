@@ -2,9 +2,7 @@ package org.services.analysis;
 
 import java.util.HashMap;
 
-/**
- * Created by Administrator on 2017/7/18.
- */
+
 public class Clock {
 
     private String type;

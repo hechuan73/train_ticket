@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
-public class FuckContactsController {
+public class ContactsController {
 
     @Autowired
     private ContactsService contactsService;
@@ -22,7 +22,7 @@ public class FuckContactsController {
         return "Welcome to [ Contacts Service ] !";
     }
 
-    /***************For super admin(Single Service Test*******************/
+
     @CrossOrigin(origins = "*")
     @RequestMapping(path = "/contacts/admincreate", method = RequestMethod.POST)
     public AddContactsResult createNewContactsAdmin(@RequestBody Contacts aci){
@@ -56,7 +56,7 @@ public class FuckContactsController {
         return contactsService.delete(UUID.fromString(info.getContactsId()));
     }
 
-    /***************************For Normal Use***************************/
+
     @CrossOrigin(origins = "*")
     @RequestMapping(path = "/contacts/findContacts", method = RequestMethod.GET)
     public ArrayList<Contacts> findContactsByAccountId(@CookieValue String loginId,@CookieValue String loginToken){

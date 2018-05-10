@@ -4,7 +4,7 @@ public class DeleteContactsInfo {
 
     private String contactsId;
 
-    /***If you use as Single Service test,you do not need this var, just let it null***/
+
     private String loginToken;
 
     public String getContactsId() {

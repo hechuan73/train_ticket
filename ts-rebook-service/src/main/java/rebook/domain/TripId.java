@@ -2,9 +2,7 @@ package rebook.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by Chenjie Xu on 2017/5/9.
- */
+
 public class TripId implements Serializable{
     private Type type;
     private String number;

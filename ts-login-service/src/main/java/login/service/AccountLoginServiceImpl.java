@@ -26,7 +26,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
     @Autowired
     private RestTemplate restTemplate;
 
-    //cookie失效时间，秒为单位
     public static final int COOKIE_EXPIRED = 21600;
 
     @Override
@@ -55,7 +54,6 @@ public class AccountLoginServiceImpl implements AccountLoginService {
         LoginResult lr = restTemplate.postForObject(
                 "http://ts-sso-service:12349/account/login",
                 li,LoginResult.class);
-        //将cookie放到response中
         System.out.println("[Login Service] Status:" + lr.getStatus());
         if(lr.getStatus() == false){
             System.out.println("[Login Service] Status: false. Cookie wrong.");

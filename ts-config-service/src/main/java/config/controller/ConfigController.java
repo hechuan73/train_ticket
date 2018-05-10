@@ -1,8 +1,6 @@
 package config.controller;
 
-/**
- * Created by Chenjie Xu on 2017/5/11.
- */
+
 
 import config.domain.Config;
 import config.domain.Information;

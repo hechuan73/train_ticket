@@ -43,40 +43,10 @@ public class HelloWorldConfiguration {
 		return new Queue(this.helloWorldQueueName);
 	}
 
-	/*
-	@Bean 
-	public Binding binding() {
-		return declare(new Binding(helloWorldQueue(), defaultDirectExchange()));
-	}*/
+
 	
-	/*	
-	@Bean
-	public TopicExchange helloExchange() {
-		return declare(new TopicExchange("hello.world.exchange"));
-	}*/
+
 	
-	/*
-	public Queue declareUniqueQueue(String namePrefix) {
-		Queue queue = new Queue(namePrefix + "-" + UUID.randomUUID());
-		rabbitAdminTemplate().declareQueue(queue);
-		return queue;
-	}
-	
-	// if the default exchange isn't configured to your liking....
-	@Bean Binding declareP2PBinding(Queue queue, DirectExchange exchange) {
-		return declare(new Binding(queue, exchange, queue.getName()));
-	}
-	
-	@Bean Binding declarePubSubBinding(String queuePrefix, FanoutExchange exchange) {
-		return declare(new Binding(declareUniqueQueue(queuePrefix), exchange));
-	}
-	
-	@Bean Binding declarePubSubBinding(UniqueQueue uniqueQueue, TopicExchange exchange) {
-		return declare(new Binding(uniqueQueue, exchange));
-	}
-	
-	@Bean Binding declarePubSubBinding(String queuePrefix, TopicExchange exchange, String routingKey) {
-		return declare(new Binding(declareUniqueQueue(queuePrefix), exchange, routingKey));
-	}*/
+
 
 }

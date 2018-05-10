@@ -5,10 +5,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- * 查询车票的返回信息，模仿12306，有车次、出发站、到达站、出发时间、到达时间、座位等级及相应的余票
- */
+
 public class TripResponse {
 
     private TripId tripId;
@@ -23,9 +20,9 @@ public class TripResponse {
 
     private Date endTime;
 
-    private int economyClass;   //普通座的座位数量
+    private int economyClass;
 
-    private int confortClass;   //商务座的座位数量
+    private int confortClass;
 
     private String priceForEconomyClass;
 

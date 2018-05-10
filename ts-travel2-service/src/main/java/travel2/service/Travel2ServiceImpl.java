@@ -140,22 +140,16 @@ public class Travel2ServiceImpl implements Travel2Service{
     @Override
     public ArrayList<TripResponse> query(QueryInfo info){
 
-        //获取要查询的车次的起始站和到达站。这里收到的起始站和到达站都是站的名称，所以需要发两个请求转换成站的id
         String startingPlaceName = info.getStartingPlace();
         String endPlaceName = info.getEndPlace();
         String startingPlaceId = queryForStationId(startingPlaceName);
         String endPlaceId = queryForStationId(endPlaceName);
 
-        //这个是最终的结果
         ArrayList<TripResponse> list = new ArrayList<>();
 
-        //查询所有的车次信息
         ArrayList<Trip> allTripList = repository.findAll();
         for(Trip tempTrip : allTripList){
-            //拿到这个车次的具体路线表
             Route tempRoute = getRouteByRouteId(tempTrip.getRouteId());
-            //检查这个车次的路线表。检查要求的起始站和到达站在不在车次路线的停靠站列表中
-            //并检查起始站的位置在到达站之前。满足以上条件的车次被加入返回列表
             if(tempRoute.getStations().contains(startingPlaceId) &&
                     tempRoute.getStations().contains(endPlaceId) &&
                     tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)){
@@ -203,7 +197,6 @@ public class Travel2ServiceImpl implements Travel2Service{
 
     private TripResponse getTickets(Trip trip,Route route,String startingPlaceId,String endPlaceId,String startingPlaceName, String endPlaceName, Date departureTime){
 
-        //判断所查日期是否在当天及之后
         if(!afterToday(departureTime)){
             return null;
         }
@@ -217,7 +210,6 @@ public class Travel2ServiceImpl implements Travel2Service{
         ResultForTravel resultForTravel = restTemplate.postForObject(
                 "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,ResultForTravel.class);
 
-        //车票订单_高铁动车（已购票数）
         QuerySoldTicket information = new QuerySoldTicket(departureTime,trip.getTripId().toString());
         ResultSoldTicket result = restTemplate.postForObject(
                 "http://ts-order-other-service:12032/orderOther/calculate", information ,ResultSoldTicket.class);
@@ -225,7 +217,6 @@ public class Travel2ServiceImpl implements Travel2Service{
             System.out.println("soldticket Info doesn't exist");
             return null;
         }
-        //设置返回的车票信息
         TripResponse response = new TripResponse();
         if(queryForStationId(startingPlaceName).equals(trip.getStartingStationId()) &&
                 queryForStationId(endPlaceName).equals(trip.getTerminalStationId())){
@@ -247,13 +238,11 @@ public class Travel2ServiceImpl implements Travel2Service{
         response.setStartingStation(startingPlaceName);
         response.setTerminalStation(endPlaceName);
 
-        //计算车从起始站开出的距离
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
         int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);
         int distanceEnd = route.getDistances().get(indexEnd) - route.getDistances().get(0);
         TrainType trainType = getTrainType(trip.getTrainTypeId());
-        //根据列车平均运行速度计算列车运行时间
         int minutesStart = 60 * distanceStart / trainType.getAverageSpeed();
         int minutesEnd = 60 * distanceEnd / trainType.getAverageSpeed();
 
@@ -261,13 +250,11 @@ public class Travel2ServiceImpl implements Travel2Service{
         calendarStart.setTime(trip.getStartingTime());
         calendarStart.add(Calendar.MINUTE,minutesStart);
         response.setStartingTime(calendarStart.getTime());
-        System.out.println("[Train Service]计算时间：" + minutesStart  + " 时间:" + calendarStart.getTime().toString());
 
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
         calendarEnd.add(Calendar.MINUTE,minutesEnd);
         response.setEndTime(calendarEnd.getTime());
-        System.out.println("[Train Service]计算时间：" + minutesEnd  + " 时间:" + calendarEnd.getTime().toString());
 
         response.setTripId(new TripId(result.getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());

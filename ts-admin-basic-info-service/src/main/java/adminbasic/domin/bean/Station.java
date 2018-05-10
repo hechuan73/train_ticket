@@ -3,9 +3,7 @@ package adminbasic.domin.bean;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Chenjie Xu on 2017/5/9.
- */
+
 public class Station {
 
     private String id;

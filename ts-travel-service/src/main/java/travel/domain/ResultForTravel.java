@@ -2,9 +2,7 @@ package travel.domain;
 
 import java.util.HashMap;
 
-/**
- * Created by Chenjie Xu on 2017/6/6.
- */
+
 public class ResultForTravel {
 
     private boolean status;

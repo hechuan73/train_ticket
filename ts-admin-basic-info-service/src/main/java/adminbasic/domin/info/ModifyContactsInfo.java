@@ -12,7 +12,7 @@ public class ModifyContactsInfo {
 
     private String phoneNumber;
 
-    /***If you use as Single Service test,you do not need this var, just let it null***/
+
     private String loginToken;
 
     public String getLoginId() {

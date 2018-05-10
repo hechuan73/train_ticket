@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * Created by Chenjie Xu on 2017/6/5.
- */
+
 @Component
 public class InitData implements CommandLineRunner {
     @Autowired

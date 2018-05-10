@@ -3,9 +3,7 @@ package travel.domain;
 import org.springframework.data.annotation.Id;
 import java.util.Date;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- */
+
 public class Information {
     @Id
     private String tripId;

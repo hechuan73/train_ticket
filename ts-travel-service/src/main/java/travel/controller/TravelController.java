@@ -35,7 +35,6 @@ public class TravelController {
         return travelService.create(info);
     }
 
-    //只返回Trip，不会返回票数信息
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/travel/retrieve", method= RequestMethod.POST)
     public Trip retrieve(@RequestBody Information2 info){
@@ -54,7 +53,6 @@ public class TravelController {
         return travelService.delete(info);
     }
 
-    //返回Trip以及剩余票数
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/travel/query", method= RequestMethod.POST)
     public ArrayList<TripResponse> query(@RequestBody QueryInfo info){
@@ -84,7 +82,7 @@ public class TravelController {
         return new QueryTripResponsePackage(true,"Success.",responses);
     }
 
-    //返回某一个Trip以及剩余票数
+
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/travel/getTripAllDetailInfo", method= RequestMethod.POST)
     public GetTripAllDetailResult getTripAllDetailInfo(@RequestBody GetTripAllDetailInfo gtdi){

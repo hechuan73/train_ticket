@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public class ConsignRequest {
 
-    private UUID id;//更新记录使用
-    private UUID accountId;//办理托运的账户ID
-    private String handleDate;//办理日期，一般早于order日期
-    private String targetDate;//行李托运日期，和order上的日期一致
-    private String from;//托运起始站，和order一致
-    private String to;//托运终点站，和order一致
-    private String consignee;//收件人
-    private String phone;//收件人手机号码
-    private double weight;//托运重量
-    private boolean isWithin;//是否在省内
+    private UUID id;
+    private UUID accountId;
+    private String handleDate;
+    private String targetDate;
+    private String from;
+    private String to;
+    private String consignee;
+    private String phone;
+    private double weight;
+    private boolean isWithin;
 
     public ConsignRequest(){
 

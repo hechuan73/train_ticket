@@ -1,5 +1,5 @@
 FROM erkekin/tornado
-MAINTAINER jay <15110240026@fudan.edu.cn>
+
 
 RUN mkdir -p /app
 WORKDIR /app

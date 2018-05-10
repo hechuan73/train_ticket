@@ -2,11 +2,8 @@ package inside_payment.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by Administrator on 2017/7/3.
- */
+
 public enum AddMoneyType implements Serializable {
-    //add money对应账户充值，draw back money对应改签或退票时的退款
     A("Add Money",1),D("Draw Back Money",2);
 
     private String name;

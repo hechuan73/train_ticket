@@ -1,8 +1,6 @@
 package notification.domain;
 
-/**
- * Created by Wenyi on 2017/6/19.
- */
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

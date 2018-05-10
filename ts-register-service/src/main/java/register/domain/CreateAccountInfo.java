@@ -1,8 +1,6 @@
 package register.domain;
 
-/**
- * Created by Administrator on 2017/6/20.
- */
+
 public class CreateAccountInfo {
 
     private String userId;

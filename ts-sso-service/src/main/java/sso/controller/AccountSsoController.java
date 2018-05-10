@@ -28,7 +28,7 @@ public class AccountSsoController {
         return "Welcome to [ Accounts SSO Service ] !";
     }
 
-    /***************For super admin(Single Service Test*******************/
+
     @RequestMapping(path = "/account/findAll", method = RequestMethod.GET)
     public FindAllAccountResult findAllAccount(){
         return ssoService.findAllAccount();
@@ -44,7 +44,7 @@ public class AccountSsoController {
         return ssoService.saveChanges(modifyAccountInfo);
     }
 
-    /***************************For Normal Use***************************/
+
     @RequestMapping(path = "/account/register", method = RequestMethod.POST)
     public RegisterResult createNewAccount(@RequestBody RegisterInfo ri){
         return ssoService.create(ri);

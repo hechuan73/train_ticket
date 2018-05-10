@@ -1,8 +1,6 @@
 package travel2.domain;
 
-/**
- * Created by Wenyi on 2017/6/15.
- */
+
 public class QueryForStationId {
 
     private String name;

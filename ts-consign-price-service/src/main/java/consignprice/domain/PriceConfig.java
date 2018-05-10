@@ -10,10 +10,10 @@ public class PriceConfig {
     @Id
     private UUID id;
     private int index;
-    private double initialWeight;//起步重量
-    private double initialPrice;//起步价
-    private double withinPrice;//省内超出以后单价
-    private double beyondPrice;//省外超出以后单价
+    private double initialWeight;
+    private double initialPrice;
+    private double withinPrice;
+    private double beyondPrice;
 
     public PriceConfig(){
 

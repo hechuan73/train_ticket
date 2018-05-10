@@ -5,9 +5,7 @@ import train.domain.TrainType;
 
 import java.util.List;
 
-/**
- * Created by Chenjie Xu on 2017/5/8.
- */
+
 public interface TrainTypeRepository extends CrudRepository<TrainType,String>{
 
     TrainType findById(String id);

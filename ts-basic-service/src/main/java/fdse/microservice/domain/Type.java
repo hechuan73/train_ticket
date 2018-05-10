@@ -2,9 +2,7 @@ package fdse.microservice.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by Chenjie Xu on 2017/5/9.
- */
+
 public enum Type implements Serializable{
     G("G", 1), D("D", 2),Z("Z",3), T("T", 4), K("K", 5);
 

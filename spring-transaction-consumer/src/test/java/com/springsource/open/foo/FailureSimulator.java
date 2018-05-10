@@ -21,11 +21,7 @@ public class FailureSimulator {
 		this.jmsTemplate = jmsTemplate;
 	}
 
-	/**
-	 * Causes the JMS session to fail on commit, as if the middleware has
-	 * failed. Can be used to simulate failure of JMS independent of business
-	 * processing, causing duplicate messages even if best efforts 1PC is used.
-	 */
+
 	public void simulateMessageSystemFailure() {
 
 		// Simulate a message system failure before the main transaction
@@ -44,9 +40,7 @@ public class FailureSimulator {
 
 	}
 
-	/**
-	 * Just throws a {@link DataIntegrityViolationException}.
-	 */
+
 	public void simulateBusinessProcessingFailure() {
 		throw new DataIntegrityViolationException("Simulated failure.");
 	}

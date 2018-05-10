@@ -2,9 +2,7 @@ package fdse.microservice.domain;
 
 import java.util.Date;
 
-/**
- * Created by Chenjie Xu on 2017/6/6.
- */
+
 public class QueryForTravel {
 
     private Trip trip;

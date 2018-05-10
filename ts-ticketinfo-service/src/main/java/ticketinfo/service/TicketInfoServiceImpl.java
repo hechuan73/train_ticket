@@ -7,9 +7,7 @@ import ticketinfo.domain.QueryForStationId;
 import ticketinfo.domain.QueryForTravel;
 import ticketinfo.domain.ResultForTravel;
 
-/**
- * Created by Chenjie Xu on 2017/6/6.
- */
+
 @Service
 public class TicketInfoServiceImpl implements TicketInfoService{
 

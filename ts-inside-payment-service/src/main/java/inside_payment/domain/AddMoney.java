@@ -7,9 +7,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-/**
- * Created by Administrator on 2017/6/20.
- */
+
 @Document(collection="addMoney")
 public class AddMoney {
 

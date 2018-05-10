@@ -7,9 +7,7 @@ import travel2.domain.Information;
 import travel2.service.Travel2Service;
 import java.util.Date;
 
-/**
- * Created by Chenjie Xu on 2017/6/7.
- */
+
 @Component
 public class InitData implements CommandLineRunner {
 
