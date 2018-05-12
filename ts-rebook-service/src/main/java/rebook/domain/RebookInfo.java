@@ -4,9 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by Administrator on 2017/6/26.
- */
+
 public class RebookInfo {
 
     @Valid

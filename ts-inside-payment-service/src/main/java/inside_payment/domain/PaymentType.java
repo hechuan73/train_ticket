@@ -2,11 +2,8 @@ package inside_payment.domain;
 
 import java.io.Serializable;
 
-/**
- * Created by Administrator on 2017/7/3.
- */
+
 public enum  PaymentType implements Serializable {
-    //payment对应第一次支付，difference对应改签后支付差价,通过站外支付支付
     P("Payment",1), D("Difference",2),O("Outside Payment",3),E("Difference & Outside Payment",4);
 
     private String name;

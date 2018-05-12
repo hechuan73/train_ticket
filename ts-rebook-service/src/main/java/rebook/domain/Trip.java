@@ -10,10 +10,9 @@ public class Trip {
 
     private String routeId;
 
-    //-------------------------------以下变量暂时停用-----------------------
     private String startingStationId;
 
-    //中间停靠站，最开始的版本只设置一站，也就是说只有起始站、一个停靠站、终点站，在之后的版本中，停靠站扩展为若干站
+
     private String stationsId;
 
     private String terminalStationId;

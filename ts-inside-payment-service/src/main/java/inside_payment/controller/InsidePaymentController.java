@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
- * Created by Administrator on 2017/6/20.
- */
+
 @RestController
 public class InsidePaymentController {
 

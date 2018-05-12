@@ -4,9 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by Chenjie Xu on 2017/5/9.
- */
+
 public class Trip {
     @Valid
     private TripId tripId;

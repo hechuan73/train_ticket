@@ -9,9 +9,7 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by ZDH on 2017/7/21.
- */
+
 public class TestServiceLogin {
     private WebDriver driver;
     private String baseUrl;

@@ -3,9 +3,7 @@ package config.domain;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- */
+
 public class Information2 {
     @Valid
     @NotNull

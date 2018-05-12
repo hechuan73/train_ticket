@@ -10,12 +10,9 @@ import java.util.UUID;
 
 @Repository
 public interface ConsignRepository extends MongoRepository<ConsignRecord,String> {
-    //按照办理托运的用户ID进行查找
     ArrayList<ConsignRecord> findByAccountId(UUID accountId);
 
-    //按照办理托运的用户ID进行查找
     ArrayList<ConsignRecord> findByConsignee(String consignee);
 
-    //按照托运ID进行查找
     ConsignRecord findById(UUID id);
 }

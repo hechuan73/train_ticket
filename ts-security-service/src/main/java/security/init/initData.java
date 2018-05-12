@@ -17,12 +17,12 @@ public class initData implements CommandLineRunner {
         CreateSecurityConfigInfo info1 = new CreateSecurityConfigInfo();
         info1.setName("max_order_1_hour");
         info1.setValue("5");
-        info1.setDescription("一个小时内最多下达的订单");
+        info1.setDescription("Max in 1 hour");
         securityService.addNewSecurityConfig(info1);
         CreateSecurityConfigInfo info2 = new CreateSecurityConfigInfo();
         info2.setName("max_order_not_use");
         info2.setValue("20");
-        info2.setDescription("最多可持有的未使用票数");
+        info2.setDescription("Max not used");
         securityService.addNewSecurityConfig(info2);
     }
 }

@@ -1,8 +1,6 @@
 package ticketinfo.controller;
 
-/**
- * Created by Chenjie Xu on 2017/6/6.
- */
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -49,7 +49,6 @@ public class FoodServiceImpl implements FoodService{
             result.setMessage(trainFoodListResult.getMessage());
             return result;
         }
-       //车次途经的车站
 
         GetRouteResult  stationResult= restTemplate.getForObject
                                         ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
@@ -57,7 +56,6 @@ public class FoodServiceImpl implements FoodService{
         if( stationResult.isStatus() ){
             Route route = stationResult.getRoute();
             List<String> stations = route.getStations();
-            //去除不经过的站，如果起点终点有的话
             if(null != startStation && !"".equals(startStation)){
                 QueryForId q1=new QueryForId();
                 q1.setName(startStation);

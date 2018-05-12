@@ -5,9 +5,7 @@ import org.springframework.data.annotation.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- */
+
 public class Information {
 
     @Valid

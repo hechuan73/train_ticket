@@ -15,10 +15,10 @@ public class Order {
 
     private Date boughtDate;
 
-    //精确到到天，比如某年某月某天
+
     private Date travelDate;
 
-    //发车的时刻，和在某一天无关
+
     private Date travelTime;
 
     //Which Account Bought it
@@ -54,8 +54,8 @@ public class Order {
         coachNumber = 5;
         seatClass = SeatClass.FIRSTCLASS.getCode();
         seatNumber = "5A";
-        from = "上海";
-        to = "太原";
+        from = "shanghai";
+        to = "taiyuan";
         status = OrderStatus.PAID.getCode();
         price = "0.0";
     }

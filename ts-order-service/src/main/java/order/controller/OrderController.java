@@ -21,7 +21,7 @@ public class OrderController {
         return "Welcome to [ Order Service ] !";
     }
 
-    /***************************For Normal Use***************************/
+
 
     @RequestMapping(value="/order/getTicketListByDateAndTripId", method = RequestMethod.POST)
     public LeftTicketInfo getTicketListByDateAndTripId(@RequestBody SeatRequest seatRequest){
@@ -141,7 +141,7 @@ public class OrderController {
         return orderService.deleteOrder(info);
     }
 
-    /***************For super admin(Single Service Test*******************/
+
 
     @CrossOrigin(origins = "*")
     @RequestMapping(path="/order/findAll", method = RequestMethod.GET)

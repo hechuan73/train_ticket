@@ -11,11 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 
-/** 
- * Asynchronous Tasks 
- * @author Xu 
- * 
- */  
+
 @Component  
 public class AsyncTask {  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());  

@@ -1,8 +1,6 @@
 package sso.domain;
 
-/**
- * RegisterInfo:  Container for saving the register information.
- */
+
 public class RegisterInfo {
 
     private String password;

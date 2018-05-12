@@ -3,9 +3,7 @@ package inside_payment.domain;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Administrator on 2017/7/3.
- */
+
 public class Balance {
     @Valid
     @NotNull

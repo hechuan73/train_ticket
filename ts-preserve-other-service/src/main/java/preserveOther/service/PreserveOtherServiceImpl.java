@@ -19,7 +19,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
         OrderTicketsResult otr = new OrderTicketsResult();
         if(tokenResult.isStatus() == true){
             System.out.println("[Preserve Other Service][Verify Login] Success");
-            //1.黄牛检测
             System.out.println("[Preserve Service] [Step 1] Check Security");
             CheckInfo checkInfo = new CheckInfo();
             checkInfo.setAccountId(accountId);
@@ -32,7 +31,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
                 return otr;
             }
             System.out.println("[Preserve Service] [Step 1] Check Security Complete. ");
-            //2.查询联系人信息 -- 修改，通过基础信息微服务作为中介
             System.out.println("[Preserve Other Service] [Step 2] Find contacts");
             GetContactsInfo gci = new GetContactsInfo();
             System.out.println("[Preserve Other Service] [Step 2] Contacts Id:" + oti.getContactsId());
@@ -47,7 +45,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
                 return otr;
             }
             System.out.println("[Preserve Other Service][Step 2] Complete");
-            //3.查询座位余票信息和车次的详情
             System.out.println("[Preserve Other Service] [Step 3] Check tickets num");
             GetTripAllDetailInfo gtdi = new GetTripAllDetailInfo();
 
@@ -88,7 +85,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
             }
             Trip trip = gtdr.getTrip();
             System.out.println("[Preserve Other Service] [Step 3] Tickets Enough");
-            //4.下达订单请求 设置order的各个信息
             System.out.println("[Preserve Other Service] [Step 4] Do Order");
             Contacts contacts = gcr.getContacts();
             Order order = new Order();
@@ -176,7 +172,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
             otr.setStatus(true);
             otr.setMessage("Success");
             otr.setOrder(cor.getOrder());
-            //5.检查保险的选择
             if(oti.getAssurance() == 0){
                 System.out.println("[Preserve Service][Step 5] Do not need to buy assurance");
             }else{
@@ -190,7 +185,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
                 }
             }
 
-            //6.增加订餐
             if(oti.getFoodType() != 0){
                 AddFoodOrderInfo afoi = new AddFoodOrderInfo();
                 afoi.setOrderId(cor.getOrder().getId().toString());
@@ -212,7 +206,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService{
                 System.out.println("[Preserve Service][Step 6] Do not need to buy food");
             }
 
-            //7.增加托运
             if(null != oti.getConsigneeName() && !"".equals(oti.getConsigneeName())){
                 ConsignRequest consignRequest = new ConsignRequest();
                 consignRequest.setAccountId(cor.getOrder().getAccountId());

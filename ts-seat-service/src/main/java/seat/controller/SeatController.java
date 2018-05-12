@@ -12,14 +12,13 @@ public class SeatController {
     @Autowired
     private SeatService seatService;
 
-    //分配座位
+
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/seat/getSeat", method= RequestMethod.POST)
     public Ticket create(@RequestBody SeatRequest seatRequest){
         return seatService.distributeSeat(seatRequest);
     }
 
-    //查询特定区间余票
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/seat/getLeftTicketOfInterval", method= RequestMethod.POST)
     public int getLeftTicketOfInterval(@RequestBody SeatRequest seatRequest){

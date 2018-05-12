@@ -1,5 +1,5 @@
 FROM python:3
-MAINTAINER Li Wenhai <16212010016@fudan.edu.cn>
+
 
 RUN mkdir -p /app
 WORKDIR /app

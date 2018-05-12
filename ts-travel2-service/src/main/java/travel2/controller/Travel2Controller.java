@@ -51,7 +51,7 @@ public class Travel2Controller {
         return service.delete(info);
     }
 
-    //返回Trip以及剩余票数
+
     @RequestMapping(value="/travel2/query", method= RequestMethod.POST)
     public ArrayList<TripResponse> query(@RequestBody QueryInfo info){
         if(info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
@@ -80,7 +80,7 @@ public class Travel2Controller {
         return new QueryTripResponsePackage(true,"Success.",responses);
     }
 
-    //返回Trip以及剩余票数
+
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/travel2/getTripAllDetailInfo", method= RequestMethod.POST)
     public GetTripAllDetailResult getTripAllDetailInfo(@RequestBody GetTripAllDetailInfo gtdi){

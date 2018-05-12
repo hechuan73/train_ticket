@@ -10,9 +10,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by ZDH on 2017/7/21.
- */
+
 public class TestServiceContacts {
     private WebDriver driver;
     private String baseUrl;

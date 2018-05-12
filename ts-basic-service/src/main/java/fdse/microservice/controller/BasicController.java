@@ -8,9 +8,7 @@ import fdse.microservice.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by Chenjie Xu on 2017/6/6.
- */
+
 @RestController
 public class BasicController {
 

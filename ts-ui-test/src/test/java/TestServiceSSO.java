@@ -10,9 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by ZDH on 2017/7/19.
- */
+
 public class TestServiceSSO {
     private WebDriver driver;
     private String baseUrl;

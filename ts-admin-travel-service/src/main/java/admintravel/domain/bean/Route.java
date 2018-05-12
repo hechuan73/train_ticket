@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 
-@Document(collection = "routes")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 
     @Id

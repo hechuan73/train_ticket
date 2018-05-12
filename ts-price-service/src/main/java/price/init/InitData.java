@@ -7,9 +7,7 @@ import price.domain.CreateAndModifyPriceConfig;
 import price.service.PriceService;
 
 
-/**
- * Created by Chenjie Xu on 2017/6/12.
- */
+
 
 @Component
 public class InitData implements CommandLineRunner {

@@ -13,7 +13,7 @@ public class ExecuteServiceImpl implements ExecuteService{
 
     @Override
     public TicketExecuteResult ticketExecute(TicketExecuteInfo info){
-        //1.获取订单信息
+
         GetOrderByIdInfo getOrderByIdInfo = new GetOrderByIdInfo();
         getOrderByIdInfo.setOrderId(info.getOrderId());
         GetOrderResult resultFromOrder = getOrderByIdFromOrder(getOrderByIdInfo);
@@ -21,13 +21,13 @@ public class ExecuteServiceImpl implements ExecuteService{
         Order order;
         if(resultFromOrder.isStatus() == true){
             order = resultFromOrder.getOrder();
-            //2.检查订单是否可以进站
+
             if(order.getStatus() != OrderStatus.COLLECTED.getCode()){
                 result.setStatus(false);
                 result.setMessage("Order Status Wrong");
                 return result;
             }
-            //3.确认进站 请求修改订单信息
+
             ModifyOrderStatusInfo executeInfo = new ModifyOrderStatusInfo();
             executeInfo.setOrderId(info.getOrderId());
             executeInfo.setStatus(OrderStatus.USED.getCode());
@@ -45,13 +45,13 @@ public class ExecuteServiceImpl implements ExecuteService{
             resultFromOrder = getOrderByIdFromOrderOther(getOrderByIdInfo);
             if(resultFromOrder.isStatus() == true){
                 order = resultFromOrder.getOrder();
-                //2.检查订单是否可以进站
+
                 if(order.getStatus() != OrderStatus.COLLECTED.getCode()){
                     result.setStatus(false);
                     result.setMessage("Order Status Wrong");
                     return result;
                 }
-                //3.确认进站 请求修改订单信息
+
                 ModifyOrderStatusInfo executeInfo = new  ModifyOrderStatusInfo();
                 executeInfo.setOrderId(info.getOrderId());
                 executeInfo.setStatus(OrderStatus.USED.getCode());
@@ -75,7 +75,7 @@ public class ExecuteServiceImpl implements ExecuteService{
 
     @Override
     public TicketExecuteResult ticketCollect(TicketExecuteInfo info){
-        //1.获取订单信息
+
         GetOrderByIdInfo getOrderByIdInfo = new GetOrderByIdInfo();
         getOrderByIdInfo.setOrderId(info.getOrderId());
         GetOrderResult resultFromOrder = getOrderByIdFromOrder(getOrderByIdInfo);
@@ -83,13 +83,13 @@ public class ExecuteServiceImpl implements ExecuteService{
         Order order;
         if(resultFromOrder.isStatus() == true){
             order = resultFromOrder.getOrder();
-            //2.检查订单是否可以进站
+
             if(order.getStatus() != OrderStatus.PAID.getCode()){
                 result.setStatus(false);
                 result.setMessage("Order Status Wrong");
                 return result;
             }
-            //3.确认进站 请求修改订单信息
+
             ModifyOrderStatusInfo executeInfo = new ModifyOrderStatusInfo();
             executeInfo.setOrderId(info.getOrderId());
             executeInfo.setStatus(OrderStatus.COLLECTED.getCode());
@@ -107,13 +107,13 @@ public class ExecuteServiceImpl implements ExecuteService{
             resultFromOrder = getOrderByIdFromOrderOther(getOrderByIdInfo);
             if(resultFromOrder.isStatus() == true){
                 order = resultFromOrder.getOrder();
-                //2.检查订单是否可以进站
+
                 if(order.getStatus() != OrderStatus.PAID.getCode()){
                     result.setStatus(false);
                     result.setMessage("Order Status Wrong");
                     return result;
                 }
-                //3.确认进站 请求修改订单信息
+
                 ModifyOrderStatusInfo executeInfo = new ModifyOrderStatusInfo();
                 executeInfo.setOrderId(info.getOrderId());
                 executeInfo.setStatus(OrderStatus.COLLECTED.getCode());

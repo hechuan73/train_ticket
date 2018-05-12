@@ -6,9 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Chenjie Xu on 2017/5/9.
- */
+
 @Document(collection="station")
 public class Station {
     @Valid

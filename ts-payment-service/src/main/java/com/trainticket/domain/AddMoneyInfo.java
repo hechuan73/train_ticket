@@ -1,8 +1,6 @@
 package com.trainticket.domain;
 
-/**
- * Created by Administrator on 2017/6/20.
- */
+
 public class AddMoneyInfo {
     private String userId;
     private String money;

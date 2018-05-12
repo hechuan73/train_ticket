@@ -17,7 +17,6 @@ public class BasicServiceImpl implements BasicService{
 
         ResultForTravel result = new ResultForTravel();
         result.setStatus(true);
-        //车站站名服务
 //        boolean startingPlaceExist = restTemplate.postForObject(
 //                "http://ts-station-service:12345/station/exist", new QueryStation(info.getStartingPlace()), Boolean.class);
 //        boolean endPlaceExist = restTemplate.postForObject(
@@ -35,9 +34,6 @@ public class BasicServiceImpl implements BasicService{
 
 
 
-        //配置
-        //查询车票配比，以车站ABC为例，A是始发站，B是途径的车站，C是终点站，分配AC 50%，如果总票数100，那么AC有50张票，AB和BC也各有
-        //50张票，因为AB和AC拼起来正好是一张AC。
 //        String proportion = restTemplate.postForObject("http://ts-config-service:15679/config/query",
 //                new QueryConfig("DirectTicketAllocationProportion"), String.class
 //        );
@@ -50,7 +46,7 @@ public class BasicServiceImpl implements BasicService{
 //            result.setStatus(false);
 //        }
 
-        //车服务
+
 //        TrainType trainType = restTemplate.postForObject(
 //                "http://ts-train-service:14567/train/retrieve", new QueryTrainType(info.getTrip().getTrainTypeId()), TrainType.class
 //        );
@@ -62,7 +58,6 @@ public class BasicServiceImpl implements BasicService{
             result.setTrainType(trainType);
         }
 
-        //票价服务
 //        QueryPriceInfo queryPriceInfo = new QueryPriceInfo();
 //        queryPriceInfo.setStartingPlaceId(startingPlaceId);
 //        queryPriceInfo.setEndPlaceId(endPlaceId);
@@ -89,7 +84,7 @@ public class BasicServiceImpl implements BasicService{
 
         int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
 
-        double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();//需要price Rate和距离（起始站）
+        double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();
         double priceForConfortClass= distance * priceConfig.getFirstClassPriceRate();
 
         HashMap<String,String> prices = new HashMap<String,String>();

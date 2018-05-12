@@ -19,9 +19,7 @@ public class TestFlowFour {
     private WebDriver driver;
     private String baseUrl;
 
-    /**
-     * Please test when Ji chao fixed bugs on front end.
-     */
+
 
     public static void serviceLogin(WebDriver driver, String username, String password, String verificationCode){
         driver.findElement(By.id("flow_four_page")).click();

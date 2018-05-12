@@ -1,11 +1,7 @@
 package org.services.analysis;
 
-///**
-// * Created by hh on 2017-07-08.
-// */
-///**
-// * Created by Administrator on 2017/7/11.
-// */
+//
+//
 
 import java.io.*;
 import java.sql.Timestamp;
@@ -15,9 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by hh on 2017-07-08.
- */
+
 public class TraceTranslator {
     public static void main(String[] args) throws JSONException {
 
@@ -907,9 +901,7 @@ public class TraceTranslator {
         return earlist;
     }
 
-    /*   log1 happens before log2 return true;
-         log2 happens before log1 return false;
-     */
+
     private static boolean compareLog(HashMap<String, String> log1, HashMap<String, String> log2, List<HashMap<String, String>> logs1, List<HashMap<String, String>> logs2){
         long timestamp1 = Long.valueOf(log1.get("timestamp"));
         long timestamp2 = Long.valueOf(log2.get("timestamp"));

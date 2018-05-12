@@ -2,15 +2,15 @@ package cancel.domain;
 
 public enum SeatClass {
 
-    NONE        (0,"无座"),
-    BUSINESS    (1,"商务座"),
-    FIRSTCLASS  (2,"一等座"),
-    SECONDCLASS (3,"二等座"),
-    HARDSEAT    (4,"硬座"),
-    SOFTSEAT    (5,"软座"),
-    HARDBED     (6,"硬卧"),
-    SOFTBED     (7,"软卧"),
-    HIGHSOFTBED (8,"高级软卧");
+    NONE        (0,"NoSeat"),
+    BUSINESS    (1,"GreenSeat"),
+    FIRSTCLASS  (2,"FirstClassSeat"),
+    SECONDCLASS (3,"SecondClassSeat"),
+    HARDSEAT    (4,"HardSeat"),
+    SOFTSEAT    (5,"SoftSeat"),
+    HARDBED     (6,"HardBed"),
+    SOFTBED     (7,"SoftBed"),
+    HIGHSOFTBED (8,"HighSoftSeat");
 
     private int code;
     private String name;

@@ -1,9 +1,5 @@
-/**
- * Created by hh on 2017-07-08.
- */
-/**
- * Created by Administrator on 2017/7/11.
- */
+
+
 package org.services.analysis;
 
 import java.io.*;
@@ -15,9 +11,7 @@ import org.json.JSONObject;
 import org.services.analysis.Clock;
 import org.services.analysis.Span;
 
-/**
- * Created by hh on 2017-07-08.
- */
+
 public class TraceTranslatorQueue {
     public static void main(String[] args) throws JSONException {
 

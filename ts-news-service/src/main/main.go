@@ -13,7 +13,7 @@ import (
 
 //func getNews(val string) string {
 //
-//	//创建连接
+
 //	session, err := mgo.Dial(MONGODB_URL)
 //	if err != nil {
 //		panic(err)
@@ -21,11 +21,11 @@ import (
 //	defer session.Close()
 //
 //	session.SetMode(mgo.Monotonic, true)
-//	// db := session.DB("xtest")   //数据库名称
-//	// collection := db.C("xtest") // 集合名称
+//	// db := session.DB("xtest")
+//	// collection := db.C("xtest")
 //	c := session.DB("xtest").C("xtest")
 //
-//	 //查询多条数据 Find().All()
+
 //	 var personAll []News
 //	 err = c.Find(nil).All(&personAll)
 //	 for i := 0; i < len(personAll); i++ {

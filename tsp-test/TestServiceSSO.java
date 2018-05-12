@@ -50,9 +50,7 @@ public class TestServiceSSO {
         }
     }
 
-    /*
-     * because there is no message about updated the SSO account, I don't test the update function.
-     */
+
 
 
     @Test (dependsOnMethods = {"testGetSSOAccountList"})

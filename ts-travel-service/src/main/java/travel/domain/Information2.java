@@ -4,9 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- */
+
 public class Information2 {
     @Valid
     @Id

@@ -3,9 +3,7 @@ package notification.domain;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * Created by Wenyi on 2017/6/15.
- */
+
 public class NotifyInfo {
 
     public NotifyInfo(){}

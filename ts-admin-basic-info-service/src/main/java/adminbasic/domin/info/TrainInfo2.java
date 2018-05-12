@@ -1,11 +1,9 @@
 package adminbasic.domin.info;
 
-/**
- * Created by Chenjie Xu on 2017/5/15.
- */
+
 public class TrainInfo2 {
 
-    private String id;      //车型ID，每个车型一个ID，比如某个型号的动车
+    private String id;
 
     private String loginId;
 
