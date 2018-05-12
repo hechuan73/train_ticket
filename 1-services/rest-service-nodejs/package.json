@@ -1,5 +1,5 @@
 {
-	"name": "rest-service-external",
+	"name": "rest-service-nodejs",
 	"version": "0.0.1",
 	"keywords": "javascript, nodejs",
 	"engines": {
@@ -7,7 +7,7 @@
 	},
 	"private": true,
 	"scripts": {
-		"start": "node rest-service-external.js"
+		"start": "node rest-service-nodejs.js"
 	},
 	"dependencies": {
 		"express": "latest",

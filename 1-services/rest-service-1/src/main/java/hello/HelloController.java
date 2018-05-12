@@ -47,7 +47,7 @@ public class HelloController {
 		}
 
 		if (rand < 0.3) {
-			value = restTemplate.getForObject("http://rest-service-external:16100/greeting?cal=" + cal2, Value.class);
+			value = restTemplate.getForObject("http://rest-service-nodejs:16100/greeting?cal=" + cal2, Value.class);
 		} else if (rand >= 0.3 && rand < 0.6) {
 			String result = restTemplate.getForObject("http://rest-service-python:16101/test?cal=" + cal2,
 					String.class);
