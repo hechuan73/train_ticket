@@ -3,7 +3,7 @@ spring:
     name: rest-service-5
 
   zipkin:
-    baseUrl: http://zipkin:9411/
+    baseUrl: http://rest-service-collector:9412/
   sleuth:
     sampler:
       percentage: 1.0

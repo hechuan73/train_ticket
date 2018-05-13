@@ -84,6 +84,21 @@ services:
     
   
 
+  
+  rest-service-collector:
+    build: rest-service-collector
+    image: my-service-cluster/rest-service-collector
+    # image: 10.141.212.25:5555/my-rest-service-collector
+    restart: always
+    ports:
+      - 9412:9412
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    networks:
+      - my-network
+
   rest-service-6:
     build: rest-service-6
     image: my-service-cluster/rest-service-6

@@ -23,6 +23,7 @@
 		<module>rest-service-2</module>
 		<module>rest-service-1</module>
 		<module>rest-service-end</module>
+        <module>rest-service-collector</module>
 	</modules>
 
 	<dependencies>

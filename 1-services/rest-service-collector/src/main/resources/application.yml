@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: rest-service-collector
+
+server:
+  port: 9412
