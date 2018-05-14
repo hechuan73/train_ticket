@@ -30,9 +30,9 @@ public class KafkaProducer {
 				throwable -> System.out.println("failed: " + message));
 	}
 
-	@Scheduled(fixedRate = 1000 * 60)
-	public void testKafka() throws Exception {
-		kafkaTemplate.send("app_log", "TEST kafka");
-	}
+//	@Scheduled(fixedRate = 1000 * 60)
+//	public void testKafka() throws Exception {
+//		kafkaTemplate.send("app_log", "TEST kafka");
+//	}
 
 }

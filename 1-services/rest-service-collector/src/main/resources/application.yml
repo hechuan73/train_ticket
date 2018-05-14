@@ -3,7 +3,7 @@ spring:
     name: rest-service-collector
     
   kafka:
-    bootstrap-servers: 127.0.0.1:9092
+    bootstrap-servers: kafka:9092
     producer:
       retries: 0
       batch-size: 16384
