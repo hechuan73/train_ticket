@@ -50,14 +50,14 @@ services:
     networks:
       - my-network
 
-  # kafka:
-  #   container_name: kafka
-  #   image: spotify/kafka:latest
-  #   ports:
-  #    - 2181:2181
-  #    - 9092:9092
-  #   networks:
-  #     - my-network
+  kafka:
+    container_name: kafka
+    image: spotify/kafka:latest
+    ports:
+     - 2181:2181
+     - 9092:9092
+    networks:
+      - my-network
 
 
   zipkin:
