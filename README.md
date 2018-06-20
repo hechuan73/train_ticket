@@ -8,7 +8,10 @@ This project is ticket seller application in microservice architecture, includin
 - python，dijango
 - go，webgo
 
-
+---
+## Add Dependency
+Before you setup TrainTicket, please add the "myproject" directory to your ".m2" directory.
+The directory index is like C:\Users\chaoj\.m2\repository\myproject.
 
 ---
 
