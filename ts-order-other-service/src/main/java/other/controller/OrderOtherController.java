@@ -117,7 +117,8 @@ public class OrderOtherController {
         VerifyResult tokenResult = verifySsoLogin(orderInfo.getLoginToken());
         if(tokenResult.isStatus() == true){
             System.out.println("[Order Other Service][Verify Login] Success");
-            return orderService.saveChanges(orderInfo.getOrder());
+            // return orderService.saveChanges(orderInfo.getOrder());
+            return orderService.sendOrderToQueue(orderInfo.getOrder());
         }else{
             System.out.println("[Order Other Service][Verify Login] Fail");
             ChangeOrderResult cor = new ChangeOrderResult();
