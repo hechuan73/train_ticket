@@ -1,6 +1,7 @@
 package other.service;
 
 import other.domain.*;
+import other.queue.MsgSender;
 import other.repository.OrderOtherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ public class OrderOtherServiceImpl implements OrderOtherService{
 
     @Autowired
     private OrderOtherRepository orderOtherRepository;
+
+    @Autowired
+    private MsgSender msgSender;
 
     @Override
     public LeftTicketInfo getSoldTickets(SeatRequest seatRequest){
@@ -424,6 +428,47 @@ public class OrderOtherServiceImpl implements OrderOtherService{
             result.setMessage("Success");
         }
         return result;
+    }
+
+    @Override
+    public ChangeOrderResult sendOrderToQueue(Order order) {
+        Order oldOrder = findOrderById(order.getId());
+        ChangeOrderResult cor = new ChangeOrderResult();
+        if (null == oldOrder) {
+            System.out.println("[Order Other Service][Modify Order] Fail.Order not found.");
+            cor.setStatus(false);
+            cor.setMessage("Order Not Found");
+            cor.setOrder(null);
+        }
+        else {
+            msgSender.sendLoginInfoToSso(order);
+            cor.setStatus(true);
+            cor.setMessage("The operation is processing, please search the result after 1 minute!");
+        }
+        return cor;
+
+    }
+
+    @Override
+    public void processOrderFromQueue(Order order) {
+        Order oldOrder = findOrderById(order.getId());
+        oldOrder.setAccountId(order.getAccountId());
+        oldOrder.setBoughtDate(order.getBoughtDate());
+        oldOrder.setTravelDate(order.getTravelDate());
+        oldOrder.setTravelTime(order.getTravelTime());
+        oldOrder.setCoachNumber(order.getCoachNumber());
+        oldOrder.setSeatClass(order.getSeatClass());
+        oldOrder.setSeatNumber(order.getSeatNumber());
+        oldOrder.setFrom(order.getFrom());
+        oldOrder.setTo(order.getTo());
+        oldOrder.setStatus(order.getStatus());
+        oldOrder.setTrainNumber(order.getTrainNumber());
+        oldOrder.setPrice(order.getPrice());
+        oldOrder.setContactsName(order.getContactsName());
+        oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
+        oldOrder.setDocumentType(order.getDocumentType());
+        orderOtherRepository.save(oldOrder);
+        System.out.println("The order from queue has been processed!");
     }
 }
 
