@@ -796,7 +796,7 @@ $("#flow_advanced_reserve_collect_button").click(function() {
             $("#flow_advanced_reserve_collect_button").attr("disabled",false);
         }
     });
-});;
+});
 
 /**
  * Flow Preserve - Step 7 - Enter Station
