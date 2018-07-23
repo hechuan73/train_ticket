@@ -352,7 +352,7 @@ spec:
     spec:
       containers:
       - name: ts-voucher-mysql
-        image: 10.141.211.160:5000/f12/cluster-ts-mysql
+        image: 10.141.211.160:5000/master/cluster-ts-mysql
         imagePullPolicy: IfNotPresent
         env:
         # Use secret in real usage
