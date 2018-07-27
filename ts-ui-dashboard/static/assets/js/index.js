@@ -1,225 +1,325 @@
 /**
- * Created by lwh on 2017/11/16.
+ * Created by ldw on 20178/7/17.
  */
-/*
- * 显示管理员名字
- * */
-var loadBody = function () {
-    var username = sessionStorage.getItem("admin_name");
-    if (username == null) {
-        alert("Please login first!");
-        location.href = "adminlogin.html";
-    }
-    else {
-        document.getElementById("admin_name").innerHTML = username;
-    }
-};
 
-/*
- * 登出
- * */
-var logout = function () {
-    sessionStorage.clear();
-    location.href = "adminlogin.html";
-}
-
-/*
- * 将加载数据封装为一个服务
- * */
-var app = angular.module('myApp', []);
-app.factory('loadDataService', function ($http, $q) {
-
-    var service = {};
-
-    //获取并返回数据
-    service.loadRecordList = function (param) {
-        var deferred = $q.defer();
-        var promise = deferred.promise;
-        //返回的数据对象
-        var information = new Object();
-
-        $http({
-            method: "get",
-            url: "/adminorder/findAll/" + param.id,
-            withCredentials: true,
-        }).success(function (data, status, headers, config) {
-            if (data.status) {
-                information.orderRecords = data.orders;
-                deferred.resolve(information);
+var reserveApp = new Vue({
+    el: '#reserveApp',
+    data: {
+        from: 'Shang Hai',
+        to: 'Su Zhou',
+        selectedDate: '',
+        selectedTrainType: 1,
+        trainTypes: [
+            {text: 'All', value: 0},
+            {text: 'GaoTie DongChe', value: 1},
+            {text: 'Other', value: 2}
+        ],
+        travelList: [],
+        tempTravelList: [],
+        selectedSeats: [],
+        email: 'fdse_microservices@163.com',
+        password: 'DefaultPassword',
+        verifyCode: '1234'
+    },
+    methods: {
+        initPage() {
+            this.setTodayDatePreserve();
+            this.checkLogin();
+        },
+        setTodayDatePreserve() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
             }
-            else{
-                alert("Request the order list fail!" + data.message);
+            if (mm < 10) {
+                mm = '0' + mm
             }
-        });
+            today = yyyy + '-' + mm + '-' + dd;
+            this.selectedDate = today;
+            document.getElementById("travel_booking_date").setAttribute("min", today);
+        },
+        checkLogin() {
+            var username = sessionStorage.getItem("client_name");
+            if (username == null) {
+                // alert("Please login first!");
+            }
+            else {
+                document.getElementById("client_name").innerHTML = username;
+            }
+        },
+        logOutClient() {
+            var logoutInfo = new Object();
+            logoutInfo.id = this.getCookie("loginId");
+            if (logoutInfo.id == null || logoutInfo.id == "") {
+                alert("No cookie named 'loginId' exist. please login");
+                location.href = "client_login.html";
+                return;
+            }
+            logoutInfo.token = this.getCookie("loginToken");
+            if (logoutInfo.token == null || logoutInfo.token == "") {
+                alert("No cookie named 'loginToken' exist.  please login");
+                location.href = "client_login.html";
+                return;
+            }
+            var data = JSON.stringify(logoutInfo);
+            var that = this;
+            $.ajax({
+                type: "post",
+                url: "/logout",
+                contentType: "application/json",
+                dataType: "json",
+                data: data,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    if (result["status"] == true) {
+                        that.setCookie("loginId", "", -1);
+                        that.setCookie("loginToken", "", -1);
+                    } else if (result["message"] == "Not Login") {
+                        that.setCookie("loginId", "", -1);
+                        that.setCookie("loginToken", "", -1);
+                    }
+                    sessionStorage.setItem("client_id", "-1");
+                    sessionStorage.setItem("client_name", "Not Login");
+                    document.getElementById("client_name").innerHTML = "Not Login";
+                    location.href = "client_login.html";
+                },
+                error: function (e) {
+                    alert("logout error");
+                }
+            });
+        },
+        initSeatClass(size) {
+            this.selectedSeats = new Array(size);
+            for (var i = 0; i < size; i++)
+                this.selectedSeats[i] = 2;
+        },
+        searchTravel() {
+            var travelQueryInfo = new Object();
+            travelQueryInfo.startingPlace = this.from;
+            travelQueryInfo.endPlace = this.to;
+            travelQueryInfo.departureTime = this.selectedDate;
+            if (travelQueryInfo.departureTime == null || this.checkDateFormat(travelQueryInfo.departureTime) == false) {
+                alert("Departure Date Format Wrong.");
+                return;
+            }
+            var travelQueryData = JSON.stringify(travelQueryInfo);
+            var train_type = this.selectedTrainType;
+            this.tempTravelList = [];
+            this.travelList =[];
 
-        return promise;
-    };
+            if (train_type == 0) {
+                this.queryForTravelInfo(travelQueryData, "/travel/query");
+                this.queryForTravelInfo(travelQueryData, "/travel2/query");
+            } else if (train_type == 1) {
+                //http://10.141.212.22/travel/query
+                this.queryForTravelInfo(travelQueryData, "/travel/query");
+            } else if (train_type == 2) {
+                this.queryForTravelInfo(travelQueryData, "/travel2/query");
+            }
 
-    return service;
-});
+        },
+        queryForTravelInfo(data, path) {
+            $("#travel_booking_button").attr("disabled", true);
+            var that = this;
+            $('#my-svg').shCircleLoader({namespace: 'runLoad',});
+            $.ajax({
+                type: "post",
+                url: path,
+                contentType: "application/json",
+                dataType: "json",
+                data: data,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    if (result[0] != null) {
+                        var obj = result;
+                        var size = obj.length;
+                        that.tempTravelList = obj;
+                        that.initSeatClass(size);
+                        for (var i = 0; i < size; i++) {
+                            that.tempTravelList[i].startingTime = that.convertNumberToTimeString(obj[i].startingTime);
+                            that.tempTravelList[i].endTime = that.convertNumberToTimeString(obj[i].endTime);
+                        }
+                        that.travelList = that.travelList.concat(that.tempTravelList);
+                    }
+                },
+                complete: function () {
+                    $('#my-svg').shCircleLoader('destroy');
+                    $("#travel_booking_button").attr("disabled", false);
+                }
+            });
+        },
+        preserverBooking(index, tripType, tripNum, from, to) {
+            var tripId = tripType + tripNum;
+            var seatPrice = "0.0";
+            if (this.selectedSeats[index] == 2)
+                seatPrice = this.travelList[index].priceForConfortClass;
+            else if (this.selectedSeats[index] == 3) {
+                seatPrice = this.travelList[index].priceForEconomyClass;
+            }
+            var that = this;
+            if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
 
-/*
- * 加载列表
- * */
-app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
-    var param = {};
-    param.id = sessionStorage.getItem("admin_id");
+                $('#my-prompt').modal({
+                    relatedTarget: this,
+                    onConfirm: function (e) {
+                        var loginInfo = new Object();
+                        loginInfo.email = e.data[0];
+                        if (loginInfo.email == null || loginInfo.email == "") {
+                            alert("Email Can Not Be Empty.");
+                            return;
+                        }
+                        if (that.checkEmailFormat(loginInfo.email) == false) {
+                            alert("Email Format Wrong.");
+                            return;
+                        }
 
-    //刷新页面
-    $scope.reloadRoute = function () {
-        $window.location.reload();
-    };
+                        loginInfo.password = e.data[1];
+                        if (loginInfo.password == null || loginInfo.password == "") {
+                            alert("Password Can Not Be Empty.");
+                            return;
+                        }
+                        loginInfo.verificationCode = e.data[2];
+                        if (loginInfo.verificationCode == null || loginInfo.verificationCode == "") {
+                            alert("Verification Code Can Not Be Empty.");
+                            return;
+                        }
 
-    //首次加载显示数据
-    loadDataService.loadRecordList(param).then(function (result) {
-        $scope.records = result.orderRecords;
-        //$scope.decodeInfo(result.orderRecords[0]);
-    });
+                        var data = JSON.stringify(loginInfo);
+                        $.ajax({
+                            type: "post",
+                            url: "/login",
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: data,
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            success: function (result) {
+                                var obj = result;
+                                if (obj["status"] == true) {
+                                    sessionStorage.setItem("client_id", obj["account"].id);
+                                    sessionStorage.setItem("client_name", obj["account"].name);
+                                    document.cookie = "loginId=" + obj["account"].id;
+                                    document.cookie = "loginToken=" + obj["token"];
+                                    document.getElementById("client_name").innerHTML = obj["account"].name;
+                                    location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
+                                        that.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + that.selectedDate;
 
-    $scope.decodeInfo = function (obj) {
-        var des = "";
-        for(var name in obj){
-            des += name + ":" + obj[name] + ";";
+                                } else {
+                                    alert(obj["message"]);
+                                }
+                            },
+                            error: function (e) {
+                                alert("login error, please login again!");
+                            }
+                        });
+                    },
+                    onCancel: function (e) {
+                        // alert('cancel!');
+                    }
+                });
+            } else {
+                location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
+                    this.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + this.selectedDate;
+            }
+        },
+        checkDateFormat(date) {
+            var dateFormat = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+            if (!dateFormat.test(date)) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        convertNumberToTimeString(timeNumber) {
+            var str = new Date(timeNumber);
+            var newStr = str.getHours() + ":" + str.getMinutes() + "";
+            return newStr;
+        },
+        login() {
+            var loginInfo = new Object();
+            loginInfo.email = this.email;
+            if (loginInfo.email == null || loginInfo.email == "") {
+                alert("Email Can Not Be Empty.");
+                return;
+            }
+            if (this.checkEmailFormat(loginInfo.email) == false) {
+                alert("Email Format Wrong.");
+                return;
+            }
+            loginInfo.password = this.password;
+            if (loginInfo.password == null || loginInfo.password == "") {
+                alert("Password Can Not Be Empty.");
+                return;
+            }
+            loginInfo.verificationCode = this.verifyCode;
+            if (loginInfo.verificationCode == null || loginInfo.verificationCode == "") {
+                alert("Verification Code Can Not Be Empty.");
+                return;
+            }
+            var data = JSON.stringify(loginInfo);
+            $.ajax({
+                type: "post",
+                url: "/login",
+                contentType: "application/json",
+                dataType: "json",
+                data: data,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    var obj = result;
+                    if (obj["status"] == true) {
+                        sessionStorage.setItem("client_id", obj["account"].id);
+                        sessionStorage.setItem("client_name", obj["account"].name);
+                        document.cookie = "loginId=" + obj["account"].id;
+                        document.cookie = "loginToken=" + obj["token"];
+                        document.getElementById("client_name").innerHTML = obj["account"].name;
+                        //  alert(obj["message"] + obj["account"].name + "======-");
+                        // login in success
+                    } else {
+                        setCookie("loginId", "", -1);
+                        setCookie("loginToken", "", -1);
+                        sessionStorage.setItem("client_id","-1");
+                        sessionStorage.setItem("client_name", "Not Login");
+                        document.getElementById("client_name").innerHTML = "Not Login";
+                    }
+                }
+            });
+        },
+        checkEmailFormat(email) {
+            var emailFormat = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+            if (!emailFormat.test(email)) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
+        },
+        setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
         }
-        alert(des);
-    }
-    
-    //Add new order
-    $scope.addNewOrder = function () {
-        $('#add_prompt').modal({
-            relatedTarget: this,
-            onConfirm: function(e) {
-                $http({
-                    method: "post",
-                    url: "/adminorder/addOrder",
-                    withCredentials: true,
-                    data:{
-                        loginid: sessionStorage.getItem("admin_id"),
-                        order:{
-                            boughtDate: $scope.add_order_bought_date,
-                            travelDate: $scope.add_order_travel_date,
-                            travelTime: $scope.add_order_travel_time,
-                            accountId: $scope.add_order_account,
-                            contactsName: $scope.add_order_passenger,
-                            documentType: $scope.add_order_document_type,
-                            contactsDocumentNumber: $scope.add_order_document_number,
-                            trainNumber: $scope.add_order_train_number,
-                            coachNumber: $scope.add_order_coach_number,
-                            seatClass: $scope.add_order_seat_class,
-                            seatNumber: $scope.add_order_seat_number,
-                            from: $scope.add_order_from,
-                            to: $scope.add_order_to,
-                            status: $scope.add_order_status,
-                            price: $scope.add_order_price
-                        }
-                    }
-                }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
-                        $scope.reloadRoute();
-                    }
-                    else{
-                        alert("Request the order list fail!" + data.message);
-                    }
-                });
-            },
-            onCancel: function(e) {
-                alert('You have canceled the operation!');
-            }
-        });
-    }
-    
-    //Update exist order
-    $scope.updateOrder = function (record) {
-        $scope.update_order_id = record.id;
-        $scope.update_order_bought_date = record.boughtDate;
-        $scope.update_order_travel_date = record.travelDate;
-        $scope.update_order_travel_time = record.travelTime;
-        $scope.update_order_account = record.accountId;
-        $scope.update_order_passenger = record.contactsName;
-        $scope.update_add_order_document_type = record.documentType;
-        $scope.update_order_document_number = record.contactsDocumentNumber;
-        $scope.update_order_train_number = record.trainNumber;
-        $scope.update_order_coach_number = record.coachNumber;
-        $scope.update_order_seat_class = record.seatClass;
-        $scope.update_order_seat_number = record.seatNumber;
-        $scope.update_order_from = record.from;
-        $scope.update_order_to = record.to;
-        $scope.update_order_status = record.status;
-        $scope.update_order_price = record.price;
-
-        $('#update_prompt').modal({
-            relatedTarget: this,
-            onConfirm: function(e) {
-                $http({
-                    method: "post",
-                    url: "/adminorder/updateOrder",
-                    withCredentials: true,
-                    data:{
-                        loginid: sessionStorage.getItem("admin_id"),
-                        order:{
-                            id: $scope.update_order_id,
-                            boughtDate: $scope.update_order_bought_date,
-                            travelDate: $scope.update_order_travel_date,
-                            travelTime: $scope.update_order_travel_time,
-                            accountId: $scope.update_order_account,
-                            contactsName: $scope.update_order_passenger,
-                            documentType: $scope.update_add_order_document_type,
-                            contactsDocumentNumber: $scope.update_order_document_number,
-                            trainNumber: $scope.update_order_train_number,
-                            coachNumber: $scope.update_order_coach_number,
-                            seatClass: $scope.update_order_seat_class,
-                            seatNumber: $scope.update_order_seat_number,
-                            from: $scope.update_order_from,
-                            to: $scope.update_order_to,
-                            status: $scope.update_order_status,
-                            price: $scope.update_order_price
-                        }
-                    }
-                }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
-                        $scope.reloadRoute();
-                    }
-                    else{
-                        alert("Request the order list fail!" + data.message);
-                    }
-                });
-            },
-            onCancel: function(e) {
-                alert('You have canceled the operation!');
-            }
-        });
-    }
-
-    //Delete order
-    $scope.deleteOrder = function(orderId,trainNumber){
-        $('#delete_confirm').modal({
-            relatedTarget: this,
-            onConfirm: function(options) {
-                $http({
-                    method: "post",
-                    url: "/adminorder/deleteOrder",
-                    withCredentials: true,
-                    data: {
-                        loginid: sessionStorage.getItem("admin_id"),
-                        orderId: orderId,
-                        trainNumber: trainNumber
-                    }
-                }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
-                        $scope.reloadRoute();
-                    }
-                    else{
-                        alert("Request the order list fail!" + data.message);
-                    }
-                });
-            },
-            // closeOnConfirm: false,
-            onCancel: function() {
-                alert('You have canceled the operation!');
-            }
-        });
+    },
+    mounted() {
+        this.initPage();
     }
 });
