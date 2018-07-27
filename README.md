@@ -9,13 +9,18 @@ This project is ticket seller application in microservice architecture, includin
 - go，webgo
 
 ---
+## Supported Cluster Orchestration
+- K8S + Istio
+- Docker Swarm
+
+---
 ## Add Dependency
 Before you setup TrainTicket, please add the "myproject" directory to your ".m2" directory.
 The directory index is like C:\Users\chaoj\.m2\repository\myproject.
 
 ---
 
-## local runtime environment
+## Local runtime environment
 
 build:
 
@@ -48,7 +53,7 @@ docker-compose logs -f
 
 ---
 
-##  clustering runtime environment(docker swarm):
+##  Clustering runtime environment(docker swarm):
 
 build:
 
