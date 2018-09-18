@@ -1,7 +1,5 @@
 .idea
-*.jar
 *.original
-*.jar
 *.lst
 *.iml
 *.class
