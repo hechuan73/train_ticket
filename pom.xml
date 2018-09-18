@@ -71,17 +71,7 @@
 
 	<dependencies>
 
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.cloud</groupId>-->
-			<!--<artifactId>spring-cloud-starter-sleuth</artifactId>-->
-		<!--</dependency>-->
-
-		<!--分界线-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-        <dependency>
+		<!-- <dependency>
             <groupId>myproject.microservices</groupId>
             <artifactId>micro-service-monitoring-core</artifactId>
             <version>1.2.2.BUILD-SNAPSHOT</version>
@@ -89,6 +79,23 @@
         <dependency>
             <groupId>myproject.microservices</groupId>
             <artifactId>micro-service-monitoring-zipkin</artifactId>
+            <version>1.2.2.BUILD-SNAPSHOT</version>
+        </dependency> -->
+
+		<!--分界线-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+        
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-core</artifactId>
+            <version>1.2.2.BUILD-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
             <version>1.2.2.BUILD-SNAPSHOT</version>
         </dependency>
 
