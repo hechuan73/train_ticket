@@ -70,14 +70,14 @@ kubeadm join 10.141.212.23:6443 --token qrxigf.bdqvtgdzyygj1qek --discovery-toke
 Please write down this instruction, you will use this command to join you node to your cluser.    
 
 ## Step 11: Install a network plugin
-kubectl apply -f kube-flannel.yml  
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 
 
 # ==For Slave/Node==
 ## Step 12: Join to the cluster
 Use the command you write down in Step 10.   
 
-============================Some command may be helpful==============
+# ==Some command may be helpful==
 kubectl get nodes   
 kubectl get pods --all-namespaces   
 kuebctl get svc --all-namespaces   

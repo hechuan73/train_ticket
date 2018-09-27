@@ -1,4 +1,4 @@
-=========================在部署开始之前===============================
+﻿=========================在部署开始之前===============================
 1.给所有机器安装yum install ntp
 然后用ntpdate指令找一个时间服务器把所有服务器时间校准
 
@@ -81,7 +81,7 @@ kubeadm join 10.141.212.23:6443 --token qrxigf.bdqvtgdzyygj1qek --discovery-toke
 
 10.然后安装一个网络插件
 
-kubectl apply -f kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 
 kube-flanner.yml这个文件也附带在外面了记得挪到服务器上
 
