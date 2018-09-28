@@ -1,5 +1,3 @@
-
-
 This project is ticket seller application in microservice architecture, including 40+ microservices
 =========================
 
@@ -13,127 +11,34 @@ This project is ticket seller application in microservice architecture, includin
 - K8S + Istio
 - Docker Swarm
 
----
-## Add Dependency
-Before you setup TrainTicket, please add the "myproject" directory to your ".m2" directory.
-The directory index is like C:\Users\chaoj\.m2\repository\myproject.
+##  Local runtime environment
+- docker
+- docker-compose
+- k8s
+- maven
+- jdk8
 
----
+## Deploy Train Ticket with docker-compose
 
-## Local runtime environment
-
-build:
-
-mvn build:
-
-mvn -Dmaven.test.skip=true clean package
-
-docker-compose -f docker-compose.yml build
-
-docker build:
-
-docker-compose build
-(docker-compose -f docker-compose.yml build)
-
-docker-compose up -d
-
-docker-compose down
-
-
-start the ticket microservice applciation (single node):
-
-docker-compose -f docker-compose.yml up -d
-
-docker-compose down
-
-docker-compose logs -f
-
-
-
-
----
-
-##  Clustering runtime environment(docker swarm):
-
-build:
-
-mvn clean package
-
-docker-compose build
-
-docker-compose up
-
-docker swarm init --advertise-addr 10.141.211.161
-
-docker swarm join-token manager
-
-docker swarm join-token worker
-
-
-app tag:
-
-docker tag ts/ts-ui-dashboard 10.141.212.25:5555/cluster-ts-ui-dashboard
-
-
-app local registry:
-
-docker push 10.141.212.25:5555/cluster-ts-ui-dashboard
-
-
-deploy app (docker swarm):
-
-docker stack deploy --compose-file=docker-compose-swarm.yml my-compose-swarm
-
-
-monitoring:
-
-docker run -d -p 9000:9000 --name=portainer-ui-local -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-
-http://10.141.211.161:9000
-
-
-
-
----
-
-##  Fault Replication Branches list (11): You can check the fault replication details on following branches of this git repository
-
-F1 
-ts-error-process-seq
-
-F2
-ts-error-reportui
-
-F3
-ts-error-docker-JVM
-
-F4
-ts-error-ssl
-
-F5
-ts-error-cross-timeout-status(chance)
-
-F7
-ts-external-normal
-
-F8
-ts-error-redis
-
-F10
-ts-error-normal
-
-F11
-ts-error-bomupdate
-
-F12
-ts-error-processes-seq-status(chance)
-
-F13 
-ts-error-queue
-
-
-
-
-
-
-
+      you jsut need one machine and installed with  git, jdk8, maven, docker and docker-compose
+      setup with the following steps:
+     (1) Clone all the source code to your local computer with git.
+     (2) Move all directory whose name is start with "ts-" to your server's  other directory. 
+     (3) Move pom.xml and docker-compose.xml to your server to the same directory with "ts-..." directories.
+     (4) Add the "myproject" directory to your maven ".m2" directory.  The directory index is like  /root/.m2/repository/myproject.
+     (5) Open the terminal and enter the directory where pom.xml loacted.   
+     (6) Use the instruction: mvn clean package  And waiting for build success.   
+     (7) Use the instruction: docker-compose build  And waiting for build success.
+     (8) Use the instruction: docker-compose up   And wating for all services startup
+     
+## Access the Train Ticket System in Browser 
+    before access, you can use docker ps to see which port you should access:
+    on default. the port is 80
+    than you can use the ip of your server to access it.
+    Unless something unexpected, then you can see the main interface
+    ![main interface](https://github.com/microcosmx/train_ticket/blob/master/image/main_interface.png)
+    
+##  The Step of Buy Ticket
+    (1) while access the ui , then you can    
+    
+    
