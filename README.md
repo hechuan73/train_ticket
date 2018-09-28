@@ -21,11 +21,11 @@ This project is ticket seller application in microservice architecture, includin
 ## Deploy Train Ticket with docker-compose
 
   you just need one machine and installed with  git, jdk8, maven, docker and docker-compose
-- setup with the following steps:
-    (1) Clone all the source code to your local computer with git.
-    (2) Move all directory whose name is start with "ts-" to your server's  other directory. 
-    (3) Move pom.xml and docker-compose.xml to your server to the same directory with "ts-..." directories.
-    (4) Add the "myproject" directory to your maven ".m2" directory.  The directory index is like  /root/.m2/repository/myproject.
+- setup with the following steps:  
+    (1) Clone all the source code to your local computer with git.  
+    (2) Move all directory whose name is start with "ts-" to your server's  other directory.   
+    (3) Move pom.xml and docker-compose.xml to your server to the same directory with "ts-..." directories.  
+    (4) Add the "myproject" directory to your maven ".m2" directory.  The directory index is like  /root/.m2/repository/myproject.  
     (5) Open the terminal and enter the directory where pom.xml loacted.   
     (6) Use the instruction: mvn clean package  And waiting for build success.   
     (7) Use the instruction: docker-compose build  And waiting for build success.
