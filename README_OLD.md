@@ -96,7 +96,8 @@ http://10.141.211.161:9000
 
 ---
 
-##  Fault Replication Branches list (11): You can check the fault replication details on following branches of this git repository
+##  Fault Replication Branches list  
+- You can check the fault replication details on following branches of this git repository
 
 F1 
 ts-error-process-seq
