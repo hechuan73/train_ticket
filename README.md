@@ -57,7 +57,21 @@ This project is ticket seller application in microservice architecture, includin
     (5) The last step is to go to the Order List to find the ticket you reserver before, and click the "Pay" button,
        waitting for success, than the buy ticket flow is over.
   ![pay_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/pay_ticket.png)
-
+   （6）Also you can modify you order information
+  ![modify_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/modify_ticket.png)
+    (7) If you want search by different conditions such as quickest, cheapest and so on, you can use advanced search function
+  ![advanced_search](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/advanced_search.png)  
+  
+## Admin panel
+- The admin panel is used to manage orders, trips, users, prices and so on.   
+  you can use your ip + /adminlogin.html to access the admin panel in broswer
+  (1) The login panel looks like this, you can use   adminroot/adminroot  to login
+  ![admin_login](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/admin_login.png)
+  (2) The admin's order list panel
+  ![admin_order_list](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/admin_order_list.png)
+  (3) The admin's travel list panel
+  ![admin_travel_list](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/admin_travel_list.png)
+   
 #  Deploy Train Ticket with k8s
 - please follow the below steps:  
   [k8s deploy steps](https://github.com/microcosmx/train_ticket/tree/master/Document/k8s)
