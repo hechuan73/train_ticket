@@ -36,9 +36,9 @@ This project is ticket seller application in microservice architecture, includin
     on default. the port is 80
     than you can use the ip of your server to access it.
     Unless something unexpected, then you can see the main interface
-    ![main interface](https://github.com/microcosmx/train_ticket/blob/master/image/main_interface.png)
+    ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
     
 ##  The Step of Buy Ticket
     (1) while access the ui , then you can    
-    
+     
     
