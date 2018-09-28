@@ -12,7 +12,7 @@ This project is ticket seller application in microservice architecture, includin
 - Docker Swarm
 
 ##  Local runtime environment
-- jdk8
+- jdk1.8
 - maven
 - docker
 - docker-compose
@@ -23,7 +23,7 @@ This project is ticket seller application in microservice architecture, includin
 # Deploy Train Ticket with docker-compose
 
 ## SetUp steps
-  you just need one machine and installed with  git, jdk8, maven, docker and docker-compose
+  you just need one machine and installed with  git, jdk1.8, maven, docker and docker-compose
 - setup with the following steps:  
     (1) Clone all the source code to your local computer with git.  
     (2) Move all directory whose name is start with "ts-" to your server's  other directory.   
