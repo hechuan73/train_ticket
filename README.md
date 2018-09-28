@@ -35,7 +35,7 @@ This project is ticket seller application in microservice architecture, includin
 ## Access the Train Ticket System in Browser 
 - before access, you can use "docker ps" to see which port you should access:  
     on default. the port is 80
-    than you can use the ip of your server to access it.
+    than you can use the ip of your server to access it.  
     Unless something unexpected, if you can see the main interface like below, congratulations!
   ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
     
