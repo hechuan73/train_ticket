@@ -12,14 +12,17 @@ This project is ticket seller application in microservice architecture, includin
 - Docker Swarm
 
 ##  Local runtime environment
+- jdk8
+- maven
 - docker
 - docker-compose
 - k8s
-- maven
-- jdk8
+- istio
 
-## Deploy Train Ticket with docker-compose
 
+# Deploy Train Ticket with docker-compose
+
+## SetUp steps
   you just need one machine and installed with  git, jdk8, maven, docker and docker-compose
 - setup with the following steps:  
     (1) Clone all the source code to your local computer with git.  
@@ -34,7 +37,7 @@ This project is ticket seller application in microservice architecture, includin
      
 ## Access the Train Ticket System in Browser 
 - before access, you can use "docker ps" to see which port you should access:  
-    on default. the port is 80
+    on default. the port is 80  
     than you can use the ip of your server to access it.  
     Unless something unexpected, if you can see the main interface like below, congratulations!
   ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
@@ -55,3 +58,10 @@ This project is ticket seller application in microservice architecture, includin
        waitting for success, than the buy ticket flow is over.
   ![pay_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/pay_ticket.png)
 
+#  Deploy Train Ticket with k8s
+- please follow the below steps:  
+  [k8s deploy steps](https://github.com/microcosmx/train_ticket/tree/master/Document/k8s)
+  
+#  Deploy Train Ticket with k8s + istio
+- please follow the below steps:  
+  [k8s + istio deploy steps]
