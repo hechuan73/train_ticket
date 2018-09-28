@@ -42,6 +42,7 @@ This project is ticket seller application in microservice architecture, includin
     Unless something unexpected, if you can see the main interface like below, congratulations!
   ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
     
+    
 ##  The Step of Buy Ticket
     (1) While access the main interface, Input the start city ,destination city, date and train type , And then click "search" button,
         you will get the tickets list , which is like the picture above.
