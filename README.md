@@ -35,6 +35,7 @@ This project is ticket seller application in microservice architecture, includin
     before access, you can use "docker ps" to see which port you should access:
     on default. the port is 80
     than you can use the ip of your server to access it.
+<<<<<<< HEAD
     Unless something unexpected, if you can see the main interface like below, congratulations!
     ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
     
@@ -53,3 +54,12 @@ This project is ticket seller application in microservice architecture, includin
     (5) The last step is to go to the Order List to find the ticket you reserver before, and click the "Pay" button,
        waitting for success, than the buy ticket flow is over.
        ![pay_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/pay_ticket.png)
+=======
+    Unless something unexpected, then you can see the main interface
+   ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
+    
+##  The Step of Buy Ticket
+    (1) while access the ui , then you can    
+     
+    
+>>>>>>> de7866f254cdf6c3148d925c65c052df2ff4e051
