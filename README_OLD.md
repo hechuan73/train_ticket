@@ -91,9 +91,6 @@ docker run -d -p 9000:9000 --name=portainer-ui-local -v /var/run/docker.sock:/va
 
 http://10.141.211.161:9000
 
-
-
-
 ---
 
 ##  Fault Replication Branches list  
