@@ -64,7 +64,7 @@ This project is ticket seller application in microservice architecture, includin
   
 ## Admin panel
 - The admin panel is used to manage orders, trips, users, prices and so on.   
-  you can use your ip + /adminlogin.html to access the admin panel in broswer
+  you can use your ip + /adminlogin.html to access the admin panel in broswer  
   (1) The login panel looks like this, you can use   adminroot/adminroot  to login
   ![admin_login](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/admin_login.png)
   (2) The admin's order list panel
