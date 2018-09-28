@@ -62,6 +62,80 @@ This project is ticket seller application in microservice architecture, includin
 - please follow the below steps:  
   [k8s deploy steps](https://github.com/microcosmx/train_ticket/tree/master/Document/k8s)
   
-#  Deploy Train Ticket with k8s + istio
-- please follow the below steps:  
-  [k8s + istio deploy steps]
+---
+
+##  Clustering runtime environment(docker swarm):
+
+build:
+
+mvn clean package
+
+docker-compose build
+
+docker-compose up
+
+docker swarm init --advertise-addr 10.141.211.161
+
+docker swarm join-token manager
+
+docker swarm join-token worker
+
+
+app tag:
+
+docker tag ts/ts-ui-dashboard 10.141.212.25:5555/cluster-ts-ui-dashboard
+
+
+app local registry:
+
+docker push 10.141.212.25:5555/cluster-ts-ui-dashboard
+
+
+deploy app (docker swarm):
+
+docker stack deploy --compose-file=docker-compose-swarm.yml my-compose-swarm
+
+
+monitoring:
+
+docker run -d -p 9000:9000 --name=portainer-ui-local -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+
+http://10.141.211.161:9000
+
+
+---
+
+##  Fault Replication Branches list (11): You can check the fault replication details on following branches of this git repository
+
+F1 
+ts-error-process-seq
+
+F2
+ts-error-reportui
+
+F3
+ts-error-docker-JVM
+
+F4
+ts-error-ssl
+
+F5
+ts-error-cross-timeout-status(chance)
+
+F7
+ts-external-normal
+
+F8
+ts-error-redis
+
+F10
+ts-error-normal
+
+F11
+ts-error-bomupdate
+
+F12
+ts-error-processes-seq-status(chance)
+
+F13 
+ts-error-queue
