@@ -35,7 +35,6 @@ This project is ticket seller application in microservice architecture, includin
     before access, you can use "docker ps" to see which port you should access:
     on default. the port is 80
     than you can use the ip of your server to access it.
-<<<<<<< HEAD
     Unless something unexpected, if you can see the main interface like below, congratulations!
     ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
     
@@ -44,22 +43,14 @@ This project is ticket seller application in microservice architecture, includin
         you will get the tickets list , which is like the picture above.
     (2) After select trip and seat type, Click "Booking" button, then it will show login dialog( or you can login before)
         Just follow that step to login
-     ![client_login](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/login.png)
+       ![client_login](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/login.png)
     (3) After login succeed, it will continue with the previous step, in this step, you must choose or add one Contacts,
         And decide whether you need Assurance ,food , or consign, than you can click "Select" button.  
-      ![select_contact](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/select_contace.png)
+       ![select_contact](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/select_contace.png)
     (4) After select,it will pop up a dialog for you to check whether the order information is correct, if so, then you can 
        click "submit" button to submit you reservation  
        ![confirm_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/confirm_ticket.png)
     (5) The last step is to go to the Order List to find the ticket you reserver before, and click the "Pay" button,
        waitting for success, than the buy ticket flow is over.
        ![pay_ticket](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/pay_ticket.png)
-=======
-    Unless something unexpected, then you can see the main interface
-   ![main interface](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/main_interface.png)
-    
-##  The Step of Buy Ticket
-    (1) while access the ui , then you can    
-     
-    
->>>>>>> de7866f254cdf6c3148d925c65c052df2ff4e051
+
