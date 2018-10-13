@@ -1,5 +1,5 @@
 package fdse.microservice.service;
-
+import org.springframework.http.HttpHeaders;
 import fdse.microservice.domain.Information;
 import fdse.microservice.domain.QueryForId;
 import fdse.microservice.domain.QueryStation;
@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface StationService {
     //CRUD
-    boolean create(Information info);
-    boolean exist(QueryStation info);
-    boolean update(Information info);
-    boolean delete(Information info);
-    List<Station> query();
-    String queryForId(QueryForId info);
-    QueryStation queryById(String stationId);
+    boolean create(Information info,HttpHeaders headers);
+    boolean exist(QueryStation info,HttpHeaders headers);
+    boolean update(Information info,HttpHeaders headers);
+    boolean delete(Information info,HttpHeaders headers);
+    List<Station> query(HttpHeaders headers);
+    String queryForId(QueryForId info,HttpHeaders headers);
+    QueryStation queryById(String stationId,HttpHeaders headers);
 }

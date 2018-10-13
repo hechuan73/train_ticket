@@ -3,6 +3,7 @@ package order.service;
 import order.domain.*;
 import order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class OrderServiceImpl implements OrderService{
     private OrderRepository orderRepository;
 
     @Override
-    public LeftTicketInfo getSoldTickets(SeatRequest seatRequest){
+    public LeftTicketInfo getSoldTickets(SeatRequest seatRequest, HttpHeaders headers){
         ArrayList<Order> list = orderRepository.findByTravelDateAndTrainNumber(seatRequest.getTravelDate(),
                 seatRequest.getTrainNumber());
         Set ticketSet = new HashSet();
@@ -30,12 +31,12 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order findOrderById(UUID id){
+    public Order findOrderById(UUID id, HttpHeaders headers){
         return orderRepository.findById(id);
     }
 
     @Override
-    public CreateOrderResult create(Order order){
+    public CreateOrderResult create(Order order, HttpHeaders headers){
         System.out.println("[Order Service][Create Order] Ready Create Order.");
         ArrayList<Order> accountOrders = orderRepository.findByAccountId(order.getAccountId());
         CreateOrderResult cor = new CreateOrderResult();
@@ -57,10 +58,10 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public OrderAlterResult alterOrder(OrderAlterInfo oai){
+    public OrderAlterResult alterOrder(OrderAlterInfo oai, HttpHeaders headers){
         OrderAlterResult oar = new OrderAlterResult();
         UUID oldOrderId = oai.getPreviousOrderId();
-        Order oldOrder = findOrderById(oldOrderId);
+        Order oldOrder = findOrderById(oldOrderId, headers);
         if(oldOrder == null){
             System.out.println("[Order Service][Alter Order] Fail.Order do not exist.");
             oar.setStatus(false);
@@ -70,10 +71,10 @@ public class OrderServiceImpl implements OrderService{
             return oar;
         }
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
-        saveChanges(oldOrder);
+        saveChanges(oldOrder,headers);
         Order newOrder = oai.getNewOrderInfo();
         newOrder.setId(UUID.randomUUID());
-        CreateOrderResult cor = create(oai.getNewOrderInfo());
+        CreateOrderResult cor = create(oai.getNewOrderInfo(), headers);
         if(cor.isStatus() == true){
             oar.setStatus(true);
             oar.setMessage("Success");
@@ -90,7 +91,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public ArrayList<Order> queryOrders(QueryInfo qi,String accountId){
+    public ArrayList<Order> queryOrders(QueryInfo qi,String accountId, HttpHeaders headers){
         //1.Get all orders of the user
         ArrayList<Order> list = orderRepository.findByAccountId(UUID.fromString(accountId));
         System.out.println("[Order Service][Query Order][Step 1] Get Orders Number of Account:" + list.size());
@@ -151,8 +152,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public ChangeOrderResult saveChanges(Order order){
-        Order oldOrder = findOrderById(order.getId());
+    public ChangeOrderResult saveChanges(Order order, HttpHeaders headers){
+        Order oldOrder = findOrderById(order.getId(),headers);
         ChangeOrderResult cor = new ChangeOrderResult();
         if(oldOrder == null){
             System.out.println("[Order Service][Modify Order] Fail.Order not found.");
@@ -185,7 +186,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public CancelOrderResult cancelOrder(CancelOrderInfo coi){
+    public CancelOrderResult cancelOrder(CancelOrderInfo coi, HttpHeaders headers){
         UUID orderId = coi.getOrderId();
         Order oldOrder = orderRepository.findById(orderId);
         CancelOrderResult cor = new CancelOrderResult();
@@ -207,7 +208,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public  CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti){
+    public  CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti, HttpHeaders headers){
         ArrayList<Order> orders = orderRepository.findByTravelDateAndTrainNumber(csti.getTravelDate(),csti.getTrainNumber());
         CalculateSoldTicketResult cstr = new CalculateSoldTicketResult();
         cstr.setTravelDate(csti.getTravelDate());
@@ -243,14 +244,14 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public QueryOrderResult getAllOrders(){
+    public QueryOrderResult getAllOrders(HttpHeaders headers){
         ArrayList<Order> orders = orderRepository.findAll();
         QueryOrderResult result = new QueryOrderResult(true,"Success.",orders);
         return result;
     }
 
     @Override
-    public ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info){
+    public ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info, HttpHeaders headers){
         Order order = orderRepository.findById(UUID.fromString(info.getOrderId()));
         ModifyOrderStatusResult result = new ModifyOrderStatusResult();
         if(order == null){
@@ -268,7 +269,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public GetOrderPriceResult getOrderPrice(GetOrderPrice info){
+    public GetOrderPriceResult getOrderPrice(GetOrderPrice info, HttpHeaders headers){
         Order order = orderRepository.findById(UUID.fromString(info.getOrderId()));
         GetOrderPriceResult result = new GetOrderPriceResult();
         if(order == null){
@@ -286,7 +287,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public PayOrderResult payOrder(PayOrderInfo info){
+    public PayOrderResult payOrder(PayOrderInfo info, HttpHeaders headers){
         Order order = orderRepository.findById(UUID.fromString(info.getOrderId()));
         PayOrderResult result = new PayOrderResult();
         if(result == null){
@@ -304,7 +305,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public GetOrderResult getOrderById(GetOrderByIdInfo info){
+    public GetOrderResult getOrderById(GetOrderByIdInfo info, HttpHeaders headers){
         Order order = orderRepository.findById(UUID.fromString(info.getOrderId()));
         GetOrderResult result = new GetOrderResult();
         if(order == null){
@@ -320,7 +321,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public void initOrder(Order order){
+    public void initOrder(Order order, HttpHeaders headers){
         Order orderTemp = orderRepository.findById(order.getId());
         if(orderTemp == null){
             orderRepository.save(order);
@@ -330,7 +331,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info){
+    public GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info, HttpHeaders headers){
         GetOrderInfoForSecurityResult result = new GetOrderInfoForSecurityResult();
         ArrayList<Order> orders = orderRepository.findByAccountId(UUID.fromString(info.getAccountId()));
         int countOrderInOneHour = 0;
@@ -356,7 +357,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public DeleteOrderResult deleteOrder(DeleteOrderInfo info){
+    public DeleteOrderResult deleteOrder(DeleteOrderInfo info, HttpHeaders headers){
         UUID orderUuid = UUID.fromString(info.getOrderId());
         Order order = orderRepository.findById(orderUuid);
         DeleteOrderResult result = new DeleteOrderResult();
@@ -372,7 +373,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public AddOrderResult addNewOrder(Order order) {
+    public AddOrderResult addNewOrder(Order order, HttpHeaders headers) {
         System.out.println("[Order Service][Admin Add Order] Ready Add Order.");
         ArrayList<Order> accountOrders = orderRepository.findByAccountId(order.getAccountId());
         AddOrderResult result = new AddOrderResult();
@@ -394,8 +395,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public UpdateOrderResult updateOrder(Order order) {
-        Order oldOrder = findOrderById(order.getId());
+    public UpdateOrderResult updateOrder(Order order, HttpHeaders headers) {
+        Order oldOrder = findOrderById(order.getId(), headers);
         UpdateOrderResult result = new UpdateOrderResult();
         if(oldOrder == null){
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");

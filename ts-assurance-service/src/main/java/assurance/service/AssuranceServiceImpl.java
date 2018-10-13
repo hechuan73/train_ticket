@@ -3,6 +3,7 @@ package assurance.service;
 import assurance.domain.*;
 import assurance.repository.AssuranceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,17 +29,17 @@ public class AssuranceServiceImpl implements AssuranceService {
 //    }
 
     @Override
-    public Assurance findAssuranceById(UUID id) {
+    public Assurance findAssuranceById(UUID id, HttpHeaders headers) {
         return assuranceRepository.findById(id);
     }
 
     @Override
-    public Assurance findAssuranceByOrderId(UUID orderId) {
+    public Assurance findAssuranceByOrderId(UUID orderId, HttpHeaders headers) {
         return assuranceRepository.findByOrderId(orderId);
     }
 
     @Override
-    public AddAssuranceResult create(AddAssuranceInfo aai) {
+    public AddAssuranceResult create(AddAssuranceInfo aai, HttpHeaders headers) {
         Assurance a = assuranceRepository.findByOrderId(UUID.fromString(aai.getOrderId()));
         AddAssuranceResult aar = new AddAssuranceResult();
         AssuranceType at = AssuranceType.getTypeByIndex(aai.getTypeIndex());
@@ -64,7 +65,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     }
 
     @Override
-    public DeleteAssuranceResult deleteById(UUID assuranceId) {
+    public DeleteAssuranceResult deleteById(UUID assuranceId, HttpHeaders headers) {
         assuranceRepository.deleteById(assuranceId);
         Assurance a = assuranceRepository.findById(assuranceId);
         DeleteAssuranceResult dar = new DeleteAssuranceResult();
@@ -81,7 +82,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     }
 
     @Override
-    public DeleteAssuranceResult deleteByOrderId(UUID orderId) {
+    public DeleteAssuranceResult deleteByOrderId(UUID orderId, HttpHeaders headers) {
         assuranceRepository.removeAssuranceByOrderId(orderId);
         Assurance a = assuranceRepository.findByOrderId(orderId);
         DeleteAssuranceResult dar = new DeleteAssuranceResult();
@@ -98,8 +99,8 @@ public class AssuranceServiceImpl implements AssuranceService {
     }
 
     @Override
-    public ModifyAssuranceResult modify(ModifyAssuranceInfo info) {
-        Assurance oldAssurance = findAssuranceById(UUID.fromString(info.getAssuranceId()));
+    public ModifyAssuranceResult modify(ModifyAssuranceInfo info, HttpHeaders headers) {
+        Assurance oldAssurance = findAssuranceById(UUID.fromString(info.getAssuranceId()), headers);
         ModifyAssuranceResult mcr = new ModifyAssuranceResult();
         if(oldAssurance == null){
             System.out.println("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance not found.");
@@ -126,7 +127,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     }
 
     @Override
-    public GetAllAssuranceResult getAllAssurances() {
+    public GetAllAssuranceResult getAllAssurances(HttpHeaders headers) {
         ArrayList<Assurance> as = assuranceRepository.findAll();
         GetAllAssuranceResult gar = new GetAllAssuranceResult();
         gar.setStatus(true);
@@ -146,7 +147,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     }
 
     @Override
-    public  List<AssuranceTypeBean> getAllAssuranceTypes() {
+    public  List<AssuranceTypeBean> getAllAssuranceTypes(HttpHeaders headers) {
         List<AssuranceTypeBean> atlist = new ArrayList<AssuranceTypeBean>();
         for(AssuranceType at : AssuranceType.values()){
             AssuranceTypeBean atb = new AssuranceTypeBean();

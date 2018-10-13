@@ -1,6 +1,10 @@
 package preserve.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import preserve.domain.*;
@@ -14,8 +18,8 @@ public class PreserveServiceImpl implements PreserveService{
     private RestTemplate restTemplate;
 
     @Override
-    public OrderTicketsResult preserve(OrderTicketsInfo oti,String accountId,String loginToken){
-        VerifyResult tokenResult = verifySsoLogin(loginToken);
+    public OrderTicketsResult preserve(OrderTicketsInfo oti,String accountId,String loginToken, HttpHeaders headers){
+        VerifyResult tokenResult = verifySsoLogin(loginToken, headers);
         OrderTicketsResult otr = new OrderTicketsResult();
         if(tokenResult.isStatus() == true){
             System.out.println("[Preserve Service][Verify Login] Success");
@@ -23,7 +27,7 @@ public class PreserveServiceImpl implements PreserveService{
             System.out.println("[Preserve Service] [Step 1] Check Security");
             CheckInfo checkInfo = new CheckInfo();
             checkInfo.setAccountId(accountId);
-            CheckResult result = checkSecurity(checkInfo);
+            CheckResult result = checkSecurity(checkInfo, headers);
             if(result.isStatus() == false){
                 otr.setStatus(false);
                 otr.setMessage(result.getMessage());
@@ -37,7 +41,7 @@ public class PreserveServiceImpl implements PreserveService{
             System.out.println("[Preserve Service] [Step 2] Contacts Id:" + oti.getContactsId());
             gci.setContactsId(oti.getContactsId());
             gci.setLoginToken(loginToken);
-            GetContactsResult gcr = getContactsById(gci);
+            GetContactsResult gcr = getContactsById(gci, headers);
             if(gcr.isStatus() == false){
                 System.out.println("[Preserve Service][Get Contacts] Fail." + gcr.getMessage());
                 otr.setStatus(false);
@@ -56,7 +60,7 @@ public class PreserveServiceImpl implements PreserveService{
             gtdi.setTravelDate(oti.getDate());
             gtdi.setTripId(oti.getTripId());
             System.out.println("[Preserve Service] [Step 3] TripId:" + oti.getTripId());
-            GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi);
+            GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi, headers);
             if(gtdr.isStatus() == false){
                 System.out.println("[Preserve Service][Search For Trip Detail Information] " + gcr.getMessage());
                 otr.setStatus(false);
@@ -95,8 +99,8 @@ public class PreserveServiceImpl implements PreserveService{
             order.setTrainNumber(oti.getTripId());
             order.setAccountId(UUID.fromString(accountId));
 
-            String fromStationId = queryForStationId(oti.getFrom());
-            String toStationId = queryForStationId(oti.getTo());
+            String fromStationId = queryForStationId(oti.getFrom(), headers);
+            String toStationId = queryForStationId(oti.getTo(), headers);
 
             order.setFrom(fromStationId);
             order.setTo(toStationId);
@@ -112,8 +116,15 @@ public class PreserveServiceImpl implements PreserveService{
             query.setEndPlace(oti.getTo());
             query.setDepartureTime(new Date());
 
-            ResultForTravel resultForTravel = restTemplate.postForObject(
-                    "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,ResultForTravel.class);
+            HttpEntity requestEntity = new HttpEntity(query, headers);
+            ResponseEntity<ResultForTravel> re = restTemplate.exchange(
+                    "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel",
+                    HttpMethod.POST,
+                    requestEntity,
+                    ResultForTravel.class);
+            ResultForTravel resultForTravel = re.getBody();
+//            ResultForTravel resultForTravel = restTemplate.postForObject(
+//                    "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,ResultForTravel.class);
 
             order.setSeatClass(oti.getSeatType());
             System.out.println("[Preserve Service][Order] Order Travel Date:" + oti.getDate().toString());
@@ -124,7 +135,7 @@ public class PreserveServiceImpl implements PreserveService{
                 Ticket ticket =
                         dipatchSeat(oti.getDate(),
                                 order.getTrainNumber(),fromStationId,toStationId,
-                                SeatClass.FIRSTCLASS.getCode());
+                                SeatClass.FIRSTCLASS.getCode(), headers);
                 order.setSeatClass(SeatClass.FIRSTCLASS.getCode());
                 order.setSeatNumber("" + ticket.getSeatNo());
 //                int firstClassRemainNum = gtdr.getTripResponse().getConfortClass();
@@ -134,7 +145,7 @@ public class PreserveServiceImpl implements PreserveService{
                 Ticket ticket =
                         dipatchSeat(oti.getDate(),
                                 order.getTrainNumber(),fromStationId,toStationId,
-                                SeatClass.SECONDCLASS.getCode());
+                                SeatClass.SECONDCLASS.getCode(), headers);
                 order.setSeatClass(SeatClass.SECONDCLASS.getCode());
                 order.setSeatNumber("" + ticket.getSeatNo());
 //                int secondClassRemainNum = gtdr.getTripResponse().getEconomyClass();
@@ -146,7 +157,7 @@ public class PreserveServiceImpl implements PreserveService{
             CreateOrderInfo coi = new CreateOrderInfo();//Send info to create the order.
             coi.setLoginToken(loginToken);
             coi.setOrder(order);
-            CreateOrderResult cor = createOrder(coi);
+            CreateOrderResult cor = createOrder(coi, headers);
             if(cor.isStatus() == false){
                 System.out.println("[Preserve Service][Create Order Fail] Create Order Fail." +
                         "Reason:" + cor.getMessage());
@@ -164,7 +175,7 @@ public class PreserveServiceImpl implements PreserveService{
                 System.out.println("[Preserve Service][Step 5] Do not need to buy assurance");
             }else{
                 AddAssuranceResult addAssuranceResult = addAssuranceForOrder(
-                        oti.getAssurance(),cor.getOrder().getId().toString());
+                        oti.getAssurance(),cor.getOrder().getId().toString(), headers);
                 if(addAssuranceResult.isStatus() == true){
                     System.out.println("[Preserve Service][Step 5] Buy Assurance Success");
                 }else{
@@ -186,7 +197,7 @@ public class PreserveServiceImpl implements PreserveService{
                     afoi.setStoreName(oti.getStoreName());
                     System.out.println("[Food Service]!!!!!!!!!!!!!!!foodstore=" + afoi.getFoodType() + "   " + afoi.getStationName()+"   "+afoi.getStoreName());
                 }
-                AddFoodOrderResult afor = createFoodOrder(afoi);
+                AddFoodOrderResult afor = createFoodOrder(afoi, headers);
                 if(afor.isStatus()){
                     System.out.println("[Preserve Service][Step 6] Buy Food Success");
                 } else {
@@ -209,7 +220,7 @@ public class PreserveServiceImpl implements PreserveService{
                 consignRequest.setPhone(oti.getConsigneePhone());
                 consignRequest.setWeight(oti.getConsigneeWeight());
                 consignRequest.setWithin(oti.isWithin());
-                InsertConsignRecordResult icresult = createConsign(consignRequest);
+                InsertConsignRecordResult icresult = createConsign(consignRequest, headers);
                 if(icresult.isStatus()){
                     System.out.println("[Preserve Service][Step 7] Consign Success");
                 } else {
@@ -224,7 +235,7 @@ public class PreserveServiceImpl implements PreserveService{
             System.out.println("[Preserve Service]");
             GetAccountByIdInfo getAccountByIdInfo = new GetAccountByIdInfo();
             getAccountByIdInfo.setAccountId(order.getAccountId().toString());
-            GetAccountByIdResult getAccountByIdResult = getAccount(getAccountByIdInfo);
+            GetAccountByIdResult getAccountByIdResult = getAccount(getAccountByIdInfo, headers);
             if(result.isStatus() == false){
                 return null;
             }
@@ -242,7 +253,7 @@ public class PreserveServiceImpl implements PreserveService{
             notifyInfo.setSeatClass(SeatClass.getNameByCode(order.getSeatClass()));
             notifyInfo.setStartingTime(order.getTravelTime().toString());
 
-            sendEmail(notifyInfo);
+            sendEmail(notifyInfo, headers);
         }else{
             System.out.println("[Preserve Service][Verify Login] Fail");
             otr.setStatus(false);
@@ -252,111 +263,214 @@ public class PreserveServiceImpl implements PreserveService{
         return otr;
     }
 
-    public Ticket dipatchSeat(Date date,String tripId,String startStationId,String endStataionId,int seatType){
+    public Ticket dipatchSeat(Date date,String tripId,String startStationId,String endStataionId,int seatType, HttpHeaders httpHeaders){
         SeatRequest seatRequest = new SeatRequest();
         seatRequest.setTravelDate(date);
         seatRequest.setTrainNumber(tripId);
         seatRequest.setStartStation(startStationId);
         seatRequest.setDestStation(endStataionId);
         seatRequest.setSeatType(seatType);
-        Ticket ticket = restTemplate.postForObject(
-                "http://ts-seat-service:18898/seat/getSeat"
-                ,seatRequest,Ticket.class);
+
+        HttpEntity requestEntityTicket = new HttpEntity(seatRequest,httpHeaders);
+        ResponseEntity<Ticket> reTicket = restTemplate.exchange(
+                "http://ts-seat-service:18898/seat/getSeat",
+                HttpMethod.POST,
+                requestEntityTicket,
+                Ticket.class);
+        Ticket ticket  = reTicket.getBody();
+
+//        Ticket ticket = restTemplate.postForObject(
+//                "http://ts-seat-service:18898/seat/getSeat"
+//                ,seatRequest,Ticket.class);
         return ticket;
     }
 
-    public boolean sendEmail(NotifyInfo notifyInfo){
+    public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders httpHeaders){
         System.out.println("[Preserve Service][Send Email]");
-        boolean result = restTemplate.postForObject(
+
+        HttpEntity requestEntitySendEmail = new HttpEntity(notifyInfo,httpHeaders);
+        ResponseEntity<Boolean> reSendEmail = restTemplate.exchange(
                 "http://ts-notification-service:17853/notification/order_cancel_success",
-                notifyInfo,
-                Boolean.class
-        );
+                HttpMethod.POST,
+                requestEntitySendEmail,
+                Boolean.class);
+        boolean result = reSendEmail.getBody();
+//        boolean result = restTemplate.postForObject(
+//                "http://ts-notification-service:17853/notification/order_cancel_success",
+//                notifyInfo,
+//                Boolean.class
+//        );
         return result;
     }
 
-    public GetAccountByIdResult getAccount(GetAccountByIdInfo info){
+    public GetAccountByIdResult getAccount(GetAccountByIdInfo info, HttpHeaders httpHeaders){
         System.out.println("[Cancel Order Service][Get By Id]");
-        GetAccountByIdResult result = restTemplate.postForObject(
+
+        HttpEntity requestEntitySendEmail = new HttpEntity(info,httpHeaders);
+        ResponseEntity<GetAccountByIdResult> reSendEmail = restTemplate.exchange(
                 "http://ts-sso-service:12349/account/findById",
-                info,
-                GetAccountByIdResult.class
-        );
+                HttpMethod.POST,
+                requestEntitySendEmail,
+                GetAccountByIdResult.class);
+        GetAccountByIdResult result = reSendEmail.getBody();
+//        GetAccountByIdResult result = restTemplate.postForObject(
+//                "http://ts-sso-service:12349/account/findById",
+//                info,
+//                GetAccountByIdResult.class
+//        );
         return result;
     }
 
-    private AddAssuranceResult addAssuranceForOrder(int assuranceType,String orderId){
+    private AddAssuranceResult addAssuranceForOrder(int assuranceType,String orderId, HttpHeaders httpHeaders){
         System.out.println("[Preserve Service][Add Assurance For Order]");
         AddAssuranceInfo info = new AddAssuranceInfo();
         info.setOrderId(orderId);
         info.setTypeIndex(assuranceType);
-        AddAssuranceResult result = restTemplate.postForObject(
+
+        HttpEntity requestAddAssuranceResult = new HttpEntity(info,httpHeaders);
+        ResponseEntity<AddAssuranceResult> reAddAssuranceResult = restTemplate.exchange(
                 "http://ts-assurance-service:18888/assurance/create",
-                info,
-                AddAssuranceResult.class
-        );
+                HttpMethod.POST,
+                requestAddAssuranceResult,
+                AddAssuranceResult.class);
+        AddAssuranceResult result = reAddAssuranceResult.getBody();
+//        AddAssuranceResult result = restTemplate.postForObject(
+//                "http://ts-assurance-service:18888/assurance/create",
+//                info,
+//                AddAssuranceResult.class
+//        );
         return result;
     }
 
-    private String queryForStationId(String stationName){
-        System.out.println("[Preserve Service][Get Station Name]");
+    private String queryForStationId(String stationName, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Get Station Name]");
         QueryForId queryForId = new QueryForId();
         queryForId.setName(stationName);
-        String stationId = restTemplate.postForObject("http://ts-station-service:12345/station/queryForId",queryForId,String.class);
+
+        HttpEntity requestQueryForStationId = new HttpEntity(queryForId, httpHeaders);
+        ResponseEntity<String> reQueryForStationId = restTemplate.exchange(
+                "http://ts-station-service:12345/station/queryForId",
+                HttpMethod.POST,
+                requestQueryForStationId,
+                String.class);
+        String stationId = reQueryForStationId.getBody();
+//        String stationId = restTemplate.postForObject(
+//                "http://ts-station-service:12345/station/queryForId",queryForId,String.class);
         return stationId;
     }
 
-    private CheckResult checkSecurity(CheckInfo info){
-        System.out.println("[Preserve Service][Check Security] Checking....");
-        CheckResult result = restTemplate.postForObject("http://ts-security-service:11188/security/check",info,CheckResult.class);
+    private CheckResult checkSecurity(CheckInfo info, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Check Security] Checking....");
+
+        HttpEntity requestCheckResult = new HttpEntity(info, httpHeaders);
+        ResponseEntity<CheckResult> reCheckResult = restTemplate.exchange(
+                "http://ts-security-service:11188/security/check",
+                HttpMethod.POST,
+                requestCheckResult,
+                CheckResult.class);
+        CheckResult result = reCheckResult.getBody();
+//        CheckResult result = restTemplate.postForObject("http://ts-security-service:11188/security/check",
+//                info,CheckResult.class);
         return result;
     }
 
-    private VerifyResult verifySsoLogin(String loginToken){
-        System.out.println("[Preserve Service][Verify Login] Verifying....");
-        VerifyResult tokenResult = restTemplate.getForObject(
+    private VerifyResult verifySsoLogin(String loginToken, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Verify Login] Verifying....");
+
+        HttpEntity requestCheckResult = new HttpEntity(null, httpHeaders);
+        ResponseEntity<VerifyResult> reCheckResult = restTemplate.exchange(
                 "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+                HttpMethod.GET,
+                requestCheckResult,
                 VerifyResult.class);
+        VerifyResult tokenResult = reCheckResult.getBody();
+//        VerifyResult tokenResult = restTemplate.getForObject(
+//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+//                VerifyResult.class);
         return tokenResult;
     }
 
-    private GetTripAllDetailResult getTripAllDetailInformation(GetTripAllDetailInfo gtdi){
-        System.out.println("[Preserve Service][Get Trip All Detail Information] Getting....");
-        GetTripAllDetailResult gtdr = restTemplate.postForObject(
-                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/"
-                ,gtdi,GetTripAllDetailResult.class);
+
+    private GetTripAllDetailResult getTripAllDetailInformation(GetTripAllDetailInfo gtdi, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Get Trip All Detail Information] Getting....");
+
+        HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
+        ResponseEntity<GetTripAllDetailResult> reGetTripAllDetailResult = restTemplate.exchange(
+                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/",
+                HttpMethod.POST,
+                requestGetTripAllDetailResult,
+                GetTripAllDetailResult.class);
+        GetTripAllDetailResult gtdr = reGetTripAllDetailResult.getBody();
+//        GetTripAllDetailResult gtdr = restTemplate.postForObject(
+//                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/"
+//                ,gtdi,GetTripAllDetailResult.class);
         return gtdr;
     }
 
-    private GetContactsResult getContactsById(GetContactsInfo gci){
-        System.out.println("[Preserve Service][Get Contacts By Id] Getting....");
-        GetContactsResult gcr = restTemplate.postForObject(
-                "http://ts-contacts-service:12347/contacts/getContactsById/"
-                ,gci,GetContactsResult.class);
+
+    private GetContactsResult getContactsById(GetContactsInfo gci, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Get Contacts By Id] Getting....");
+
+        HttpEntity requestGetContactsResult = new HttpEntity(gci, httpHeaders);
+        ResponseEntity<GetContactsResult> reGetContactsResult= restTemplate.exchange(
+                "http://ts-contacts-service:12347/contacts/getContactsById/",
+                HttpMethod.POST,
+                requestGetContactsResult,
+                GetContactsResult.class);
+        GetContactsResult gcr = reGetContactsResult.getBody();
+//        GetContactsResult gcr = restTemplate.postForObject(
+//                "http://ts-contacts-service:12347/contacts/getContactsById/"
+//                ,gci,GetContactsResult.class);
         return gcr;
     }
 
-    private CreateOrderResult createOrder(CreateOrderInfo coi){
-        System.out.println("[Preserve Service][Get Contacts By Id] Creating....");
-        CreateOrderResult cor = restTemplate.postForObject(
-                "http://ts-order-service:12031/order/create/"
-                ,coi,CreateOrderResult.class);
+    private CreateOrderResult createOrder(CreateOrderInfo coi, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Get Contacts By Id] Creating....");
+
+        HttpEntity requestEntityCreateOrderResult = new HttpEntity(coi,httpHeaders);
+        ResponseEntity<CreateOrderResult> reCreateOrderResult = restTemplate.exchange(
+                "http://ts-order-service:12031/order/create/",
+                HttpMethod.POST,
+                requestEntityCreateOrderResult,
+                CreateOrderResult.class);
+        CreateOrderResult cor = reCreateOrderResult .getBody();
+
+//        CreateOrderResult cor = restTemplate.postForObject(
+//                "http://ts-order-service:12031/order/create/"
+//                ,coi,CreateOrderResult.class);
         return cor;
     }
 
-    private AddFoodOrderResult createFoodOrder(AddFoodOrderInfo afi){
+    private AddFoodOrderResult createFoodOrder(AddFoodOrderInfo afi, HttpHeaders httpHeaders) {
         System.out.println("[Preserve Service][Add food Order] Creating....");
-        AddFoodOrderResult afr = restTemplate.postForObject(
-                "http://ts-food-service:18856/food/createFoodOrder"
-                ,afi,AddFoodOrderResult.class);
+
+        HttpEntity requestEntityAddFoodOrderResult = new HttpEntity(afi,httpHeaders);
+        ResponseEntity<AddFoodOrderResult> reAddFoodOrderResult = restTemplate.exchange(
+                "http://ts-food-service:18856/food/createFoodOrder",
+                HttpMethod.POST,
+                requestEntityAddFoodOrderResult,
+                AddFoodOrderResult.class);
+        AddFoodOrderResult afr = reAddFoodOrderResult.getBody();
+//        AddFoodOrderResult afr = restTemplate.postForObject(
+//                "http://ts-food-service:18856/food/createFoodOrder"
+//                ,afi,AddFoodOrderResult.class);
         return afr;
     }
 
-    private InsertConsignRecordResult createConsign(ConsignRequest cr){
+    private InsertConsignRecordResult createConsign(ConsignRequest cr, HttpHeaders httpHeaders){
         System.out.println("[Preserve Service][Add Condign] Creating....");
-        InsertConsignRecordResult icr = restTemplate.postForObject(
-                "http://ts-consign-service:16111/consign/insertConsign"
-                ,cr,InsertConsignRecordResult.class);
+
+        HttpEntity requestEntityResultForTravel = new HttpEntity(cr,httpHeaders);
+        ResponseEntity<InsertConsignRecordResult> reResultForTravel = restTemplate.exchange(
+                "http://ts-consign-service:16111/consign/insertConsign",
+                HttpMethod.POST,
+                requestEntityResultForTravel,
+                InsertConsignRecordResult.class);
+        InsertConsignRecordResult icr = reResultForTravel.getBody();
+//        InsertConsignRecordResult icr = restTemplate.postForObject(
+//                "http://ts-consign-service:16111/consign/insertConsign"
+//                ,cr,InsertConsignRecordResult.class);
+
         return icr;
     }
 

@@ -8,6 +8,10 @@ import adminroute.domain.response.CreateAndModifyRouteResult;
 import adminroute.domain.response.DeleteRouteResult;
 import adminroute.domain.response.GetRoutesListlResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,11 +21,18 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     private RestTemplate restTemplate;
 
     @Override
-    public GetRoutesListlResult getAllRoutes(String id) {
+    public GetRoutesListlResult getAllRoutes(String id, HttpHeaders headers) {
         if(checkId(id)){
-            GetRoutesListlResult result = restTemplate.getForObject(
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<GetRoutesListlResult> re = restTemplate.exchange(
                     "http://ts-route-service:11178/route/queryAll",
+                    HttpMethod.GET,
+                    requestEntity,
                     GetRoutesListlResult.class);
+            GetRoutesListlResult result = re.getBody();
+//            GetRoutesListlResult result = restTemplate.getForObject(
+//                    "http://ts-route-service:11178/route/queryAll",
+//                    GetRoutesListlResult.class);
             return result;
         }else {
             System.out.println("[Admin Route Service][Wrong Admin ID]");
@@ -34,7 +45,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     }
 
     @Override
-    public CreateAndModifyRouteResult createAndModifyRoute(CreateAndModifyRouteRequest request) {
+    public CreateAndModifyRouteResult createAndModifyRoute(CreateAndModifyRouteRequest request, HttpHeaders headers) {
         if(checkId(request.getLoginId())){
             CreateAndModifyRouteInfo createAndModifyRouteInfo = new CreateAndModifyRouteInfo();
             createAndModifyRouteInfo.setId(request.getId());
@@ -42,8 +53,15 @@ public class AdminRouteServiceImpl implements AdminRouteService {
             createAndModifyRouteInfo.setDistanceList(request.getDistanceList());
             createAndModifyRouteInfo.setStartStation(request.getStartStation());
             createAndModifyRouteInfo.setEndStation(request.getEndStation());
-            CreateAndModifyRouteResult result = restTemplate.postForObject(
-                    "http://ts-route-service:11178/route/createAndModify", createAndModifyRouteInfo,CreateAndModifyRouteResult.class);
+            HttpEntity requestEntity = new HttpEntity(createAndModifyRouteInfo, headers);
+            ResponseEntity<CreateAndModifyRouteResult> re = restTemplate.exchange(
+                    "http://ts-route-service:11178/route/createAndModify",
+                    HttpMethod.POST,
+                    requestEntity,
+                    CreateAndModifyRouteResult.class);
+            CreateAndModifyRouteResult result = re.getBody();
+//            CreateAndModifyRouteResult result = restTemplate.postForObject(
+//                    "http://ts-route-service:11178/route/createAndModify", createAndModifyRouteInfo,CreateAndModifyRouteResult.class);
             return result;
         }
         else {
@@ -57,12 +75,19 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     }
 
     @Override
-    public DeleteRouteResult deleteRoute(DeleteRouteRequest request) {
+    public DeleteRouteResult deleteRoute(DeleteRouteRequest request, HttpHeaders headers) {
         if(checkId(request.getLoginId())){
             DeleteRouteInfo deleteRouteInfo = new DeleteRouteInfo();
             deleteRouteInfo.setRouteId(request.getRouteId());
-            DeleteRouteResult result = restTemplate.postForObject(
-                    "http://ts-route-service:11178/route/delete", deleteRouteInfo,DeleteRouteResult.class);
+            HttpEntity requestEntity = new HttpEntity(deleteRouteInfo, headers);
+            ResponseEntity<DeleteRouteResult> re = restTemplate.exchange(
+                    "http://ts-route-service:11178/route/delete",
+                    HttpMethod.POST,
+                    requestEntity,
+                    DeleteRouteResult.class);
+            DeleteRouteResult result = re.getBody();
+//            DeleteRouteResult result = restTemplate.postForObject(
+//                    "http://ts-route-service:11178/route/delete", deleteRouteInfo,DeleteRouteResult.class);
             return result;
         }
         else {

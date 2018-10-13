@@ -18,11 +18,11 @@ public class initData implements CommandLineRunner {
         info1.setName("max_order_1_hour");
         info1.setValue("1000");
         info1.setDescription("Max in 1 hour");
-        securityService.addNewSecurityConfig(info1);
+        securityService.addNewSecurityConfig(info1,null);
         CreateSecurityConfigInfo info2 = new CreateSecurityConfigInfo();
         info2.setName("max_order_not_use");
         info2.setValue("1000");
         info2.setDescription("Max not used");
-        securityService.addNewSecurityConfig(info2);
+        securityService.addNewSecurityConfig(info2,null);
     }
 }

@@ -29,7 +29,7 @@ public class InitData implements CommandLineRunner {
         payment.setOrderId("5ad7750b-a68b-49c0-a8c0-32776b067701");
         payment.setPrice("10000.0");
         payment.setUserId("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f");
-        service.initPayment(payment);
+        service.initPayment(payment, null);
         //paymentRepository.save(payment);
     }
 }

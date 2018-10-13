@@ -1,6 +1,7 @@
 package route.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import route.domain.*;
 import route.repository.RouteRepository;
@@ -14,7 +15,7 @@ public class RouteServiceImpl implements RouteService {
     private RouteRepository routeRepository;
 
     @Override
-    public CreateAndModifyRouteResult createAndModify(CreateAndModifyRouteInfo info){
+    public CreateAndModifyRouteResult createAndModify(CreateAndModifyRouteInfo info, HttpHeaders headers){
         System.out.println("[Route Service] Create And Modify Start:" + info.getStartStation() + " End:" + info.getEndStation());
         CreateAndModifyRouteResult result;
         String[] stations = info.getStationList().split(",");
@@ -68,14 +69,14 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public DeleteRouteResult deleteRoute(DeleteRouteInfo info){
+    public DeleteRouteResult deleteRoute(DeleteRouteInfo info,HttpHeaders headers){
         routeRepository.removeRouteById(info.getRouteId());
         DeleteRouteResult result = new DeleteRouteResult(true,"Success");
         return result;
     }
 
     @Override
-    public GetRouteByIdResult getRouteById(String routeId){
+    public GetRouteByIdResult getRouteById(String routeId,HttpHeaders headers){
         Route route = routeRepository.findById(routeId);
         GetRouteByIdResult result;
         if(route == null){
@@ -87,7 +88,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public GetRoutesListlResult getRouteByStartAndTerminal(GetRouteByStartAndTerminalInfo info){
+    public GetRoutesListlResult getRouteByStartAndTerminal(GetRouteByStartAndTerminalInfo info,HttpHeaders headers){
 //        ArrayList<Route> routes = routeRepository.findByStartStationIdAndTerminalStationId(info.getStartId(),info.getTerminalId());
         ArrayList<Route> routes = routeRepository.findAll();
         System.out.println("[Route Service] Find All:" + routes.size());
@@ -106,7 +107,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public GetRoutesListlResult getAllRoutes() {
+    public GetRoutesListlResult getAllRoutes(HttpHeaders headers) {
         ArrayList<Route> routes = routeRepository.findAll();
 
         if(routes == null){

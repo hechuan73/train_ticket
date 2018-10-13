@@ -33,7 +33,7 @@ public class InitData implements CommandLineRunner {
         order.setTo("shanghaihongqiao");
         order.setStatus(0);
         order.setPrice("100.0");
-        service.initOrder(order);
+        service.initOrder(order, null);
 
 
         Order orderTwo = new Order();
@@ -53,7 +53,7 @@ public class InitData implements CommandLineRunner {
         orderTwo.setTo("beijing");
         orderTwo.setStatus(0);
         orderTwo.setPrice("100.0");
-        service.initOrder(orderTwo);
+        service.initOrder(orderTwo, null);
 
         Order orderThree = new Order();
         orderThree.setId(UUID.fromString("d3c91694-d5b8-424c-9974-e14c89226e49"));
@@ -72,7 +72,7 @@ public class InitData implements CommandLineRunner {
         orderThree.setTo("beijing");
         orderThree.setStatus(0);
         orderThree.setPrice("100.0");
-        service.initOrder(orderThree);
+        service.initOrder(orderThree, null);
     }
 
 }

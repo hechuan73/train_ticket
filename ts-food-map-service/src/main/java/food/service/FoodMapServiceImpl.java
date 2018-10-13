@@ -7,6 +7,7 @@ import food.domain.TrainFood;
 import food.repository.FoodStoreRepository;
 import food.repository.TrainFoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class FoodMapServiceImpl implements FoodMapService{
 
 
     @Override
-    public FoodStore createFoodStore(FoodStore fs) {
+    public FoodStore createFoodStore(FoodStore fs, HttpHeaders headers) {
         FoodStore fsTemp = foodStoreRepository.findById(fs.getId());
         if(fsTemp != null){
             System.out.println("[Food Map Service][Init FoodStore] Already Exists Id:" + fs.getId());
@@ -32,7 +33,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public TrainFood createTrainFood(TrainFood tf) {
+    public TrainFood createTrainFood(TrainFood tf, HttpHeaders headers) {
         TrainFood tfTemp = trainFoodRepository.findById(tf.getId());
         if(tfTemp != null){
             System.out.println("[Food Map Service][Init TrainFood] Already Exists Id:" + tf.getId());
@@ -43,7 +44,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public GetFoodStoresListResult listFoodStores() {
+    public GetFoodStoresListResult listFoodStores(HttpHeaders headers) {
         List<FoodStore> fsList= foodStoreRepository.findAll();
         GetFoodStoresListResult result = new GetFoodStoresListResult();
         result.setStatus(true);
@@ -53,7 +54,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public GetTrainFoodListResult listTrainFood() {
+    public GetTrainFoodListResult listTrainFood(HttpHeaders headers) {
         List<TrainFood> tfList= trainFoodRepository.findAll();
         GetTrainFoodListResult result = new GetTrainFoodListResult();
         result.setStatus(true);
@@ -63,7 +64,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public GetFoodStoresListResult listFoodStoresByStationId(String stationId) {
+    public GetFoodStoresListResult listFoodStoresByStationId(String stationId, HttpHeaders headers) {
         List<FoodStore> fsList= foodStoreRepository.findByStationId(stationId);
         GetFoodStoresListResult result = new GetFoodStoresListResult();
         result.setStatus(true);
@@ -74,7 +75,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public GetTrainFoodListResult listTrainFoodByTripId(String tripId) {
+    public GetTrainFoodListResult listTrainFoodByTripId(String tripId, HttpHeaders headers) {
         List<TrainFood> tfList= trainFoodRepository.findByTripId(tripId);
         GetTrainFoodListResult result = new GetTrainFoodListResult();
         result.setStatus(true);

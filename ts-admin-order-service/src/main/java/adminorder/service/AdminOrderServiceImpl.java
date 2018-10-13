@@ -7,6 +7,10 @@ import adminorder.domain.request.DeleteOrderRequest;
 import adminorder.domain.request.UpdateOrderRequest;
 import adminorder.domain.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,15 +22,22 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RestTemplate restTemplate;
 
     @Override
-    public GetAllOrderResult getAllOrders(String id) {
+    public GetAllOrderResult getAllOrders(String id, HttpHeaders headers) {
         if(checkId(id)){
             System.out.println("[Admin Order Service][Get All Orders]");
             //Get all of the orders
             ArrayList<Order> orders = new ArrayList<Order>();
             //From ts-order-service
-            QueryOrderResult result = restTemplate.getForObject(
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<QueryOrderResult> re = restTemplate.exchange(
                     "http://ts-order-service:12031/order/findAll",
+                    HttpMethod.GET,
+                    requestEntity,
                     QueryOrderResult.class);
+            QueryOrderResult result = re.getBody();
+//            QueryOrderResult result = restTemplate.getForObject(
+//                    "http://ts-order-service:12031/order/findAll",
+//                    QueryOrderResult.class);
             if(result.isStatus()){
                 System.out.println("[Admin Order Service][Get Orders From ts-order-service successfully!]");
                 orders.addAll(result.getOrders());
@@ -34,9 +45,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             else
                 System.out.println("[Admin Order Service][Get Orders From ts-order-service fail!]");
             //From ts-order-other-service
-            result = restTemplate.getForObject(
+            HttpEntity requestEntity2 = new HttpEntity(headers);
+            ResponseEntity<QueryOrderResult> re2 = restTemplate.exchange(
                     "http://ts-order-other-service:12032/orderOther/findAll",
+                    HttpMethod.GET,
+                    requestEntity2,
                     QueryOrderResult.class);
+            result = re2.getBody();
+//            result = restTemplate.getForObject(
+//                    "http://ts-order-other-service:12032/orderOther/findAll",
+//                    QueryOrderResult.class);
             if(result.isStatus()){
                 System.out.println("[Admin Order Service][Get Orders From ts-order-other-service successfully!]");
                 orders.addAll(result.getOrders());
@@ -60,22 +78,36 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Override
-    public DeleteOrderResult deleteOrder(DeleteOrderRequest request) {
+    public DeleteOrderResult deleteOrder(DeleteOrderRequest request, HttpHeaders headers) {
         if(checkId(request.getLoginid())){
-            DeleteOrderResult deleteOrderResult = new DeleteOrderResult();
+            DeleteOrderResult deleteOrderResult ;
 
             DeleteOrderInfo deleteOrderInfo = new DeleteOrderInfo();
             deleteOrderInfo.setOrderId(request.getOrderId());
 
             if(request.getTrainNumber().startsWith("G") || request.getTrainNumber().startsWith("D") ){
                 System.out.println("[Admin Order Service][Delete Order]");
-                deleteOrderResult = restTemplate.postForObject(
-                        "http://ts-order-service:12031/order/delete", deleteOrderInfo,DeleteOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(deleteOrderInfo, headers);
+                ResponseEntity<DeleteOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-service:12031/order/delete",
+                        HttpMethod.POST,
+                        requestEntity,
+                        DeleteOrderResult.class);
+                deleteOrderResult = re.getBody();
+//                deleteOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-service:12031/order/delete", deleteOrderInfo,DeleteOrderResult.class);
             }
             else{
                 System.out.println("[Admin Order Service][Delete Order Other]");
-                deleteOrderResult = restTemplate.postForObject(
-                        "http://ts-order-other-service:12032/orderOther/delete", deleteOrderInfo,DeleteOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(deleteOrderInfo, headers);
+                ResponseEntity<DeleteOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-other-service:12032/orderOther/delete",
+                        HttpMethod.POST,
+                        requestEntity,
+                        DeleteOrderResult.class);
+                deleteOrderResult = re.getBody();
+//                deleteOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-other-service:12032/orderOther/delete", deleteOrderInfo,DeleteOrderResult.class);
             }
             return deleteOrderResult;
         }
@@ -89,18 +121,32 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Override
-    public UpdateOrderResult updateOrder(UpdateOrderRequest request) {
+    public UpdateOrderResult updateOrder(UpdateOrderRequest request, HttpHeaders headers) {
         if(checkId(request.getLoginid())){
-            UpdateOrderResult updateOrderResult = new UpdateOrderResult();
+            UpdateOrderResult updateOrderResult ;
             if(request.getOrder().getTrainNumber().startsWith("G") || request.getOrder().getTrainNumber().startsWith("D") ){
                 System.out.println("[Admin Order Service][Update Order]");
-                updateOrderResult = restTemplate.postForObject(
-                        "http://ts-order-service:12031/order/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(request.getOrder(), headers);
+                ResponseEntity<UpdateOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-service:12031/order/adminUpdate",
+                        HttpMethod.POST,
+                        requestEntity,
+                        UpdateOrderResult.class);
+                updateOrderResult = re.getBody();
+//                updateOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-service:12031/order/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
             }
             else{
                 System.out.println("[Admin Order Service][Add New Order Other]");
-                updateOrderResult = restTemplate.postForObject(
-                        "http://ts-order-other-service:12032/orderOther/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(request.getOrder(), headers);
+                ResponseEntity<UpdateOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-other-service:12032/orderOther/adminUpdate",
+                        HttpMethod.POST,
+                        requestEntity,
+                        UpdateOrderResult.class);
+                updateOrderResult = re.getBody();
+//                updateOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-other-service:12032/orderOther/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
             }
             return updateOrderResult;
         }
@@ -114,18 +160,32 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Override
-    public AddOrderResult addOrder(AddOrderRequest request) {
+    public AddOrderResult addOrder(AddOrderRequest request, HttpHeaders headers) {
         if(checkId(request.getLoginid())){
             AddOrderResult addOrderResult;
             if(request.getOrder().getTrainNumber().startsWith("G") || request.getOrder().getTrainNumber().startsWith("D") ){
                 System.out.println("[Admin Order Service][Add New Order]");
-                addOrderResult = restTemplate.postForObject(
-                        "http://ts-order-service:12031/order/adminAddOrder", request.getOrder() ,AddOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(request.getOrder(), headers);
+                ResponseEntity< AddOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-service:12031/order/adminAddOrder",
+                        HttpMethod.POST,
+                        requestEntity,
+                        AddOrderResult.class);
+                addOrderResult = re.getBody();
+//                addOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-service:12031/order/adminAddOrder", request.getOrder() ,AddOrderResult.class);
             }
             else{
                 System.out.println("[Admin Order Service][Add New Order Other]");
-                addOrderResult = restTemplate.postForObject(
-                        "http://ts-order-other-service:12032/orderOther/adminAddOrder", request.getOrder() ,AddOrderResult.class);
+                HttpEntity requestEntity = new HttpEntity(request.getOrder(), headers);
+                ResponseEntity< AddOrderResult> re = restTemplate.exchange(
+                        "http://ts-order-other-service:12032/orderOther/adminAddOrder",
+                        HttpMethod.POST,
+                        requestEntity,
+                        AddOrderResult.class);
+                addOrderResult = re.getBody();
+//                addOrderResult = restTemplate.postForObject(
+//                        "http://ts-order-other-service:12032/orderOther/adminAddOrder", request.getOrder() ,AddOrderResult.class);
             }
             return addOrderResult;
         }

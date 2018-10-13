@@ -1,21 +1,22 @@
 package price.service;
 
-import price.domain.CreateAndModifyPriceConfig;
-import price.domain.ReturnManyPriceConfigResult;
-import price.domain.ReturnSinglePriceConfigResult;
+        import org.springframework.http.HttpHeaders;
+        import price.domain.CreateAndModifyPriceConfig;
+        import price.domain.ReturnManyPriceConfigResult;
+        import price.domain.ReturnSinglePriceConfigResult;
 
 public interface PriceService {
 
-    ReturnSinglePriceConfigResult createNewPriceConfig(CreateAndModifyPriceConfig createAndModifyPriceConfig);
+    ReturnSinglePriceConfigResult createNewPriceConfig(CreateAndModifyPriceConfig createAndModifyPriceConfig, HttpHeaders headers);
 
-    ReturnSinglePriceConfigResult findById(String id);
+    ReturnSinglePriceConfigResult findById(String id, HttpHeaders headers);
 
-    ReturnSinglePriceConfigResult findByRouteIdAndTrainType(String routeId,String trainType);
+    ReturnSinglePriceConfigResult findByRouteIdAndTrainType(String routeId,String trainType, HttpHeaders headers);
 
-    ReturnManyPriceConfigResult findAllPriceConfig();
+    ReturnManyPriceConfigResult findAllPriceConfig(HttpHeaders headers);
 
-    boolean deletePriceConfig(CreateAndModifyPriceConfig c);
+    boolean deletePriceConfig(CreateAndModifyPriceConfig c, HttpHeaders headers);
 
-    boolean updatePriceConfig(CreateAndModifyPriceConfig c);
+    boolean updatePriceConfig(CreateAndModifyPriceConfig c, HttpHeaders headers);
 
 }

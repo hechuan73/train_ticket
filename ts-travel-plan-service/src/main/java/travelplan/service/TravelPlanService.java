@@ -1,15 +1,16 @@
 package travelplan.service;
 
+import org.springframework.http.HttpHeaders;
 import travelplan.domain.*;
 
 public interface TravelPlanService {
 
-    TransferTravelSearchResult getTransferSearch(TransferTravelSearchInfo info);
+    TransferTravelSearchResult getTransferSearch(TransferTravelSearchInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getCheapest(QueryInfo info);
+    TravelAdvanceResult getCheapest(QueryInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getQuickest(QueryInfo info);
+    TravelAdvanceResult getQuickest(QueryInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getMinStation(QueryInfo info);
+    TravelAdvanceResult getMinStation(QueryInfo info, HttpHeaders headers);
 
 }

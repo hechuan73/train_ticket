@@ -4,15 +4,19 @@ import consignprice.domain.GetPriceDomain;
 import consignprice.domain.PriceConfig;
 import consignprice.repository.ConsignPriceConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class ConsignPriceServiceImpl implements ConsignPriceService {
     @Autowired
     private ConsignPriceConfigRepository repository;
 
+    //计价
     @Override
-    public double getPriceByWeightAndRegion(GetPriceDomain domain) {
+    public double getPriceByWeightAndRegion(GetPriceDomain domain, HttpHeaders headers) {
         PriceConfig priceConfig = repository.findByIndex(0);
         double initialPrice = priceConfig.getInitialPrice();
         if(domain.getWeight() <= priceConfig.getInitialWeight()){
@@ -27,8 +31,9 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         }
     }
 
+    //查询价格信息
     @Override
-    public String queryPriceInformation() {
+    public String queryPriceInformation(HttpHeaders headers) {
         StringBuilder sb = new StringBuilder();
         PriceConfig price = repository.findByIndex(0);
         sb.append("The price of weight within ");
@@ -43,10 +48,11 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         return sb.toString();
     }
 
+    //创建价格
     @Override
-    public boolean createAndModifyPrice(PriceConfig config) {
+    public boolean createAndModifyPrice(PriceConfig config, HttpHeaders headers) {
         System.out.println("[Consign Price Service][Create New Price Config]");
-
+        //更新price
         PriceConfig originalConfig;
         if(repository.findByIndex(0) != null)
             originalConfig = repository.findByIndex(0);
@@ -63,7 +69,7 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
     }
 
     @Override
-    public PriceConfig getPriceConfig() {
+    public PriceConfig getPriceConfig(HttpHeaders headers) {
         return repository.findByIndex(0);
     }
 }

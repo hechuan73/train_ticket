@@ -25,7 +25,7 @@ public class InitData implements CommandLineRunner {
         info.setTerminalStationId("beijing");
         info.setStartingTime(new Date("Mon May 04 09:51:52 GMT+0800 2013"));
         info.setEndTime(new Date("Mon May 04 15:51:52 GMT+0800 2013"));
-        service.create(info);
+        service.create(info,null);
 
         info.setTripId("Z1235");
         info.setTrainTypeId("ZhiDa");
@@ -35,7 +35,7 @@ public class InitData implements CommandLineRunner {
         info.setTerminalStationId("beijing");
         info.setStartingTime(new Date("Mon May 04 11:31:52 GMT+0800 2013"));
         info.setEndTime(new Date("Mon May 04 17:51:52 GMT+0800 2013"));
-        service.create(info);
+        service.create(info,null);
 
         info.setTripId("Z1236");
         info.setTrainTypeId("ZhiDa");
@@ -45,7 +45,7 @@ public class InitData implements CommandLineRunner {
         info.setTerminalStationId("beijing");
         info.setStartingTime(new Date("Mon May 04 7:05:52 GMT+0800 2013"));
         info.setEndTime(new Date("Mon May 04 12:51:52 GMT+0800 2013"));
-        service.create(info);
+        service.create(info,null);
 
         info.setTripId("T1235");
         info.setTrainTypeId("TeKuai");
@@ -55,7 +55,7 @@ public class InitData implements CommandLineRunner {
         info.setTerminalStationId("beijing");
         info.setStartingTime(new Date("Mon May 04 08:31:52 GMT+0800 2013"));
         info.setEndTime(new Date("Mon May 04 17:21:52 GMT+0800 2013"));
-        service.create(info);
+        service.create(info,null);
 
         info.setTripId("K1345");
         info.setTrainTypeId("KuaiSu");
@@ -65,6 +65,6 @@ public class InitData implements CommandLineRunner {
         info.setTerminalStationId("beijing");
         info.setStartingTime(new Date("Mon May 04 07:51:52 GMT+0800 2013"));
         info.setEndTime(new Date("Mon May 04 19:59:52 GMT+0800 2013"));
-        service.create(info);
+        service.create(info,null);
     }
 }

@@ -24,6 +24,6 @@ public class InitData implements CommandLineRunner {
         config.setWithinPrice(2);
         config.setBeyondPrice(4);
 
-        service.createAndModifyPrice(config);
+        service.createAndModifyPrice(config, null);
     }
 }

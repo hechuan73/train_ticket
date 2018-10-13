@@ -6,6 +6,10 @@ import consign.domain.GetPriceDomain;
 import consign.domain.InsertConsignRecordResult;
 import consign.repository.ConsignRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,11 +24,11 @@ public class ConsignServiceImpl implements ConsignService {
     RestTemplate restTemplate;
 
     @Override
-    public InsertConsignRecordResult insertConsignRecord(ConsignRequest consignRequest){
+    public InsertConsignRecordResult insertConsignRecord(ConsignRequest consignRequest, HttpHeaders headers){
         System.out.println("[Consign servie] [ Insert new consign record]");
 
         ConsignRecord consignRecord = new ConsignRecord();
-
+        //设置record属性
         consignRecord.setId(UUID.randomUUID());
         consignRecord.setAccountId(consignRequest.getAccountId());
         System.out.printf("The handle date is %s", consignRequest.getHandleDate());
@@ -36,12 +40,19 @@ public class ConsignServiceImpl implements ConsignService {
         consignRecord.setConsignee(consignRequest.getConsignee());
         consignRecord.setPhone(consignRequest.getPhone());
         consignRecord.setWeight(consignRequest.getWeight());
-
+        //获得价格
         GetPriceDomain domain = new GetPriceDomain();
         domain.setWeight(consignRequest.getWeight());
         domain.setWithinRegion(consignRequest.isWithin());
-        double price = restTemplate.postForObject(
-                "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
+        HttpEntity requestEntity = new HttpEntity(domain, headers);
+        ResponseEntity<Double> re = restTemplate.exchange(
+                "http://ts-consign-price-service:16110/consignPrice/getPrice",
+                HttpMethod.POST,
+                requestEntity,
+                double.class);
+        double price = re.getBody();
+//        double price = restTemplate.postForObject(
+//                "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
         consignRecord.setPrice(price);
         //存储
         ConsignRecord result = repository.save(consignRecord);
@@ -59,7 +70,7 @@ public class ConsignServiceImpl implements ConsignService {
     }
 
     @Override
-    public boolean updateConsignRecord(ConsignRequest consignRequest){
+    public boolean updateConsignRecord(ConsignRequest consignRequest, HttpHeaders headers){
         System.out.println("[Consign servie] [ Update consign record]");
 
         ConsignRecord originalRecord = repository.findById(consignRequest.getId());
@@ -72,13 +83,20 @@ public class ConsignServiceImpl implements ConsignService {
         originalRecord.setTo(consignRequest.getTo());
         originalRecord.setConsignee(consignRequest.getConsignee());
         originalRecord.setPhone(consignRequest.getPhone());
-
+        //重新计算价格
         if(originalRecord.getWeight() != consignRequest.getWeight()){
             GetPriceDomain domain = new GetPriceDomain();
             domain.setWeight(consignRequest.getWeight());
             domain.setWithinRegion(consignRequest.isWithin());
-            double price = restTemplate.postForObject(
-                    "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
+            HttpEntity requestEntity = new HttpEntity(domain, headers);
+            ResponseEntity<Double> re = restTemplate.exchange(
+                    "http://ts-consign-price-service:16110/consignPrice/getPrice",
+                    HttpMethod.POST,
+                    requestEntity,
+                    double.class);
+            double price = re.getBody();
+//            double price = restTemplate.postForObject(
+//                    "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
             originalRecord.setPrice(price);
         }
         else{
@@ -90,12 +108,12 @@ public class ConsignServiceImpl implements ConsignService {
     }
 
     @Override
-    public ArrayList<ConsignRecord> queryByAccountId(UUID accountId) {
+    public ArrayList<ConsignRecord> queryByAccountId(UUID accountId, HttpHeaders headers) {
         return repository.findByAccountId(accountId);
     }
 
     @Override
-    public ArrayList<ConsignRecord> queryByConsignee(String consignee) {
+    public ArrayList<ConsignRecord> queryByConsignee(String consignee, HttpHeaders headers) {
         return repository.findByConsignee(consignee);
     }
 }

@@ -6,15 +6,15 @@ import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 import inside_payment.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 
 @Service
 public class InsidePaymentServiceImpl implements InsidePaymentService{
@@ -28,11 +28,8 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     @Autowired
     public RestTemplate restTemplate;
 
-    @Autowired
-    private AsyncTask asyncTask;
-
     @Override
-    public boolean pay(PaymentInfo info, HttpServletRequest request){
+    public boolean pay(PaymentInfo info, HttpServletRequest request, HttpHeaders headers){
 //        QueryOrderResult result;
         String userId = CookieUtil.getCookieByName(request,"loginId").getValue();
 
@@ -41,11 +38,30 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
         GetOrderResult result;
 
         if(info.getTripId().startsWith("G") || info.getTripId().startsWith("D")){
-            result = restTemplate.postForObject("http://ts-order-service:12031/order/getById",getOrderByIdInfo,GetOrderResult.class);
+
+            HttpEntity requestGetOrderResults = new HttpEntity(getOrderByIdInfo,headers);
+            ResponseEntity<GetOrderResult> reGetOrderResults = restTemplate.exchange(
+                    "http://ts-order-service:12031/order/getById",
+                    HttpMethod.POST,
+                    requestGetOrderResults,
+                    GetOrderResult.class);
+            result = reGetOrderResults.getBody();
+
+//            result = restTemplate.postForObject("http://ts-order-service:12031/order/getById",getOrderByIdInfo,GetOrderResult.class);
              //result = restTemplate.postForObject(
              //       "http://ts-order-service:12031/order/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }else{
-            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/getById",getOrderByIdInfo,GetOrderResult.class);
+
+
+            HttpEntity requestGetOrderResults = new HttpEntity(getOrderByIdInfo,headers);
+            ResponseEntity<GetOrderResult> reGetOrderResults = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/getById",
+                    HttpMethod.POST,
+                    requestGetOrderResults,
+                    GetOrderResult.class);
+            result = reGetOrderResults.getBody();
+
+//            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/getById",getOrderByIdInfo,GetOrderResult.class);
             //result = restTemplate.postForObject(
             //      "http://ts-order-other-service:12032/orderOther/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }
@@ -62,7 +78,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
             payment.setPrice(result.getOrder().getPrice());
             payment.setUserId(userId);
 
-
+            //判断一下账户余额够不够，不够要去站外支付
             List<Payment> payments = paymentRepository.findByUserId(userId);
             List<AddMoney> addMonies = addMoneyRepository.findByUserId(userId);
             Iterator<Payment> paymentsIterator = payments.iterator();
@@ -82,16 +98,25 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
             }
 
             if(totalExpand.compareTo(money) > 0){
-
+                //站外支付
                 OutsidePaymentInfo outsidePaymentInfo = new OutsidePaymentInfo();
                 outsidePaymentInfo.setOrderId(info.getOrderId());
                 outsidePaymentInfo.setUserId(userId);
                 outsidePaymentInfo.setPrice(result.getOrder().getPrice());
 
 
+                /****这里异步调用第三方支付***/
 
-                boolean outsidePaySuccess = restTemplate.postForObject(
-                        "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
+                HttpEntity requestEntityOutsidePaySuccess = new HttpEntity(outsidePaymentInfo,headers);
+                ResponseEntity<Boolean> reOutsidePaySuccess = restTemplate.exchange(
+                        "http://ts-payment-service:19001/payment/pay",
+                        HttpMethod.POST,
+                        requestEntityOutsidePaySuccess,
+                        Boolean.class);
+                boolean outsidePaySuccess = reOutsidePaySuccess.getBody();
+
+//                boolean outsidePaySuccess = restTemplate.postForObject(
+//                        "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
 //                boolean outsidePaySuccess = false;
 //                try{
 //                    System.out.println("[Payment Service][Turn To Outside Patment] Async Task Begin");
@@ -104,19 +129,16 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
 //                    return false;
 //                }
 
-
-
-
                 if(outsidePaySuccess){
                     payment.setType(PaymentType.O);
                     paymentRepository.save(payment);
-                    setOrderStatus(info.getTripId(),info.getOrderId());
+                    setOrderStatus(info.getTripId(),info.getOrderId(), headers);
                     return true;
                 }else{
                     return false;
                 }
             }else{
-                setOrderStatus(info.getTripId(),info.getOrderId());
+                setOrderStatus(info.getTripId(),info.getOrderId(), headers);
                 payment.setType(PaymentType.P);
                 paymentRepository.save(payment);
             }
@@ -128,7 +150,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public boolean createAccount(CreateAccountInfo info){
+    public boolean createAccount(CreateAccountInfo info, HttpHeaders headers){
         List<AddMoney> list = addMoneyRepository.findByUserId(info.getUserId());
         if(list.size() == 0){
             AddMoney addMoney = new AddMoney();
@@ -143,7 +165,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public boolean addMoney(AddMoneyInfo info){
+    public boolean addMoney(AddMoneyInfo info, HttpHeaders headers){
         if(addMoneyRepository.findByUserId(info.getUserId()) != null){
             AddMoney addMoney = new AddMoney();
             addMoney.setUserId(info.getUserId());
@@ -157,7 +179,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public List<Balance> queryAccount(){
+    public List<Balance> queryAccount(HttpHeaders headers){
         List<Balance> result = new ArrayList<Balance>();
         List<AddMoney> list = addMoneyRepository.findAll();
         Iterator<AddMoney> ite = list.iterator();
@@ -196,7 +218,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
         return result;
     }
 
-    public String queryAccount(String userId){
+    public String queryAccount(String userId, HttpHeaders headers){
         List<Payment> payments = paymentRepository.findByUserId(userId);
         List<AddMoney> addMonies = addMoneyRepository.findByUserId(userId);
         Iterator<Payment> paymentsIterator = payments.iterator();
@@ -219,12 +241,12 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public List<Payment> queryPayment(){
+    public List<Payment> queryPayment(HttpHeaders headers){
         return paymentRepository.findAll();
     }
 
     @Override
-    public boolean drawBack(DrawBackInfo info){
+    public boolean drawBack(DrawBackInfo info, HttpHeaders headers){
         if(addMoneyRepository.findByUserId(info.getUserId()) != null){
             AddMoney addMoney = new AddMoney();
             addMoney.setUserId(info.getUserId());
@@ -238,7 +260,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public boolean payDifference(PaymentDifferenceInfo info, HttpServletRequest request){
+    public boolean payDifference(PaymentDifferenceInfo info, HttpServletRequest request, HttpHeaders headers){
         QueryOrderResult result;
         String userId = info.getUserId();
 
@@ -267,13 +289,22 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
         }
 
         if(totalExpand.compareTo(money) > 0){
-
+            //站外支付
             OutsidePaymentInfo outsidePaymentInfo = new OutsidePaymentInfo();
             outsidePaymentInfo.setOrderId(info.getOrderId());
             outsidePaymentInfo.setUserId(userId);
             outsidePaymentInfo.setPrice(info.getPrice());
-            boolean outsidePaySuccess = restTemplate.postForObject(
-                    "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
+
+            HttpEntity requestEntityOutsidePaySuccess = new HttpEntity(outsidePaymentInfo,headers);
+            ResponseEntity<Boolean> reOutsidePaySuccess = restTemplate.exchange(
+                    "http://ts-payment-service:19001/payment/pay",
+                    HttpMethod.POST,
+                    requestEntityOutsidePaySuccess,
+                    Boolean.class);
+            boolean outsidePaySuccess = reOutsidePaySuccess.getBody();
+
+//            boolean outsidePaySuccess = restTemplate.postForObject(
+//                    "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
             if(outsidePaySuccess){
                 payment.setType(PaymentType.E);
                 paymentRepository.save(payment);
@@ -292,28 +323,46 @@ public class InsidePaymentServiceImpl implements InsidePaymentService{
     }
 
     @Override
-    public List<AddMoney> queryAddMoney(){
+    public List<AddMoney> queryAddMoney(HttpHeaders headers){
         return addMoneyRepository.findAll();
     }
 
-    private ModifyOrderStatusResult setOrderStatus(String tripId,String orderId){
+    private ModifyOrderStatusResult setOrderStatus(String tripId,String orderId, HttpHeaders headers){
         ModifyOrderStatusInfo info = new ModifyOrderStatusInfo();
         info.setOrderId(orderId);
         info.setStatus(1);   //order paid and not collected
 
         ModifyOrderStatusResult result;
         if(tripId.startsWith("G") || tripId.startsWith("D")){
-            result = restTemplate.postForObject(
-                    "http://ts-order-service:12031/order/modifyOrderStatus", info, ModifyOrderStatusResult.class);
+
+            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(info,headers);
+            ResponseEntity<ModifyOrderStatusResult> reModifyOrderStatusResult= restTemplate.exchange(
+                    "http://ts-order-service:12031/order/modifyOrderStatus",
+                    HttpMethod.POST,
+                    requestEntityModifyOrderStatusResult,
+                    ModifyOrderStatusResult.class);
+            result = reModifyOrderStatusResult.getBody();
+
+//            result = restTemplate.postForObject(
+//                    "http://ts-order-service:12031/order/modifyOrderStatus", info, ModifyOrderStatusResult.class);
         }else{
-            result = restTemplate.postForObject(
-                    "http://ts-order-other-service:12032/orderOther/modifyOrderStatus", info, ModifyOrderStatusResult.class);
+
+            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(info,headers);
+            ResponseEntity<ModifyOrderStatusResult> reModifyOrderStatusResult= restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/modifyOrderStatus",
+                    HttpMethod.POST,
+                    requestEntityModifyOrderStatusResult,
+                    ModifyOrderStatusResult.class);
+            result = reModifyOrderStatusResult.getBody();
+
+//            result = restTemplate.postForObject(
+//                    "http://ts-order-other-service:12032/orderOther/modifyOrderStatus", info, ModifyOrderStatusResult.class);
         }
         return result;
     }
 
     @Override
-    public void initPayment(Payment payment){
+    public void initPayment(Payment payment, HttpHeaders headers){
         Payment paymentTemp = paymentRepository.findById(payment.getId());
         if(paymentTemp == null){
             paymentRepository.save(payment);

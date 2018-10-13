@@ -1,48 +1,45 @@
 package other.service;
 
+import org.springframework.http.HttpHeaders;
 import other.domain.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public interface OrderOtherService {
 
-    Order findOrderById(UUID id);
+    Order findOrderById(UUID id, HttpHeaders headers);
 
-    CreateOrderResult create(Order newOrder);
+    CreateOrderResult create(Order newOrder, HttpHeaders headers);
 
-    ChangeOrderResult saveChanges(Order order);
+    ChangeOrderResult saveChanges(Order order, HttpHeaders headers);
 
-    CancelOrderResult cancelOrder(CancelOrderInfo coi);
+    CancelOrderResult cancelOrder(CancelOrderInfo coi, HttpHeaders headers);
 
-    ArrayList<Order> queryOrders(QueryInfo qi,String accountId);
+    ArrayList<Order> queryOrders(QueryInfo qi,String accountId, HttpHeaders headers);
 
-    OrderAlterResult alterOrder(OrderAlterInfo oai);
+    OrderAlterResult alterOrder(OrderAlterInfo oai, HttpHeaders headers);
 
-    CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti);
+    CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti, HttpHeaders headers);
 
-    QueryOrderResult getAllOrders();
+    QueryOrderResult getAllOrders(HttpHeaders headers);
 
-    ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info);
+    ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info, HttpHeaders headers);
 
-    GetOrderPriceResult getOrderPrice(GetOrderPrice info);
+    GetOrderPriceResult getOrderPrice(GetOrderPrice info, HttpHeaders headers);
 
-    PayOrderResult payOrder(PayOrderInfo info);
+    PayOrderResult payOrder(PayOrderInfo info, HttpHeaders headers);
 
-    GetOrderResult getOrderById(GetOrderByIdInfo info);
+    GetOrderResult getOrderById(GetOrderByIdInfo info, HttpHeaders headers);
 
-    GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info);
+    GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info, HttpHeaders headers);
 
-    DeleteOrderResult deleteOrder(DeleteOrderInfo info);
+    DeleteOrderResult deleteOrder(DeleteOrderInfo info, HttpHeaders headers);
 
-    void initOrder(Order order);
+    void initOrder(Order order, HttpHeaders headers);
 
-    LeftTicketInfo getSoldTickets(SeatRequest seatRequest);
+    LeftTicketInfo getSoldTickets(SeatRequest seatRequest, HttpHeaders headers);
 
-    AddOrderResult addNewOrder(Order order);
+    AddOrderResult addNewOrder(Order order, HttpHeaders headers);
 
-    UpdateOrderResult updateOrder(Order order);
-
-    ChangeOrderResult sendOrderToQueue(Order order);
-
-    void processOrderFromQueue(Order order);
+    UpdateOrderResult updateOrder(Order order, HttpHeaders headers);
 }

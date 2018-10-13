@@ -11,6 +11,7 @@ import java.util.UUID;
 import com.trainticket.verificationcode.domain.VerificationCodeValue;
 import com.trainticket.verificationcode.repository.VerificationCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService{
     public static final int CAPTCHA_EXPIRED = 1000;
 
     @Override
-    public Map<String, Object> getImageCode(int width, int height, OutputStream os, HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> getImageCode(int width, int height, OutputStream os, HttpServletRequest request, HttpServletResponse response, HttpHeaders headers) {
         Map<String,Object> returnMap = new HashMap<String, Object>();
         if (width <= 0) width = 60;
         if (height <= 0) height = 20;
@@ -97,7 +98,8 @@ public class VerificationCodeServiceImpl implements VerificationCodeService{
         return returnMap;
     }
 
-    public boolean verifyCode(HttpServletRequest request, HttpServletResponse response, String receivedCode){
+    @Override
+    public boolean verifyCode(HttpServletRequest request, HttpServletResponse response, String receivedCode, HttpHeaders headers){
         boolean result = false;
         Cookie cookie = CookieUtil.getCookieByName(request,"YsbCaptcha");
         String cookieId;

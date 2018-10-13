@@ -1,6 +1,7 @@
 package price.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import price.domain.CreateAndModifyPriceConfig;
 import price.domain.PriceConfig;
@@ -8,6 +9,7 @@ import price.domain.ReturnManyPriceConfigResult;
 import price.domain.ReturnSinglePriceConfigResult;
 import price.repository.PriceConfigRepository;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,7 +19,7 @@ public class PriceServiceImpl implements PriceService{
     private PriceConfigRepository priceConfigRepository;
 
     @Override
-    public ReturnSinglePriceConfigResult createNewPriceConfig(CreateAndModifyPriceConfig createAndModifyPriceConfig) {
+    public ReturnSinglePriceConfigResult createNewPriceConfig(CreateAndModifyPriceConfig createAndModifyPriceConfig, HttpHeaders headers) {
         System.out.println("[Price Service][Create New Price Config]");
         ReturnSinglePriceConfigResult result = new ReturnSinglePriceConfigResult();
         if(createAndModifyPriceConfig.getId() == null || createAndModifyPriceConfig.getId().length() < 10){
@@ -50,7 +52,7 @@ public class PriceServiceImpl implements PriceService{
     }
 
     @Override
-    public ReturnSinglePriceConfigResult findById(String id) {
+    public ReturnSinglePriceConfigResult findById(String id, HttpHeaders headers) {
         System.out.println("[Price Service][Find By Id] ID:" + id);
         PriceConfig priceConfig = priceConfigRepository.findById(UUID.fromString(id));
         ReturnSinglePriceConfigResult result = new ReturnSinglePriceConfigResult();
@@ -67,7 +69,7 @@ public class PriceServiceImpl implements PriceService{
     }
 
     @Override
-    public ReturnSinglePriceConfigResult findByRouteIdAndTrainType(String routeId, String trainType) {
+    public ReturnSinglePriceConfigResult findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
         System.out.println("[Price Service][Find By Route And Train Type] Rote:" + routeId + "Train Type:" + trainType);
         PriceConfig priceConfig = priceConfigRepository.findByRouteIdAndTrainType(routeId,trainType);
         ReturnSinglePriceConfigResult result = new ReturnSinglePriceConfigResult();
@@ -83,11 +85,14 @@ public class PriceServiceImpl implements PriceService{
             result.setPriceConfig(priceConfig);
             System.out.println("[Price Service][Find By Route Id And Train Type] Success");
         }
+
         return result;
     }
 
+
+
     @Override
-    public ReturnManyPriceConfigResult findAllPriceConfig() {
+    public ReturnManyPriceConfigResult findAllPriceConfig(HttpHeaders headers) {
         ArrayList<PriceConfig> list = priceConfigRepository.findAll();
         ReturnManyPriceConfigResult result = new ReturnManyPriceConfigResult();
         if(list == null){
@@ -100,7 +105,7 @@ public class PriceServiceImpl implements PriceService{
     }
 
     @Override
-    public boolean deletePriceConfig(CreateAndModifyPriceConfig c) {
+    public boolean deletePriceConfig(CreateAndModifyPriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(UUID.fromString(c.getId()));
         if(priceConfig == null){
             return false;
@@ -117,7 +122,7 @@ public class PriceServiceImpl implements PriceService{
     }
 
     @Override
-    public boolean updatePriceConfig(CreateAndModifyPriceConfig c) {
+    public boolean updatePriceConfig(CreateAndModifyPriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(UUID.fromString(c.getId()));
         if(priceConfig == null){
             return false;

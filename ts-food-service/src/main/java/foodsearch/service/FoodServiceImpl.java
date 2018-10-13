@@ -3,6 +3,10 @@ package foodsearch.service;
 import foodsearch.domain.*;
 import foodsearch.repository.FoodOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,7 +25,7 @@ public class FoodServiceImpl implements FoodService{
     private FoodOrderRepository foodOrderRepository;
 
     @Override
-    public GetAllFoodOfTripResult getAllFood(String date, String startStation, String endStation, String tripId) {
+    public GetAllFoodOfTripResult getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers) {
         System.out.println("data=" + date + "start=" + startStation + "end=" + endStation + "tripid=" + tripId);
         GetAllFoodOfTripResult result = new GetAllFoodOfTripResult();
 
@@ -37,9 +41,20 @@ public class FoodServiceImpl implements FoodService{
         QueryTrainFoodInfo qti = new QueryTrainFoodInfo();
         qti.setTripId(tripId);
 
-        GetTrainFoodListResult  trainFoodListResult = restTemplate.postForObject
-                                        ("http://ts-food-map-service:18855/foodmap/getTrainFoodOfTrip",
-                                                qti, GetTrainFoodListResult.class);
+        /**--------------------------------------------------------------------------------------*/
+        HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(qti,headers);
+        ResponseEntity<GetTrainFoodListResult> reGetTrainFoodListResult = restTemplate.exchange(
+                "http://ts-food-map-service:18855/foodmap/getTrainFoodOfTrip",
+                HttpMethod.POST,
+                requestEntityGetTrainFoodListResult,
+                GetTrainFoodListResult.class);
+        GetTrainFoodListResult trainFoodListResult = reGetTrainFoodListResult.getBody();
+//        GetTrainFoodListResult  trainFoodListResult = restTemplate.postForObject
+//                                        ("http://ts-food-map-service:18855/foodmap/getTrainFoodOfTrip",
+//                                                qti, GetTrainFoodListResult.class);
+
+
+
         if( trainFoodListResult.isStatus()){
             trainFoodList = trainFoodListResult.getTrainFoodList();
             System.out.println("[Food Service]Get Train Food List!");
@@ -49,18 +64,41 @@ public class FoodServiceImpl implements FoodService{
             result.setMessage(trainFoodListResult.getMessage());
             return result;
         }
+        //车次途经的车站
+        /**--------------------------------------------------------------------------------------*/
+        HttpEntity requestEntityGetRouteResult = new HttpEntity(null,headers);
+        ResponseEntity<GetRouteResult> reGetRouteResult = restTemplate.exchange(
+                "http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
+                HttpMethod.GET,
+                requestEntityGetRouteResult,
+                GetRouteResult.class);
+        GetRouteResult stationResult = reGetRouteResult.getBody();
+//        GetRouteResult  stationResult= restTemplate.getForObject
+//                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
+//                                                GetRouteResult.class);
 
-        GetRouteResult  stationResult= restTemplate.getForObject
-                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
-                                                GetRouteResult.class);
+
         if( stationResult.isStatus() ){
             Route route = stationResult.getRoute();
             List<String> stations = route.getStations();
+            //去除不经过的站，如果起点终点有的话
             if(null != startStation && !"".equals(startStation)){
                 QueryForId q1=new QueryForId();
                 q1.setName(startStation);
-                String startStationId = restTemplate.postForObject
-                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
+
+
+                /**--------------------------------------------------------------------------------------*/
+                HttpEntity requestEntityStartStationId = new HttpEntity(q1,headers);
+                ResponseEntity<String> reStartStationId = restTemplate.exchange(
+                        "http://ts-station-service:12345/station/queryForId",
+                        HttpMethod.POST,
+                        requestEntityStartStationId,
+                        String.class);
+                String startStationId = reStartStationId.getBody();
+//                String startStationId = restTemplate.postForObject
+//                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
+
+
                 for(int i = 0; i < stations.size(); i++){
                     if(stations.get(i).equals(startStationId)){
                         break;
@@ -72,8 +110,22 @@ public class FoodServiceImpl implements FoodService{
             if(null != endStation && !"".equals(endStation)){
                 QueryForId q2=new QueryForId();
                 q2.setName(endStation);
-                String endStationId = restTemplate.postForObject
-                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
+
+
+
+                /**--------------------------------------------------------------------------------------*/
+                HttpEntity requestEntityEndStationId = new HttpEntity(q2,headers);
+                ResponseEntity<String> reEndStationId = restTemplate.exchange(
+                        "http://ts-station-service:12345/station/queryForId",
+                        HttpMethod.POST,
+                        requestEntityEndStationId,
+                        String.class);
+                String endStationId = reEndStationId.getBody();
+//                String endStationId = restTemplate.postForObject
+//                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
+
+
+
                 for(int i = stations.size()-1; i >= 0 ; i--){
                     if(stations.get(i).equals(endStationId)){
                         break;
@@ -86,9 +138,22 @@ public class FoodServiceImpl implements FoodService{
             for(String s:stations){
                 QueryFoodStoresInfo qsi = new QueryFoodStoresInfo();
                 qsi.setStationId(s);
-                GetFoodStoresListResult foodStoresListResult = restTemplate.postForObject
-                                            ("http://ts-food-map-service:18855/foodmap/getFoodStoresOfStation",
-                                                    qsi, GetFoodStoresListResult.class);
+
+
+                HttpEntity requestEntityFoodStoresListResult = new HttpEntity(qsi,headers);
+                ResponseEntity<GetFoodStoresListResult> reFoodStoresListResult = restTemplate.exchange(
+                        "http://ts-food-map-service:18855/foodmap/getFoodStoresOfStation",
+                        HttpMethod.POST,
+                        requestEntityFoodStoresListResult,
+                        GetFoodStoresListResult.class);
+                GetFoodStoresListResult foodStoresListResult = reFoodStoresListResult.getBody();
+//                GetFoodStoresListResult foodStoresListResult = restTemplate.postForObject
+//                                            ("http://ts-food-map-service:18855/foodmap/getFoodStoresOfStation",
+//                                                    qsi, GetFoodStoresListResult.class);
+
+
+
+
                 if(foodStoresListResult.isStatus()){
                     if( null != foodStoresListResult.getFoodStoreList()){
                         System.out.println("[Food Service]Get the Food Store!");
@@ -115,7 +180,7 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public AddFoodOrderResult createFoodOrder(AddFoodOrderInfo afoi) {
+    public AddFoodOrderResult createFoodOrder(AddFoodOrderInfo afoi, HttpHeaders headers) {
         FoodOrder fo = foodOrderRepository.findByOrderId(UUID.fromString(afoi.getOrderId()));
         AddFoodOrderResult result = new AddFoodOrderResult();
         if(fo != null){
@@ -145,7 +210,7 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public CancelFoodOrderResult cancelFoodOrder(CancelFoodOrderInfo cfoi) {
+    public CancelFoodOrderResult cancelFoodOrder(CancelFoodOrderInfo cfoi, HttpHeaders headers) {
         FoodOrder fo = foodOrderRepository.findByOrderId(UUID.fromString(cfoi.getOrderId()));
         CancelFoodOrderResult result = new  CancelFoodOrderResult();
         if(fo == null){
@@ -165,7 +230,7 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public UpdateFoodOrderResult updateFoodOrder(UpdateFoodOrderInfo ufoi) {
+    public UpdateFoodOrderResult updateFoodOrder(UpdateFoodOrderInfo ufoi, HttpHeaders headers) {
         FoodOrder fo = foodOrderRepository.findById(UUID.fromString(ufoi.getId()));
         UpdateFoodOrderResult result = new UpdateFoodOrderResult();
         if(fo == null){
@@ -193,12 +258,12 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public List<FoodOrder> findAllFoodOrder() {
+    public List<FoodOrder> findAllFoodOrder(HttpHeaders headers) {
         return foodOrderRepository.findAll();
     }
 
     @Override
-    public FindByOrderIdResult findByOrderId(String orderId) {
+    public FindByOrderIdResult findByOrderId(String orderId, HttpHeaders headers) {
         FoodOrder fo = foodOrderRepository.findByOrderId(UUID.fromString(orderId));
        FindByOrderIdResult result = new FindByOrderIdResult();
        if(fo != null ){

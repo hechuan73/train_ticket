@@ -1,7 +1,7 @@
 package other.service;
 
+import org.springframework.http.HttpHeaders;
 import other.domain.*;
-import other.queue.MsgSender;
 import other.repository.OrderOtherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,8 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     @Autowired
     private OrderOtherRepository orderOtherRepository;
 
-    @Autowired
-    private MsgSender msgSender;
-
     @Override
-    public LeftTicketInfo getSoldTickets(SeatRequest seatRequest){
+    public LeftTicketInfo getSoldTickets(SeatRequest seatRequest, HttpHeaders headers){
         ArrayList<Order> list = orderOtherRepository.findByTravelDateAndTrainNumber(seatRequest.getTravelDate(),
                 seatRequest.getTrainNumber());
         Set ticketSet = new HashSet();
@@ -33,12 +30,12 @@ public class OrderOtherServiceImpl implements OrderOtherService{
         return leftTicketInfo;
     }
     @Override
-    public Order findOrderById(UUID id){
+    public Order findOrderById(UUID id, HttpHeaders headers){
         return orderOtherRepository.findById(id);
     }
 
     @Override
-    public CreateOrderResult create(Order order){
+    public CreateOrderResult create(Order order, HttpHeaders headers){
         System.out.println("[Order Other Service][Create Order] Ready Create Order");
         ArrayList<Order> accountOrders = orderOtherRepository.findByAccountId(order.getAccountId());
         CreateOrderResult cor = new CreateOrderResult();
@@ -60,7 +57,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public void initOrder(Order order){
+    public void initOrder(Order order, HttpHeaders headers){
         Order orderTemp = orderOtherRepository.findById(order.getId());
         if(orderTemp == null){
             orderOtherRepository.save(order);
@@ -71,10 +68,10 @@ public class OrderOtherServiceImpl implements OrderOtherService{
 
 
     @Override
-    public OrderAlterResult alterOrder(OrderAlterInfo oai){
+    public OrderAlterResult alterOrder(OrderAlterInfo oai, HttpHeaders headers){
         OrderAlterResult oar = new OrderAlterResult();
         UUID oldOrderId = oai.getPreviousOrderId();
-        Order oldOrder = findOrderById(oldOrderId);
+        Order oldOrder = findOrderById(oldOrderId, headers);
         if(oldOrder == null){
             System.out.println("[Order Other Service][Alter Order] Fail.Order do not exist.");
             oar.setStatus(false);
@@ -84,10 +81,10 @@ public class OrderOtherServiceImpl implements OrderOtherService{
             return oar;
         }
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
-        saveChanges(oldOrder);
+        saveChanges(oldOrder, headers);
         Order newOrder = oai.getNewOrderInfo();
         newOrder.setId(UUID.randomUUID());
-        CreateOrderResult cor = create(oai.getNewOrderInfo());
+        CreateOrderResult cor = create(oai.getNewOrderInfo(), headers);
         if(cor.isStatus() == true){
             oar.setStatus(true);
             oar.setMessage("Success");
@@ -104,7 +101,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public ArrayList<Order> queryOrders(QueryInfo qi,String accountId){
+    public ArrayList<Order> queryOrders(QueryInfo qi,String accountId, HttpHeaders headers){
         //1.Get all orders of the user
         ArrayList<Order> list = orderOtherRepository.findByAccountId(UUID.fromString(accountId));
         System.out.println("[Order Other Service][Query Order][Step 1] Get Orders Number of Account:" + list.size());
@@ -165,8 +162,8 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public ChangeOrderResult saveChanges(Order order){
-        Order oldOrder = findOrderById(order.getId());
+    public ChangeOrderResult saveChanges(Order order, HttpHeaders headers){
+        Order oldOrder = findOrderById(order.getId(), headers);
         ChangeOrderResult cor = new ChangeOrderResult();
         if(oldOrder == null){
             System.out.println("[Order Other Service][Modify Order] Fail.Order not found.");
@@ -199,7 +196,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public CancelOrderResult cancelOrder(CancelOrderInfo coi){
+    public CancelOrderResult cancelOrder(CancelOrderInfo coi, HttpHeaders headers){
         UUID orderId = coi.getOrderId();
         Order oldOrder = orderOtherRepository.findById(orderId);
         CancelOrderResult cor = new CancelOrderResult();
@@ -221,7 +218,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public  CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti){
+    public  CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti, HttpHeaders headers){
         ArrayList<Order> orders = orderOtherRepository.findByTravelDateAndTrainNumber(csti.getTravelDate(),csti.getTrainNumber());
         CalculateSoldTicketResult cstr = new CalculateSoldTicketResult();
         cstr.setTravelDate(csti.getTravelDate());
@@ -257,14 +254,14 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public QueryOrderResult getAllOrders(){
+    public QueryOrderResult getAllOrders(HttpHeaders headers){
         ArrayList<Order> orders = orderOtherRepository.findAll();
         QueryOrderResult result = new QueryOrderResult(true,"Success.",orders);
         return result;
     }
 
     @Override
-    public ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info){
+    public ModifyOrderStatusResult modifyOrder(ModifyOrderStatusInfo info, HttpHeaders headers){
         Order order = orderOtherRepository.findById(UUID.fromString(info.getOrderId()));
         ModifyOrderStatusResult result = new ModifyOrderStatusResult();
         if(order == null){
@@ -282,7 +279,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public GetOrderPriceResult getOrderPrice(GetOrderPrice info){
+    public GetOrderPriceResult getOrderPrice(GetOrderPrice info, HttpHeaders headers){
         Order order = orderOtherRepository.findById(UUID.fromString(info.getOrderId()));
         GetOrderPriceResult result = new GetOrderPriceResult();
         if(result == null){
@@ -299,7 +296,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public PayOrderResult payOrder(PayOrderInfo info){
+    public PayOrderResult payOrder(PayOrderInfo info, HttpHeaders headers){
         Order order = orderOtherRepository.findById(UUID.fromString(info.getOrderId()));
         PayOrderResult result = new PayOrderResult();
         if(result == null){
@@ -317,7 +314,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public GetOrderResult getOrderById(GetOrderByIdInfo info){
+    public GetOrderResult getOrderById(GetOrderByIdInfo info, HttpHeaders headers){
         Order order = orderOtherRepository.findById(UUID.fromString(info.getOrderId()));
         GetOrderResult result = new GetOrderResult();
         if(order == null){
@@ -333,7 +330,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info){
+    public GetOrderInfoForSecurityResult checkSecurityAboutOrder(GetOrderInfoForSecurity info, HttpHeaders headers){
         GetOrderInfoForSecurityResult result = new GetOrderInfoForSecurityResult();
         ArrayList<Order> orders = orderOtherRepository.findByAccountId(UUID.fromString(info.getAccountId()));
         int countOrderInOneHour = 0;
@@ -359,7 +356,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public DeleteOrderResult deleteOrder(DeleteOrderInfo info){
+    public DeleteOrderResult deleteOrder(DeleteOrderInfo info, HttpHeaders headers){
         UUID orderUuid = UUID.fromString(info.getOrderId());
         Order order = orderOtherRepository.findById(orderUuid);
         DeleteOrderResult result = new DeleteOrderResult();
@@ -375,7 +372,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public AddOrderResult addNewOrder(Order order) {
+    public AddOrderResult addNewOrder(Order order, HttpHeaders headers) {
         System.out.println("[Order Service][Admin Add Order] Ready Add Order.");
         ArrayList<Order> accountOrders = orderOtherRepository.findByAccountId(order.getAccountId());
         AddOrderResult result = new AddOrderResult();
@@ -397,8 +394,8 @@ public class OrderOtherServiceImpl implements OrderOtherService{
     }
 
     @Override
-    public UpdateOrderResult updateOrder(Order order) {
-        Order oldOrder = findOrderById(order.getId());
+    public UpdateOrderResult updateOrder(Order order, HttpHeaders headers) {
+        Order oldOrder = findOrderById(order.getId(), headers);
         UpdateOrderResult result = new UpdateOrderResult();
         if(oldOrder == null){
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");
@@ -430,45 +427,7 @@ public class OrderOtherServiceImpl implements OrderOtherService{
         return result;
     }
 
-    @Override
-    public ChangeOrderResult sendOrderToQueue(Order order) {
-        Order oldOrder = findOrderById(order.getId());
-        ChangeOrderResult cor = new ChangeOrderResult();
-        if (null == oldOrder) {
-            System.out.println("[Order Other Service][Modify Order] Fail.Order not found.");
-            cor.setStatus(false);
-            cor.setMessage("Order Not Found");
-            cor.setOrder(null);
-        }
-        else {
-            msgSender.sendLoginInfoToSso(order);
-            cor.setStatus(true);
-            cor.setMessage("The operation is processing, please search the result after 1 minute!");
-        }
-        return cor;
 
-    }
 
-    @Override
-    public void processOrderFromQueue(Order order) {
-        Order oldOrder = findOrderById(order.getId());
-        oldOrder.setAccountId(order.getAccountId());
-        oldOrder.setBoughtDate(order.getBoughtDate());
-        oldOrder.setTravelDate(order.getTravelDate());
-        oldOrder.setTravelTime(order.getTravelTime());
-        oldOrder.setCoachNumber(order.getCoachNumber());
-        oldOrder.setSeatClass(order.getSeatClass());
-        oldOrder.setSeatNumber(order.getSeatNumber());
-        oldOrder.setFrom(order.getFrom());
-        oldOrder.setTo(order.getTo());
-        oldOrder.setStatus(order.getStatus());
-        oldOrder.setTrainNumber(order.getTrainNumber());
-        oldOrder.setPrice(order.getPrice());
-        oldOrder.setContactsName(order.getContactsName());
-        oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
-        oldOrder.setDocumentType(order.getDocumentType());
-        orderOtherRepository.save(oldOrder);
-        System.out.println("The order from queue has been processed!");
-    }
 }
 

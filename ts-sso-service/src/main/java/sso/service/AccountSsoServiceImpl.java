@@ -1,6 +1,7 @@
 package sso.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import sso.domain.*;
 import sso.repository.AccountRepository;
@@ -20,7 +21,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     //private static HashMap<String,String > loginUserList = new HashMap<>();
 
     @Override
-    public Account createAccount(Account account){
+    public Account createAccount(Account account, HttpHeaders headers){
 
         if(accountRepository.findById(account.getId()) != null){
             System.out.println("[SSO Service][Init Account] Account Already Exists.");
@@ -34,7 +35,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public RegisterResult create(RegisterInfo ri){
+    public RegisterResult create(RegisterInfo ri, HttpHeaders headers){
         Account oldAcc = accountRepository.findByEmail(ri.getEmail());
         if(oldAcc != null){
             RegisterResult rr = new RegisterResult();
@@ -64,7 +65,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public LoginResult login(LoginInfo li){
+    public LoginResult login(LoginInfo li, HttpHeaders headers){
         if(li == null){
             System.out.println("[SSO Service][Login] Fail.Account not found.");
             LoginResult lr = new LoginResult();
@@ -133,7 +134,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public LogoutResult logoutDeleteToken(LogoutInfo li){
+    public LogoutResult logoutDeleteToken(LogoutInfo li, HttpHeaders headers){
         LogoutResult lr = new LogoutResult();
         if(loginUserListRepository.findById(li.getId()) == null){
             System.out.println("[SSO Service][Logout] Already Logout. LogoutId:" + li.getId());
@@ -155,7 +156,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public VerifyResult verifyLoginToken(String verifyToken){
+    public VerifyResult verifyLoginToken(String verifyToken, HttpHeaders headers){
         System.out.println("[SSO Service][Verify] Verify token:" + verifyToken);
         VerifyResult vr = new VerifyResult();
         if(loginUserListRepository.findByloginToken(verifyToken) != null || verifyToken.equals("admin")){
@@ -171,7 +172,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public FindAllAccountResult findAllAccount(){
+    public FindAllAccountResult findAllAccount(HttpHeaders headers){
         FindAllAccountResult findAllAccountResult = new FindAllAccountResult();
         ArrayList<Account> accounts = accountRepository.findAll();
         for(int i = 0;i < accounts.size();i++){
@@ -184,7 +185,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public GetLoginAccountList findAllLoginAccount(){
+    public GetLoginAccountList findAllLoginAccount(HttpHeaders headers){
         ArrayList<LoginAccountValue> values = new ArrayList<>();
         for(LoginValue lv : loginUserListRepository.findAll()){
             LoginAccountValue value = new LoginAccountValue(lv.getId(),lv.getLoginToken());
@@ -198,7 +199,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public ModifyAccountResult saveChanges(ModifyAccountInfo modifyAccountInfo){
+    public ModifyAccountResult saveChanges(ModifyAccountInfo modifyAccountInfo, HttpHeaders headers){
         Account existAccount = accountRepository.findByEmail(modifyAccountInfo.getNewEmail());
         ModifyAccountResult result = new ModifyAccountResult();
         if(existAccount != null && !modifyAccountInfo.getAccountId().equals(existAccount.getId().toString())){
@@ -231,7 +232,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
         return result;
     }
 
-    public GetAccountByIdResult getAccountById(GetAccountByIdInfo info){
+    public GetAccountByIdResult getAccountById(GetAccountByIdInfo info, HttpHeaders headers){
         Account account = accountRepository.findById(UUID.fromString(info.getAccountId()));
         GetAccountByIdResult result = new GetAccountByIdResult();
         if(account == null){
@@ -247,7 +248,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public Contacts adminLogin(String name, String password) {
+    public Contacts adminLogin(String name, String password, HttpHeaders headers) {
         Contacts c = null;
         if("adminroot".equals(name) && "adminroot".equals(password)){
             c = new Contacts();
@@ -261,7 +262,7 @@ public class AccountSsoServiceImpl implements AccountSsoService{
     }
 
     @Override
-    public DeleteAccountResult deleteAccount(String accountId) {
+    public DeleteAccountResult deleteAccount(String accountId, HttpHeaders headers) {
         Account account = accountRepository.findById(UUID.fromString(accountId));
         DeleteAccountResult result = new DeleteAccountResult();
         if(account == null){

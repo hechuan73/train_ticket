@@ -23,7 +23,7 @@ public class InitData implements CommandLineRunner{
         contacts_One.setDocumentNumber("DocumentNumber_One");
         contacts_One.setPhoneNumber("ContactsPhoneNum_One");
         contacts_One.setId(UUID.fromString("4d2a46c7-71cb-4cf1-a5bb-b68406d9da6f"));
-        service.createContacts(contacts_One);
+        service.createContacts(contacts_One ,null);
 
         Contacts contacts_Two = new Contacts();
         contacts_Two.setAccountId(UUID.fromString("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"));
@@ -32,6 +32,6 @@ public class InitData implements CommandLineRunner{
         contacts_Two.setDocumentNumber("DocumentNumber_Two");
         contacts_Two.setPhoneNumber("ContactsPhoneNum_Two");
         contacts_Two.setId(UUID.fromString("4d2546c7-71cb-4cf1-a5bb-b68406d9da6f"));
-        service.createContacts(contacts_Two);
+        service.createContacts(contacts_Two,null);
     }
 }

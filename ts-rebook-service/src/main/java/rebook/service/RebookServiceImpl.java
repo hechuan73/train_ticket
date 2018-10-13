@@ -1,7 +1,13 @@
 package rebook.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.integration.dsl.http.Http;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 import rebook.domain.*;
 import rebook.domain.RebookInfo;
@@ -17,10 +23,10 @@ public class RebookServiceImpl implements RebookService{
     private RestTemplate restTemplate;
 
     @Override
-    public RebookResult rebook(RebookInfo info, String loginId, String loginToken){
+    public RebookResult rebook(RebookInfo info, String loginId, String loginToken, HttpHeaders httpHeaders){
         RebookResult rebookResult = new RebookResult();
 
-        QueryOrderResult queryOrderResult = getOrderByRebookInfo(info);
+        QueryOrderResult queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
         if(!queryOrderResult.isStatus()){
             rebookResult.setStatus(false);
@@ -55,7 +61,7 @@ public class RebookServiceImpl implements RebookService{
             return rebookResult;
         }
 
-
+        //查询当前时间和旧订单乘车时间，根据时间来判断能否改签，发车两小时后不能改签
         if(!checkTime(order.getTravelDate(),order.getTravelTime())){
             rebookResult.setStatus(false);
             rebookResult.setMessage("You can only change the ticket before the train start or within 2 hours after the train start.");
@@ -63,13 +69,14 @@ public class RebookServiceImpl implements RebookService{
             return rebookResult;
         }
 
-
+        //改签不能更换出发地和目的地，只能更改车次、席位、时间
+        //查询座位余票信息和车次的详情
         GetTripAllDetailInfo gtdi = new GetTripAllDetailInfo();
-        gtdi.setFrom(queryForStationName(order.getFrom()));
-        gtdi.setTo(queryForStationName(order.getTo()));
+        gtdi.setFrom(queryForStationName(order.getFrom(), httpHeaders));
+        gtdi.setTo(queryForStationName(order.getTo(), httpHeaders));
         gtdi.setTravelDate(info.getDate());
         gtdi.setTripId(info.getTripId());
-        GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi,info.getTripId());
+        GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi,info.getTripId(), httpHeaders);
         if(gtdr.isStatus() == false){
             rebookResult.setStatus(false);
             rebookResult.setMessage(gtdr.getMessage());
@@ -96,7 +103,8 @@ public class RebookServiceImpl implements RebookService{
         }
         Trip trip = gtdr.getTrip();
 
-
+        //处理差价，多退少补
+        //退掉原有的票，让其他人可以订到对应的位置
 //        QueryPriceInfo queryPriceInfo = new QueryPriceInfo();
 //        queryPriceInfo.setStartingPlaceId(order.getFrom());
 //        queryPriceInfo.setEndPlaceId(order.getTo());
@@ -122,19 +130,19 @@ public class RebookServiceImpl implements RebookService{
         if(priceOld.compareTo(priceNew) > 0){
             //退差价
             String difference = priceOld.subtract(priceNew).toString();
-            if(!drawBackMoney(loginId,difference)){
+            if(!drawBackMoney(loginId,difference, httpHeaders)){
                 rebookResult.setStatus(false);
                 rebookResult.setMessage("Can't draw back the difference money, please try again!");
                 rebookResult.setOrder(null);
                 return rebookResult;
             }
-            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken);
+            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken,httpHeaders);
 
         }else if(priceOld.compareTo(priceNew) == 0){
             //do nothing
-            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken);
+            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken,httpHeaders);
         }else{
-
+            //补差价
             String difference = priceNew.subtract(priceOld).toString();
             rebookResult.setStatus(false);
             rebookResult.setMessage("Please pay the different money!");
@@ -145,10 +153,10 @@ public class RebookServiceImpl implements RebookService{
     }
 
     @Override
-    public RebookResult payDifference(RebookInfo info, String loginId, String loginToken){
+    public RebookResult payDifference(RebookInfo info, String loginId, String loginToken, HttpHeaders httpHeaders){
         RebookResult rebookResult = new RebookResult();
 
-        QueryOrderResult queryOrderResult = getOrderByRebookInfo(info);
+        QueryOrderResult queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 //        if(info.getOldTripId().startsWith("G") || info.getOldTripId().startsWith("D")){
 //            queryOrderResult = restTemplate.postForObject(
 //                    "http://ts-order-service:12031/order/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
@@ -167,11 +175,11 @@ public class RebookServiceImpl implements RebookService{
         Order order = queryOrderResult.getOrder();
 
         GetTripAllDetailInfo gtdi = new GetTripAllDetailInfo();
-        gtdi.setFrom(queryForStationName(order.getFrom()));
-        gtdi.setTo(queryForStationName(order.getTo()));
+        gtdi.setFrom(queryForStationName(order.getFrom(), httpHeaders));
+        gtdi.setTo(queryForStationName(order.getTo(), httpHeaders));
         gtdi.setTravelDate(info.getDate());
         gtdi.setTripId(info.getTripId());
-        GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi,info.getTripId());
+        GetTripAllDetailResult gtdr = getTripAllDetailInformation(gtdi,info.getTripId(), httpHeaders);
 
 //        QueryPriceInfo queryPriceInfo = new QueryPriceInfo();
 //        queryPriceInfo.setStartingPlaceId(order.getFrom());
@@ -195,8 +203,8 @@ public class RebookServiceImpl implements RebookService{
         BigDecimal priceOld = new BigDecimal(oldPrice);
         BigDecimal priceNew = new BigDecimal(ticketPrice);
 
-        if(payDifferentMoney(info.getOrderId(),info.getTripId(),loginId,priceNew.subtract(priceOld).toString())){
-            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken);
+        if(payDifferentMoney(info.getOrderId(),info.getTripId(),loginId,priceNew.subtract(priceOld).toString(), httpHeaders)){
+            return updateOrder(order,info,gtdr,ticketPrice,loginId,loginToken,httpHeaders);
         }else{
             rebookResult.setStatus(false);
             rebookResult.setMessage("Can't pay the difference,please try again");
@@ -205,8 +213,9 @@ public class RebookServiceImpl implements RebookService{
         }
     }
 
-    private RebookResult updateOrder(Order order, RebookInfo info, GetTripAllDetailResult gtdr,String ticketPrice, String loginId, String loginToken){
+    private RebookResult updateOrder(Order order, RebookInfo info, GetTripAllDetailResult gtdr, String ticketPrice, String loginId, String loginToken, HttpHeaders httpHeaders){
         RebookResult rebookResult = new RebookResult();
+        //4.修改原有订单 设置order的各个信息
         Trip trip = gtdr.getTrip();
         String oldTripId = order.getTrainNumber();
         order.setTrainNumber(info.getTripId());
@@ -221,14 +230,14 @@ public class RebookServiceImpl implements RebookService{
             Ticket ticket =
                     dipatchSeat(info.getDate(),
                             order.getTrainNumber(),order.getFrom(),order.getTo(),
-                            SeatClass.FIRSTCLASS.getCode());
+                            SeatClass.FIRSTCLASS.getCode(), httpHeaders);
             order.setSeatClass(SeatClass.FIRSTCLASS.getCode());
             order.setSeatNumber("" + ticket.getSeatNo());
         }else{
             Ticket ticket =
                     dipatchSeat(info.getDate(),
                             order.getTrainNumber(),order.getFrom(),order.getTo(),
-                            SeatClass.SECONDCLASS.getCode());
+                            SeatClass.SECONDCLASS.getCode(), httpHeaders);
             order.setSeatClass(SeatClass.SECONDCLASS.getCode());
             order.setSeatNumber("" + ticket.getSeatNo());
         }
@@ -242,11 +251,13 @@ public class RebookServiceImpl implements RebookService{
 //        }
 
 
+        //更新订单信息
+        //原订单和新订单如果分别位于高铁动车和其他订单，应该删掉原订单，在另一边新建，用新的id
         if((tripGD(oldTripId) && tripGD(info.getTripId())) || (!tripGD(oldTripId) && !tripGD(info.getTripId()))){
             ChangeOrderInfo changeOrderInfo = new ChangeOrderInfo();
             changeOrderInfo.setLoginToken(loginToken);
             changeOrderInfo.setOrder(order);
-            ChangeOrderResult changeOrderResult = updateOrder(changeOrderInfo,info.getTripId());
+            ChangeOrderResult changeOrderResult = updateOrder(changeOrderInfo,info.getTripId(), httpHeaders);
             if(changeOrderResult.isStatus()){
                 rebookResult.setStatus(true);
                 rebookResult.setMessage("Success!");
@@ -259,29 +270,39 @@ public class RebookServiceImpl implements RebookService{
                 return rebookResult;
             }
         }else{
-
-            deleteOrder(order.getId().toString(), oldTripId);
-
-            createOrder(order,loginToken,order.getTrainNumber());
+            //删掉原有订单
+            deleteOrder(order.getId().toString(), oldTripId, httpHeaders);
+            //在另一边创建新订单
+            createOrder(order,loginToken,order.getTrainNumber(), httpHeaders);
             rebookResult.setStatus(true);
             rebookResult.setMessage("Success!");
-            rebookResult.setOrder(order);
+            rebookResult.setOrder(order); //order id是不对的，因为新创建的时候，会创建新的order id
             return rebookResult;
         }
     }
 
-    public Ticket dipatchSeat(Date date,String tripId,String startStationId,String endStataionId,int seatType){
+    public Ticket dipatchSeat(Date date,String tripId,String startStationId,String endStataionId,int seatType, HttpHeaders httpHeaders){
         SeatRequest seatRequest = new SeatRequest();
         seatRequest.setTravelDate(date);
         seatRequest.setTrainNumber(tripId);
         seatRequest.setStartStation(startStationId);
         seatRequest.setDestStation(endStataionId);
         seatRequest.setSeatType(seatType);
-        Ticket ticket = restTemplate.postForObject(
-                "http://ts-seat-service:18898/seat/getSeat"
-                ,seatRequest,Ticket.class);
+
+        HttpEntity requestEntityTicket = new HttpEntity(seatRequest,httpHeaders);
+        ResponseEntity<Ticket> reTicket = restTemplate.exchange(
+                "http://ts-seat-service:18898/seat/getSeat",
+                HttpMethod.POST,
+                requestEntityTicket,
+                Ticket.class);
+        Ticket ticket  = reTicket.getBody();
+
+//        Ticket ticket = restTemplate.postForObject(
+//                "http://ts-seat-service:18898/seat/getSeat"
+//                ,seatRequest,Ticket.class);
         return ticket;
     }
+
 
     private boolean tripGD(String tripId){
         if(tripId.startsWith("G") || tripId.startsWith("D")){
@@ -291,10 +312,21 @@ public class RebookServiceImpl implements RebookService{
         }
     }
 
-    private VerifyResult verifySsoLogin(String loginToken){
-        VerifyResult tokenResult = restTemplate.getForObject(
+    private VerifyResult verifySsoLogin(String loginToken, HttpHeaders headers){
+        System.out.println("[Order Service][Verify Login] Verifying....");
+
+        HttpEntity requestTokenResult = new HttpEntity(null,headers);
+        ResponseEntity<VerifyResult> reTokenResult  = restTemplate.exchange(
                 "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+                HttpMethod.GET,
+                requestTokenResult,
                 VerifyResult.class);
+        VerifyResult tokenResult = reTokenResult.getBody();
+//        VerifyResult tokenResult = restTemplate.getForObject(
+//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+//                VerifyResult.class);
+
+
         return tokenResult;
     }
 
@@ -329,104 +361,220 @@ public class RebookServiceImpl implements RebookService{
         return result;
     }
 
-    private GetTripAllDetailResult getTripAllDetailInformation(GetTripAllDetailInfo gtdi, String tripId){
+    private GetTripAllDetailResult getTripAllDetailInformation(GetTripAllDetailInfo gtdi, HttpHeaders httpHeaders){
+        System.out.println("[Preserve Other Service][Get Trip All Detail Information] Getting....");
+
+        HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
+        ResponseEntity<GetTripAllDetailResult> reGetTripAllDetailResult = restTemplate.exchange(
+                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/",
+                HttpMethod.POST,
+                requestGetTripAllDetailResult,
+                GetTripAllDetailResult.class);
+        GetTripAllDetailResult gtdr = reGetTripAllDetailResult.getBody();
+//        GetTripAllDetailResult gtdr = restTemplate.postForObject(
+//                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/"
+//                ,gtdi,GetTripAllDetailResult.class);
+        return gtdr;
+    }
+
+
+    private GetTripAllDetailResult getTripAllDetailInformation(GetTripAllDetailInfo gtdi, String tripId, HttpHeaders httpHeaders){
         GetTripAllDetailResult gtdr;
         if(tripId.startsWith("G") || tripId.startsWith("D")){
-            gtdr = restTemplate.postForObject(
-                    "http://ts-travel-service:12346/travel/getTripAllDetailInfo"
-                    ,gtdi,GetTripAllDetailResult.class);
+
+            HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
+            ResponseEntity<GetTripAllDetailResult> reGetTripAllDetailResult = restTemplate.exchange(
+                    "http://ts-travel-service:12346/travel/getTripAllDetailInfo/",
+                    HttpMethod.POST,
+                    requestGetTripAllDetailResult,
+                    GetTripAllDetailResult.class);
+            gtdr = reGetTripAllDetailResult.getBody();
+//            gtdr = restTemplate.postForObject(
+//                    "http://ts-travel-service:12346/travel/getTripAllDetailInfo"
+//                    ,gtdi,GetTripAllDetailResult.class);
         }else{
-            gtdr = restTemplate.postForObject(
-                    "http://ts-travel2-service:16346/travel2/getTripAllDetailInfo"
-                    ,gtdi,GetTripAllDetailResult.class);
+            HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
+            ResponseEntity<GetTripAllDetailResult> reGetTripAllDetailResult = restTemplate.exchange(
+                    "http://ts-travel2-service:16346/travel2/getTripAllDetailInfo",
+                    HttpMethod.POST,
+                    requestGetTripAllDetailResult,
+                    GetTripAllDetailResult.class);
+            gtdr = reGetTripAllDetailResult.getBody();
+//            gtdr = restTemplate.postForObject(
+//                    "http://ts-travel2-service:16346/travel2/getTripAllDetailInfo"
+//                    ,gtdi,GetTripAllDetailResult.class);
         }
         return gtdr;
     }
 
-    private CreateOrderResult createOrder(Order order, String loginToken, String tripId){
+    private CreateOrderResult createOrder(Order order, String loginToken, String tripId, HttpHeaders httpHeaders){
         CreateOrderInfo createOrderInfo = new CreateOrderInfo();
         createOrderInfo.setOrder(order);
         createOrderInfo.setLoginToken(loginToken);
         CreateOrderResult createOrderResult;
         if(tripId.startsWith("G") || tripId.startsWith("D")){
-            createOrderResult = restTemplate.postForObject(
-                    "http://ts-order-service:12031/order/create"
-                    ,createOrderInfo,CreateOrderResult.class);
+
+            HttpEntity requestCreateOrder = new HttpEntity(createOrderInfo, httpHeaders);
+            ResponseEntity<CreateOrderResult> reCreateOrder = restTemplate.exchange(
+                    "http://ts-order-service:12031/order/create",
+                    HttpMethod.POST,
+                    requestCreateOrder,
+                    CreateOrderResult.class);
+            createOrderResult = reCreateOrder .getBody();
+//            createOrderResult = restTemplate.postForObject(
+//                    "http://ts-order-service:12031/order/create"
+//                    ,createOrderInfo,CreateOrderResult.class);
         }else{
-            createOrderResult = restTemplate.postForObject(
-                    "http://ts-order-other-service:12032/orderOther/create"
-                    ,createOrderInfo,CreateOrderResult.class);
+
+            HttpEntity requestCreateOrder = new HttpEntity(createOrderInfo, httpHeaders);
+            ResponseEntity<CreateOrderResult> reCreateOrder = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/create",
+                    HttpMethod.POST,
+                    requestCreateOrder,
+                    CreateOrderResult.class);
+            createOrderResult = reCreateOrder .getBody();
+//            createOrderResult = restTemplate.postForObject(
+//                    "http://ts-order-other-service:12032/orderOther/create"
+//                    ,createOrderInfo,CreateOrderResult.class);
         }
         return createOrderResult;
     }
 
-    private ChangeOrderResult updateOrder(ChangeOrderInfo info, String tripId){
+    private ChangeOrderResult updateOrder(ChangeOrderInfo info, String tripId, HttpHeaders httpHeaders){
         ChangeOrderResult result;
         if(tripGD(tripId)){
-            result = restTemplate.postForObject("http://ts-order-service:12031/order/update",
-                    info,ChangeOrderResult.class);
+            HttpEntity requestUpdateOrder = new HttpEntity(info, httpHeaders);
+            ResponseEntity<ChangeOrderResult> reUpdateOrder = restTemplate.exchange(
+                    "http://ts-order-service:12031/order/update",
+                    HttpMethod.POST,
+                    requestUpdateOrder,
+                    ChangeOrderResult.class);
+            result = reUpdateOrder.getBody();
+//            result = restTemplate.postForObject("http://ts-order-service:12031/order/update",
+//                    info,ChangeOrderResult.class);
         }else{
-            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/update",
-                    info,ChangeOrderResult.class);
+            HttpEntity requestUpdateOrder = new HttpEntity(info, httpHeaders);
+            ResponseEntity<ChangeOrderResult> reUpdateOrder = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/update",
+                    HttpMethod.POST,
+                    requestUpdateOrder,
+                    ChangeOrderResult.class);
+            result = reUpdateOrder.getBody();
+//            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/update",
+//                    info,ChangeOrderResult.class);
         }
         return result;
     }
 
-    private DeleteOrderResult deleteOrder(String orderId, String tripId){
+    private DeleteOrderResult deleteOrder(String orderId, String tripId, HttpHeaders httpHeaders){
         DeleteOrderInfo deleteOrderInfo = new DeleteOrderInfo();
         deleteOrderInfo.setOrderId(orderId);
         DeleteOrderResult deleteOrderResult;
         if(tripGD(tripId)){
-            deleteOrderResult = restTemplate.postForObject("http://ts-order-service:12031/order/delete",
-                    deleteOrderInfo,DeleteOrderResult.class);
+            HttpEntity requestDeleteOrder = new HttpEntity(deleteOrderInfo, httpHeaders);
+            ResponseEntity<DeleteOrderResult> reDeleteOrder = restTemplate.exchange(
+                    "http://ts-order-service:12031/order/delete",
+                    HttpMethod.POST,
+                    requestDeleteOrder,
+                    DeleteOrderResult.class);
+            deleteOrderResult = reDeleteOrder .getBody();
+//            deleteOrderResult = restTemplate.postForObject("http://ts-order-service:12031/order/delete",
+//                    deleteOrderInfo,DeleteOrderResult.class);
         }else{
-            deleteOrderResult = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/delete",
-                    deleteOrderInfo,DeleteOrderResult.class);
+            HttpEntity requestDeleteOrder = new HttpEntity(deleteOrderInfo, httpHeaders);
+            ResponseEntity<DeleteOrderResult> reDeleteOrder = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/delete",
+                    HttpMethod.POST,
+                    requestDeleteOrder,
+                    DeleteOrderResult.class);
+            deleteOrderResult = reDeleteOrder .getBody();
+//            deleteOrderResult = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/delete",
+//                    deleteOrderInfo,DeleteOrderResult.class);
         }
         return deleteOrderResult;
     }
 
-    private QueryOrderResult getOrderByRebookInfo(RebookInfo info){
+    private QueryOrderResult getOrderByRebookInfo(RebookInfo info, HttpHeaders httpHeaders){
         QueryOrderResult queryOrderResult;
-
+        //改签只能改签一次，查询订单状态来判断是否已经改签过
         if(info.getOldTripId().startsWith("G") || info.getOldTripId().startsWith("D")){
-            queryOrderResult = restTemplate.postForObject(
-                    "http://ts-order-service:12031/order/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
+            HttpEntity requestEntityGetOrderByRebookInfo = new HttpEntity(info,httpHeaders);
+            ResponseEntity<QueryOrderResult> reGetOrderByRebookInfo = restTemplate.exchange(
+                    "http://ts-order-service:12031/order/getById",
+                    HttpMethod.POST,
+                    requestEntityGetOrderByRebookInfo,
+                    QueryOrderResult.class);
+            queryOrderResult = reGetOrderByRebookInfo.getBody();
+//            queryOrderResult = restTemplate.postForObject(
+//                    "http://ts-order-service:12031/order/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }else{
-            queryOrderResult = restTemplate.postForObject(
-                    "http://ts-order-other-service:12032/orderOther/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
+
+            HttpEntity requestEntityGetOrderByRebookInfo = new HttpEntity(info,httpHeaders);
+            ResponseEntity<QueryOrderResult> reGetOrderByRebookInfo = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/orderOther/getById",
+                    HttpMethod.POST,
+                    requestEntityGetOrderByRebookInfo,
+                    QueryOrderResult.class);
+            queryOrderResult = reGetOrderByRebookInfo.getBody();
+
+//            queryOrderResult = restTemplate.postForObject(
+//                    "http://ts-order-other-service:12032/orderOther/getById", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }
         return queryOrderResult;
     }
 
-    private String queryForStationName(String stationId){
+    private String queryForStationName(String stationId, HttpHeaders httpHeaders){
         QueryById query = new QueryById();
         query.setStationId(stationId);
-        QueryStation station = restTemplate.postForObject(
-                "http://ts-station-service:12345/station/queryById"
-                ,query,QueryStation.class);
+
+        HttpEntity requestEntityQueryForStationName = new HttpEntity(query,httpHeaders);
+        ResponseEntity<QueryStation> reQueryForStationName = restTemplate.exchange(
+                "http://ts-station-service:12345/station/queryById",
+                HttpMethod.POST,
+                requestEntityQueryForStationName,
+                QueryStation.class);
+        QueryStation station = reQueryForStationName.getBody();
+//        QueryStation station = restTemplate.postForObject(
+//                "http://ts-station-service:12345/station/queryById"
+//                ,query,QueryStation.class);
         return station.getName();
     }
 
-    private boolean payDifferentMoney(String orderId, String tripId, String userId, String money){
+    private boolean payDifferentMoney(String orderId, String tripId, String userId, String money, HttpHeaders httpHeaders){
         PaymentDifferenceInfo info = new PaymentDifferenceInfo();
         info.setOrderId(orderId);
         info.setTripId(tripId);
         info.setUserId(userId);
         info.setPrice(money);
-        boolean result = restTemplate.postForObject(
-                "http://ts-inside-payment-service:18673/inside_payment/payDifference"
-                ,info,Boolean.class);
+
+        HttpEntity requestEntityPayDifferentMoney = new HttpEntity(info,httpHeaders);
+        ResponseEntity<Boolean> rePayDifferentMoney = restTemplate.exchange(
+                "http://ts-inside-payment-service:18673/inside_payment/payDifference",
+                HttpMethod.POST,
+                requestEntityPayDifferentMoney,
+                Boolean.class);
+        boolean result = rePayDifferentMoney.getBody();
+//        boolean result = restTemplate.postForObject(
+//                "http://ts-inside-payment-service:18673/inside_payment/payDifference"
+//                ,info,Boolean.class);
         return result;
     }
 
-    private boolean drawBackMoney(String userId,String money){
+    private boolean drawBackMoney(String userId,String money, HttpHeaders httpHeaders){
         DrawBackInfo info = new DrawBackInfo();
         info.setUserId(userId);
         info.setMoney(money);
-        boolean result = restTemplate.postForObject(
-                "http://ts-inside-payment-service:18673/inside_payment/drawBack"
-                ,info,Boolean.class);
+
+        HttpEntity requestEntityDrawBackMoney = new HttpEntity(info,httpHeaders);
+        ResponseEntity<Boolean> reDrawBackMoney = restTemplate.exchange(
+                "http://ts-inside-payment-service:18673/inside_payment/drawBack",
+                HttpMethod.POST,
+                requestEntityDrawBackMoney,
+                Boolean.class);
+        boolean result = reDrawBackMoney.getBody();
+//        boolean result = restTemplate.postForObject(
+//                "http://ts-inside-payment-service:18673/inside_payment/drawBack"
+//                ,info,Boolean.class);
         return result;
     }
 

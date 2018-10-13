@@ -6,6 +6,7 @@ import fdse.microservice.domain.QueryStation;
 import fdse.microservice.domain.Station;
 import fdse.microservice.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class StationServiceImpl implements StationService {
     private StationRepository repository;
 
     @Override
-    public boolean create(Information info){
+    public boolean create(Information info, HttpHeaders headers){
         boolean result = false;
         if(repository.findById(info.getId()) == null){
             Station station = new Station(info.getId(), info.getName());
@@ -30,7 +31,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean exist(QueryStation info){
+    public boolean exist(QueryStation info,HttpHeaders headers){
         boolean result = false;
         if(repository.findByName(info.getName()) != null){
             result = true;
@@ -39,7 +40,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean update(Information info){
+    public boolean update(Information info,HttpHeaders headers){
         boolean result = false;
 
         Station station = new Station(info.getId(), info.getName());
@@ -51,7 +52,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean delete(Information info){
+    public boolean delete(Information info,HttpHeaders headers){
         boolean result = false;
         if(repository.findById(info.getId()) != null){
             Station station = new Station(info.getId(),info.getName());
@@ -62,18 +63,18 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public List<Station> query(){
+    public List<Station> query(HttpHeaders headers){
         return repository.findAll();
     }
 
     @Override
-    public String queryForId(QueryForId info){
+    public String queryForId(QueryForId info,HttpHeaders headers){
         Station station = repository.findByName(info.getName());
         return station.getId();
     }
 
     @Override
-    public QueryStation queryById(String stationId){
+    public QueryStation queryById(String stationId,HttpHeaders headers){
         Station station = repository.findById(stationId);
         if(station != null){
             return new QueryStation(station.getName());

@@ -2,6 +2,7 @@ package contacts.service;
 
 import contacts.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import contacts.repository.ContactsRepository;
 import java.util.ArrayList;
@@ -14,19 +15,19 @@ public class ContactsServiceImpl implements ContactsService{
     private ContactsRepository contactsRepository;
 
     @Override
-    public Contacts findContactsById(UUID id){
+    public Contacts findContactsById(UUID id, HttpHeaders headers){
         return contactsRepository.findById(id);
     }
 
     @Override
-    public ArrayList<Contacts> findContactsByAccountId(UUID accountId){
+    public ArrayList<Contacts> findContactsByAccountId(UUID accountId, HttpHeaders headers){
         ArrayList<Contacts> arr = contactsRepository.findByAccountId(accountId);
         System.out.println("[Contacts-Query-Service][Query-Contacts] Result Size:" + arr.size());
         return arr;
     }
 
     @Override
-    public Contacts createContacts(Contacts contacts){
+    public Contacts createContacts(Contacts contacts, HttpHeaders headers){
         Contacts contactsTemp = contactsRepository.findById(contacts.getId());
         if(contactsTemp != null){
             System.out.println("[Contacts Service][Init Contacts] Already Exists Id:" + contacts.getId());
@@ -37,7 +38,7 @@ public class ContactsServiceImpl implements ContactsService{
     }
 
     @Override
-    public AddContactsResult create(AddContactsInfo aci,String accountId){
+    public AddContactsResult create(AddContactsInfo aci,String accountId, HttpHeaders headers){
         Contacts contacts = new Contacts();
         contacts.setId(UUID.randomUUID());
         contacts.setName(aci.getName());
@@ -64,7 +65,7 @@ public class ContactsServiceImpl implements ContactsService{
     }
 
     @Override
-    public DeleteContactsResult delete(UUID contactsId){
+    public DeleteContactsResult delete(UUID contactsId, HttpHeaders headers){
         contactsRepository.deleteById(contactsId);
         Contacts contacts = contactsRepository.findById(contactsId);
         DeleteContactsResult dcr = new DeleteContactsResult();
@@ -81,8 +82,8 @@ public class ContactsServiceImpl implements ContactsService{
     }
 
     @Override
-    public ModifyContactsResult modify(ModifyContactsInfo info){
-        Contacts oldContacts = findContactsById(UUID.fromString(info.getContactsId()));
+    public ModifyContactsResult modify(ModifyContactsInfo info, HttpHeaders headers){
+        Contacts oldContacts = findContactsById(UUID.fromString(info.getContactsId()), headers);
         ModifyContactsResult mcr = new ModifyContactsResult();
         if(oldContacts == null){
             System.out.println("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");
@@ -104,7 +105,7 @@ public class ContactsServiceImpl implements ContactsService{
     }
 
     @Override
-    public GetAllContactsResult getAllContacts(){
+    public GetAllContactsResult getAllContacts(HttpHeaders headers){
         ArrayList<Contacts> contacts = contactsRepository.findAll();
         GetAllContactsResult result = new GetAllContactsResult();
         result.setStatus(true);

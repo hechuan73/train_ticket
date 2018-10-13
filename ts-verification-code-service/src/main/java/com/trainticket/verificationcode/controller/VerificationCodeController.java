@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import com.trainticket.verificationcode.service.*;
 import javax.servlet.http.HttpServletRequest;
@@ -20,15 +21,15 @@ public class VerificationCodeController {
 
 
 	@RequestMapping(value="/error",method=RequestMethod.GET)
-	public String welcome(){
+	public String welcome(@RequestHeader HttpHeaders headers){
 		return "error";
 	}
 
 	
 	@RequestMapping(value = "/verification/generate", method = RequestMethod.GET)
-	public void imagecode(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void imagecode(@RequestHeader HttpHeaders headers,HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    OutputStream os = response.getOutputStream();
-	    Map<String,Object> map = verificationCodeService.getImageCode(60, 20, os, request, response);
+	    Map<String,Object> map = verificationCodeService.getImageCode(60, 20, os, request, response, headers);
 	    String simpleCaptcha = "simpleCaptcha";
 	    request.getSession().setAttribute(simpleCaptcha, map.get("strEnsure").toString().toLowerCase());
 	    request.getSession().setAttribute("codeTime",new Date().getTime());
@@ -42,7 +43,7 @@ public class VerificationCodeController {
 	}
 
 	@RequestMapping(value = "/verification/verify", method = RequestMethod.POST)
-	public boolean verifyCode(HttpServletRequest request, HttpServletResponse response ) {
+	public boolean verifyCode(@RequestHeader HttpHeaders headers,HttpServletRequest request, HttpServletResponse response ) {
 		return true;
 //		String receivedCode = request.getParameter("verificationCode");
 //		System.out.println("receivedCode"+receivedCode);

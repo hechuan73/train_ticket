@@ -25,7 +25,7 @@ public class InitData implements CommandLineRunner {
         CreateAccountInfo info1 = new CreateAccountInfo();
         info1.setUserId("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f");
         info1.setMoney("10000");
-        service.createAccount(info1);
+        service.createAccount(info1,null);
 
 //        PaymentInfo info2 = new PaymentInfo();
 //        info2.setOrderId("5ad7750b-a68b-49c0-a8c0-32776b067703");
@@ -38,7 +38,7 @@ public class InitData implements CommandLineRunner {
         payment.setPrice("100.0");
         payment.setUserId("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f");
         payment.setType(PaymentType.P);
-        service.initPayment(payment);
+        service.initPayment(payment,null);
     }
 }
 

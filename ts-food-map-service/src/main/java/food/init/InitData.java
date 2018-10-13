@@ -53,7 +53,7 @@ public class InitData implements CommandLineRunner{
                     lineTemp = br1.readLine().trim().split("=");
 //                    System.out.println("foodList=" + lineTemp[1]);
                     fs.setFoodList(toFoodList(lineTemp[1]));
-                    service.createFoodStore(fs);
+                    service.createFoodStore(fs,null);
                 }
                 line = br1.readLine();
             }
@@ -77,7 +77,7 @@ public class InitData implements CommandLineRunner{
                     tf.setTripId(lineTemp[1]);
                     lineTemp = br2.readLine().trim().split("=");
                     tf.setFoodList(toFoodList(lineTemp[1]));
-                    service.createTrainFood(tf);
+                    service.createTrainFood(tf,null);
                 }
                 line2 = br2.readLine();
             }

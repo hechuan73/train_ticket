@@ -5,6 +5,7 @@ import config.domain.Information;
 import config.domain.Information2;
 import config.repository.ConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class ConfigServiceImpl implements ConfigService {
 //        }
 //    }
 
-    public String create(Information info){
+    public String create(Information info, HttpHeaders headers){
         if(repository.findByName(info.getName()) != null){
             String result = "Config " + info.getName() + " already exists.";
             return result;
@@ -37,7 +38,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public String update(Information info){
+    public String update(Information info, HttpHeaders headers){
         if(repository.findByName(info.getName()) == null){
             String result = "Config " + info.getName() + " doesn't exist.";
             return result;
@@ -48,7 +49,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public Config retrieve(Information2 info){
+    public Config retrieve(Information2 info, HttpHeaders headers){
         if(repository.findByName(info.getName()) == null){
             return null;
         }else{
@@ -56,7 +57,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public String query(Information2 info){
+    public String query(Information2 info, HttpHeaders headers){
         if(repository.findByName(info.getName()) == null){
             return null;
         }else{
@@ -64,7 +65,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public String delete(Information2 info){
+    public String delete(Information2 info, HttpHeaders headers){
         if(repository.findByName(info.getName()) == null){
             String result = "Config " + info.getName() + " doesn't exist.";
             return result;
@@ -75,7 +76,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public List<Config> queryAll(){
+    public List<Config> queryAll(HttpHeaders headers){
         return repository.findAll();
     }
 }

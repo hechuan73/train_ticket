@@ -13,6 +13,8 @@ public class ResultForTravel {
 
     private HashMap<String,String> prices;
 
+    private String message;
+
     public ResultForTravel(){
         //Default Constructor
     }
@@ -47,5 +49,13 @@ public class ResultForTravel {
 
     public void setPrices(HashMap<String, String> prices) {
         this.prices = prices;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

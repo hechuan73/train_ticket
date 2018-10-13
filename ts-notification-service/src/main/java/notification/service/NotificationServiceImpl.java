@@ -2,16 +2,12 @@ package notification.service;
 
 import notification.domain.Mail;
 import notification.domain.NotifyInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
-
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
-
-
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -23,7 +19,7 @@ public class NotificationServiceImpl implements NotificationService{
     MailService mailService;
 
     @Override
-    public boolean preserve_success(NotifyInfo info){
+    public boolean preserve_success(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom("fdse_microservices@163.com");
         mail.setMailTo(info.getEmail());
@@ -50,7 +46,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_create_success(NotifyInfo info){
+    public boolean order_create_success(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom("fdse_microservices@163.com");
         mail.setMailTo(info.getEmail());
@@ -77,7 +73,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_changed_success(NotifyInfo info){
+    public boolean order_changed_success(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom("fdse_microservices@163.com");
         mail.setMailTo(info.getEmail());
@@ -104,7 +100,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_cancel_success(NotifyInfo info){
+    public boolean order_cancel_success(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom("fdse_microservices@163.com");
         mail.setMailTo(info.getEmail());

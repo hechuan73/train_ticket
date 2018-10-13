@@ -1,6 +1,7 @@
 package train.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import train.domain.Information;
 import train.domain.Information2;
@@ -19,33 +20,38 @@ public class TrainController {
     @Autowired
     private TrainService trainService;
 
+    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    public String home(@RequestHeader HttpHeaders headers) {
+        return "Welcome to [ Train Service ] !";
+    }
+
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/train/create",method= RequestMethod.POST)
-    public boolean create(@RequestBody Information info){
-        return trainService.create(info);
+    public boolean create(@RequestBody Information info,@RequestHeader HttpHeaders headers){
+        return trainService.create(info,headers);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/train/retrieve",method= RequestMethod.POST)
-    public TrainType retrieve(@RequestBody Information2 info){
-        return trainService.retrieve(info);
+    public TrainType retrieve(@RequestBody Information2 info,@RequestHeader HttpHeaders headers){
+        return trainService.retrieve(info,headers);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/train/update",method= RequestMethod.POST)
-    public boolean update(@RequestBody Information info){
-        return trainService.update(info);
+    public boolean update(@RequestBody Information info,@RequestHeader HttpHeaders headers){
+        return trainService.update(info,headers);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/train/delete",method= RequestMethod.POST)
-    public boolean delete(@RequestBody Information2 info){
-        return trainService.delete(info);
+    public boolean delete(@RequestBody Information2 info,@RequestHeader HttpHeaders headers){
+        return trainService.delete(info,headers);
     }
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/train/query",method= RequestMethod.GET)
-    public List<TrainType> query(){
-        return trainService.query();
+    public List<TrainType> query(@RequestHeader HttpHeaders headers){
+        return trainService.query(headers);
     }
 }

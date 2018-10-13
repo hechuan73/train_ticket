@@ -25,7 +25,7 @@ public class initData implements CommandLineRunner {
         acc.setName("Default User");
         acc.setGender(Gender.MALE.getCode());
         acc.setId(UUID.fromString("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"));
-        ssoService.createAccount(acc);
+        ssoService.createAccount(acc, null);
 
         acc = new Account();
         acc.setDocumentType(DocumentType.ID_CARD.getCode());
@@ -35,7 +35,7 @@ public class initData implements CommandLineRunner {
         acc.setName("adminroot");
         acc.setGender(Gender.MALE.getCode());
         acc.setId(UUID.fromString("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f"));
-        ssoService.createAccount(acc);
+        ssoService.createAccount(acc, null);
     }
 
 }

@@ -1,6 +1,7 @@
 package route.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import route.domain.*;
 import route.service.RouteService;
@@ -17,28 +18,28 @@ public class RouteController {
     }
 
     @RequestMapping(path = "/route/createAndModify", method = RequestMethod.POST)
-    public CreateAndModifyRouteResult createAndModifyRoute(@RequestBody CreateAndModifyRouteInfo createAndModifyRouteInfo){
-        return routeService.createAndModify(createAndModifyRouteInfo);
+    public CreateAndModifyRouteResult createAndModifyRoute(@RequestBody CreateAndModifyRouteInfo createAndModifyRouteInfo,@RequestHeader HttpHeaders headers){
+        return routeService.createAndModify(createAndModifyRouteInfo, headers);
     }
 
     @RequestMapping(path = "/route/delete", method = RequestMethod.POST)
-    public DeleteRouteResult deleteRoute(@RequestBody DeleteRouteInfo deleteRouteInfo){
-        return routeService.deleteRoute(deleteRouteInfo);
+    public DeleteRouteResult deleteRoute(@RequestBody DeleteRouteInfo deleteRouteInfo,@RequestHeader HttpHeaders headers){
+        return routeService.deleteRoute(deleteRouteInfo, headers);
     }
 
     @RequestMapping(path = "/route/queryById/{routeId}", method = RequestMethod.GET)
-    public GetRouteByIdResult queryById(@PathVariable String routeId){
-        return routeService.getRouteById(routeId);
+    public GetRouteByIdResult queryById(@PathVariable String routeId,@RequestHeader HttpHeaders headers){
+        return routeService.getRouteById(routeId, headers);
     }
 
     @RequestMapping(path = "/route/queryAll", method = RequestMethod.GET)
-    public GetRoutesListlResult queryAll(){
-        return routeService.getAllRoutes();
+    public GetRoutesListlResult queryAll(@RequestHeader HttpHeaders headers){
+        return routeService.getAllRoutes(headers);
     }
 
     @RequestMapping(path = "/route/queryByStartAndTerminal", method = RequestMethod.POST)
-    public GetRoutesListlResult queryByStartAndTerminal(@RequestBody GetRouteByStartAndTerminalInfo getRouteByStartAndTerminalInfo){
-        return routeService.getRouteByStartAndTerminal(getRouteByStartAndTerminalInfo);
+    public GetRoutesListlResult queryByStartAndTerminal(@RequestBody GetRouteByStartAndTerminalInfo getRouteByStartAndTerminalInfo,@RequestHeader HttpHeaders headers){
+        return routeService.getRouteByStartAndTerminal(getRouteByStartAndTerminalInfo, headers);
     }
 
 }
