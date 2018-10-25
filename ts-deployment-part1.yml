@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: redis
-        image: 10.141.212.25:5555/cluster-ts-redis
+        image: redis
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 6379
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: ts-account-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
       - name: ts-route-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: ts-contacts-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
       - name: ts-order-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -111,7 +111,7 @@ spec:
     spec:
       containers:
       - name: ts-order-other-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -131,7 +131,7 @@ spec:
     spec:
       containers:
       - name: ts-config-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -151,7 +151,7 @@ spec:
     spec:
       containers:
       - name: ts-station-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -171,7 +171,7 @@ spec:
     spec:
       containers:
       - name: ts-train-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -191,7 +191,7 @@ spec:
     spec:
       containers:
       - name: ts-travel-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -211,7 +211,7 @@ spec:
     spec:
       containers:
       - name: ts-travel2-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -231,7 +231,7 @@ spec:
     spec:
       containers:
       - name: ts-price-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -251,7 +251,7 @@ spec:
     spec:
       containers:
       - name: ts-security-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -271,7 +271,7 @@ spec:
     spec:
       containers:
       - name: ts-inside-payment-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -291,7 +291,7 @@ spec:
     spec:
       containers:
       - name: ts-payment-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -311,7 +311,7 @@ spec:
     spec:
       containers:
       - name: ts-assurance-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -331,7 +331,7 @@ spec:
     spec:
       containers:
       - name: ts-ticket-office-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -352,7 +352,7 @@ spec:
     spec:
       containers:
       - name: ts-voucher-mysql
-        image: 10.141.212.25:5555/cluster-ts-mysql
+        image: mysql
         imagePullPolicy: IfNotPresent
         env:
         # Use secret in real usage
@@ -376,7 +376,7 @@ spec:
     spec:
       containers:
       - name: ts-food-map-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -396,7 +396,7 @@ spec:
     spec:
       containers:
       - name: ts-consign-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -416,7 +416,7 @@ spec:
     spec:
       containers:
       - name: ts-consign-price-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
@@ -436,7 +436,7 @@ spec:
     spec:
       containers:
       - name: ts-food-mongo
-        image: 10.141.212.25:5555/cluster-ts-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017

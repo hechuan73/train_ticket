@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: ts-ui-dashboard
-        image: 10.141.212.25:5555/cluster-ts-ui-dashboard
+        image: ts/ts-ui-dashboard
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

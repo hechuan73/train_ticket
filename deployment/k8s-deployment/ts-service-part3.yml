@@ -3,9 +3,7 @@ kind: Service
 metadata:
   name: ts-ui-dashboard
 spec:
-  type: NodePort
   ports:
     - port: 8080
-      nodePort: 30004
   selector:
-   app: ts-ui-dashboard
+    app: ts-ui-dashboard

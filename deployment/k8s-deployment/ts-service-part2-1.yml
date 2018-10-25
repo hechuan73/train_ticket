@@ -6,7 +6,7 @@ spec:
   ports:
     - port: 18767
   selector:
-   app: ts-admin-basic-info-service
+    app: ts-admin-basic-info-service
 
 ---
 
@@ -18,7 +18,7 @@ spec:
   ports:
     - port: 16112
   selector:
-   app: ts-admin-order-service
+    app: ts-admin-order-service
 
 ---
 
@@ -30,7 +30,7 @@ spec:
   ports:
     - port: 16113
   selector:
-   app: ts-admin-route-service
+    app: ts-admin-route-service
 
 ---
 
@@ -42,7 +42,7 @@ spec:
   ports:
     - port: 16114
   selector:
-   app: ts-admin-travel-service
+    app: ts-admin-travel-service
 
 ---
 
@@ -54,7 +54,7 @@ spec:
   ports:
     - port: 16115
   selector:
-   app: ts-admin-user-service
+    app: ts-admin-user-service
 
 ---
 
@@ -66,7 +66,7 @@ spec:
   ports:
     - port: 18888
   selector:
-   app: ts-assurance-service
+    app: ts-assurance-service
 
 ---
 
@@ -78,7 +78,7 @@ spec:
   ports:
     - port: 15680
   selector:
-   app: ts-basic-service
+    app: ts-basic-service
 
 ---
 
@@ -90,7 +90,7 @@ spec:
   ports:
     - port: 18885
   selector:
-   app: ts-cancel-service
+    app: ts-cancel-service
 
 ---
 
@@ -102,7 +102,7 @@ spec:
   ports:
     - port: 15679
   selector:
-   app: ts-config-service
+    app: ts-config-service
 
 ---
 
@@ -114,7 +114,7 @@ spec:
   ports:
     - port: 16110
   selector:
-   app: ts-consign-price-service
+    app: ts-consign-price-service
 
 ---
 
@@ -126,7 +126,7 @@ spec:
   ports:
     - port: 16111
   selector:
-   app: ts-consign-service
+    app: ts-consign-service
 
 ---
 
@@ -138,7 +138,7 @@ spec:
   ports:
     - port: 12347
   selector:
-   app: ts-contacts-service
+    app: ts-contacts-service
 
 ---
 
@@ -150,7 +150,7 @@ spec:
   ports:
     - port: 12386
   selector:
-   app: ts-execute-service
+    app: ts-execute-service
 
 ---
 
@@ -162,7 +162,7 @@ spec:
   ports:
     - port: 18855
   selector:
-   app: ts-food-map-service
+    app: ts-food-map-service
 
 ---
 
@@ -174,7 +174,7 @@ spec:
   ports:
     - port: 18856
   selector:
-   app: ts-food-service
+    app: ts-food-service
 
 ---
 
@@ -186,7 +186,7 @@ spec:
   ports:
     - port: 18673
   selector:
-   app: ts-inside-payment-service
+    app: ts-inside-payment-service
 
 ---
 
@@ -198,7 +198,7 @@ spec:
   ports:
     - port: 12342
   selector:
-   app: ts-login-service
+    app: ts-login-service
 
 ---
 
@@ -210,7 +210,7 @@ spec:
   ports:
     - port: 17853
   selector:
-   app: ts-notification-service
+    app: ts-notification-service
 
 ---
 
@@ -222,7 +222,7 @@ spec:
   ports:
     - port: 12862
   selector:
-   app: ts-news-service
+    app: ts-news-service
 
 ---
 
@@ -234,7 +234,7 @@ spec:
   ports:
     - port: 12032
   selector:
-   app: ts-order-other-service
+    app: ts-order-other-service
 
 ---
 
@@ -246,7 +246,7 @@ spec:
   ports:
     - port: 12031
   selector:
-   app: ts-order-service
+    app: ts-order-service
 
 ---
 
@@ -258,7 +258,7 @@ spec:
   ports:
     - port: 19001
   selector:
-   app: ts-payment-service
+    app: ts-payment-service
 
 ---
 
@@ -270,7 +270,7 @@ spec:
   ports:
     - port: 14569
   selector:
-   app: ts-preserve-other-service
+    app: ts-preserve-other-service
 
 ---
 
@@ -282,7 +282,7 @@ spec:
   ports:
     - port: 14568
   selector:
-   app: ts-preserve-service
+    app: ts-preserve-service
 
 ---
 
@@ -294,7 +294,7 @@ spec:
   ports:
     - port: 16579
   selector:
-   app: ts-price-service
+    app: ts-price-service
 
 ---
 
@@ -306,4 +306,4 @@ spec:
   ports:
     - port: 18886
   selector:
-   app: ts-rebook-service
+    app: ts-rebook-service

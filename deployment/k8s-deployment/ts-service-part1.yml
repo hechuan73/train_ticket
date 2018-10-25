@@ -6,7 +6,7 @@ spec:
   ports:
     - port: 6379
   selector:
-   app: redis
+    app: redis
 
 ---
 
@@ -18,7 +18,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-account-mongo
+    app: ts-account-mongo
 
 ---
 
@@ -30,7 +30,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-route-mongo
+    app: ts-route-mongo
 
 ---
 
@@ -42,7 +42,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-contacts-mongo
+    app: ts-contacts-mongo
 
 ---
 
@@ -54,7 +54,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-order-mongo
+    app: ts-order-mongo
 
 ---
 
@@ -66,7 +66,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-order-other-mongo
+    app: ts-order-other-mongo
 
 ---
 
@@ -78,7 +78,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-config-mongo
+    app: ts-config-mongo
 
 ---
 
@@ -90,7 +90,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-station-mongo
+    app: ts-station-mongo
 
 ---
 
@@ -102,7 +102,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-train-mongo
+    app: ts-train-mongo
 
 ---
 
@@ -114,7 +114,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-travel-mongo
+    app: ts-travel-mongo
 
 ---
 
@@ -126,7 +126,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-travel2-mongo
+    app: ts-travel2-mongo
 
 ---
 
@@ -138,7 +138,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-price-mongo
+    app: ts-price-mongo
 
 ---
 
@@ -150,7 +150,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-security-mongo
+    app: ts-security-mongo
 
 ---
 
@@ -162,7 +162,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-inside-payment-mongo
+    app: ts-inside-payment-mongo
 
 ---
 
@@ -174,7 +174,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-payment-mongo
+    app: ts-payment-mongo
 
 ---
 
@@ -186,7 +186,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-assurance-mongo
+    app: ts-assurance-mongo
 
 ---
 
@@ -198,7 +198,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-ticket-office-mongo
+    app: ts-ticket-office-mongo
 
 ---
 
@@ -210,7 +210,7 @@ spec:
   ports:
     - port: 3306
   selector:
-   app: ts-voucher-mysql
+    app: ts-voucher-mysql
 
 ---
 
@@ -222,7 +222,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-food-map-mongo
+    app: ts-food-map-mongo
 
 ---
 
@@ -234,7 +234,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-consign-mongo
+    app: ts-consign-mongo
 
 ---
 
@@ -246,7 +246,7 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-consign-price-mongo
+    app: ts-consign-price-mongo
 
 ---
 
@@ -258,4 +258,4 @@ spec:
   ports:
     - port: 27017
   selector:
-   app: ts-food-mongo
+    app: ts-food-mongo

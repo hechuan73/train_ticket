@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: ts-register-service
-        image: 10.141.212.25:5555/cluster-ts-register-service
+        image: ts/ts-register-service
         imagePullPolicy: Always
         ports:
         - containerPort: 12344
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: ts-route-plan-service
-        image: 10.141.212.25:5555/cluster-ts-route-plan-service
+        image: ts/ts-route-plan-service
         imagePullPolicy: Always
         ports:
         - containerPort: 14578
@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
       - name: ts-route-service
-        image: 10.141.212.25:5555/cluster-ts-route-service
+        image: ts/ts-route-service
         imagePullPolicy: Always
         ports:
         - containerPort: 11178
@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: ts-seat-service
-        image: 10.141.212.25:5555/cluster-ts-seat-service
+        image: ts/ts-seat-service
         imagePullPolicy: Always
         ports:
         - containerPort: 18898
@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
       - name: ts-security-service
-        image: 10.141.212.25:5555/cluster-ts-security-service
+        image: ts/ts-security-service
         imagePullPolicy: Always
         ports:
         - containerPort: 11188
@@ -111,7 +111,7 @@ spec:
     spec:
       containers:
       - name: ts-sso-service
-        image: 10.141.212.25:5555/cluster-ts-sso-service
+        image: ts/ts-sso-service
         imagePullPolicy: Always
         ports:
         - containerPort: 12349
@@ -131,7 +131,7 @@ spec:
     spec:
       containers:
       - name: ts-station-service
-        image: 10.141.212.25:5555/cluster-ts-station-service
+        image: ts/ts-station-service
         imagePullPolicy: Always
         ports:
         - containerPort: 12345
@@ -151,7 +151,7 @@ spec:
     spec:
       containers:
       - name: ts-ticket-office-service
-        image: 10.141.212.25:5555/cluster-ts-ticket-office-service
+        image: ts/ts-ticket-office-service
         imagePullPolicy: Always
         ports:
         - containerPort: 16108
@@ -171,7 +171,7 @@ spec:
     spec:
       containers:
       - name: ts-ticketinfo-service
-        image: 10.141.212.25:5555/cluster-ts-ticketinfo-service
+        image: ts/ts-ticketinfo-service
         imagePullPolicy: Always
         ports:
         - containerPort: 15681
@@ -191,7 +191,7 @@ spec:
     spec:
       containers:
       - name: ts-train-service
-        image: 10.141.212.25:5555/cluster-ts-train-service
+        image: ts/ts-train-service
         imagePullPolicy: Always
         ports:
         - containerPort: 14567
@@ -211,7 +211,7 @@ spec:
     spec:
       containers:
       - name: ts-travel2-service
-        image: 10.141.212.25:5555/cluster-ts-travel2-service
+        image: ts/ts-travel2-service
         imagePullPolicy: Always
         ports:
         - containerPort: 16346
@@ -231,7 +231,7 @@ spec:
     spec:
       containers:
       - name: ts-travel-plan-service
-        image: 10.141.212.25:5555/cluster-ts-travel-plan-service
+        image: ts/ts-travel-plan-service
         imagePullPolicy: Always
         ports:
         - containerPort: 14322
@@ -251,7 +251,7 @@ spec:
     spec:
       containers:
       - name: ts-travel-service
-        image: 10.141.212.25:5555/cluster-ts-travel-service
+        image: ts/ts-travel-service
         imagePullPolicy: Always
         ports:
         - containerPort: 12346
@@ -271,7 +271,7 @@ spec:
     spec:
       containers:
       - name: ts-verification-code-service
-        image: 10.141.212.25:5555/cluster-ts-verification-code-service
+        image: ts/ts-verification-code-service
         imagePullPolicy: Always
         ports:
         - containerPort: 15678
@@ -291,7 +291,7 @@ spec:
     spec:
       containers:
       - name: ts-voucher-service
-        image: 10.141.212.25:5555/cluster-ts-voucher-service
+        image: ts/ts-voucher-service
         imagePullPolicy: Always
         ports:
         - containerPort: 16101

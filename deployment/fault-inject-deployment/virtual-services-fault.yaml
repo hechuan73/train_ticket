@@ -9,10 +9,10 @@ spec:
   - route:
     - destination:
         host: ts-voucher-service
-        subset: v2
-      weight: 100
+        subset: v1
+      weight: 10
   - route:
     - destination:
         host: ts-voucher-service
-        subset: v1
-      weight: 0
+        subset: v2
+      weight: 10
