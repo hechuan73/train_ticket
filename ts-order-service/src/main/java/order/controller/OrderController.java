@@ -73,6 +73,20 @@ public class OrderController {
     }
 
     @CrossOrigin(origins = "*")
+    @RequestMapping(path = "/order/queryForRefresh", method = RequestMethod.POST)
+    public ArrayList<Order> queryOrdersForRefresh(@RequestBody QueryInfo qi,@CookieValue String loginId,@CookieValue String loginToken, @RequestHeader HttpHeaders headers){
+        System.out.println("[Order Service][Query Orders] Query Orders for " + loginId);
+        VerifyResult tokenResult = verifySsoLogin(loginToken, headers);
+        if(tokenResult.isStatus() == true){
+            System.out.println("[Order Service][Verify Login] Success");
+            return orderService.queryOrdersForRefresh(qi,loginId,headers);
+        }else{
+            System.out.println("[Order Service][Verify Login] Fail");
+            return new ArrayList<>();
+        }
+    }
+
+    @CrossOrigin(origins = "*")
     @RequestMapping(path="/order/calculate", method = RequestMethod.POST)
     public CalculateSoldTicketResult calculateSoldTicket(@RequestBody CalculateSoldTicketInfo csti, @RequestHeader HttpHeaders headers){
         System.out.println("[Order Service][Calculate Sold Tickets] Date:" + csti.getTravelDate() + " TrainNumber:"

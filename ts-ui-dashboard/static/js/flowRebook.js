@@ -39,8 +39,8 @@ function queryMyOrder(){
     myOrdersQueryInfo.boughtDateEnd = null;
     var myOrdersQueryData = JSON.stringify(myOrdersQueryInfo);
     $("#my_orders_result").html("");
-    queryForMyOrder("/order/query",myOrdersQueryData);
-    queryForMyOrder("/orderOther/query",myOrdersQueryData);
+    queryForMyOrder("/order/queryForRefresh",myOrdersQueryData);
+    queryForMyOrder("/orderOther/queryForRefresh",myOrdersQueryData);
 }
 
 function queryForMyOrder(path,data){
@@ -57,8 +57,8 @@ function queryForMyOrder(path,data){
             var size = result.length;
             for(var i = 0; i < size;i++){
                 var order = result[i];
-                var fromString = getStationNameById(order['from']);
-                var toString  = getStationNameById(order['to']);
+                var fromString = order['from'];
+                var toString  = order['to'];
                 $("#my_orders_result").append(
                     "<div class='panel panel-default'>" +
                     "<div class='panel-heading'>" +
@@ -84,14 +84,14 @@ function queryForMyOrder(path,data){
                     "<label class='col-sm-2 control-label'>From: </label>" +
                     "<div class='col-sm-10'>" +
                     "<label class='control-label my_order_list_from'>" + fromString + "</label>" +
-                    "<label class='control-label noshow_component my_order_list_from_id'>" + order["from"] + "</label>" +
+                    "<label class='control-label noshow_component my_order_list_from_name'>" + order["from"] + "</label>" +
                     "</div>" +
                     "</div>" +
                     "<div class='div form-group'>" +
                     "<label class='col-sm-2 control-label'>To: </label>" +
                     "<div class='col-sm-10'>" +
                     "<label class='control-label my_order_list_to'>" + toString + "</label>" +
-                    "<label class='control-label noshow_component my_order_list_to_id'>" + order["to"] + "</label>" +
+                    "<label class='control-label noshow_component my_order_list_to_name'>" + order["to"] + "</label>" +
                     "</div>" +
                     "</div>" +
                     "<div class='form-group'>" +
@@ -182,14 +182,14 @@ function addListenerToOrderChange(){
     var ticketChangeButtonSet = $(".order_rebook_btn");
     for(var i = 0;i < ticketChangeButtonSet.length;i++){
         ticketChangeButtonSet[i].onclick = function(){
-            var changeStartingPlaceId = $(this).parents("form").find(".my_order_list_from_id").text();
-            var changeEndPlaceId = $(this).parents("form").find(".my_order_list_to_id").text();
+            var changeStartingPlaceName = $(this).parents("form").find(".my_order_list_from_name").text();
+            var changeEndPlaceName = $(this).parents("form").find(".my_order_list_to_name").text();
             var orderStatus = $(this).parents("form").find(".my_order_list_status").text();
             if(orderStatus != 1){
                 alert("Order Can Not Be Changed");
                 return;
             }
-            replaceStationId(changeStartingPlaceId,changeEndPlaceId);
+            replaceStationId(changeStartingPlaceName,changeEndPlaceName);
             //$("#order_rebook_panel").css('display','block');
             location.hash="anchor_flow_rebook_rebook_orders";
             //Set Information on confirm page
@@ -272,39 +272,41 @@ function getStationNameById(stationId){
     return stationName;
 }
 
-function replaceStationId(stationIdOne,stationIdTwo){
-    var getStationInfoOne = new Object();
-    getStationInfoOne.stationId =  stationIdOne;
-    var getStationInfoOneData = JSON.stringify(getStationInfoOne);
-    $.ajax({
-        type: "post",
-        url: "/station/queryById",
-        contentType: "application/json",
-        dataType: "json",
-        data:getStationInfoOneData,
-        xhrFields: {
-            withCredentials: true
-        },
-        success: function (result) {
-            $("#travel_rebook_startingPlace").val(result["name"]);
-        },
-    });
-    var getStationInfoTwo = new Object();
-    getStationInfoTwo.stationId =  stationIdTwo;
-    var getStationInfoTwoData = JSON.stringify(getStationInfoTwo);
-    $.ajax({
-        type: "post",
-        url: "/station/queryById",
-        contentType: "application/json",
-        dataType: "json",
-        data:getStationInfoTwoData,
-        xhrFields: {
-            withCredentials: true
-        },
-        success: function (result) {
-            $("#travel_rebook_terminalPlace").val(result["name"]);
-        },
-    });
+function replaceStationId(stationNameOne,stationNameTwo){
+    $("#travel_rebook_startingPlace").val(stationNameOne);
+    $("#travel_rebook_terminalPlace").val(stationNameTwo);
+    // var getStationInfoOne = new Object();
+    // getStationInfoOne.stationId =  stationIdOne;
+    // var getStationInfoOneData = JSON.stringify(getStationInfoOne);
+    // $.ajax({
+    //     type: "post",
+    //     url: "/station/queryById",
+    //     contentType: "application/json",
+    //     dataType: "json",
+    //     data:getStationInfoOneData,
+    //     xhrFields: {
+    //         withCredentials: true
+    //     },
+    //     success: function (result) {
+    //         $("#travel_rebook_startingPlace").val(result["name"]);
+    //     },
+    // });
+    // var getStationInfoTwo = new Object();
+    // getStationInfoTwo.stationId =  stationIdTwo;
+    // var getStationInfoTwoData = JSON.stringify(getStationInfoTwo);
+    // $.ajax({
+    //     type: "post",
+    //     url: "/station/queryById",
+    //     contentType: "application/json",
+    //     dataType: "json",
+    //     data:getStationInfoTwoData,
+    //     xhrFields: {
+    //         withCredentials: true
+    //     },
+    //     success: function (result) {
+    //         $("#travel_rebook_terminalPlace").val(result["name"]);
+    //     },
+    // });
 }
 
 $("#travel_rebook_cancel").click(function(){

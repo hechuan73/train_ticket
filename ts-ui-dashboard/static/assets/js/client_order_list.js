@@ -50,8 +50,8 @@ var appConsign = new Vue({
             this.tempOrderList = [];
             this.myOrderList = [];
             var myOrdersQueryData = JSON.stringify(myOrdersQueryInfo);
-            this.queryForMyOrderThree("/order/query", myOrdersQueryData);
-            this.queryForMyOrderThree("/orderOther/query",myOrdersQueryData);
+            this.queryForMyOrderThree("/order/queryForRefresh", myOrdersQueryData);
+            this.queryForMyOrderThree("/orderOther/queryForRefresh",myOrdersQueryData);
         },
         queryForMyOrderThree(path, data) {
             var that = this;
@@ -68,8 +68,8 @@ var appConsign = new Vue({
                     var size = result.length;
                     for (var i = 0; i < size; i++) {
                         that.tempOrderList[i] = result[i];
-                        that.tempOrderList[i].from = that.getStationNameById(that.tempOrderList[i].from);
-                        that.tempOrderList[i].to = that.getStationNameById(that.tempOrderList[i].to);
+                        // that.tempOrderList[i].from = that.getStationNameById(that.tempOrderList[i].from);
+                        // that.tempOrderList[i].to = that.getStationNameById(that.tempOrderList[i].to);
                         that.tempOrderList[i].boughtDate = that.convertNumberToDateTimeString(that.tempOrderList[i].boughtDate)
                     }
                     that.myOrderList = that.myOrderList.concat(that.tempOrderList);

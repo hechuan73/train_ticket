@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,15 +49,29 @@ public class StationController {
     }
 
     @RequestMapping(value="/station/queryForId",method= RequestMethod.POST)
-    public String queryForId(@RequestBody QueryForId info,@RequestHeader HttpHeaders headers){
+    public String queryForId(@RequestBody QueryForId info, @RequestHeader HttpHeaders headers){
         return stationService.queryForId(info,headers);
     }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/station/queryForIdBatch", method = RequestMethod.POST)
+    public ArrayList<String> queryForIdBatch(@RequestBody QueryForIdBatch queryForIdBatch, @RequestHeader HttpHeaders headers){
+        return stationService.queryForIdBatch(queryForIdBatch, headers);
+    }
+
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/station/queryById",method = RequestMethod.POST)
     public QueryStation queryById(@RequestBody QueryById queryById,@RequestHeader HttpHeaders headers){
         System.out.println("[Station Service] Query By Id:" + queryById.getStationId());
         return stationService.queryById(queryById.getStationId(),headers);
+    }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/station/queryByIdBatch", method = RequestMethod.POST)
+    public QueryByIdBatchResult queryByIdBatch(@RequestBody QueryByIdBatch queryByIdBatch, @RequestHeader HttpHeaders headers){
+        QueryByIdBatchResult result = new QueryByIdBatchResult(stationService.queryByIdBatch(queryByIdBatch, headers));
+        return result;
     }
 
     @CrossOrigin(origins = "*")

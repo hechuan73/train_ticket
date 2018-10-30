@@ -18,6 +18,8 @@ public interface OrderService {
 
     ArrayList<Order> queryOrders(QueryInfo qi,String accountId, HttpHeaders headers);
 
+    ArrayList<Order> queryOrdersForRefresh(QueryInfo qi,String accountId, HttpHeaders headers);
+
     OrderAlterResult alterOrder(OrderAlterInfo oai, HttpHeaders headers);
 
     CalculateSoldTicketResult queryAlreadySoldOrders(CalculateSoldTicketInfo csti, HttpHeaders headers);

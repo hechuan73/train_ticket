@@ -1,14 +1,12 @@
 package fdse.microservice.service;
 
-import fdse.microservice.domain.Information;
-import fdse.microservice.domain.QueryForId;
-import fdse.microservice.domain.QueryStation;
-import fdse.microservice.domain.Station;
+import fdse.microservice.domain.*;
 import fdse.microservice.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -73,6 +71,22 @@ public class StationServiceImpl implements StationService {
         return station.getId();
     }
 
+
+    @Override
+    public ArrayList<String> queryForIdBatch(QueryForIdBatch queryForIdBatch, HttpHeaders headers) {
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> nameList = queryForIdBatch.getNameList();
+        for(int i = 0; i < nameList.size(); i++) {
+            Station station = repository.findByName(nameList.get(i));
+            if(station == null) {
+                result.add("Not Exist");
+            }else{
+                result.add(station.getId());
+            }
+        }
+        return result;
+    }
+
     @Override
     public QueryStation queryById(String stationId,HttpHeaders headers){
         Station station = repository.findById(stationId);
@@ -81,5 +95,20 @@ public class StationServiceImpl implements StationService {
         }else{
             return new QueryStation("Station Not Found");
         }
+    }
+
+    @Override
+    public ArrayList<String> queryByIdBatch(QueryByIdBatch queryByIdBatch, HttpHeaders headers) {
+        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> idList = queryByIdBatch.getStationIdList();
+        for(int i = 0; i < idList.size(); i++) {
+            Station station = repository.findById(idList.get(i));
+            if(station == null) {
+                result.add("Not Exist");
+            }else{
+                result.add(station.getName());
+            }
+        }
+        return result;
     }
 }
