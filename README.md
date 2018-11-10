@@ -76,8 +76,13 @@ This project is ticket seller application in microservice architecture, includin
    
 #  Deploy Train Ticket with k8s
 - please follow the below steps:  
-  [k8s deploy steps](https://github.com/microcosmx/train_ticket/tree/master/Document/k8s)
   
+# About Test Case
+- Please download "webdriver.chrome.driver".
+  Modify its file path and "baseUrl". As the picture below.
+  [k8s deploy steps](https://raw.githubusercontent.com/microcosmx/train_ticket/master/image/test_code.PNG)
+  The you can run this test case. 
+  You may also change some input parameters in test case as you like.
 ---
 
 ##  Clustering runtime environment(docker swarm):
