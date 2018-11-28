@@ -159,7 +159,7 @@ public class ExecuteServiceImpl implements ExecuteService{
         System.out.println("[Execute Service][Execute Order] Executing....");
         HttpEntity requestEntity = new HttpEntity(info, headers);
         ResponseEntity<ModifyOrderStatusResult> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/order/modifyOrderStatus",
+                "http://ts-order-other-service:12032/orderOther/modifyOrderStatus",
                 HttpMethod.POST,
                 requestEntity,
                 ModifyOrderStatusResult.class);
