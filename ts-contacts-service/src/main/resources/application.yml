@@ -9,9 +9,4 @@ spring:
       host: ts-contacts-mongo
       database: ts
       port: 27017
-  zipkin:
-    baseUrl: http://zipkin:9411/
-  sleuth:
-    sampler:
-      percentage: 1.0
 
