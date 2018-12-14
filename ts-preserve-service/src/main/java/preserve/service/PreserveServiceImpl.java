@@ -64,7 +64,7 @@ public class PreserveServiceImpl implements PreserveService{
             if(gtdr.isStatus() == false){
                 System.out.println("[Preserve Service][Search For Trip Detail Information] " + gcr.getMessage());
                 otr.setStatus(false);
-                otr.setMessage(gcr.getMessage());
+                otr.setMessage(gtdr.getMessage());
                 otr.setOrder(null);
                 return otr;
             }else{
