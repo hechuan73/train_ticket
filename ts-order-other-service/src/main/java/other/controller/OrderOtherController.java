@@ -171,20 +171,18 @@ public class OrderOtherController {
     }
 
     private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Verify Login] Verifying....");
+        System.out.println("[Order Other Service][Verify Login] Verifying....");
         System.out.println("=======Token: " + loginToken + "=======");
-        HttpEntity requestTokenResult = new HttpEntity(null,headers);
+        HttpEntity requestTokenResult = new HttpEntity(headers);
         ResponseEntity<VerifyResult> reTokenResult  = restTemplate.exchange(
                 "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
                 HttpMethod.GET,
                 requestTokenResult,
                 VerifyResult.class);
-        VerifyResult tokenResult = reTokenResult.getBody();
-//        VerifyResult tokenResult = restTemplate.getForObject(
+        //        VerifyResult tokenResult = restTemplate.getForObject(
 //                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
 //                VerifyResult.class);
 
-
-        return tokenResult;
+        return reTokenResult.getBody();
     }
 }
