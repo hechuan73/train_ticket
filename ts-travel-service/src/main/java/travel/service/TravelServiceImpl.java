@@ -234,10 +234,10 @@ public class TravelServiceImpl implements TravelService{
         ResultForTravel resultForTravel = re.getBody();
 
 
-        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("Basic-Service Unavailable")){
-            System.out.println("Basic-Service Unavailable");
-            return null;
-        }
+//        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("Basic-Service Unavailable")){
+//            System.out.println("Basic-Service Unavailable");
+//            return null;
+//        }
 
 //        ResultForTravel resultForTravel = restTemplate.postForObject(
 //                "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,ResultForTravel.class);

@@ -23,40 +23,40 @@ public class TicketInfoServiceImpl implements TicketInfoService{
     @Override
     public ResultForTravel queryForTravel(QueryForTravel info,HttpHeaders headers){
         HttpEntity requestEntity = new HttpEntity(info,headers);
-
-        try{
-            ResponseEntity<ResultForTravel> re = restTemplate.exchange(
-                    "http://ts-basic-service:15680/basic/queryForTravel",
-                    HttpMethod.POST,
-                    requestEntity,
-                    ResultForTravel.class);
-            ResultForTravel result = re.getBody();
-            return result;
-        }catch(Exception e){
-            ResponseEntity<String> sayHello = restTemplate.exchange(
-                    "http://ts-basic-service:15680/welcome",
-                    HttpMethod.GET,
-                    requestEntity,
-                    String.class);
-
-            ResponseEntity<String> sayHelloPrice = restTemplate.exchange(
-                    "http://ts-price-service:16579/welcome",
-                    HttpMethod.GET,
-                    requestEntity,
-                    String.class);
-
-            if(sayHello.getStatusCodeValue() == 200 && sayHelloPrice.getStatusCodeValue() == 200){
-                ResultForTravel result = new ResultForTravel();
-                result.setStatus(false);
-                result.setMessage("Basic-Service Unavailable");
-                return result;
-            }else{
-                ResultForTravel result = new ResultForTravel();
-                result.setStatus(false);
-                result.setMessage(sayHello.getBody());
-                return null;
-            }
-        }
+        ResponseEntity<ResultForTravel> re = restTemplate.exchange(
+                "http://ts-basic-service:15680/basic/queryForTravel",
+                HttpMethod.POST,
+                requestEntity,
+                ResultForTravel.class);
+        ResultForTravel result = re.getBody();
+        return result;
+//        try{
+//
+//        }catch(Exception e){
+//            ResponseEntity<String> sayHello = restTemplate.exchange(
+//                    "http://ts-basic-service:15680/welcome",
+//                    HttpMethod.GET,
+//                    requestEntity,
+//                    String.class);
+//
+//            ResponseEntity<String> sayHelloPrice = restTemplate.exchange(
+//                    "http://ts-price-service:16579/welcome",
+//                    HttpMethod.GET,
+//                    requestEntity,
+//                    String.class);
+//
+//            if(sayHello.getStatusCodeValue() == 200 && sayHelloPrice.getStatusCodeValue() == 200){
+//                ResultForTravel result = new ResultForTravel();
+//                result.setStatus(false);
+//                result.setMessage("Basic-Service Unavailable");
+//                return result;
+//            }else{
+//                ResultForTravel result = new ResultForTravel();
+//                result.setStatus(false);
+//                result.setMessage(sayHello.getBody());
+//                return null;
+//            }
+//        }
 
 
     }
