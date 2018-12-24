@@ -48,7 +48,7 @@ public class TicketInfoServiceImpl implements TicketInfoService{
             if(sayHello.getStatusCodeValue() == 200 && sayHelloPrice.getStatusCodeValue() == 200){
                 ResultForTravel result = new ResultForTravel();
                 result.setStatus(false);
-                result.setMessage("OOM");
+                result.setMessage("Basic-Service Unavailable");
                 return result;
             }else{
                 ResultForTravel result = new ResultForTravel();

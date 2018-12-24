@@ -234,8 +234,8 @@ public class TravelServiceImpl implements TravelService{
         ResultForTravel resultForTravel = re.getBody();
 
 
-        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("OOM")){
-            System.out.println("报出了OOOOOOOOOOMMMMMMMMMMMMMMMMMMMM");
+        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("Basic-Service Unavailable")){
+            System.out.println("Basic-Service Unavailable");
             return null;
         }
 
