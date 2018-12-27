@@ -8,7 +8,7 @@ import train.service.TrainService;
 
 
 @Component
-public class InitData implements CommandLineRunner{
+public class InitData implements CommandLineRunner {
 
     @Autowired
     TrainService service;
@@ -18,39 +18,39 @@ public class InitData implements CommandLineRunner{
         Information info = new Information();
 
         info.setId("GaoTieOne");
-        info.setConfortClass(60);
-        info.setEconomyClass(120);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(250);
-        service.create(info,null);
+        service.create(info, null);
 
         info.setId("GaoTieTwo");
-        info.setConfortClass(80);
-        info.setEconomyClass(200);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(200);
-        service.create(info,null);
+        service.create(info, null);
 
         info.setId("DongCheOne");
-        info.setConfortClass(100);
-        info.setEconomyClass(300);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(180);
-        service.create(info,null);
+        service.create(info, null);
 
         info.setId("ZhiDa");
-        info.setConfortClass(60);
-        info.setEconomyClass(120);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(120);
-        service.create(info,null);
+        service.create(info, null);
 
         info.setId("TeKuai");
-        info.setConfortClass(80);
-        info.setEconomyClass(200);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(120);
-        service.create(info,null);
+        service.create(info, null);
 
         info.setId("KuaiSu");
-        info.setConfortClass(100);
-        info.setEconomyClass(300);
+        info.setConfortClass(Integer.MAX_VALUE);
+        info.setEconomyClass(Integer.MAX_VALUE);
         info.setAverageSpeed(90);
-        service.create(info,null);
+        service.create(info, null);
     }
 }
