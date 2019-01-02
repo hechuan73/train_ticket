@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E9EEF3"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#b1b3af"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/date_pick_left_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="6dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/trip_train_date_left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/btn_yesterday"
+                android:textColor="#fff"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@drawable/layout_border"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16sp"
+                android:layout_height="16sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/trip_train_date_icon" />
+
+            <Button
+                android:id="@+id/btn_byticket_date"
+                style="@style/NormalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1-21 thursday" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/trip_train_vector_drawable_calendar_down_arrow"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/date_pick_right_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="@string/btn_tomorrow"
+                android:textColor="#fff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="6dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/trip_train_date_right" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/by_startStation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shang Hai"
+                android:textColor="#949494" />
+
+            <TextView
+                android:id="@+id/by_startTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="05:13"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/time_table_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/by_pathname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="G9418"
+                    android:textColor="#949494" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/trip_train_list_idcard" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="25dp"
+                    android:layout_height="2dp"
+                    android:background="#b7b7b7"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layout_border"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_table" />
+                </LinearLayout>
+                <View
+                    android:layout_width="25dp"
+                    android:layout_height="2dp"
+                    android:background="#b7b7b7"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/by_arriveStation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="He Fei"
+                android:textColor="#949494" />
+
+            <TextView
+                android:id="@+id/by_endTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07:29"
+                android:textSize="25sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ts.trainticket.Meituan.MeiTuanListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:divider="#00000000"
+        android:dividerHeight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

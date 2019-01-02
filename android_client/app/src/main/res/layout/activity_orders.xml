@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#2a8dcf"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/common_head_back_btn2"
+            style="@style/GridLayoutButton"
+            android:layout_width="13dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/title_back_new_icon_normal" />
+
+        <TextView
+            android:id="@+id/title_head_tv2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/order_list"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#4889DB">
+
+        <LinearLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tab_o1"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/all_orders"
+                android:textColor="#fed137" />
+
+            <TextView
+                android:id="@+id/tab_o2"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/not_collect"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/tab_o3"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/not_paid"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/tab_o4"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cancel_list"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/tab_line"
+            android:layout_width="60dp"
+            android:layout_height="2dp"
+            android:layout_below="@id/tab_layout"
+            android:background="#fed137" />
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

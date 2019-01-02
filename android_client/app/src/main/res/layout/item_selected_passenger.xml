@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pas_name_sid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xxx"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/pas_type_sid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="adult"
+                android:layout_marginLeft="10dp"
+                android:textColor="#b7b7b7"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/pas_seatType_sid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1st" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Docuemnt Number"
+                android:textColor="#b7b7b7"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/pas_idcard_sid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="34122****011X"
+                android:textColor="#b7b7b7"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/pas_price_sid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$607.5" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/odt_status_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_corner_yellow"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:text="order id:"/>
+            <TextView
+                android:id="@+id/odt_ordernum_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="1516545375060001"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

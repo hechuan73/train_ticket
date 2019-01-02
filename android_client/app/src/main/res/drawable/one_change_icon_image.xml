@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!--one_change_icon_image.xml-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:drawable="@drawable/tab_ticket_selected_new" android:state_selected="true"/>
+<item android:drawable="@drawable/tab_ticket_normal_new"/>
+</selector>

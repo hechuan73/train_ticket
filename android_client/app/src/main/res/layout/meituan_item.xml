@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ts.trainticket.Meituan.MeiTuanRefreshFirstStepView
+        android:id="@+id/first_view"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="10dp" />
+
+    <ts.trainticket.Meituan.MeiTuanRefreshSecondStepView
+        android:id="@+id/second_view"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:visibility="gone" />
+
+    <ts.trainticket.Meituan.MeiTuanRefreshThirdStepView
+        android:id="@+id/third_view"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_pull_to_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="pull to refresh" />
+
+</LinearLayout>

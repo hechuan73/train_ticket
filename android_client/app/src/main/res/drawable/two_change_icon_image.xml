@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--two_change_icon_image.xml-->  
+<selector xmlns:android="http://schemas.android.com/apk/res/android">  
+  
+<item android:drawable="@drawable/tab_timetable_selected_new" android:state_selected="true"/>  
+<item android:drawable="@drawable/tab_timetable_normal_new"/>  
+  
+</selector> 

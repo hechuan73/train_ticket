@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/title_L"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:paddingRight="25dp"
+        android:background="#2a8dcf"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/common_head_back_btn"
+            style="@style/GridLayoutButton"
+            android:layout_width="13dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/title_back_new_icon_normal" />
+
+        <TextView
+            android:id="@+id/title_head_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/common_contacts"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/addw_pas_id"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_add_white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_contacts_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+</LinearLayout>

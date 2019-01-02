@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/timeTable_num"
+        android:layout_width="60dp"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="1"/>
+    <TextView
+        android:id="@+id/timeTable_station"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Nan Jing"/>
+    <TextView
+        android:id="@+id/timeTable_arriveTime"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="-----"/>
+    <TextView
+        android:id="@+id/timeTable_stopTime"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginRight="8dp"
+        android:layout_height="wrap_content"
+        android:text="33m"/>
+</LinearLayout>

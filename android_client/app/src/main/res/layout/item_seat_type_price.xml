@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="15dp"
+    android:clickable="true"
+    app:cardCornerRadius="5dp"
+    app:elevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/res_ticketType"
+            android:layout_width="70dp"
+            android:textSize="14sp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/res_tickePrice"
+            android:layout_width="wrap_content"
+            android:textColor="#fdbd68"
+            android:textSize="18sp"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:id="@+id/res_leftticket"
+            android:layout_width="50dp"
+            android:textSize="16sp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/res_btn"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="#fff"
+            android:background="#fd9915"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:gravity="center"
+            style="@style/NormalButton"
+             />
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

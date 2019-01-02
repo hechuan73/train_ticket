@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    app:cardCornerRadius="5dp"
+    app:elevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--里面2个布局-->
+        <!--第一个 里面包裹 四个竖着的，一个横着的-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <!--第一个-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/startStaiton_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上海虹桥"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/startTime_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="05:39"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="2dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/pathname_ct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="G9418" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:src="@drawable/trip_train_list_idcard" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="5dp"
+                    android:background="@drawable/trip_train_vector_drawable_ttk_list_start" />
+
+                <TextView
+                    android:id="@+id/lastTime_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2时39分" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="2dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/endStation_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="合肥南站"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/endTime_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="08:18"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/first_money_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$200"
+                    android:textColor="#f5cd55"
+                    android:textSize="24sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <!--画虚线-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/dash_line"
+            android:layerType="software" />
+
+        <!--第二层-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/first_seattype_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2rd:"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/first_seatvalue_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0p"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="2dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/second_seattype_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1st:"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/second_seatvalue_ct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2p"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="2dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"></LinearLayout>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="2dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"></LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

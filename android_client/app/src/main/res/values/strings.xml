@@ -1,0 +1,130 @@
+<resources>
+    <string name="app_name">trainticket</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+
+    <string name="text_split_city">⇌</string>
+
+    <!--login page-->
+    <string name="user_eamil">Eamil</string>
+    <string name="user_password">Password</string>
+
+    <!--researve page-->
+    <string name="title">－ Ticket －</string>
+    <string name="base">From</string>
+    <string name="termini">To</string>
+    <string name="start_date">start date</string>
+    <string name="start_time">start time</string>
+    <string name="student">student</string>
+    <string name="seat_type_tag">seat type:</string>
+
+
+    <string name="box_train_type_all">All</string>
+    <string name="box_train_type_GD">G/D</string>
+    <string name="box_train_type_G">G</string>
+    <string name="box_train_type_D">D</string>
+    <string name="box_train_type_Z">Z</string>
+    <string name="box_train_type_T">T</string>
+    <string name="box_train_type_K">K</string>
+    <string name="id_card">DocumentNumber: </string>
+
+    <!-- path detail-->
+    <string name="early_time_fid">start time</string>
+    <string name="total_time_fid">travel time</string>
+    <string name="arrive_time_fid">arrive time</string>
+    <string name="select_fid">select</string>
+    <string name="no_trip_line">no that trip line</string>
+
+
+    <string name="btn_yesterday">day before</string>
+    <string name="btn_tomorrow">day after</string>
+    <string name="time_table">time table</string>
+
+
+    <string name="text_split_station">---------></string>
+
+    <!--time table page-->
+    <string name="loading_data">loading data...</string>
+    <string name="earliest_start">Start</string>
+    <string name="earliest_arrival">Arrive</string>
+    <string name="table_search">search</string>
+    <string name="text_start_station">from：</string>
+    <string name="text_arrive_station">to：</string>
+    <string name="text_char_split_station">direction</string>
+
+    <!--ticket info page-->
+    <string name="add_adult">Add Adult</string>
+    <string name="add_children">Add Children</string>
+    <string name="contact">Phone Number:</string>
+    <string name="use_current_account">use current account to buy ticket</string>
+    <string name="submit_order">Submit</string>
+
+    <string name="add_passenger">Add passenger</string>
+    <string name="refresh_passenger">Refresh passenger</string>
+    <string name="no_user_under_the_account">There are no common contacts under this account.</string>
+    <string name="cancel_add_ps">Cancel</string>
+    <string name="sure_add_ps">Ok</string>
+
+
+    <!--add passenger page-->
+    <string name="passenger_name">Name</string>
+    <string name="name_desc">document name</string>
+    <string name="document_type">Document Type</string>
+    <string name="document_desc">ID Card</string>
+    <string name="document_num">Document Number</string>
+    <string name="document_num_desc">docuemnt number.</string>
+    <string name="phone_num">Phone Num</string>
+    <string name="phone_num_desc">phone number.</string>
+    <string name="passenger_type">Passenger type</string>
+    <string name="passenger_type_desc">Adult ticket</string>
+    <string name="add_passengers">Add passenger</string>
+    <string name="no_cantact">no cantact info</string>
+
+
+    <!--order detail Page-->
+    <string name="site_lock_tip1">Seat locking successfully, Please pay in time</string>
+
+    <!--register-->
+    <string name="register_user">Email</string>
+    <string name="edit_account_password">Password</string>
+    <string name="edit_repeat_password">Email</string>
+    <string name="edit_user_name">Gender</string>
+    <string name="edit_id_card">Name</string>
+    <string name="edit_phone_number">Password</string>
+
+
+    <!--contancts-->
+    <string name="common_contacts">common contacts</string>
+
+    <!--order list page-->
+    <string name="no_order_info">no order</string>
+    <string name="pull_to_refresh">pull to refresh</string>
+    <string name="order_list">Order List</string>
+    <string name="all_orders">All</string>
+    <string name="not_collect">Not Collect</string>
+    <string name="not_paid">Not Paid</string>
+    <string name="cancel_list">Cancel</string>
+
+    <!--station  and city choose-->
+    <string name="text_click_tip">select a station</string>
+    <string name="resent_search">resent search: </string>
+    <string name="hot_city">hot city: </string>
+
+    <!--about page-->
+    <string name="about_microservice">microservice</string>
+    <string name="author">fudan.edu.cn</string>
+
+
+    <string name="text_split_time">--</string>
+
+
+    <string name="btn_sign">Sign In/Sign Up</string>
+    <string name="phone_num_tip">used to receive message</string>
+
+
+    <string name="text_student_number">18212010064</string>
+    <string name="image_read"> </string>
+
+
+</resources>
