@@ -11,7 +11,7 @@
      
 
 ## Step 2: Upload docker image to docker registry
-    In this step, you will upload you docker image to your docker registry.   
+    In this step, you will upload your docker image to your docker registry.   
     (1) Use the instructions in Part1 in [Docker Tag&Upload.md] to tag your docker images.   
     (2) Use the instructions in Part2 in [Docker Tag&Upload.md] to upload the docker images.   
 
