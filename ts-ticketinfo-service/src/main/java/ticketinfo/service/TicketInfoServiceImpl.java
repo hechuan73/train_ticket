@@ -7,9 +7,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ticketinfo.domain.QueryForStationId;
-import ticketinfo.domain.QueryForTravel;
-import ticketinfo.domain.ResultForTravel;
+import ticketinfo.entity.QueryForStationId;
+import ticketinfo.entity.QueryForTravel;
+import ticketinfo.entity.ResultForTravel;
 
 /**
  * Created by Chenjie Xu on 2017/6/6.

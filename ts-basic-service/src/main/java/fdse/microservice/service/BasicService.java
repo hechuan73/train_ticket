@@ -1,6 +1,6 @@
 package fdse.microservice.service;
 
-import fdse.microservice.domain.*;
+import fdse.microservice.entity.*;
 import org.springframework.http.HttpHeaders;
 
 /**

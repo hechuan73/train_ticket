@@ -3,7 +3,7 @@ package sso.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import sso.domain.LoginValue;
+import sso.entity.LoginValue;
 import java.util.ArrayList;
 
 @Repository

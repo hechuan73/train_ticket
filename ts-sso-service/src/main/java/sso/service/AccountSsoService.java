@@ -1,7 +1,7 @@
 package sso.service;
 
 import org.springframework.http.HttpHeaders;
-import sso.domain.*;
+import sso.entity.*;
 
 public interface AccountSsoService {
 

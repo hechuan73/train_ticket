@@ -3,9 +3,9 @@ package sso.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import sso.domain.Account;
-import sso.domain.DocumentType;
-import sso.domain.Gender;
+import sso.entity.Account;
+import sso.entity.DocumentType;
+import sso.entity.Gender;
 import sso.service.AccountSsoService;
 import java.util.UUID;
 

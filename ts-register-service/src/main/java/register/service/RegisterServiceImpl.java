@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import register.domain.CreateAccountInfo;
-import register.domain.RegisterInfo;
-import register.domain.RegisterResult;
+import register.entity.CreateAccountInfo;
+import register.entity.RegisterInfo;
+import register.entity.RegisterResult;
 import org.springframework.stereotype.Service;
 
 @Service

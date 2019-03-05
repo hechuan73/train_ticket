@@ -3,9 +3,9 @@ package train.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import train.domain.Information;
-import train.domain.Information2;
-import train.domain.TrainType;
+import train.entity.Information;
+import train.entity.Information2;
+import train.entity.TrainType;
 import train.service.TrainService;
 
 import java.util.List;

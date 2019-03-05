@@ -1,7 +1,6 @@
 package com.trainticket.repository;
 
-import com.trainticket.domain.AddMoney;
-import com.trainticket.domain.Payment;
+import com.trainticket.entity.AddMoney;
 import org.springframework.data.repository.CrudRepository;
 
 

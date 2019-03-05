@@ -1,9 +1,9 @@
 package com.trainticket.service;
 
-import com.trainticket.domain.AddMoney;
-import com.trainticket.domain.AddMoneyInfo;
-import com.trainticket.domain.Payment;
-import com.trainticket.domain.PaymentInfo;
+import com.trainticket.entity.AddMoney;
+import com.trainticket.entity.AddMoneyInfo;
+import com.trainticket.entity.Payment;
+import com.trainticket.entity.PaymentInfo;
 import com.trainticket.repository.AddMoneyRepository;
 import com.trainticket.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

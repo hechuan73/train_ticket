@@ -3,7 +3,7 @@ package travel2.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import travel2.domain.*;
+import travel2.entity.*;
 import travel2.service.Travel2Service;
 import java.util.ArrayList;
 import java.util.List;

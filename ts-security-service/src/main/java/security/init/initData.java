@@ -3,7 +3,7 @@ package security.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import security.domain.CreateSecurityConfigInfo;
+import security.entity.CreateSecurityConfigInfo;
 import security.service.SecurityService;
 
 @Component

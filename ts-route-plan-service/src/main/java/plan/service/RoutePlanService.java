@@ -1,8 +1,8 @@
 package plan.service;
 
 import org.springframework.http.HttpHeaders;
-import plan.domain.GetRoutePlanInfo;
-import plan.domain.RoutePlanResults;
+import plan.entity.GetRoutePlanInfo;
+import plan.entity.RoutePlanResults;
 
 public interface RoutePlanService {
 

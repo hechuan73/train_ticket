@@ -3,10 +3,10 @@ package travelplan.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import travelplan.domain.QueryInfo;
-import travelplan.domain.TransferTravelSearchInfo;
-import travelplan.domain.TransferTravelSearchResult;
-import travelplan.domain.TravelAdvanceResult;
+import travelplan.entity.QueryInfo;
+import travelplan.entity.TransferTravelSearchInfo;
+import travelplan.entity.TransferTravelSearchResult;
+import travelplan.entity.TravelAdvanceResult;
 import travelplan.service.TravelPlanService;
 
 @RestController

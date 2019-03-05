@@ -3,8 +3,8 @@ package seat.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import seat.domain.SeatRequest;
-import seat.domain.Ticket;
+import seat.entity.SeatRequest;
+import seat.entity.Ticket;
 import seat.service.SeatService;
 
 @RestController

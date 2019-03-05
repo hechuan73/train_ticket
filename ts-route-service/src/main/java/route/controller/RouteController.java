@@ -3,7 +3,7 @@ package route.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import route.domain.*;
+import route.entity.*;
 import route.service.RouteService;
 
 @RestController

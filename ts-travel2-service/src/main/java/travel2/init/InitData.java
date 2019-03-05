@@ -3,7 +3,7 @@ package travel2.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import travel2.domain.Information;
+import travel2.entity.Information;
 import travel2.service.Travel2Service;
 import java.util.Date;
 

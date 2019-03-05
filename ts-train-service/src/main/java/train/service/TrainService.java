@@ -1,9 +1,9 @@
 package train.service;
 
 import org.springframework.http.HttpHeaders;
-import train.domain.Information;
-import train.domain.Information2;
-import train.domain.TrainType;
+import train.entity.Information;
+import train.entity.Information2;
+import train.entity.TrainType;
 
 import java.util.List;
 

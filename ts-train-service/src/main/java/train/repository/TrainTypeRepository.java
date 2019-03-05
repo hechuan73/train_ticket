@@ -1,7 +1,7 @@
 package train.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import train.domain.TrainType;
+import train.entity.TrainType;
 
 import java.util.List;
 

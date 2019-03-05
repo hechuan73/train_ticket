@@ -1,6 +1,6 @@
 package order.service;
 
-import order.domain.*;
+import order.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;

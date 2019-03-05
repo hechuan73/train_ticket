@@ -1,7 +1,7 @@
 package travelplan.service;
 
 import org.springframework.http.HttpHeaders;
-import travelplan.domain.*;
+import travelplan.entity.*;
 
 public interface TravelPlanService {
 

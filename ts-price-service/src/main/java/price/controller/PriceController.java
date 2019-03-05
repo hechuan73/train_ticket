@@ -3,10 +3,10 @@ package price.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import price.domain.CreateAndModifyPriceConfig;
-import price.domain.QueryPriceConfigByTrainAndRoute;
-import price.domain.ReturnManyPriceConfigResult;
-import price.domain.ReturnSinglePriceConfigResult;
+import price.entity.CreateAndModifyPriceConfig;
+import price.entity.QueryPriceConfigByTrainAndRoute;
+import price.entity.ReturnManyPriceConfigResult;
+import price.entity.ReturnSinglePriceConfigResult;
 import price.service.PriceService;
 
 @RestController

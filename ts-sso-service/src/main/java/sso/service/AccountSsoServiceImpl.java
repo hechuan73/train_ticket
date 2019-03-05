@@ -3,7 +3,7 @@ package sso.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import sso.domain.*;
+import sso.entity.*;
 import sso.repository.AccountRepository;
 import sso.repository.LoginUserListRepository;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package fdse.microservice.repository;
 
-import fdse.microservice.domain.Station;
+import fdse.microservice.entity.Station;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

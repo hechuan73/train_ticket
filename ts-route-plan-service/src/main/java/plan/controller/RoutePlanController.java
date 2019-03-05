@@ -3,12 +3,9 @@ package plan.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import plan.domain.GetRoutePlanInfo;
-import plan.domain.RoutePlanResults;
-import plan.domain.TripResponse;
+import plan.entity.GetRoutePlanInfo;
+import plan.entity.RoutePlanResults;
 import plan.service.RoutePlanService;
-
-import java.util.ArrayList;
 
 @RestController
 public class RoutePlanController {

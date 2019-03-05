@@ -1,8 +1,8 @@
 package register.service;
 
 import org.springframework.http.HttpHeaders;
-import register.domain.RegisterInfo;
-import register.domain.RegisterResult;
+import register.entity.RegisterInfo;
+import register.entity.RegisterResult;
 
 public interface RegisterService {
 

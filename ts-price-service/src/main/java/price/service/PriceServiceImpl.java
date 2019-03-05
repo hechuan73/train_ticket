@@ -3,13 +3,12 @@ package price.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import price.domain.CreateAndModifyPriceConfig;
-import price.domain.PriceConfig;
-import price.domain.ReturnManyPriceConfigResult;
-import price.domain.ReturnSinglePriceConfigResult;
+import price.entity.CreateAndModifyPriceConfig;
+import price.entity.PriceConfig;
+import price.entity.ReturnManyPriceConfigResult;
+import price.entity.ReturnSinglePriceConfigResult;
 import price.repository.PriceConfigRepository;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service

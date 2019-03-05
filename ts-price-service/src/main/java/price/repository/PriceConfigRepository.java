@@ -3,7 +3,7 @@ package price.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import price.domain.PriceConfig;
+import price.entity.PriceConfig;
 import java.util.ArrayList;
 import java.util.UUID;
 

@@ -1,9 +1,9 @@
 package ticketinfo.service;
 
 import org.springframework.http.HttpHeaders;
-import ticketinfo.domain.QueryForStationId;
-import ticketinfo.domain.QueryForTravel;
-import ticketinfo.domain.ResultForTravel;
+import ticketinfo.entity.QueryForStationId;
+import ticketinfo.entity.QueryForTravel;
+import ticketinfo.entity.ResultForTravel;
 
 /**
  * Created by Chenjie Xu on 2017/6/6.

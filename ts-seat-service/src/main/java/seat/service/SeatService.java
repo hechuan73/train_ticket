@@ -1,8 +1,8 @@
 package seat.service;
 
 import org.springframework.http.HttpHeaders;
-import seat.domain.SeatRequest;
-import seat.domain.Ticket;
+import seat.entity.SeatRequest;
+import seat.entity.Ticket;
 
 public interface SeatService {
 

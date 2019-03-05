@@ -1,6 +1,6 @@
 package order.service;
 
-import order.domain.*;
+import order.entity.*;
 import order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

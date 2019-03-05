@@ -3,7 +3,7 @@ package train.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import train.domain.Information;
+import train.entity.Information;
 import train.service.TrainService;
 
 

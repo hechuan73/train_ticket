@@ -1,7 +1,7 @@
 package route.service;
 
 import org.springframework.http.HttpHeaders;
-import route.domain.*;
+import route.entity.*;
 
 public interface RouteService {
 

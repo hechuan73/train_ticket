@@ -3,8 +3,8 @@ package preserveOther.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import preserveOther.domain.OrderTicketsInfo;
-import preserveOther.domain.OrderTicketsResult;
+import preserveOther.entity.OrderTicketsInfo;
+import preserveOther.entity.OrderTicketsResult;
 import preserveOther.service.PreserveOtherService;
 
 @RestController

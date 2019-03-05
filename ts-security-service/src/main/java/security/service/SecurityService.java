@@ -1,7 +1,7 @@
 package security.service;
 
 import org.springframework.http.HttpHeaders;
-import security.domain.*;
+import security.entity.*;
 
 public interface SecurityService {
 

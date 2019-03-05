@@ -1,8 +1,8 @@
 package preserve.service;
 
 import org.springframework.http.HttpHeaders;
-import preserve.domain.OrderTicketsInfo;
-import preserve.domain.OrderTicketsResult;
+import preserve.entity.OrderTicketsInfo;
+import preserve.entity.OrderTicketsResult;
 
 public interface PreserveService {
 

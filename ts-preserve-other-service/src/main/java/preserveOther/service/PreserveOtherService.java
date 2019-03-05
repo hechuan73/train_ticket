@@ -1,9 +1,8 @@
 package preserveOther.service;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.RequestHeader;
-import preserveOther.domain.OrderTicketsInfo;
-import preserveOther.domain.OrderTicketsResult;
+import preserveOther.entity.OrderTicketsInfo;
+import preserveOther.entity.OrderTicketsResult;
 
 public interface PreserveOtherService {
 

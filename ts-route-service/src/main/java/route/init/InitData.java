@@ -3,7 +3,7 @@ package route.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import route.domain.CreateAndModifyRouteInfo;
+import route.entity.CreateAndModifyRouteInfo;
 import route.service.RouteService;
 
 @Component

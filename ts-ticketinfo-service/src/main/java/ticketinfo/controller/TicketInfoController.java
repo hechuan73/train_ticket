@@ -7,9 +7,9 @@ package ticketinfo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import ticketinfo.domain.QueryForStationId;
-import ticketinfo.domain.QueryForTravel;
-import ticketinfo.domain.ResultForTravel;
+import ticketinfo.entity.QueryForStationId;
+import ticketinfo.entity.QueryForTravel;
+import ticketinfo.entity.ResultForTravel;
 import ticketinfo.service.TicketInfoService;
 
 @RestController

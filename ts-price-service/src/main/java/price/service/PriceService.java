@@ -1,9 +1,9 @@
 package price.service;
 
         import org.springframework.http.HttpHeaders;
-        import price.domain.CreateAndModifyPriceConfig;
-        import price.domain.ReturnManyPriceConfigResult;
-        import price.domain.ReturnSinglePriceConfigResult;
+        import price.entity.CreateAndModifyPriceConfig;
+        import price.entity.ReturnManyPriceConfigResult;
+        import price.entity.ReturnSinglePriceConfigResult;
 
 public interface PriceService {
 

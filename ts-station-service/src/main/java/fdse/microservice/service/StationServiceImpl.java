@@ -1,6 +1,6 @@
 package fdse.microservice.service;
 
-import fdse.microservice.domain.*;
+import fdse.microservice.entity.*;
 import fdse.microservice.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

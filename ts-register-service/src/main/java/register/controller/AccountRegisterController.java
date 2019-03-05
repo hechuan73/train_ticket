@@ -1,8 +1,8 @@
 package register.controller;
 
 import org.springframework.http.HttpHeaders;
-import register.domain.RegisterInfo;
-import register.domain.RegisterResult;
+import register.entity.RegisterInfo;
+import register.entity.RegisterResult;
 import register.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

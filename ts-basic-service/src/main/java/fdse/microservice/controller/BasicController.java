@@ -1,9 +1,8 @@
 package fdse.microservice.controller;
 
-import fdse.microservice.domain.QueryForStationId;
-import fdse.microservice.domain.QueryForTravel;
-import fdse.microservice.domain.QueryStation;
-import fdse.microservice.domain.ResultForTravel;
+import fdse.microservice.entity.QueryForTravel;
+import fdse.microservice.entity.QueryStation;
+import fdse.microservice.entity.ResultForTravel;
 import fdse.microservice.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

@@ -3,8 +3,8 @@ package rebook.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import rebook.domain.RebookInfo;
-import rebook.domain.RebookResult;
+import rebook.entity.RebookInfo;
+import rebook.entity.RebookResult;
 import rebook.service.RebookService;
 
 @RestController

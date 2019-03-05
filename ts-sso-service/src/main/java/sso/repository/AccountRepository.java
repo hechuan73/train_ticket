@@ -1,6 +1,6 @@
 package sso.repository;
 
-import sso.domain.Account;
+import sso.entity.Account;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

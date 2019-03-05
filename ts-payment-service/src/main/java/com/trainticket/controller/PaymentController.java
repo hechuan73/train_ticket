@@ -1,8 +1,8 @@
 package com.trainticket.controller;
 
-import com.trainticket.domain.AddMoneyInfo;
-import com.trainticket.domain.Payment;
-import com.trainticket.domain.PaymentInfo;
+import com.trainticket.entity.AddMoneyInfo;
+import com.trainticket.entity.Payment;
+import com.trainticket.entity.PaymentInfo;
 import com.trainticket.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

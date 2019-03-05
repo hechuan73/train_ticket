@@ -1,6 +1,6 @@
 package fdse.microservice.init;
 
-import fdse.microservice.domain.Information;
+import fdse.microservice.entity.Information;
 import fdse.microservice.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -3,10 +3,8 @@ package sso.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import sso.domain.*;
+import sso.entity.*;
 import sso.service.AccountSsoService;
-
-import java.util.UUID;
 
 @RestController
 public class AccountSsoController {

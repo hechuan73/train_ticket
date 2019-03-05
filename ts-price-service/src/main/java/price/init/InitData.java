@@ -3,7 +3,7 @@ package price.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import price.domain.CreateAndModifyPriceConfig;
+import price.entity.CreateAndModifyPriceConfig;
 import price.service.PriceService;
 
 

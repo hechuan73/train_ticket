@@ -1,7 +1,7 @@
 package travel2.service;
 
 import org.springframework.http.HttpHeaders;
-import travel2.domain.*;
+import travel2.entity.*;
 import java.util.ArrayList;
 import java.util.List;
 
