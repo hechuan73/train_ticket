@@ -1,9 +1,9 @@
 package food.service;
 
-import food.domain.FoodStore;
-import food.domain.GetFoodStoresListResult;
-import food.domain.GetTrainFoodListResult;
-import food.domain.TrainFood;
+import food.entity.FoodStore;
+import food.entity.GetFoodStoresListResult;
+import food.entity.GetTrainFoodListResult;
+import food.entity.TrainFood;
 import food.repository.FoodStoreRepository;
 import food.repository.TrainFoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;

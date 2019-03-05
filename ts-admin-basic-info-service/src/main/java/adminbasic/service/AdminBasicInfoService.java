@@ -1,11 +1,6 @@
 package adminbasic.service;
 
-import adminbasic.domin.bean.Config;
-import adminbasic.domin.bean.Contacts;
-import adminbasic.domin.bean.Station;
-import adminbasic.domin.bean.TrainType;
-import adminbasic.domin.info.*;
-import adminbasic.domin.reuslt.*;
+import adminbasic.entity.*;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminBasicInfoService {

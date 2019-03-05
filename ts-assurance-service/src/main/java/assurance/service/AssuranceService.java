@@ -1,6 +1,6 @@
 package assurance.service;
 
-import assurance.domain.*;
+import assurance.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;

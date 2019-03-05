@@ -1,7 +1,7 @@
 package other.service;
 
 import org.springframework.http.HttpHeaders;
-import other.domain.*;
+import other.entity.*;
 import java.util.ArrayList;
 import java.util.UUID;
 

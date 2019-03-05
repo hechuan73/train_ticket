@@ -1,6 +1,6 @@
 package foodsearch.service;
 
-import foodsearch.domain.*;
+import foodsearch.entity.*;
 import foodsearch.repository.FoodOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

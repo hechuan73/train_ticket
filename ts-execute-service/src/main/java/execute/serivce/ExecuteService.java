@@ -1,9 +1,8 @@
 package execute.serivce;
 
-import execute.domain.TicketExecuteInfo;
-import execute.domain.TicketExecuteResult;
+import execute.entity.TicketExecuteInfo;
+import execute.entity.TicketExecuteResult;
 import org.springframework.http.HttpHeaders;
-import sun.security.krb5.internal.Ticket;
 
 public interface ExecuteService {
 

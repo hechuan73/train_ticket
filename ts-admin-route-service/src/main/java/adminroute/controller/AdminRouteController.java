@@ -1,10 +1,10 @@
 package adminroute.controller;
 
-import adminroute.domain.request.CreateAndModifyRouteRequest;
-import adminroute.domain.request.DeleteRouteRequest;
-import adminroute.domain.response.CreateAndModifyRouteResult;
-import adminroute.domain.response.DeleteRouteResult;
-import adminroute.domain.response.GetRoutesListlResult;
+import adminroute.entity.CreateAndModifyRouteRequest;
+import adminroute.entity.DeleteRouteRequest;
+import adminroute.entity.CreateAndModifyRouteResult;
+import adminroute.entity.DeleteRouteResult;
+import adminroute.entity.GetRoutesListlResult;
 import adminroute.service.AdminRouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

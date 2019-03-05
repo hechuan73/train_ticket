@@ -1,6 +1,6 @@
 package notification.controller;
 
-import notification.domain.NotifyInfo;
+import notification.entity.NotifyInfo;
 import notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

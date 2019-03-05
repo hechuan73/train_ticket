@@ -1,13 +1,12 @@
 package assurance.service;
 
-import assurance.domain.*;
+import assurance.entity.*;
 import assurance.repository.AssuranceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,8 +1,8 @@
 package cancel.service;
 
-import cancel.domain.CalculateRefundResult;
-import cancel.domain.CancelOrderInfo;
-import cancel.domain.CancelOrderResult;
+import cancel.entity.CalculateRefundResult;
+import cancel.entity.CancelOrderInfo;
+import cancel.entity.CancelOrderResult;
 import org.springframework.http.HttpHeaders;
 
 public interface CancelService {

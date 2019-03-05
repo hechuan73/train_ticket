@@ -1,7 +1,7 @@
 package execute.controller;
 
-import execute.domain.TicketExecuteInfo;
-import execute.domain.TicketExecuteResult;
+import execute.entity.TicketExecuteInfo;
+import execute.entity.TicketExecuteResult;
 import execute.serivce.ExecuteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

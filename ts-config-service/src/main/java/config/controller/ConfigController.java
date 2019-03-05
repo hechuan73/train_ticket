@@ -4,9 +4,9 @@ package config.controller;
  * Created by Chenjie Xu on 2017/5/11.
  */
 
-import config.domain.Config;
-import config.domain.Information;
-import config.domain.Information2;
+import config.entity.Config;
+import config.entity.Information;
+import config.entity.Information2;
 import config.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

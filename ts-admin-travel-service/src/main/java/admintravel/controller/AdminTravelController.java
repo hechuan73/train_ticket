@@ -1,9 +1,9 @@
 package admintravel.controller;
 
-import admintravel.domain.request.AddAndModifyTravelRequest;
-import admintravel.domain.request.DeleteTravelRequest;
-import admintravel.domain.response.AdminFindAllResult;
-import admintravel.domain.response.ResponseBean;
+import admintravel.entity.AddAndModifyTravelRequest;
+import admintravel.entity.DeleteTravelRequest;
+import admintravel.entity.AdminFindAllResult;
+import admintravel.entity.ResponseBean;
 import admintravel.service.AdminTravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

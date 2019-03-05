@@ -1,9 +1,9 @@
 package food.controller;
 
-import food.domain.GetFoodStoresListResult;
-import food.domain.GetTrainFoodListResult;
-import food.domain.QueryFoodStoresInfo;
-import food.domain.QueryTrainFoodInfo;
+import food.entity.GetFoodStoresListResult;
+import food.entity.GetTrainFoodListResult;
+import food.entity.QueryFoodStoresInfo;
+import food.entity.QueryTrainFoodInfo;
 import food.service.FoodMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

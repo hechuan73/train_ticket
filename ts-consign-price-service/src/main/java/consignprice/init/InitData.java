@@ -1,6 +1,6 @@
 package consignprice.init;
 
-import consignprice.domain.PriceConfig;
+import consignprice.entity.PriceConfig;
 import consignprice.service.ConsignPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

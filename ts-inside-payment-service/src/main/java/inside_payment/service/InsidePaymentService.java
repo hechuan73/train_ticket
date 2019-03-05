@@ -1,6 +1,6 @@
 package inside_payment.service;
 
-import inside_payment.domain.*;
+import inside_payment.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;

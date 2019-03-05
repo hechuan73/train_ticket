@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import other.domain.*;
+import other.entity.*;
 import other.service.OrderOtherService;
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
 package cancel.controller;
 
-import cancel.domain.CalculateRefundResult;
-import cancel.domain.CancelOrderInfo;
-import cancel.domain.CancelOrderResult;
-import cancel.domain.VerifyResult;
+import cancel.entity.CalculateRefundResult;
+import cancel.entity.CancelOrderInfo;
+import cancel.entity.CancelOrderResult;
+import cancel.entity.VerifyResult;
 import cancel.service.CancelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

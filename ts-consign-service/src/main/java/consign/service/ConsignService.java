@@ -1,8 +1,8 @@
 package consign.service;
 
-import consign.domain.ConsignRecord;
-import consign.domain.ConsignRequest;
-import consign.domain.InsertConsignRecordResult;
+import consign.entity.ConsignRecord;
+import consign.entity.ConsignRequest;
+import consign.entity.InsertConsignRecordResult;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;

@@ -1,12 +1,10 @@
 package login.service;
 
-import login.domain.LoginInfo;
-import login.domain.LoginResult;
-import login.domain.LogoutInfo;
-import login.domain.LogoutResult;
+import login.entity.LoginInfo;
+import login.entity.LoginResult;
+import login.entity.LogoutInfo;
+import login.entity.LogoutResult;
 import org.springframework.http.HttpHeaders;
-import org.springframework.integration.dsl.http.Http;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

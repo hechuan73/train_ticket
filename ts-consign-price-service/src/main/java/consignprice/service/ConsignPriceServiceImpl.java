@@ -1,13 +1,11 @@
 package consignprice.service;
 
-import consignprice.domain.GetPriceDomain;
-import consignprice.domain.PriceConfig;
+import consignprice.entity.GetPriceDomain;
+import consignprice.entity.PriceConfig;
 import consignprice.repository.ConsignPriceConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class ConsignPriceServiceImpl implements ConsignPriceService {

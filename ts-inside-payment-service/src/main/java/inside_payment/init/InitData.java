@@ -1,6 +1,6 @@
 package inside_payment.init;
 
-import inside_payment.domain.*;
+import inside_payment.entity.*;
 import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 import inside_payment.service.InsidePaymentService;

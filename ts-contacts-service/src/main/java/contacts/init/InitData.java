@@ -1,7 +1,7 @@
 package contacts.init;
 
-import contacts.domain.Contacts;
-import contacts.domain.DocumentType;
+import contacts.entity.Contacts;
+import contacts.entity.DocumentType;
 import contacts.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

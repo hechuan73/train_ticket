@@ -1,7 +1,6 @@
 package inside_payment.service;
 
-import inside_payment.async.AsyncTask;
-import inside_payment.domain.*;
+import inside_payment.entity.*;
 import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 import inside_payment.util.CookieUtil;

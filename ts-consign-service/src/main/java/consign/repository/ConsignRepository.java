@@ -1,8 +1,7 @@
 package consign.repository;
 
-import consign.domain.ConsignRecord;
+import consign.entity.ConsignRecord;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

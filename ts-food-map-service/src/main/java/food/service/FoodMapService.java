@@ -1,6 +1,6 @@
 package food.service;
 
-import food.domain.*;
+import food.entity.*;
 import org.springframework.http.HttpHeaders;
 
 public interface FoodMapService {

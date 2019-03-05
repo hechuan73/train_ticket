@@ -1,12 +1,12 @@
 package adminorder.service;
 
-import adminorder.domain.request.AddOrderRequest;
-import adminorder.domain.request.DeleteOrderRequest;
-import adminorder.domain.request.UpdateOrderRequest;
-import adminorder.domain.response.AddOrderResult;
-import adminorder.domain.response.DeleteOrderResult;
-import adminorder.domain.response.GetAllOrderResult;
-import adminorder.domain.response.UpdateOrderResult;
+import adminorder.entity.AddOrderRequest;
+import adminorder.entity.DeleteOrderRequest;
+import adminorder.entity.UpdateOrderRequest;
+import adminorder.entity.AddOrderResult;
+import adminorder.entity.DeleteOrderResult;
+import adminorder.entity.GetAllOrderResult;
+import adminorder.entity.UpdateOrderResult;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminOrderService {

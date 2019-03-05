@@ -1,8 +1,6 @@
 package adminbasic.service;
 
-import adminbasic.domin.bean.*;
-import adminbasic.domin.info.*;
-import adminbasic.domin.reuslt.*;
+import adminbasic.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;

@@ -1,6 +1,6 @@
 package config.init;
 
-import config.domain.Information;
+import config.entity.Information;
 import config.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

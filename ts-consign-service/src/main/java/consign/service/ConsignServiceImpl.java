@@ -1,9 +1,9 @@
 package consign.service;
 
-import consign.domain.ConsignRecord;
-import consign.domain.ConsignRequest;
-import consign.domain.GetPriceDomain;
-import consign.domain.InsertConsignRecordResult;
+import consign.entity.ConsignRecord;
+import consign.entity.ConsignRequest;
+import consign.entity.GetPriceDomain;
+import consign.entity.InsertConsignRecordResult;
 import consign.repository.ConsignRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -52,7 +52,7 @@ public class ConsignServiceImpl implements ConsignService {
                 double.class);
         double price = re.getBody();
 //        double price = restTemplate.postForObject(
-//                "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
+//                "http://ts-consign-price-service:16110/consignPrice/getPrice", entity ,double.class);
         consignRecord.setPrice(price);
         //存储
         ConsignRecord result = repository.save(consignRecord);
@@ -96,7 +96,7 @@ public class ConsignServiceImpl implements ConsignService {
                     double.class);
             double price = re.getBody();
 //            double price = restTemplate.postForObject(
-//                    "http://ts-consign-price-service:16110/consignPrice/getPrice", domain ,double.class);
+//                    "http://ts-consign-price-service:16110/consignPrice/getPrice", entity ,double.class);
             originalRecord.setPrice(price);
         }
         else{

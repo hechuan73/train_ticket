@@ -1,9 +1,9 @@
 package admintravel.service;
 
-import admintravel.domain.request.AddAndModifyTravelRequest;
-import admintravel.domain.request.DeleteTravelRequest;
-import admintravel.domain.response.AdminFindAllResult;
-import admintravel.domain.response.ResponseBean;
+import admintravel.entity.AddAndModifyTravelRequest;
+import admintravel.entity.DeleteTravelRequest;
+import admintravel.entity.AdminFindAllResult;
+import admintravel.entity.ResponseBean;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminTravelService {

@@ -1,6 +1,6 @@
 package other.init;
 
-import other.domain.*;
+import other.entity.*;
 import other.service.OrderOtherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

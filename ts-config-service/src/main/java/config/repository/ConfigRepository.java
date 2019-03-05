@@ -1,6 +1,6 @@
 package config.repository;
 
-import config.domain.Config;
+import config.entity.Config;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package food.init;
 
-import food.domain.Food;
-import food.domain.FoodStore;
-import food.domain.TrainFood;
+import food.entity.Food;
+import food.entity.FoodStore;
+import food.entity.TrainFood;
 import food.service.FoodMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

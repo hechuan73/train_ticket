@@ -1,7 +1,7 @@
 package consignprice.controller;
 
-import consignprice.domain.GetPriceDomain;
-import consignprice.domain.PriceConfig;
+import consignprice.entity.GetPriceDomain;
+import consignprice.entity.PriceConfig;
 import consignprice.service.ConsignPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

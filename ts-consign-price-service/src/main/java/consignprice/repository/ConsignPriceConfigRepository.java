@@ -1,6 +1,6 @@
 package consignprice.repository;
 
-import consignprice.domain.PriceConfig;
+import consignprice.entity.PriceConfig;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

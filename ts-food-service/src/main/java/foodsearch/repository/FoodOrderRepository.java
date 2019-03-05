@@ -1,6 +1,6 @@
 package foodsearch.repository;
 
-import foodsearch.domain.FoodOrder;
+import foodsearch.entity.FoodOrder;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

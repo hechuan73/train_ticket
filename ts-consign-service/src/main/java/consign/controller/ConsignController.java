@@ -1,8 +1,8 @@
 package consign.controller;
 
-import consign.domain.ConsignRecord;
-import consign.domain.ConsignRequest;
-import consign.domain.InsertConsignRecordResult;
+import consign.entity.ConsignRecord;
+import consign.entity.ConsignRequest;
+import consign.entity.InsertConsignRecordResult;
 import consign.service.ConsignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

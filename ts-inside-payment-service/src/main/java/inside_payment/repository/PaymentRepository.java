@@ -1,6 +1,6 @@
 package inside_payment.repository;
 
-import inside_payment.domain.Payment;
+import inside_payment.entity.Payment;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

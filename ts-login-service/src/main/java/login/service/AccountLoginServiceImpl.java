@@ -1,9 +1,9 @@
 package login.service;
 
-import login.domain.LoginInfo;
-import login.domain.LoginResult;
-import login.domain.LogoutInfo;
-import login.domain.LogoutResult;
+import login.entity.LoginInfo;
+import login.entity.LoginResult;
+import login.entity.LogoutInfo;
+import login.entity.LogoutResult;
 import login.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -12,10 +12,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 
 @Service
 public class AccountLoginServiceImpl implements AccountLoginService {

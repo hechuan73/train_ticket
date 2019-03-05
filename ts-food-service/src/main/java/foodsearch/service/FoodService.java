@@ -1,6 +1,6 @@
 package foodsearch.service;
 
-import foodsearch.domain.*;
+import foodsearch.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;

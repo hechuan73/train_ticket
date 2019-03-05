@@ -1,12 +1,12 @@
 package adminuser.service;
 
-import adminuser.domain.request.AddAccountRequest;
-import adminuser.domain.request.DeleteAccountRequest;
-import adminuser.domain.request.UpdateAccountRequest;
-import adminuser.domain.response.DeleteAccountResult;
-import adminuser.domain.response.FindAllAccountResult;
-import adminuser.domain.response.ModifyAccountResult;
-import adminuser.domain.response.RegisterResult;
+import adminuser.entity.AddAccountRequest;
+import adminuser.entity.DeleteAccountRequest;
+import adminuser.entity.UpdateAccountRequest;
+import adminuser.entity.DeleteAccountResult;
+import adminuser.entity.FindAllAccountResult;
+import adminuser.entity.ModifyAccountResult;
+import adminuser.entity.RegisterResult;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminUserService {

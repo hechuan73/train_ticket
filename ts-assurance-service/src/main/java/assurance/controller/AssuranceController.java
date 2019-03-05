@@ -1,6 +1,6 @@
 package assurance.controller;
 
-import assurance.domain.*;
+import assurance.entity.*;
 import assurance.service.AssuranceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

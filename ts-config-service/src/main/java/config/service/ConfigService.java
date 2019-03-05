@@ -1,8 +1,8 @@
 package config.service;
 
-import config.domain.Config;
-import config.domain.Information;
-import config.domain.Information2;
+import config.entity.Config;
+import config.entity.Information;
+import config.entity.Information2;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package notification.service;
 
-import notification.domain.NotifyInfo;
+import notification.entity.NotifyInfo;
 import org.springframework.http.HttpHeaders;
 
 /**

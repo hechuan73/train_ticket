@@ -1,6 +1,6 @@
 package contacts.controller;
 
-import contacts.domain.*;
+import contacts.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

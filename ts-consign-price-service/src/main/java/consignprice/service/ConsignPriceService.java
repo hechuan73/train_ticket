@@ -1,7 +1,7 @@
 package consignprice.service;
 
-import consignprice.domain.GetPriceDomain;
-import consignprice.domain.PriceConfig;
+import consignprice.entity.GetPriceDomain;
+import consignprice.entity.PriceConfig;
 import org.springframework.http.HttpHeaders;
 
 public interface ConsignPriceService {
