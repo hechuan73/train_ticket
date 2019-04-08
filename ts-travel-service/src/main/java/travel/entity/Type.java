@@ -1,11 +1,9 @@
-package travel.domain;
+package travel.entity;
 
 import java.io.Serializable;
 
 
 public enum Type implements Serializable{
-
-
     G("G", 1), D("D", 2);
     //Z("Z",3), T("T", 4), K("K", 5);
 

@@ -14,19 +14,19 @@ import javax.imageio.*;
 import java.io.*;
 
 @RestController
+@RequestMapping("/api/v1")
 public class VerificationCodeController {
 
 	@Autowired
 	private VerificationCodeService verificationCodeService;
 
-
-	@RequestMapping(value="/error",method=RequestMethod.GET)
+	@GetMapping(value="/error")
 	public String welcome(@RequestHeader HttpHeaders headers){
 		return "error";
 	}
 
 	
-	@RequestMapping(value = "/verification/generate", method = RequestMethod.GET)
+	@GetMapping(value = "/generate")
 	public void imagecode(@RequestHeader HttpHeaders headers,HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    OutputStream os = response.getOutputStream();
 	    Map<String,Object> map = verificationCodeService.getImageCode(60, 20, os, request, response, headers);
@@ -42,14 +42,13 @@ public class VerificationCodeController {
 	    }
 	}
 
-	@RequestMapping(value = "/verification/verify", method = RequestMethod.POST)
+	@PostMapping(value = "/verify")
 	public boolean verifyCode(@RequestHeader HttpHeaders headers,HttpServletRequest request, HttpServletResponse response ) {
 		return true;
 //		String receivedCode = request.getParameter("verificationCode");
 //		System.out.println("receivedCode"+receivedCode);
 //		boolean result = verificationCodeService.verifyCode(request, response, receivedCode);
 //		return result;
-
 	}
 
 }

@@ -1,7 +1,6 @@
-package travel.domain;
+package travel.entity;
 
 public enum SeatClass {
-
     NONE        (0,"NoSeat"),
     BUSINESS    (1,"GreenSeat"),
     FIRSTCLASS  (2,"FirstClassSeat"),

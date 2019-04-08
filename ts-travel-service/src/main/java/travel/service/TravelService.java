@@ -1,8 +1,7 @@
 package travel.service;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.integration.dsl.http.Http;
-import travel.domain.*;
+import travel.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;

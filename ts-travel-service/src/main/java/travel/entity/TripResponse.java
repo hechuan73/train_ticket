@@ -1,8 +1,5 @@
-package travel.domain;
+package travel.entity;
 
-import org.springframework.data.annotation.Id;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 

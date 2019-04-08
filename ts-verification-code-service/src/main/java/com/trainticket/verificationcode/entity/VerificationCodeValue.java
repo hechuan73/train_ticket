@@ -1,4 +1,4 @@
-package com.trainticket.verificationcode.domain;
+package com.trainticket.verificationcode.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;

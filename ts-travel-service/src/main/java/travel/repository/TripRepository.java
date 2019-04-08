@@ -1,8 +1,9 @@
 package travel.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import travel.domain.Trip;
-import travel.domain.TripId;
+import travel.entity.Trip;
+import travel.entity.TripId;
+
 import java.util.ArrayList;
 
 public interface TripRepository extends CrudRepository<Trip,TripId> {

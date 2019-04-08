@@ -1,4 +1,4 @@
-package travel.domain;
+package travel.entity;
 
 public class GetTrainTypeResult {
 

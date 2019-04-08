@@ -1,9 +1,8 @@
-package travel.domain;
+package travel.entity;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
 
 public class QueryInfo {
 

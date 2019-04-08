@@ -43,6 +43,4 @@ public class TravelPlanController {
         System.out.println("[Search Min Station]");
         return travelPlanService.getMinStation(queryInfo, headers);
     }
-
-
 }

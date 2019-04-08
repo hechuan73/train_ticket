@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import com.trainticket.verificationcode.domain.VerificationCodeValue;
+import com.trainticket.verificationcode.entity.VerificationCodeValue;
 import com.trainticket.verificationcode.repository.VerificationCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

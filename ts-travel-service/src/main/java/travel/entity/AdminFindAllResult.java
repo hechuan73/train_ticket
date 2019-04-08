@@ -1,5 +1,4 @@
-package travel.domain;
-
+package travel.entity;
 import java.util.ArrayList;
 
 public class AdminFindAllResult {

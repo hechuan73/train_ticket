@@ -1,4 +1,4 @@
-package travel.domain;
+package travel.entity;
 
 import java.util.Date;
 

@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import travel.domain.*;
+import travel.entity.*;
 import travel.repository.TripRepository;
 import java.util.*;
 

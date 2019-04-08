@@ -3,7 +3,7 @@ package travel.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import travel.domain.Information;
+import travel.entity.Information;
 import travel.service.TravelService;
 
 import java.util.Date;

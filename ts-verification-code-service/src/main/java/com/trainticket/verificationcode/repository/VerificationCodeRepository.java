@@ -1,6 +1,6 @@
 package com.trainticket.verificationcode.repository;
 
-import com.trainticket.verificationcode.domain.VerificationCodeValue;
+import com.trainticket.verificationcode.entity.VerificationCodeValue;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
