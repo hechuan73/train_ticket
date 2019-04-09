@@ -87,36 +87,6 @@ public class InitData implements CommandLineRunner{
             e.printStackTrace();
             System.exit(1);
         }
-
-
-//        Food food1 = new Food();
-//        food1.setFoodName("Hamburger");
-//        food1.setPrice(10);
-//        Food food2 = new Food();
-//        food2.setFoodName("Pork Chop with rice");
-//        food2.setPrice(30);
-//        List<Food> foodList1 = new ArrayList<Food>();
-//        foodList1.add(food1);
-//        List<Food> foodList2 = new ArrayList<Food>();
-//        foodList2.add(food2);
-//
-//        FoodStore fs1 = new FoodStore();
-//        fs1.setId(UUID.randomUUID());
-//        fs1.setStationId("Shanghai");
-//        fs1.setStoreName("KFC");
-//        fs1.setTelephone("01-234567");
-//        fs1.setBusinessTime("10:00-20:00");
-//        fs1.setDeliveryFee(20);
-//        fs1.setFoodList(foodList1);
-//        service.createFoodStore(fs1);
-//
-//        TrainFood tf1 = new TrainFood();
-//        tf1.setId(UUID.randomUUID());
-//        tf1.setTripId("G1234");
-//        tf1.setFoodList(foodList2);
-//        service.createTrainFood(tf1);
-
-
     }
 
     private List<Food> toFoodList(String s){

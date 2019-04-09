@@ -4,7 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class QueryInfo {
+public class Info {
 
     @Valid
     @NotNull
@@ -18,7 +18,7 @@ public class QueryInfo {
     @NotNull
     private Date departureTime;
 
-    public QueryInfo(){
+    public Info(){
         //Default Constructor
     }
 

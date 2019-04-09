@@ -3,7 +3,7 @@ package travel.entity;
 import java.util.Date;
 
 
-public class QueryForTravel {
+public class Travel {
 
     private Trip trip;
 
@@ -13,7 +13,7 @@ public class QueryForTravel {
 
     private Date departureTime;
 
-    public QueryForTravel(){
+    public Travel(){
         //Default Constructor
     }
 

@@ -7,10 +7,6 @@ import java.util.UUID;
 
 public class FoodStore implements Serializable{
 
-    public FoodStore(){
-
-    }
-
     private UUID id;
 
     private String stationId;
@@ -24,6 +20,10 @@ public class FoodStore implements Serializable{
     private double deliveryFee;
 
     private List<Food> foodList;
+
+    public FoodStore(){
+
+    }
 
     public UUID getId() {
         return id;

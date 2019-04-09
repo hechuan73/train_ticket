@@ -4,7 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class SeatRequest {
+public class Seat {
     @Valid
     @NotNull
     private Date travelDate;
@@ -26,7 +26,7 @@ public class SeatRequest {
     @NotNull
     private int seatType;
 
-    public SeatRequest(){
+    public Seat(){
 
     }
 

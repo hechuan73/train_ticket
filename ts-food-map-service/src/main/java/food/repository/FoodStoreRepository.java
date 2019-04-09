@@ -15,6 +15,8 @@ public interface FoodStoreRepository extends MongoRepository<FoodStore, String> 
 
     @Query("{ 'stationId' : ?0 }")
     List<FoodStore> findByStationId(String stationId);
+    List<FoodStore> findByStationIdIn(List<String> stationIds);
+
 
     List<FoodStore> findAll();
 

@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface FoodService {
 
-    GetAllFoodOfTripResult getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers);
+    FoodOrder createFoodOrder(FoodOrder afoi, HttpHeaders headers);
+    FoodOrder deleteFoodOrder(String orderId, HttpHeaders headers);
 
-    AddFoodOrderResult createFoodOrder(AddFoodOrderInfo afoi, HttpHeaders headers);
+    FoodOrder findByOrderId(String orderId, HttpHeaders headers);
 
-    CancelFoodOrderResult cancelFoodOrder(CancelFoodOrderInfo cfoi, HttpHeaders headers);
-
-    UpdateFoodOrderResult updateFoodOrder(UpdateFoodOrderInfo ufoi, HttpHeaders headers);
+    FoodOrder updateFoodOrder(FoodOrder updateFoodOrder, HttpHeaders headers);
 
     List<FoodOrder> findAllFoodOrder(HttpHeaders headers);
 
-    FindByOrderIdResult findByOrderId(String orderId, HttpHeaders headers);
+    AllTripFood getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers);
+
 }

@@ -2,7 +2,7 @@ package travel.entity;
 import java.util.HashMap;
 
 
-public class ResultForTravel {
+public class TravelResult {
 
     private boolean status;
 
@@ -14,7 +14,7 @@ public class ResultForTravel {
 
     private String message;
 
-    public ResultForTravel(){
+    public TravelResult() {
         //Default Constructor
     }
 

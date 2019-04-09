@@ -1,34 +1,15 @@
 package food.entity;
 
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-//import java.util.UUID;
 
-//@Document(collection = "foods")
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Food implements Serializable{
 
+    private String foodName;
+    private double price;
     public Food(){
 
     }
-
-//    @Id
-//    private UUID id;
-    private String foodName;
-    private double price;
-
-
-//    public UUID getId() {
-//        return id;
-//    }
-//
-//    public void setId(UUID id) {
-//        this.id = id;
-//    }
-
     public String getFoodName() {
         return foodName;
     }

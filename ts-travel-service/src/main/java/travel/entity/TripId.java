@@ -3,25 +3,27 @@ package travel.entity;
 import java.io.Serializable;
 
 
-public class TripId implements Serializable{
+public class TripId implements Serializable {
     private Type type;
     private String number;
 
-    public TripId(Type type, String number){
+    public TripId(Type type, String number) {
         this.type = type;
         this.number = number;
     }
 
-    public TripId(){
+    public TripId() {
         //Default Constructor
     }
 
-    public TripId(String trainNumber){
+    public TripId(String trainNumber) {
         char type = trainNumber.charAt(0);
-        switch(type){
-            case 'G': this.type = Type.G;
+        switch (type) {
+            case 'G':
+                this.type = Type.G;
                 break;
-            case 'D': this.type = Type.D;
+            case 'D':
+                this.type = Type.D;
                 break;
 //            case 'Z': this.type = Type.Z;
 //                break;
@@ -29,7 +31,8 @@ public class TripId implements Serializable{
 //                break;
 //            case 'K': this.type = Type.K;
 //                break;
-            default:break;
+            default:
+                break;
         }
 
         this.number = trainNumber.substring(1);
@@ -53,7 +56,7 @@ public class TripId implements Serializable{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return type.getName() + number;
     }
 }

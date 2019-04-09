@@ -1,8 +1,6 @@
 package food.service;
 
 import food.entity.FoodStore;
-import food.entity.GetFoodStoresListResult;
-import food.entity.GetTrainFoodListResult;
 import food.entity.TrainFood;
 import food.repository.FoodStoreRepository;
 import food.repository.TrainFoodRepository;
@@ -13,20 +11,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FoodMapServiceImpl implements FoodMapService{
+public class FoodMapServiceImpl implements FoodMapService {
 
     @Autowired
     FoodStoreRepository foodStoreRepository;
+
     @Autowired
     TrainFoodRepository trainFoodRepository;
-
 
     @Override
     public FoodStore createFoodStore(FoodStore fs, HttpHeaders headers) {
         FoodStore fsTemp = foodStoreRepository.findById(fs.getId());
-        if(fsTemp != null){
+        if (fsTemp != null) {
             System.out.println("[Food Map Service][Init FoodStore] Already Exists Id:" + fs.getId());
-        } else{
+        } else {
             foodStoreRepository.save(fs);
         }
         return fs;
@@ -35,7 +33,7 @@ public class FoodMapServiceImpl implements FoodMapService{
     @Override
     public TrainFood createTrainFood(TrainFood tf, HttpHeaders headers) {
         TrainFood tfTemp = trainFoodRepository.findById(tf.getId());
-        if(tfTemp != null){
+        if (tfTemp != null) {
             System.out.println("[Food Map Service][Init TrainFood] Already Exists Id:" + tf.getId());
         } else {
             trainFoodRepository.save(tf);
@@ -44,44 +42,32 @@ public class FoodMapServiceImpl implements FoodMapService{
     }
 
     @Override
-    public GetFoodStoresListResult listFoodStores(HttpHeaders headers) {
-        List<FoodStore> fsList= foodStoreRepository.findAll();
-        GetFoodStoresListResult result = new GetFoodStoresListResult();
-        result.setStatus(true);
-        result.setMessage("Success");
-        result.setFoodStoreList(fsList);
-        return result;
+    public List<FoodStore> listFoodStores(HttpHeaders headers) {
+        List<FoodStore> foodStoreList = foodStoreRepository.findAll();
+        return foodStoreList;
     }
 
     @Override
-    public GetTrainFoodListResult listTrainFood(HttpHeaders headers) {
-        List<TrainFood> tfList= trainFoodRepository.findAll();
-        GetTrainFoodListResult result = new GetTrainFoodListResult();
-        result.setStatus(true);
-        result.setMessage("Success");
-        result.setTrainFoodList(tfList);
-        return result;
+    public List<TrainFood> listTrainFood(HttpHeaders headers) {
+        List<TrainFood> trainFoodList = trainFoodRepository.findAll();
+        return trainFoodList;
     }
 
     @Override
-    public GetFoodStoresListResult listFoodStoresByStationId(String stationId, HttpHeaders headers) {
-        List<FoodStore> fsList= foodStoreRepository.findByStationId(stationId);
-        GetFoodStoresListResult result = new GetFoodStoresListResult();
-        result.setStatus(true);
-        result.setMessage("Success");
-        result.setFoodStoreList(fsList);
-
-        return result;
+    public List<FoodStore> listFoodStoresByStationId(String stationId, HttpHeaders headers) {
+        List<FoodStore> foodStoreList = foodStoreRepository.findByStationId(stationId);
+        return foodStoreList;
     }
 
     @Override
-    public GetTrainFoodListResult listTrainFoodByTripId(String tripId, HttpHeaders headers) {
-        List<TrainFood> tfList= trainFoodRepository.findByTripId(tripId);
-        GetTrainFoodListResult result = new GetTrainFoodListResult();
-        result.setStatus(true);
-        result.setMessage("Success");
-        result.setTrainFoodList(tfList);
+    public List<TrainFood> listTrainFoodByTripId(String tripId, HttpHeaders headers) {
+        List<TrainFood> trainFoodList = trainFoodRepository.findByTripId(tripId);
+        return trainFoodList;
+    }
 
-        return result;
+    @Override
+    public  List<FoodStore> getFoodStoresByStationIds(List<String> stationIds) {
+        List<FoodStore> foodStoreList = foodStoreRepository.findByStationIdIn(stationIds);
+        return foodStoreList;
     }
 }

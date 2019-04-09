@@ -11,25 +11,25 @@ import java.util.List;
  */
 public interface TravelService {
 
-    String create(Information info, HttpHeaders headers);
+    String create(TravelInfo info, HttpHeaders headers);
 
-    Trip retrieve(Information2 info, HttpHeaders headers);
+    Trip retrieve(String tripId, HttpHeaders headers);
 
-    String update(Information info, HttpHeaders headers);
+    String update(TravelInfo info, HttpHeaders headers);
 
-    String delete(Information2 info, HttpHeaders headers);
+    String delete(String tripId, HttpHeaders headers);
 
-    ArrayList<TripResponse> query(QueryInfo info, HttpHeaders headers);
+    ArrayList<TripResponse> query(Info info, HttpHeaders headers);
 
-    GetTripAllDetailResult getTripAllDetailInfo(GetTripAllDetailInfo gtdi, HttpHeaders headers);
+    TripAllDetail getTripAllDetailInfo(TripAllDetailInfo gtdi, HttpHeaders headers);
 
-    GetRouteResult getRouteByTripId(String tripId, HttpHeaders headers);
+    Route getRouteByTripId(String tripId, HttpHeaders headers);
 
-    GetTrainTypeResult getTrainTypeByTripId(String tripId, HttpHeaders headers);
+    TrainType getTrainTypeByTripId(String tripId, HttpHeaders headers);
 
     List<Trip> queryAll(HttpHeaders headers);
 
-    GetTripsByRouteIdResult getTripByRoute(GetTripsByRouteIdInfo info, HttpHeaders headers);
+    ArrayList<ArrayList<Trip>>  getTripByRoute(ArrayList<String> routeIds, HttpHeaders headers);
 
-    AdminFindAllResult adminQueryAll(HttpHeaders headers);
+    ArrayList<AdminTrip> adminQueryAll(HttpHeaders headers);
 }

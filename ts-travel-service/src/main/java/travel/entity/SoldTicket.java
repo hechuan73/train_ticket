@@ -2,17 +2,17 @@ package travel.entity;
 
 import java.util.Date;
 
-public class QuerySoldTicket {
+public class SoldTicket {
 
     private Date travelDate;
 
     private String trainNumber;
 
-    public QuerySoldTicket(){
+    public SoldTicket(){
         //Default Constructor
     }
 
-    public QuerySoldTicket(Date travelDate, String trainNumber) {
+    public SoldTicket(Date travelDate, String trainNumber) {
         this.travelDate = travelDate;
         this.trainNumber = trainNumber;
     }

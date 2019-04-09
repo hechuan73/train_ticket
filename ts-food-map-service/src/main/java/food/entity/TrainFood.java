@@ -12,10 +12,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrainFood {
 
-    public TrainFood(){
-
-    }
-
     @Id
     private UUID id;
 
@@ -23,6 +19,10 @@ public class TrainFood {
     private String tripId;
 
     private List<Food> foodList;
+
+    public TrainFood(){
+
+    }
 
     public UUID getId() {
         return id;
@@ -39,7 +39,6 @@ public class TrainFood {
     public void setTripId(String tripId) {
         this.tripId = tripId;
     }
-
 
     public List<Food> getFoodList() {
         return foodList;

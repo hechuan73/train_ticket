@@ -53,7 +53,8 @@
         <module>ts-admin-route-service</module>
         <module>ts-admin-travel-service</module>
 		<module>ts-admin-user-service</module>
-		<!--<module>ts-ticket-advance-service</module>-->
+        <module>ts-common</module>
+        <!--<module>ts-ticket-advance-service</module>-->
 		<!--<module>1_services_analysis_mvn</module>-->
     </modules>
 
@@ -100,7 +101,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.18</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.4.0</version>
+		</dependency>
     </dependencies>
 
 	<!--<repositories>-->

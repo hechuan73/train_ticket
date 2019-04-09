@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import java.util.Date;
 
 
-public class Information {
+public class TravelInfo {
     @Id
     private String tripId;
 
@@ -22,7 +22,7 @@ public class Information {
 
     private Date endTime;
 
-    public Information(){
+    public TravelInfo(){
         //Default Constructor
     }
 

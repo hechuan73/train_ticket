@@ -2,7 +2,7 @@ package travel.entity;
 
 import java.util.Date;
 
-public class GetTripAllDetailInfo {
+public class TripAllDetailInfo {
 
     private String tripId;
 
@@ -12,7 +12,7 @@ public class GetTripAllDetailInfo {
 
     private String to;
 
-    public GetTripAllDetailInfo() {
+    public TripAllDetailInfo() {
         //Default Constructor
     }
 

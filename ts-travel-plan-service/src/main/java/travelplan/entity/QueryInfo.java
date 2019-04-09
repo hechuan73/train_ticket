@@ -10,7 +10,7 @@ public class QueryInfo {
 
     private Date departureTime;
 
-    public QueryInfo(){
+    public QueryInfo() {
         //Default Constructor
     }
 

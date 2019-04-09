@@ -3,7 +3,7 @@ package travel.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import travel.entity.Information;
+import travel.entity.TravelInfo;
 import travel.service.TravelService;
 
 import java.util.Date;
@@ -16,7 +16,7 @@ public class InitData implements CommandLineRunner{
     TravelService service;
 
     public void run(String... args)throws Exception{
-        Information info = new Information();
+        TravelInfo info = new TravelInfo();
 
         info.setTripId("G1234");
         info.setTrainTypeId("GaoTieOne");

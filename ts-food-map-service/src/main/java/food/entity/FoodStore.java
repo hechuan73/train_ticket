@@ -12,10 +12,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FoodStore {
 
-    public FoodStore(){
-
-    }
-
     @Id
     private UUID id;
 
@@ -31,6 +27,10 @@ public class FoodStore {
     private double deliveryFee;
 
     private List<Food> foodList;
+
+    public FoodStore(){
+
+    }
 
     public UUID getId() {
         return id;

@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import travel.entity.*;
 import travel.repository.TripRepository;
+
 import java.util.*;
 
 @Service
-public class TravelServiceImpl implements TravelService{
+public class TravelServiceImpl implements TravelService {
 
     @Autowired
     private TripRepository repository;
@@ -21,133 +22,95 @@ public class TravelServiceImpl implements TravelService{
     private RestTemplate restTemplate;
 
     @Override
-    public GetRouteResult getRouteByTripId(String tripId, HttpHeaders headers){
-        GetRouteResult result = new GetRouteResult();
-
-        if(null != tripId && tripId.length() >= 2){
+    public Route getRouteByTripId(String tripId, HttpHeaders headers) {
+        Route route = null;
+        if (null != tripId && tripId.length() >= 2) {
             TripId tripId1 = new TripId(tripId);
             Trip trip = repository.findByTripId(tripId1);
-            if(trip == null){
-                result.setStatus(false);
-                result.setMessage("Trip Not Found");
-                System.out.println("[Get Route By Trip ID] Trip Not Found:" + tripId);
-                result.setRoute(null);
-            }else{
-                Route route = getRouteByRouteId(trip.getRouteId(), headers);
-                if(route == null){
-                    result.setStatus(false);
-                    result.setMessage("Route Not Found");
-                    System.out.println("[Get Route By Trip ID] Route Not Found:" + trip.getRouteId());
-                    result.setRoute(null);
-                }else{
-                    result.setStatus(true);
-                    result.setMessage("Success");
-                    System.out.println("[Get Route By Trip ID] Success");
-                    result.setRoute(route);
-                }
+            if (trip != null) {
+                route = getRouteByRouteId(trip.getRouteId(), headers);
             }
-        } else {
-            result.setStatus(false);
-            System.out.println("[Get Route By Trip ID] TripId is invaild");
-            result.setMessage("TripId is invaild");
-            result.setRoute(null);
         }
-
-        return result;
+        return route;
     }
 
     @Override
-    public GetTrainTypeResult getTrainTypeByTripId(String tripId, HttpHeaders headers){
+    public TrainType getTrainTypeByTripId(String tripId, HttpHeaders headers) {
         TripId tripId1 = new TripId(tripId);
-        GetTrainTypeResult result = new GetTrainTypeResult();
+//        GetTrainTypeResult result = new GetTrainTypeResult();
+        TrainType trainType = null;
         Trip trip = repository.findByTripId(tripId1);
-        if(trip == null){
-            result.setStatus(false);
-            result.setMessage("Trip Not Found");
-            result.setTrainType(null);
-        }else{
+        if (trip != null) {
             TrainType train = getTrainType(trip.getTrainTypeId(), headers);
-            if(train == null){
-                result.setStatus(false);
-                result.setMessage("Route Not Found");
-                result.setTrainType(null);
-            }else{
-                result.setStatus(true);
-                result.setMessage("Success");
-                result.setTrainType(train);
-            }
+            trainType = train;
         }
-        return result;
+        return trainType;
     }
 
     @Override
-    public GetTripsByRouteIdResult getTripByRoute(GetTripsByRouteIdInfo info,HttpHeaders headers) {
-        ArrayList<String> routeIds = info.getRouteIds();
+    public ArrayList<ArrayList<Trip>> getTripByRoute(ArrayList<String> routeIds, HttpHeaders headers) {
         ArrayList<ArrayList<Trip>> tripList = new ArrayList<>();
-        for(String routeId : routeIds){
+        for (String routeId : routeIds) {
             ArrayList<Trip> tempTripList = repository.findByRouteId(routeId);
-            if(tempTripList == null){
+            if (tempTripList == null) {
                 tempTripList = new ArrayList<>();
             }
             tripList.add(tempTripList);
         }
-        GetTripsByRouteIdResult result = new GetTripsByRouteIdResult();
-        result.setMessage("Success.");
-        result.setTripsSet(tripList);
-        return result;
+        return tripList;
     }
 
     @Override
-    public String create(Information info,HttpHeaders headers){
+    public String create(TravelInfo info, HttpHeaders headers) {
         TripId ti = new TripId(info.getTripId());
-        if(repository.findByTripId(ti) == null){
-            Trip trip = new Trip(ti,info.getTrainTypeId(),info.getStartingStationId(),
-                    info.getStationsId(),info.getTerminalStationId(),info.getStartingTime(),info.getEndTime());
+        if (repository.findByTripId(ti) == null) {
+            Trip trip = new Trip(ti, info.getTrainTypeId(), info.getStartingStationId(),
+                    info.getStationsId(), info.getTerminalStationId(), info.getStartingTime(), info.getEndTime());
             trip.setRouteId(info.getRouteId());
             repository.save(trip);
             return "Create trip:" + ti.toString() + ".";
-        }else{
-            return "Trip "+ info.getTripId().toString() +" already exists";
+        } else {
+            return "Trip " + info.getTripId().toString() + " already exists";
         }
     }
 
     @Override
-    public Trip retrieve(Information2 info,HttpHeaders headers){
-        TripId ti = new TripId(info.getTripId());
-        if(repository.findByTripId(ti) != null){
+    public Trip retrieve(String tripId, HttpHeaders headers) {
+        TripId ti = new TripId(tripId);
+        if (repository.findByTripId(ti) != null) {
             return repository.findByTripId(ti);
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public String update(Information info,HttpHeaders headers){
+    public String update(TravelInfo info, HttpHeaders headers) {
         TripId ti = new TripId(info.getTripId());
-        if(repository.findByTripId(ti) != null){
-            Trip trip = new Trip(ti,info.getTrainTypeId(),info.getStartingStationId(),
-                    info.getStationsId(),info.getTerminalStationId(),info.getStartingTime(),info.getEndTime());
+        if (repository.findByTripId(ti) != null) {
+            Trip trip = new Trip(ti, info.getTrainTypeId(), info.getStartingStationId(),
+                    info.getStationsId(), info.getTerminalStationId(), info.getStartingTime(), info.getEndTime());
             trip.setRouteId(info.getRouteId());
             repository.save(trip);
             return "Update trip:" + ti.toString();
-        }else{
-            return "Trip "+ info.getTripId().toString() +" doesn't exists";
+        } else {
+            return "Trip " + info.getTripId().toString() + " doesn't exists";
         }
     }
 
     @Override
-    public String delete(Information2 info,HttpHeaders headers){
-        TripId ti = new TripId(info.getTripId());
-        if(repository.findByTripId(ti) != null){
+    public String delete(String tripId, HttpHeaders headers) {
+        TripId ti = new TripId(tripId);
+        if (repository.findByTripId(ti) != null) {
             repository.deleteByTripId(ti);
-            return "Delete trip:" +info.getTripId().toString()+ ".";
-        }else{
-            return "Trip "+info.getTripId().toString()+" doesn't exist.";
+            return "Delete trip:" + tripId + ".";
+        } else {
+            return "Trip " + tripId + " doesn't exist.";
         }
     }
 
     @Override
-    public ArrayList<TripResponse> query(QueryInfo info, HttpHeaders headers){
+    public ArrayList<TripResponse> query(Info info, HttpHeaders headers) {
 
         //获取要查询的车次的起始站和到达站。这里收到的起始站和到达站都是站的名称，所以需要发两个请求转换成站的id
         String startingPlaceName = info.getStartingPlace();
@@ -160,16 +123,16 @@ public class TravelServiceImpl implements TravelService{
 
         //查询所有的车次信息
         ArrayList<Trip> allTripList = repository.findAll();
-        for(Trip tempTrip : allTripList){
+        for (Trip tempTrip : allTripList) {
             //拿到这个车次的具体路线表
             Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
             //检查这个车次的路线表。检查要求的起始站和到达站在不在车次路线的停靠站列表中
             //并检查起始站的位置在到达站之前。满足以上条件的车次被加入返回列表
-            if(tempRoute.getStations().contains(startingPlaceId) &&
+            if (tempRoute.getStations().contains(startingPlaceId) &&
                     tempRoute.getStations().contains(endPlaceId) &&
-                    tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)){
-                TripResponse response = getTickets(tempTrip,tempRoute,startingPlaceId,endPlaceId,startingPlaceName,endPlaceName,info.getDepartureTime(), headers);
-                if(response == null){
+                    tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
+                TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
+                if (response == null) {
                     return null;
                 }
                 list.add(response);
@@ -179,32 +142,25 @@ public class TravelServiceImpl implements TravelService{
     }
 
     @Override
-    public GetTripAllDetailResult getTripAllDetailInfo(GetTripAllDetailInfo gtdi, HttpHeaders headers){
-        GetTripAllDetailResult gtdr = new GetTripAllDetailResult();
-        System.out.println("[TravelService] [GetTripAllDetailInfo] TripId:" + gtdi.getTripId());
+    public TripAllDetail getTripAllDetailInfo(TripAllDetailInfo gtdi, HttpHeaders headers) {
+        TripAllDetail gtdr = new TripAllDetail();
+        System.out.println("[TravelService] [TripAllDetailInfo] TripId:" + gtdi.getTripId());
         Trip trip = repository.findByTripId(new TripId(gtdi.getTripId()));
-        if(trip == null){
-            gtdr.setStatus(false);
-            gtdr.setMessage("Trip Not Exist");
+        if (trip == null) {
             gtdr.setTripResponse(null);
             gtdr.setTrip(null);
-        }else{
-
+        } else {
             String startingPlaceName = gtdi.getFrom();
             String endPlaceName = gtdi.getTo();
-            String startingPlaceId = queryForStationId(startingPlaceName,headers);
-            String endPlaceId = queryForStationId(endPlaceName,headers);
-            Route tempRoute = getRouteByRouteId(trip.getRouteId(),headers);
+            String startingPlaceId = queryForStationId(startingPlaceName, headers);
+            String endPlaceId = queryForStationId(endPlaceName, headers);
+            Route tempRoute = getRouteByRouteId(trip.getRouteId(), headers);
 
-            TripResponse tripResponse = getTickets(trip,tempRoute,startingPlaceId,endPlaceId,gtdi.getFrom(),gtdi.getTo(),gtdi.getTravelDate(),headers);
-            if(tripResponse == null){
-                gtdr.setStatus(false);
-                gtdr.setMessage("Cannot found TripResponse");
+            TripResponse tripResponse = getTickets(trip, tempRoute, startingPlaceId, endPlaceId, gtdi.getFrom(), gtdi.getTo(), gtdi.getTravelDate(), headers);
+            if (tripResponse == null) {
                 gtdr.setTripResponse(null);
                 gtdr.setTrip(null);
-            }else{
-                gtdr.setStatus(true);
-                gtdr.setMessage("Success");
+            } else {
                 gtdr.setTripResponse(tripResponse);
                 gtdr.setTrip(repository.findByTripId(new TripId(gtdi.getTripId())));
             }
@@ -212,39 +168,38 @@ public class TravelServiceImpl implements TravelService{
         return gtdr;
     }
 
-    private TripResponse getTickets(Trip trip, Route route, String startingPlaceId, String endPlaceId, String startingPlaceName, String endPlaceName, Date departureTime, HttpHeaders headers){
+    private TripResponse getTickets(Trip trip, Route route, String startingPlaceId, String endPlaceId, String startingPlaceName, String endPlaceName, Date departureTime, HttpHeaders headers) {
 
         //判断所查日期是否在当天及之后
-        if(!afterToday(departureTime)){
+        if (!afterToday(departureTime)) {
             return null;
         }
 
-        QueryForTravel query = new QueryForTravel();
+        Travel query = new Travel();
         query.setTrip(trip);
         query.setStartingPlace(startingPlaceName);
         query.setEndPlace(endPlaceName);
         query.setDepartureTime(departureTime);
 
-        HttpEntity requestEntity = new HttpEntity(query,headers);
-        ResponseEntity<ResultForTravel> re = restTemplate.exchange(
+        HttpEntity requestEntity = new HttpEntity(query, headers);
+        ResponseEntity<TravelResult> re = restTemplate.exchange(
                 "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel",
                 HttpMethod.POST,
                 requestEntity,
-                ResultForTravel.class);
-        ResultForTravel resultForTravel = re.getBody();
-
+                TravelResult.class);
+        TravelResult resultForTravel = re.getBody();
 
 //        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("Basic-Service Unavailable")){
 //            System.out.println("Basic-Service Unavailable");
 //            return null;
 //        }
 
-//        ResultForTravel resultForTravel = restTemplate.postForObject(
-//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,ResultForTravel.class);
+//        TravelResult resultForTravel = restTemplate.postForObject(
+//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,TravelResult.class);
 
         //车票订单_高铁动车（已购票数）
-        QuerySoldTicket information = new QuerySoldTicket(departureTime,trip.getTripId().toString());
-        requestEntity = new HttpEntity(information,headers);
+        SoldTicket information = new SoldTicket(departureTime, trip.getTripId().toString());
+        requestEntity = new HttpEntity(information, headers);
         ResponseEntity<ResultSoldTicket> re2 = restTemplate.exchange(
                 "http://ts-order-service:12031/order/calculate",
                 HttpMethod.POST,
@@ -254,26 +209,26 @@ public class TravelServiceImpl implements TravelService{
 
 //        ResultSoldTicket result = restTemplate.postForObject(
 //                "http://ts-order-service:12031/order/calculate", information ,ResultSoldTicket.class);
-        if(result == null){
+        if (result == null) {
             System.out.println("soldticket Info doesn't exist");
             return null;
         }
         //设置返回的车票信息
         TripResponse response = new TripResponse();
-        if(queryForStationId(startingPlaceName,headers).equals(trip.getStartingStationId()) &&
-                queryForStationId(endPlaceName,headers).equals(trip.getTerminalStationId())){
+        if (queryForStationId(startingPlaceName, headers).equals(trip.getStartingStationId()) &&
+                queryForStationId(endPlaceName, headers).equals(trip.getTerminalStationId())) {
             response.setConfortClass(50);
             response.setEconomyClass(50);
-        }else{
+        } else {
             response.setConfortClass(50);
             response.setEconomyClass(50);
         }
 
-        int first = getRestTicketNumber(departureTime,trip.getTripId().toString(),
-                startingPlaceName,endPlaceName,SeatClass.FIRSTCLASS.getCode(),headers);
+        int first = getRestTicketNumber(departureTime, trip.getTripId().toString(),
+                startingPlaceName, endPlaceName, SeatClass.FIRSTCLASS.getCode(), headers);
 
-        int second = getRestTicketNumber(departureTime,trip.getTripId().toString(),
-                startingPlaceName,endPlaceName,SeatClass.SECONDCLASS.getCode(),headers);
+        int second = getRestTicketNumber(departureTime, trip.getTripId().toString(),
+                startingPlaceName, endPlaceName, SeatClass.SECONDCLASS.getCode(), headers);
         response.setConfortClass(first);
         response.setEconomyClass(second);
 
@@ -292,15 +247,15 @@ public class TravelServiceImpl implements TravelService{
 
         Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTime(trip.getStartingTime());
-        calendarStart.add(Calendar.MINUTE,minutesStart);
+        calendarStart.add(Calendar.MINUTE, minutesStart);
         response.setStartingTime(calendarStart.getTime());
-        System.out.println("[Train Service]计算时间：" + minutesStart  + " 时间:" + calendarStart.getTime().toString());
+        System.out.println("[Train Service]计算时间：" + minutesStart + " 时间:" + calendarStart.getTime().toString());
 
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
-        calendarEnd.add(Calendar.MINUTE,minutesEnd);
+        calendarEnd.add(Calendar.MINUTE, minutesEnd);
         response.setEndTime(calendarEnd.getTime());
-        System.out.println("[Train Service]计算时间：" + minutesEnd  + " 时间:" + calendarEnd.getTime().toString());
+        System.out.println("[Train Service]计算时间：" + minutesEnd + " 时间:" + calendarEnd.getTime().toString());
 
         response.setTripId(new TripId(result.getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());
@@ -308,10 +263,10 @@ public class TravelServiceImpl implements TravelService{
         response.setPriceForEconomyClass(resultForTravel.getPrices().get("economyClass"));
 
         return response;
-}
+    }
 
     @Override
-    public List<Trip> queryAll(HttpHeaders headers){
+    public List<Trip> queryAll(HttpHeaders headers) {
         return repository.findAll();
     }
 
@@ -323,29 +278,27 @@ public class TravelServiceImpl implements TravelService{
         Calendar calDateB = Calendar.getInstance();
         calDateB.setTime(date);
 
-        if(calDateA.get(Calendar.YEAR) > calDateB.get(Calendar.YEAR)){
+        if (calDateA.get(Calendar.YEAR) > calDateB.get(Calendar.YEAR)) {
             return false;
-        }else if(calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)){
-            if(calDateA.get(Calendar.MONTH) > calDateB.get(Calendar.MONTH)){
+        } else if (calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)) {
+            if (calDateA.get(Calendar.MONTH) > calDateB.get(Calendar.MONTH)) {
                 return false;
-            }else if(calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)){
-                if(calDateA.get(Calendar.DAY_OF_MONTH) > calDateB.get(Calendar.DAY_OF_MONTH)){
+            } else if (calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)) {
+                if (calDateA.get(Calendar.DAY_OF_MONTH) > calDateB.get(Calendar.DAY_OF_MONTH)) {
                     return false;
-                }else{
+                } else {
                     return true;
                 }
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return true;
         }
     }
 
-    private TrainType getTrainType(String trainTypeId, HttpHeaders headers){
-        GetTrainTypeInformation info = new GetTrainTypeInformation();
-        info.setId(trainTypeId);
-        HttpEntity requestEntity = new HttpEntity(info,headers);
+    private TrainType getTrainType(String trainTypeId, HttpHeaders headers) {
+        HttpEntity requestEntity = new HttpEntity(trainTypeId, headers);
         ResponseEntity<TrainType> re = restTemplate.exchange(
                 "http://ts-train-service:14567/train/retrieve",
                 HttpMethod.POST,
@@ -357,10 +310,8 @@ public class TravelServiceImpl implements TravelService{
         return trainType;
     }
 
-    private String queryForStationId(String stationName, HttpHeaders headers){
-        QueryForStationId query = new QueryForStationId();
-        query.setName(stationName);
-        HttpEntity requestEntity = new HttpEntity(query,headers);
+    private String queryForStationId(String stationName, HttpHeaders headers) {
+        HttpEntity requestEntity = new HttpEntity(stationName, headers);
         ResponseEntity<String> re = restTemplate.exchange(
                 "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId",
                 HttpMethod.POST,
@@ -372,32 +323,26 @@ public class TravelServiceImpl implements TravelService{
         return id;
     }
 
-    private Route getRouteByRouteId(String routeId, HttpHeaders headers){
+    private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
         System.out.println("[Travel Service][Get Route By Id] Route ID：" + routeId);
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<GetRouteResult> re = restTemplate.exchange(
+        ResponseEntity<Route> re = restTemplate.exchange(
                 "http://ts-route-service:11178/route/queryById/" + routeId,
                 HttpMethod.GET,
                 requestEntity,
-                GetRouteResult.class);
-        GetRouteResult result = re.getBody();
+                Route.class);
+        Route route = re.getBody();
 //        GetRouteResult result = restTemplate.getForObject(
 //                "http://ts-route-service:11178/route/queryById/" + routeId,
 //                GetRouteResult.class);
-        if(result.isStatus() == false){
-            System.out.println("[Travel Service][Get Route By Id] Fail." + result.getMessage());
-            return null;
-        }else{
-            System.out.println("[Travel Service][Get Route By Id] Success.");
-            return result.getRoute();
-        }
+        return route;
     }
 
     private int getRestTicketNumber(Date travelDate, String trainNumber, String startStationName, String endStationName, int seatType, HttpHeaders headers) {
-        SeatRequest seatRequest = new SeatRequest();
+        Seat seatRequest = new Seat();
 
-        String fromId = queryForStationId(startStationName,headers);
-        String toId = queryForStationId(endStationName,headers);
+        String fromId = queryForStationId(startStationName, headers);
+        String toId = queryForStationId(endStationName, headers);
 
         seatRequest.setDestStation(toId);
         seatRequest.setStartStation(fromId);
@@ -405,7 +350,7 @@ public class TravelServiceImpl implements TravelService{
         seatRequest.setTravelDate(travelDate);
         seatRequest.setSeatType(seatType);
 
-        HttpEntity requestEntity = new HttpEntity(seatRequest,headers);
+        HttpEntity requestEntity = new HttpEntity(seatRequest, headers);
         ResponseEntity<Integer> re = restTemplate.exchange(
                 "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
                 HttpMethod.POST,
@@ -421,20 +366,16 @@ public class TravelServiceImpl implements TravelService{
     }
 
     @Override
-    public AdminFindAllResult adminQueryAll(HttpHeaders headers) {
+    public ArrayList<AdminTrip> adminQueryAll(HttpHeaders headers) {
         List<Trip> trips = repository.findAll();
         ArrayList<AdminTrip> adminTrips = new ArrayList<AdminTrip>();
-        for(Trip trip : trips){
+        for (Trip trip : trips) {
             AdminTrip adminTrip = new AdminTrip();
             adminTrip.setTrip(trip);
-            adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(),headers));
-            adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(),headers));
+            adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));
+            adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(), headers));
             adminTrips.add(adminTrip);
         }
-        AdminFindAllResult result = new AdminFindAllResult();
-        result.setStatus(true);
-        result.setMessage("Travel Service Admin Query All Travel Success");
-        result.setTrips(adminTrips);
-        return result;
+        return adminTrips;
     }
 }
