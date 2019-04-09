@@ -16,29 +16,28 @@ public class StationServiceImpl implements StationService {
     private StationRepository repository;
 
     @Override
-    public boolean create(Information info, HttpHeaders headers){
+    public boolean create(Station station, HttpHeaders headers){
         boolean result = false;
-        if(repository.findById(info.getId()) == null){
-            Station station = new Station(info.getId(), info.getName());
-            station.setStayTime(info.getStayTime());
+        if(repository.findById(station.getId()) == null){
+            station.setStayTime(station.getStayTime());
             repository.save(station);
             result = true;
         }
-
         return result;
     }
 
+
     @Override
-    public boolean exist(QueryStation info,HttpHeaders headers){
+    public boolean exist(String stationName,HttpHeaders headers){
         boolean result = false;
-        if(repository.findByName(info.getName()) != null){
+        if(repository.findByName(stationName) != null){
             result = true;
         }
         return result;
     }
 
     @Override
-    public boolean update(Information info,HttpHeaders headers){
+    public boolean update(Station info,HttpHeaders headers){
         boolean result = false;
 
         Station station = new Station(info.getId(), info.getName());
@@ -50,7 +49,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean delete(Information info,HttpHeaders headers){
+    public boolean delete(Station info,HttpHeaders headers){
         boolean result = false;
         if(repository.findById(info.getId()) != null){
             Station station = new Station(info.getId(),info.getName());
@@ -66,16 +65,15 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public String queryForId(QueryForId info,HttpHeaders headers){
-        Station station = repository.findByName(info.getName());
+    public String queryForId(String stationName,HttpHeaders headers){
+        Station station = repository.findByName(stationName);
         return station.getId();
     }
 
 
     @Override
-    public ArrayList<String> queryForIdBatch(QueryForIdBatch queryForIdBatch, HttpHeaders headers) {
+    public List<String> queryForIdBatch(List<String> nameList, HttpHeaders headers) {
         ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> nameList = queryForIdBatch.getNameList();
         for(int i = 0; i < nameList.size(); i++) {
             Station station = repository.findByName(nameList.get(i));
             if(station == null) {
@@ -88,19 +86,18 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public QueryStation queryById(String stationId,HttpHeaders headers){
+    public String queryById(String stationId,HttpHeaders headers){
         Station station = repository.findById(stationId);
         if(station != null){
-            return new QueryStation(station.getName());
+            return station.getName();
         }else{
-            return new QueryStation("Station Not Found");
+            return null;
         }
     }
 
     @Override
-    public ArrayList<String> queryByIdBatch(QueryByIdBatch queryByIdBatch, HttpHeaders headers) {
+    public List<String> queryByIdBatch(List<String> idList, HttpHeaders headers) {
         ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> idList = queryByIdBatch.getStationIdList();
         for(int i = 0; i < idList.size(); i++) {
             Station station = repository.findById(idList.get(i));
             if(station == null) {

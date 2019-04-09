@@ -22,6 +22,9 @@ public class Config {
     @Valid
     private String description;
 
+    public Config() {
+    }
+
     public Config(String name, String value, String description) {
         this.name = name;
         this.value = value;
@@ -30,6 +33,10 @@ public class Config {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getValue() {

@@ -3,81 +3,100 @@ package fdse.microservice.controller;
 import fdse.microservice.entity.*;
 import fdse.microservice.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 
 @RestController
+@RequestMapping("/api/v1/station")
 public class StationController {
 
     //private static final Logger log = LoggerFactory.getLogger(Application.class);
-
     @Autowired
     private StationService stationService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ Station Service ] !";
     }
 
-    @RequestMapping(value="/station/create",method= RequestMethod.POST)
-    public boolean create(@RequestBody Information info,@RequestHeader HttpHeaders headers){
-        return stationService.create(info,headers);
+    @GetMapping(value = "/stations")
+    public HttpEntity query(@RequestHeader HttpHeaders headers) {
+        List<Station> stations = stationService.query(headers);
+        return ok(stations);
     }
 
-    @RequestMapping(value="/station/exist",method= RequestMethod.POST)
-    public boolean exist(@RequestBody QueryStation info,@RequestHeader HttpHeaders headers){
-        return stationService.exist(info,headers);
+    @PostMapping(value = "/stations")
+    public HttpEntity<?> create(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
+        boolean createResult = stationService.create(station, headers);
+        return new ResponseEntity<>(createResult, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/station/update",method= RequestMethod.POST)
-    public boolean update(@RequestBody Information info,@RequestHeader HttpHeaders headers){
-        return stationService.update(info,headers);
+    @PatchMapping(value = "/stations")
+    public HttpEntity<?> update(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
+        boolean updateResult = stationService.update(station, headers);
+        return new ResponseEntity<>(updateResult, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value="/station/delete",method= RequestMethod.POST)
-    public boolean delete(@RequestBody Information info,@RequestHeader HttpHeaders headers){
-        return stationService.delete(info,headers);
+    @DeleteMapping(value = "/stations")
+    public HttpEntity<?> delete(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
+        boolean deleteResult = stationService.delete(station, headers);
+        return new ResponseEntity<>(deleteResult, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value="/station/query",method= RequestMethod.GET)
-    public List<Station> query(@RequestHeader HttpHeaders headers){
-        return stationService.query(headers);
+
+    // 根据车站名 ---> 查询 车站是否存在
+//    @GetMapping(value="/stations/{stationName}")
+//    public HttpEntity exist(@PathVariable String stationName,@RequestHeader HttpHeaders headers){
+//        return ok(stationService.exist(stationName,headers));
+//    }
+
+    // 根据车站名 ---> 查询 车站 id
+    @GetMapping(value = "/stations/id/{stationNameForId}")
+    public HttpEntity queryForStationId(@PathVariable(value = "stationNameForId")
+                                                    String stationName, @RequestHeader HttpHeaders headers) {
+        // string
+        return ok(stationService.queryForId(stationName, headers));
     }
 
-    @RequestMapping(value="/station/queryForId",method= RequestMethod.POST)
-    public String queryForId(@RequestBody QueryForId info, @RequestHeader HttpHeaders headers){
-        return stationService.queryForId(info,headers);
-    }
-
+    // 根据车站名 list --->  查询 所有车站 id
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/station/queryForIdBatch", method = RequestMethod.POST)
-    public ArrayList<String> queryForIdBatch(@RequestBody QueryForIdBatch queryForIdBatch, @RequestHeader HttpHeaders headers){
-        return stationService.queryForIdBatch(queryForIdBatch, headers);
+    @PostMapping(value = "/stations/idlist")
+    public HttpEntity queryForIdBatch(@RequestBody List<String> stationNameList, @RequestHeader HttpHeaders headers) {
+        List<String> stationIdList = stationService.queryForIdBatch(stationNameList, headers);
+        return ok(stationIdList);
     }
 
-
+    // 根据station id 查询  车站名
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/station/queryById",method = RequestMethod.POST)
-    public QueryStation queryById(@RequestBody QueryById queryById,@RequestHeader HttpHeaders headers){
-        System.out.println("[Station Service] Query By Id:" + queryById.getStationId());
-        return stationService.queryById(queryById.getStationId(),headers);
+    @GetMapping(value = "/stations/name/{stationIdForName}")
+    public HttpEntity queryById(@PathVariable(value = "stationIdForName")
+                                            String stationId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Station Service] Query By Id:" + stationId);
+        // string
+        return ok(stationService.queryById(stationId, headers));
     }
 
+    // 根据 station  id list  ---> 查询 所有 车站名
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/station/queryByIdBatch", method = RequestMethod.POST)
-    public QueryByIdBatchResult queryByIdBatch(@RequestBody QueryByIdBatch queryByIdBatch, @RequestHeader HttpHeaders headers){
-        QueryByIdBatchResult result = new QueryByIdBatchResult(stationService.queryByIdBatch(queryByIdBatch, headers));
-        return result;
+    @PostMapping(value = "/stations/namelist")
+    public HttpEntity queryForNameBatch(@RequestBody List<String> stationIdList, @RequestHeader HttpHeaders headers) {
+        List<String> nameList = stationService.queryByIdBatch(stationIdList, headers);
+        return ok(nameList);
     }
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/station/queryByIdForName",method = RequestMethod.POST)
-    public String queryByIdForName(@RequestBody QueryById queryById,@RequestHeader HttpHeaders headers){
-        System.out.println("[Station Service] Query By Id For Name:" + queryById.getStationId());
-        return stationService.queryById(queryById.getStationId(),headers).getName();
-    }
+    //  根据stationId  ----> 查询 车站名
+//    @CrossOrigin(origins = "*")
+//    @RequestMapping(value = "/station/queryByIdForName",method = RequestMethod.POST)
+//    public String queryByIdForName(@RequestBody QueryById queryById,@RequestHeader HttpHeaders headers){
+//        System.out.println("[Station Service] Query By Id For Name:" + queryById.getStationId());
+//        return stationService.queryById(queryById.getStationId(),headers).getName();
+//    }
 }

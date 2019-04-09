@@ -29,7 +29,8 @@ public class FoodController {
     @GetMapping(path = "/orders")
     public HttpEntity findAllFoodOrder(@RequestHeader HttpHeaders headers) {
         System.out.println("[Food Service]Try to Find all FoodOrder!");
-        return ok(foodService.findAllFoodOrder(headers));
+        List<FoodOrder> foodOrders = foodService.findAllFoodOrder(headers);
+        return ok(foodOrders);
     }
 
     // add

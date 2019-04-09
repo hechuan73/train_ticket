@@ -1,8 +1,6 @@
 package config.service;
 
 import config.entity.Config;
-import config.entity.Information;
-import config.entity.Information2;
 import config.repository.ConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,18 +14,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Autowired
     ConfigRepository repository;
 
-//    public String create(String name, String value,String description){
-//        if(repository.findByName(name) != null){
-//            String result = "Config " + name + " already exists.";
-//            return result;
-//        }else{
-//            Config config = new Config(name,value,description);
-//            repository.save(config);
-//            return "true";
-//        }
-//    }
-
-    public String create(Information info, HttpHeaders headers){
+    public String create(Config info, HttpHeaders headers){
         if(repository.findByName(info.getName()) != null){
             String result = "Config " + info.getName() + " already exists.";
             return result;
@@ -38,7 +25,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public String update(Information info, HttpHeaders headers){
+    public String update(Config info, HttpHeaders headers){
         if(repository.findByName(info.getName()) == null){
             String result = "Config " + info.getName() + " doesn't exist.";
             return result;
@@ -49,28 +36,31 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-    public Config retrieve(Information2 info, HttpHeaders headers){
-        if(repository.findByName(info.getName()) == null){
+//    public Config retrieve(String name, HttpHeaders headers){
+//        Config config = repository.findByName(name);
+//        if( config == null){
+//            return null;
+//        }else{
+//            return config;
+//        }
+//    }
+
+    public Config query(String name, HttpHeaders headers){
+        Config config = repository.findByName(name);
+        if( config == null){
             return null;
         }else{
-            return repository.findByName(info.getName());
+            return config;
         }
     }
 
-    public String query(Information2 info, HttpHeaders headers){
-        if(repository.findByName(info.getName()) == null){
-            return null;
-        }else{
-            return repository.findByName(info.getName()).getValue();
-        }
-    }
-
-    public String delete(Information2 info, HttpHeaders headers){
-        if(repository.findByName(info.getName()) == null){
-            String result = "Config " + info.getName() + " doesn't exist.";
+    public String delete(String name, HttpHeaders headers){
+        Config config = repository.findByName(name);
+        if(config == null){
+            String result = "Config " + name + " doesn't exist.";
             return result;
         }else{
-            repository.deleteByName(info.getName());
+            repository.deleteByName(name);
             return "true";
         }
     }

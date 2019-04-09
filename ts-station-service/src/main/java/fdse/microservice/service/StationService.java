@@ -7,17 +7,16 @@ import java.util.List;
 
 public interface StationService {
     //CRUD
-    boolean create(Information info,HttpHeaders headers);
-    boolean exist(QueryStation info,HttpHeaders headers);
-    boolean update(Information info,HttpHeaders headers);
-    boolean delete(Information info,HttpHeaders headers);
+    boolean create(Station info,HttpHeaders headers);
+    boolean exist(String stationName,HttpHeaders headers);
+    boolean update(Station info,HttpHeaders headers);
+    boolean delete(Station info,HttpHeaders headers);
     List<Station> query(HttpHeaders headers);
 
+    String queryForId(String stationName,HttpHeaders headers);
+    List<String> queryForIdBatch(List<String> nameList, HttpHeaders headers);
 
-    String queryForId(QueryForId info,HttpHeaders headers);
-    ArrayList<String> queryForIdBatch(QueryForIdBatch queryForIdBatch, HttpHeaders headers);
-
-    QueryStation queryById(String stationId,HttpHeaders headers);
-    ArrayList<String> queryByIdBatch(QueryByIdBatch queryByIdBatch, HttpHeaders headers);
+    String  queryById(String stationId,HttpHeaders headers);
+    List<String> queryByIdBatch(List<String> stationIdList, HttpHeaders headers);
 
 }

@@ -1,6 +1,6 @@
 package fdse.microservice.init;
 
-import fdse.microservice.entity.Information;
+import fdse.microservice.entity.Station;
 import fdse.microservice.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +14,7 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        Information info = new Information();
+        Station info = new Station();
 
         info.setId("shanghai");
         info.setName("Shang Hai");
