@@ -1,12 +1,16 @@
 package consignprice.service;
 
-import consignprice.entity.GetPriceDomain;
-import consignprice.entity.PriceConfig;
+import consignprice.entity.ConsignPrice;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 public interface ConsignPriceService {
-    double getPriceByWeightAndRegion(GetPriceDomain domain, HttpHeaders headers);
-    String queryPriceInformation(HttpHeaders headers);
-    boolean createAndModifyPrice(PriceConfig config, HttpHeaders headers);
-    PriceConfig getPriceConfig(HttpHeaders headers);
+
+    Response getPriceByWeightAndRegion(double weight, boolean isWithinRegion, HttpHeaders headers);
+
+    Response queryPriceInformation(HttpHeaders headers);
+
+    Response createAndModifyPrice(ConsignPrice config, HttpHeaders headers);
+
+    Response getPriceConfig(HttpHeaders headers);
 }

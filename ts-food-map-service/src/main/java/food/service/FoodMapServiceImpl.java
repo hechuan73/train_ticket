@@ -43,8 +43,8 @@ public class FoodMapServiceImpl implements FoodMapService {
 
     @Override
     public List<FoodStore> listFoodStores(HttpHeaders headers) {
-        List<FoodStore> foodStoreList = foodStoreRepository.findAll();
-        return foodStoreList;
+        List<FoodStore> foodStores = foodStoreRepository.findAll();
+        return foodStores;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package food.controller;
 
+import edu.fudan.common.util.Response;
 import food.entity.TrainFood;
 import food.service.FoodMapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api/v1/foodmap")
+@RequestMapping("/api/v1/foodmapservice")
 public class TrainFoodController {
 
     @Autowired
@@ -28,7 +29,11 @@ public class TrainFoodController {
     public HttpEntity getAllTrainFood(@RequestHeader HttpHeaders headers) {
         System.out.println("[Food Map Service][Get All TrainFoods]");
         List<TrainFood> trainFoodList = foodMapService.listTrainFood(headers);
-        return ok(trainFoodList);
+        if (trainFoodList != null && trainFoodList.size() > 0) {
+            return ok(new Response(1, "Success", trainFoodList));
+        } else {
+            return ok(new Response(0, "No content", null));
+        }
     }
 
     @CrossOrigin(origins = "*")
@@ -36,6 +41,10 @@ public class TrainFoodController {
     public HttpEntity getTrainFoodOfTrip(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Food Map Service][Get TrainFoods By TripId]");
         List<TrainFood> trainFoodList = foodMapService.listTrainFoodByTripId(tripId, headers);
-        return ok(trainFoodList);
+        if (trainFoodList != null) {
+            return ok(new Response(1, "Success", trainFoodList));
+        } else {
+            return ok(new Response(0, "No content", null));
+        }
     }
 }

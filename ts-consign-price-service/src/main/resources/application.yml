@@ -10,4 +10,7 @@ spring:
 
 # HTTP Server
 server:
-  port: 16110
+  port: 16111
+
+#swagger:
+#  controllerPackage: consignprice.controller

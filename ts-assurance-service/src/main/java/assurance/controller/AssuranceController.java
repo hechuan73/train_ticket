@@ -1,125 +1,98 @@
 package assurance.controller;
 
-import assurance.entity.*;
 import assurance.service.AssuranceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import java.util.List;
+
 import java.util.UUID;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/assuranceservice")
 public class AssuranceController {
 
     @Autowired
     private AssuranceService assuranceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
-    public String home(@RequestHeader HttpHeaders headers){
+    @GetMapping(path = "/welcome")
+    public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ Assurance Service ] !";
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/findAll", method = RequestMethod.GET)
-    public GetAllAssuranceResult getAllAssurances(@RequestHeader HttpHeaders headers){
+    @GetMapping(path = "/assurances")
+    public HttpEntity getAllAssurances(@RequestHeader HttpHeaders headers) {
         System.out.println("[Assurances Service][Get All Assurances]");
-        return assuranceService.getAllAssurances(headers);
+        return ok(assuranceService.getAllAssurances(headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/getAllAssuranceType", method = RequestMethod.GET)
-    public List<AssuranceTypeBean> getAllAssuranceType(@RequestHeader HttpHeaders headers){
+    @GetMapping(path = "/assurances/types")
+    public HttpEntity getAllAssuranceType(@RequestHeader HttpHeaders headers) {
         System.out.println("[Assurances Service][Get Assurance Type]");
-        return assuranceService.getAllAssuranceTypes(headers);
+        return ok(assuranceService.getAllAssuranceTypes(headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/deleteAssurance", method = RequestMethod.POST)
-    public DeleteAssuranceResult deleteAssurance(@RequestParam(value="assuranceId",required = true) String assuranceId, @RequestHeader HttpHeaders headers){
+    @DeleteMapping(path = "/assurances/assuranceid/{assuranceId}")
+    public HttpEntity deleteAssurance(@PathVariable String assuranceId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Assurances Service][Delete Assurance]");
-        return assuranceService.deleteById(UUID.fromString(assuranceId), headers);
+        return ok(assuranceService.deleteById(UUID.fromString(assuranceId), headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/deleteAssuranceByOrderId", method = RequestMethod.POST)
-    public DeleteAssuranceResult deleteAssuranceByOrderId(@RequestParam(value="orderId",required = true) String orderId, @RequestHeader HttpHeaders headers){
+    @DeleteMapping(path = "/assurances/orderid/{orderId}")
+    public HttpEntity deleteAssuranceByOrderId(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Assurances Service][Delete Assurance by orderId]");
-        return assuranceService.deleteByOrderId(UUID.fromString(orderId), headers);
+        return ok(assuranceService.deleteByOrderId(UUID.fromString(orderId), headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/modifyAssurance", method = RequestMethod.POST)
-    public ModifyAssuranceResult modifyAssurance(@RequestBody ModifyAssuranceInfo modifyAssuranceInfo, @RequestHeader HttpHeaders headers){
+    @PatchMapping(path = "/assurances/{assuranceId}/{orderId}/{typeIndex}")
+    public HttpEntity modifyAssurance(@PathVariable String assuranceId,
+                                      @PathVariable String orderId,
+                                      @PathVariable int typeIndex, @RequestHeader HttpHeaders headers) {
         System.out.println("[Assurances Service][Modify Assurance]");
-        return assuranceService.modify(modifyAssuranceInfo, headers);
+        return ok(assuranceService.modify(assuranceId, orderId, typeIndex, headers));
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/create", method = RequestMethod.POST)
-    public AddAssuranceResult createNewAssurance(@RequestBody AddAssuranceInfo addAssuranceInfo, @RequestHeader HttpHeaders headers){
-//        VerifyResult tokenResult = verifySsoLogin(loginToken);
-//        if(tokenResult.isStatus() == true){
-//            System.out.println("[AssuranceService][VerifyLogin] Success.");
-            return assuranceService.create(addAssuranceInfo, headers);
-//        }else {
-//            System.out.println("[AssuranceService][VerifyLogin] Fail.");
-//            AddAssuranceResult aar = new AddAssuranceResult();
-//            return aar;
-//        }
+    @PostMapping(path = "/assurances/{typeIndex}/{orderId}")
+    public HttpEntity createNewAssurance(int typeIndex, String orderId, @RequestHeader HttpHeaders headers) {
+        return ok(assuranceService.create(typeIndex, orderId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/getAssuranceById", method = RequestMethod.GET)
-    public Assurance getAssuranceById(@RequestBody GetAssuranceById gabi, @CookieValue String loginId, @CookieValue String loginToken, @RequestHeader HttpHeaders headers){
-//        VerifyResult tokenResult = verifySsoLogin(loginToken);
-//        if(tokenResult.isStatus() == true){
-//            System.out.println("[AssuranceService][VerifyLogin] Success.");
-            return assuranceService.findAssuranceById(UUID.fromString(gabi.getAssuranceId()), headers);
-//        }else {
-//            System.out.println("[AssuranceService][VerifyLogin] Fail.");
-//            Assurance resultAssurance = new Assurance();
-//            return resultAssurance;
-//        }
+    @GetMapping(path = "/assurances/assuranceid/{assuranceId}")
+    public HttpEntity getAssuranceById(@PathVariable String assuranceId, @RequestHeader HttpHeaders headers) {
+        return ok(assuranceService.findAssuranceById(UUID.fromString(assuranceId), headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/assurance/findAssuranceByOrderId", method = RequestMethod.GET)
-    public Assurance findAssuranceByOrderId(@RequestBody FindAssuranceByOrderId gabi, @RequestHeader HttpHeaders headers){
-//        VerifyResult tokenResult = verifySsoLogin(gabi.getLoginToken());
-//        if(tokenResult.isStatus() == true){
-//            System.out.println("[AssuranceService][VerifyLogin] Success.");
-            return assuranceService.findAssuranceByOrderId(UUID.fromString(gabi.getOrderId()), headers);
-//        }else {
-//            System.out.println("[AssuranceService][VerifyLogin] Fail.");
-//            Assurance resultAssurance = new Assurance();
-//            return resultAssurance;
-//        }
+    @GetMapping(path = "/assurance/orderid/{orderId}")
+    public HttpEntity findAssuranceByOrderId(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        return ok(assuranceService.findAssuranceByOrderId(UUID.fromString(orderId), headers));
     }
 
-    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Verify Login] Verifying....");
-
-        HttpEntity requestTokenResult = new HttpEntity(null,headers);
-        ResponseEntity<VerifyResult> reTokenResult  = restTemplate.exchange(
-                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-                HttpMethod.GET,
-                requestTokenResult,
-                VerifyResult.class);
-        VerifyResult tokenResult = reTokenResult.getBody();
-//        VerifyResult tokenResult = restTemplate.getForObject(
+//    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers) {
+//        System.out.println("[Order Service][Verify Login] Verifying....");
+//
+//        HttpEntity requestTokenResult = new HttpEntity(null, headers);
+//        ResponseEntity<VerifyResult> reTokenResult = restTemplate.exchange(
 //                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+//                HttpMethod.GET,
+//                requestTokenResult,
 //                VerifyResult.class);
-
-
-        return tokenResult;
-    }
+//        VerifyResult tokenResult = reTokenResult.getBody();
+////        VerifyResult tokenResult = restTemplate.getForObject(
+////                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
+////                VerifyResult.class);
+//
+//        return tokenResult;
+//    }
+//
 }

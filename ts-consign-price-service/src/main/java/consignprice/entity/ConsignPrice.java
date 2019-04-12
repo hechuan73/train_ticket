@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
 @Document(collection = "consign_price")
-public class PriceConfig {
+public class ConsignPrice {
     @Id
     private UUID id;
     private int index;
@@ -15,7 +15,7 @@ public class PriceConfig {
     private double withinPrice;
     private double beyondPrice;
 
-    public PriceConfig(){
+    public ConsignPrice(){
 
     }
 

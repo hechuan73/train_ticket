@@ -3,16 +3,18 @@ package route.service;
 import org.springframework.http.HttpHeaders;
 import route.entity.*;
 
+import java.util.List;
+
 public interface RouteService {
 
-    GetRoutesListlResult getRouteByStartAndTerminal(GetRouteByStartAndTerminalInfo info,HttpHeaders headers);
+    List<Route> getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers);
 
-    GetRoutesListlResult getAllRoutes(HttpHeaders headers);
+    List<Route> getAllRoutes(HttpHeaders headers);
 
-    GetRouteByIdResult getRouteById(String routeId,HttpHeaders headers);
+    Route getRouteById(String routeId, HttpHeaders headers);
 
-    DeleteRouteResult deleteRoute(DeleteRouteInfo info,HttpHeaders headers);
+    boolean deleteRoute(String routeId, HttpHeaders headers);
 
-    CreateAndModifyRouteResult createAndModify(CreateAndModifyRouteInfo info,HttpHeaders headers);
+    Route createAndModify(RouteInfo info, HttpHeaders headers);
 
 }

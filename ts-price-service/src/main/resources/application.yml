@@ -13,3 +13,6 @@ spring:
 # HTTP Server
 server:
   port: 16579  # HTTP (Tomcat) port
+
+swagger:
+  controllerPackage: price.controller

@@ -2,6 +2,7 @@ package assurance.service;
 
 import assurance.entity.*;
 import assurance.repository.AssuranceRepository;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -16,145 +17,130 @@ public class AssuranceServiceImpl implements AssuranceService {
     @Autowired
     private AssuranceRepository assuranceRepository;
 
-//    @Override
-//    public Assurance createAssurance(Assurance assurance) {
-//        Assurance assuranceTemp = assuranceRepository.findById(assurance.getId());
-//        if(assuranceTemp != null){
-//            System.out.println("[Assurance Service][Init Assurance] Already Exists Id:" + assurance.getId());
-//        } else {
-//            assuranceRepository.save(assurance);
-//        }
-//        return assurance;
-//    }
-
     @Override
-    public Assurance findAssuranceById(UUID id, HttpHeaders headers) {
-        return assuranceRepository.findById(id);
+    public Response findAssuranceById(UUID id, HttpHeaders headers) {
+        Assurance assurance = assuranceRepository.findById(id);
+        if (assurance == null) {
+            return new Response(0, "No Conotent by this id", id);
+        } else {
+            return new Response(1, "Find Assurace Success", assurance);
+        }
     }
 
     @Override
-    public Assurance findAssuranceByOrderId(UUID orderId, HttpHeaders headers) {
-        return assuranceRepository.findByOrderId(orderId);
+    public Response findAssuranceByOrderId(UUID orderId, HttpHeaders headers) {
+        Assurance assurance = assuranceRepository.findByOrderId(orderId);
+        if (assurance == null) {
+            return new Response(0, "No Content by this orderId", orderId);
+        } else {
+            return new Response(1, "Find Assurace Success", assurance);
+        }
     }
 
     @Override
-    public AddAssuranceResult create(AddAssuranceInfo aai, HttpHeaders headers) {
-        Assurance a = assuranceRepository.findByOrderId(UUID.fromString(aai.getOrderId()));
-        AddAssuranceResult aar = new AddAssuranceResult();
-        AssuranceType at = AssuranceType.getTypeByIndex(aai.getTypeIndex());
-        if(a != null){
+    public Response create(int typeIndex, String orderId, HttpHeaders headers) {
+        Assurance a = assuranceRepository.findByOrderId(UUID.fromString(orderId));
+        // AddAssuranceResult aar = new AddAssuranceResult();
+        AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
+        if (a != null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance already exists");
-            aar.setStatus(false);
-            aar.setMessage("Assurance Already Exists");
-            aar.setAssurance(null);
-        } else if(at == null){
+            return new Response(0, "Fail.Assurance already exists", at);
+        } else if (at == null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance type doesn't exist");
-            aar.setStatus(false);
-            aar.setMessage("Assurance type doesn't exist");
-            aar.setAssurance(null);
-        } else{
-            Assurance assurance = new Assurance(UUID.randomUUID(), UUID.fromString(aai.getOrderId()), at);
+            return new Response(0, "Fail.Assurance type doesn't exist", typeIndex);
+        } else {
+            Assurance assurance = new Assurance(UUID.randomUUID(), UUID.fromString(orderId), at);
             assuranceRepository.save(assurance);
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Success.");
-            aar.setStatus(true);
-            aar.setMessage("Success");
-            aar.setAssurance(assurance);
+            return new Response(1, "Success", assurance);
         }
-        return aar;
     }
 
     @Override
-    public DeleteAssuranceResult deleteById(UUID assuranceId, HttpHeaders headers) {
+    public Response deleteById(UUID assuranceId, HttpHeaders headers) {
         assuranceRepository.deleteById(assuranceId);
         Assurance a = assuranceRepository.findById(assuranceId);
-        DeleteAssuranceResult dar = new DeleteAssuranceResult();
-        if(a == null){
+//        DeleteAssuranceResult dar = new DeleteAssuranceResult();
+        if (a == null) {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            dar.setStatus(true);
-            dar.setMessage("Success");
+            return new Response(1, "Delete Success with Assurance id", a);
         } else {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
-            dar.setStatus(false);
-            dar.setMessage("Reason Not clear");
+            return new Response(0, "Fail.Assurance not clear", assuranceId);
         }
-        return dar;
     }
 
     @Override
-    public DeleteAssuranceResult deleteByOrderId(UUID orderId, HttpHeaders headers) {
+    public Response deleteByOrderId(UUID orderId, HttpHeaders headers) {
         assuranceRepository.removeAssuranceByOrderId(orderId);
-        Assurance a = assuranceRepository.findByOrderId(orderId);
-        DeleteAssuranceResult dar = new DeleteAssuranceResult();
-        if(a == null){
+        Assurance isExistAssurace = assuranceRepository.findByOrderId(orderId);
+        // DeleteAssuranceResult dar = new DeleteAssuranceResult();
+        if (isExistAssurace == null) {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            dar.setStatus(true);
-            dar.setMessage("Success");
+            return new Response(1, "Delete Success with Order Id", isExistAssurace);
         } else {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
-            dar.setStatus(false);
-            dar.setMessage("Reason Not clear");
+            return new Response(0, "Fail.Assurance not clear", orderId);
         }
-        return dar;
     }
 
     @Override
-    public ModifyAssuranceResult modify(ModifyAssuranceInfo info, HttpHeaders headers) {
-        Assurance oldAssurance = findAssuranceById(UUID.fromString(info.getAssuranceId()), headers);
-        ModifyAssuranceResult mcr = new ModifyAssuranceResult();
-        if(oldAssurance == null){
+    public Response modify(String assuranceId, String orderId, int typeIndex, HttpHeaders headers) {
+        Response oldAssuranceResponse = findAssuranceById(UUID.fromString(assuranceId), headers);
+        // ModifyAssuranceResult mcr = new ModifyAssuranceResult();
+        Assurance oldAssurance = (Assurance) oldAssuranceResponse.getData();
+        if (oldAssurance == null) {
             System.out.println("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance not found.");
-            mcr.setStatus(false);
-            mcr.setMessage("Contacts not found");
-            mcr.setAssurance(null);
-        }else{
-            AssuranceType at = AssuranceType.getTypeByIndex(info.getTypeIndex());
-            if(at != null){
+            return new Response(0, "Fail.Assurance not found.", assuranceId);
+        } else {
+            AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
+            if (at != null) {
                 oldAssurance.setType(at);
                 assuranceRepository.save(oldAssurance);
                 System.out.println("[Assurance-Modify-Service][ModifyAssurance] Success.");
-                mcr.setStatus(true);
-                mcr.setMessage("Success");
-                mcr.setAssurance(oldAssurance);
+                return new Response(1, "Modify Success", oldAssurance);
             } else {
                 System.out.println("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance Type not exist.");
-                mcr.setStatus(false);
-                mcr.setMessage("Assurance Type not exist");
-                mcr.setAssurance(null);
+                return new Response(0, "Assurance Type not exist", null);
             }
         }
-        return mcr;
     }
 
     @Override
-    public GetAllAssuranceResult getAllAssurances(HttpHeaders headers) {
-        ArrayList<Assurance> as = assuranceRepository.findAll();
-        GetAllAssuranceResult gar = new GetAllAssuranceResult();
-        gar.setStatus(true);
-        gar.setMessage("Success");
-        ArrayList<PlainAssurance> result = new ArrayList<PlainAssurance>();
-        for(Assurance a : as){
-            PlainAssurance pa = new PlainAssurance();
-            pa.setId(a.getId());
-            pa.setOrderId(a.getOrderId());
-            pa.setTypeIndex(a.getType().getIndex());
-            pa.setTypeName(a.getType().getName());
-            pa.setTypePrice(a.getType().getPrice());
-            result.add(pa);
+    public Response getAllAssurances(HttpHeaders headers) {
+        List<Assurance> as = assuranceRepository.findAll();
+        if (as != null && as.size() > 0) {
+            ArrayList<PlainAssurance> result = new ArrayList<PlainAssurance>();
+            for (Assurance a : as) {
+                PlainAssurance pa = new PlainAssurance();
+                pa.setId(a.getId());
+                pa.setOrderId(a.getOrderId());
+                pa.setTypeIndex(a.getType().getIndex());
+                pa.setTypeName(a.getType().getName());
+                pa.setTypePrice(a.getType().getPrice());
+                result.add(pa);
+            }
+            return new Response(1, "Success", result);
+        } else {
+            return new Response(0, "No Content, Assurance is empty", null);
         }
-        gar.setAssurances(result);
-        return gar;
     }
 
     @Override
-    public  List<AssuranceTypeBean> getAllAssuranceTypes(HttpHeaders headers) {
+    public Response getAllAssuranceTypes(HttpHeaders headers) {
+
         List<AssuranceTypeBean> atlist = new ArrayList<AssuranceTypeBean>();
-        for(AssuranceType at : AssuranceType.values()){
+        for (AssuranceType at : AssuranceType.values()) {
             AssuranceTypeBean atb = new AssuranceTypeBean();
             atb.setIndex(at.getIndex());
             atb.setName(at.getName());
             atb.setPrice(at.getPrice());
             atlist.add(atb);
         }
-        return atlist;
+        if(atlist!= null && atlist.size() > 0){
+            return new Response(1, "Find All Assurance", atlist);
+        }else{
+            return new Response(0, "Assurance is Empty", null);
+        }
     }
 }

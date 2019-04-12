@@ -34,8 +34,4 @@ public class AssuranceTypeBean implements Serializable{
     public void setPrice(double price) {
         this.price = price;
     }
-
-
-
-
 }

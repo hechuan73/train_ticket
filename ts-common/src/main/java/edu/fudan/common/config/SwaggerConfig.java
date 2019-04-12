@@ -13,15 +13,15 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${swagger.controllerPackage}")
-    private String controller_package_path;
+//    @Value("${swagger.controllerPackage}")
+//    private String controller_package_path;
 
     @Bean
     public Docket createRestApi() {
-        System.out.println("====-- " + controller_package_path);
+//        System.out.println("====-- " + controller_package_path);
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .select().apis(RequestHandlerSelectors.basePackage(controller_package_path))
+                .select().apis(RequestHandlerSelectors.basePackage("consignprice.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

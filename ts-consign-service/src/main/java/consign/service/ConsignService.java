@@ -1,16 +1,18 @@
 package consign.service;
 
-import consign.entity.ConsignRecord;
-import consign.entity.ConsignRequest;
-import consign.entity.InsertConsignRecordResult;
+import consign.entity.Consign;
 import org.springframework.http.HttpHeaders;
 
-import java.util.ArrayList;
+import edu.fudan.common.util.Response;
+
 import java.util.UUID;
 
 public interface ConsignService {
-    InsertConsignRecordResult insertConsignRecord(ConsignRequest consignRequest, HttpHeaders headers);
-    boolean updateConsignRecord(ConsignRequest consignRequest, HttpHeaders headers);
-    ArrayList<ConsignRecord> queryByAccountId(UUID accountId, HttpHeaders headers);
-    ArrayList<ConsignRecord> queryByConsignee(String consignee, HttpHeaders headers);
+    Response insertConsignRecord(Consign consignRequest, HttpHeaders headers);
+
+    Response updateConsignRecord(Consign consignRequest, HttpHeaders headers);
+
+    Response queryByAccountId(UUID accountId, HttpHeaders headers);
+
+    Response queryByConsignee(String consignee, HttpHeaders headers);
 }

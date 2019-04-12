@@ -1,12 +1,22 @@
 package route.controller;
 
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.integration.dsl.http.Http;
 import org.springframework.web.bind.annotation.*;
 import route.entity.*;
 import route.service.RouteService;
 
+import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/routeservice")
 public class RouteController {
 
     @Autowired
@@ -17,29 +27,56 @@ public class RouteController {
         return "Welcome to [ Route Service ] !";
     }
 
-    @RequestMapping(path = "/route/createAndModify", method = RequestMethod.POST)
-    public CreateAndModifyRouteResult createAndModifyRoute(@RequestBody CreateAndModifyRouteInfo createAndModifyRouteInfo,@RequestHeader HttpHeaders headers){
-        return routeService.createAndModify(createAndModifyRouteInfo, headers);
+    @PostMapping(path = "/routes")
+    public ResponseEntity<Response> createAndModifyRoute(@RequestBody RouteInfo createAndModifyRouteInfo, @RequestHeader HttpHeaders headers) {
+        Route route = routeService.createAndModify(createAndModifyRouteInfo, headers);
+        if (route == null) {
+            return ok(new Response(0, "Station Number Not Equal To Distance Number", createAndModifyRouteInfo));
+        } else {
+            return new ResponseEntity<>(new Response(1, "", route), HttpStatus.CREATED);
+        }
     }
 
-    @RequestMapping(path = "/route/delete", method = RequestMethod.POST)
-    public DeleteRouteResult deleteRoute(@RequestBody DeleteRouteInfo deleteRouteInfo,@RequestHeader HttpHeaders headers){
-        return routeService.deleteRoute(deleteRouteInfo, headers);
+    @DeleteMapping(path = "/routes/{routeId}")
+    public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
+        boolean isDeleted = routeService.deleteRoute(routeId, headers);
+        if (isDeleted) {
+            return ok(new Response(1, "Delete Success", routeId));
+        } else {
+            return ok(new Response(0, "Delete failed, Reason unKnown with this routeId", routeId));
+        }
     }
 
-    @RequestMapping(path = "/route/queryById/{routeId}", method = RequestMethod.GET)
-    public GetRouteByIdResult queryById(@PathVariable String routeId,@RequestHeader HttpHeaders headers){
-        return routeService.getRouteById(routeId, headers);
+    @GetMapping(path = "/routes/{routeId}")
+    public HttpEntity queryById(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
+        Route route = routeService.getRouteById(routeId, headers);
+        if (route == null) {
+            return ok(new Response(0, "No content with the routeId", routeId));
+        } else {
+            return ok(new Response(1, "Success", route));
+        }
     }
 
-    @RequestMapping(path = "/route/queryAll", method = RequestMethod.GET)
-    public GetRoutesListlResult queryAll(@RequestHeader HttpHeaders headers){
-        return routeService.getAllRoutes(headers);
+    @GetMapping(path = "/routes")
+    public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
+        List<Route> routes = routeService.getAllRoutes(headers);
+        if (routes != null && routes.size() > 0) {
+            return ok(new Response(1, "Success", routes));
+        } else {
+            return ok(new Response(0, "No Content", routes));
+        }
     }
 
-    @RequestMapping(path = "/route/queryByStartAndTerminal", method = RequestMethod.POST)
-    public GetRoutesListlResult queryByStartAndTerminal(@RequestBody GetRouteByStartAndTerminalInfo getRouteByStartAndTerminalInfo,@RequestHeader HttpHeaders headers){
-        return routeService.getRouteByStartAndTerminal(getRouteByStartAndTerminalInfo, headers);
+    @GetMapping(path = "/routes/{startId}/{terminalId}")
+    public HttpEntity queryByStartAndTerminal(@PathVariable String startId,
+                                              @PathVariable String terminalId,
+                                              @RequestHeader HttpHeaders headers) {
+        List<Route> routes = routeService.getRouteByStartAndTerminal(startId, terminalId, headers);
+        if (routes != null && routes.size() > 0) {
+            return ok(new Response(1, "Success", routes));
+        } else {
+            return ok(new Response(0, "No routes with the startId and terminalId", startId + " -- " + terminalId));
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package assurance.service;
 
 import assurance.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;
@@ -8,21 +9,19 @@ import java.util.UUID;
 
 public interface AssuranceService {
 
-//    Assurance createAssurance(Assurance assurance);
+    Response findAssuranceById(UUID id, HttpHeaders headers);
 
-    Assurance findAssuranceById(UUID id, HttpHeaders headers);
+    Response findAssuranceByOrderId(UUID orderId, HttpHeaders headers);
 
-    Assurance findAssuranceByOrderId(UUID orderId, HttpHeaders headers);
+    Response create(int typeIndex,String orderId , HttpHeaders headers);
 
-    AddAssuranceResult create(AddAssuranceInfo aai, HttpHeaders headers);
+    Response deleteById(UUID assuranceId, HttpHeaders headers);
 
-    DeleteAssuranceResult deleteById(UUID assuranceId, HttpHeaders headers);
+    Response deleteByOrderId(UUID orderId, HttpHeaders headers);
 
-    DeleteAssuranceResult deleteByOrderId(UUID orderId, HttpHeaders headers);
+    Response modify(String assuranceId, String orderId, int typeIndex , HttpHeaders headers);
 
-    ModifyAssuranceResult modify(ModifyAssuranceInfo info, HttpHeaders headers);
+    Response getAllAssurances(HttpHeaders headers);
 
-    GetAllAssuranceResult getAllAssurances(HttpHeaders headers);
-
-    List<AssuranceTypeBean> getAllAssuranceTypes(HttpHeaders headers);
+    Response getAllAssuranceTypes(HttpHeaders headers);
 }

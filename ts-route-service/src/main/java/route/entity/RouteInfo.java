@@ -1,6 +1,7 @@
 package route.entity;
 
-public class CreateAndModifyRouteInfo {
+public class RouteInfo {
+    private String id;
 
     private String startStation;
 
@@ -10,9 +11,7 @@ public class CreateAndModifyRouteInfo {
 
     private String distanceList;
 
-    private String id;
-
-    public CreateAndModifyRouteInfo() {
+    public RouteInfo() {
         //Default Constructor
     }
 

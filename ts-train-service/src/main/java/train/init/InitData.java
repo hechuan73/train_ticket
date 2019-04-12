@@ -3,7 +3,7 @@ package train.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import train.entity.Information;
+import train.entity.TrainType;
 import train.service.TrainService;
 
 
@@ -15,7 +15,7 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Information info = new Information();
+        TrainType info = new TrainType();
 
         info.setId("GaoTieOne");
         info.setConfortClass(Integer.MAX_VALUE);

@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
 
-public class ConsignRequest {
+public class Consign {
     @Id
     private UUID id;
     private UUID accountId;
@@ -17,7 +17,7 @@ public class ConsignRequest {
     private double weight;
     private boolean isWithin;
 
-    public ConsignRequest(){
+    public Consign(){
 
     }
 

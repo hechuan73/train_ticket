@@ -103,7 +103,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public AllTripFood getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers) {
         System.out.println("data=" + date + "start=" + startStation + "end=" + endStation + "tripid=" + tripId);
-        AllTripFood allTripFood = new AllTripFood();
+        AllTripFood allTripFood = null;
 
         if (null == tripId || tripId.length() <= 2) {
             return allTripFood;
@@ -143,96 +143,104 @@ public class FoodServiceImpl implements FoodService {
         //车次途经的车站
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetRouteResult = new HttpEntity(null, headers);
-        ResponseEntity<GetRouteResult> reGetRouteResult = restTemplate.exchange(
-                "http://ts-travel-service:12346/travel/getRouteByTripId/" + tripId,
-                HttpMethod.GET,
-                requestEntityGetRouteResult,
-                GetRouteResult.class);
-        GetRouteResult stationResult = reGetRouteResult.getBody();
-//        GetRouteResult  stationResult= restTemplate.getForObject
-//                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
-//                                                GetRouteResult.class);
 
+//        private boolean status;
+//
+//        private String message;
+//
+//        private Route route;
 
-        if (stationResult.isStatus()) {
-            Route route = stationResult.getRoute();
-            List<String> stations = route.getStations();
-            //去除不经过的站，如果起点终点有的话
-            if (null != startStation && !"".equals(startStation)) {
-                QueryForId q1 = new QueryForId();
-                q1.setName(startStation);
-
-
-                /**--------------------------------------------------------------------------------------*/
-                HttpEntity requestEntityStartStationId = new HttpEntity(q1, headers);
-                ResponseEntity<String> reStartStationId = restTemplate.exchange(
-                        "http://ts-station-service:12345/station/queryForId",
-                        HttpMethod.POST,
-                        requestEntityStartStationId,
-                        String.class);
-                String startStationId = reStartStationId.getBody();
-//                String startStationId = restTemplate.postForObject
-//                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
-
-
-                for (int i = 0; i < stations.size(); i++) {
-                    if (stations.get(i).equals(startStationId)) {
-                        break;
-                    } else {
-                        stations.remove(i);
-                    }
-                }
-            }
-            if (null != endStation && !"".equals(endStation)) {
-                QueryForId q2 = new QueryForId();
-                q2.setName(endStation);
-
-
-                /**--------------------------------------------------------------------------------------*/
-                HttpEntity requestEntityEndStationId = new HttpEntity(q2, headers);
-                ResponseEntity<String> reEndStationId = restTemplate.exchange(
-                        "http://ts-station-service:12345/station/queryForId",
-                        HttpMethod.POST,
-                        requestEntityEndStationId,
-                        String.class);
-                String endStationId = reEndStationId.getBody();
-//                String endStationId = restTemplate.postForObject
-//                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
-
-
-                for (int i = stations.size() - 1; i >= 0; i--) {
-                    if (stations.get(i).equals(endStationId)) {
-                        break;
-                    } else {
-                        stations.remove(i);
-                    }
-                }
-            }
-
-            HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, headers);
-            ResponseEntity<List<FoodStore>> reFoodStoresListResult = restTemplate.exchange(
-                    "http://ts-food-map-service:18855/api/v1/foodmap/foodstores",
-                    HttpMethod.POST,
-                    requestEntityFoodStoresListResult,
-                    new ParameterizedTypeReference<List<FoodStore>>() {
-                    });
-
-            List<FoodStore> foodStoresListResult = reFoodStoresListResult.getBody();
-            if (foodStoresListResult != null && foodStoresListResult.size() > 0) {
-                for (String stationId : stations) {
-                    List<FoodStore> res = foodStoresListResult.stream()
-                            .filter(foodStore -> (foodStore.getStationId().equals(stationId)))
-                            .collect(Collectors.toList());
-                    foodStoreListMap.put(stationId, res);
-                }
-            } else {
-                return allTripFood;
-            }
-        } else {
-            return allTripFood;
-        }
-        allTripFood.setTrainFoodList(trainFoodList);
-        allTripFood.setFoodStoreListMap(foodStoreListMap);
+//        ResponseEntity<GetRouteResult> reGetRouteResult = restTemplate.exchange(
+//                "http://ts-travel-service:12346/travel/getRouteByTripId/" + tripId,
+//                HttpMethod.GET,
+//                requestEntityGetRouteResult,
+//                GetRouteResult.class);
+//        GetRouteResult stationResult = reGetRouteResult.getBody();
+////        GetRouteResult  stationResult= restTemplate.getForObject
+////                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
+////                                                GetRouteResult.class);
+//
+//
+//        if (stationResult.isStatus()) {
+//            Route route = stationResult.getRoute();
+//            List<String> stations = route.getStations();
+//            //去除不经过的站，如果起点终点有的话
+//            if (null != startStation && !"".equals(startStation)) {
+//                //name 一个 name
+//                QueryForId q1 = new QueryForId();
+//                q1.setName(startStation);
+//
+//
+//                /**--------------------------------------------------------------------------------------*/
+//                HttpEntity requestEntityStartStationId = new HttpEntity(q1, headers);
+//                ResponseEntity<String> reStartStationId = restTemplate.exchange(
+//                        "http://ts-station-service:12345/station/queryForId",
+//                        HttpMethod.POST,
+//                        requestEntityStartStationId,
+//                        String.class);
+//                String startStationId = reStartStationId.getBody();
+////                String startStationId = restTemplate.postForObject
+////                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
+//
+//
+//                for (int i = 0; i < stations.size(); i++) {
+//                    if (stations.get(i).equals(startStationId)) {
+//                        break;
+//                    } else {
+//                        stations.remove(i);
+//                    }
+//                }
+//            }
+//            if (null != endStation && !"".equals(endStation)) {
+//                QueryForId q2 = new QueryForId();
+//                q2.setName(endStation);
+//
+//
+//                /**--------------------------------------------------------------------------------------*/
+//                HttpEntity requestEntityEndStationId = new HttpEntity(q2, headers);
+//                ResponseEntity<String> reEndStationId = restTemplate.exchange(
+//                        "http://ts-station-service:12345/station/queryForId",
+//                        HttpMethod.POST,
+//                        requestEntityEndStationId,
+//                        String.class);
+//                String endStationId = reEndStationId.getBody();
+////                String endStationId = restTemplate.postForObject
+////                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
+//
+//
+//                for (int i = stations.size() - 1; i >= 0; i--) {
+//                    if (stations.get(i).equals(endStationId)) {
+//                        break;
+//                    } else {
+//                        stations.remove(i);
+//                    }
+//                }
+//            }
+//
+//            HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, headers);
+//            ResponseEntity<List<FoodStore>> reFoodStoresListResult = restTemplate.exchange(
+//                    "http://ts-food-map-service:18855/api/v1/foodmap/foodstores",
+//                    HttpMethod.POST,
+//                    requestEntityFoodStoresListResult,
+//                    new ParameterizedTypeReference<List<FoodStore>>() {
+//                    });
+//
+//            List<FoodStore> foodStoresListResult = reFoodStoresListResult.getBody();
+//            if (foodStoresListResult != null && foodStoresListResult.size() > 0) {
+//                for (String stationId : stations) {
+//                    List<FoodStore> res = foodStoresListResult.stream()
+//                            .filter(foodStore -> (foodStore.getStationId().equals(stationId)))
+//                            .collect(Collectors.toList());
+//                    foodStoreListMap.put(stationId, res);
+//                }
+//            } else {
+//                return allTripFood;
+//            }
+//        } else {
+//            return allTripFood;
+//        }
+//        allTripFood.setTrainFoodList(trainFoodList);
+//        allTripFood.setFoodStoreListMap(foodStoreListMap);
 
         return allTripFood;
     }
