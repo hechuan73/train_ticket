@@ -28,23 +28,13 @@ public class TrainFoodController {
     @GetMapping("/trainfoods")
     public HttpEntity getAllTrainFood(@RequestHeader HttpHeaders headers) {
         System.out.println("[Food Map Service][Get All TrainFoods]");
-        List<TrainFood> trainFoodList = foodMapService.listTrainFood(headers);
-        if (trainFoodList != null && trainFoodList.size() > 0) {
-            return ok(new Response(1, "Success", trainFoodList));
-        } else {
-            return ok(new Response(0, "No content", null));
-        }
+        return ok(foodMapService.listTrainFood(headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/trainfoods/{tripId}")
     public HttpEntity getTrainFoodOfTrip(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Food Map Service][Get TrainFoods By TripId]");
-        List<TrainFood> trainFoodList = foodMapService.listTrainFoodByTripId(tripId, headers);
-        if (trainFoodList != null) {
-            return ok(new Response(1, "Success", trainFoodList));
-        } else {
-            return ok(new Response(0, "No content", null));
-        }
+        return ok(foodMapService.listTrainFoodByTripId(tripId, headers));
     }
 }

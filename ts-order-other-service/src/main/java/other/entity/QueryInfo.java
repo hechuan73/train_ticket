@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class QueryInfo {
 
+    private String loginId; //account id
+
     private Date travelDateStart;
 
     private Date travelDateEnd;
@@ -20,8 +22,16 @@ public class QueryInfo {
 
     private boolean enableStateQuery;
 
-    public QueryInfo(){
+    public QueryInfo() {
         //Default Constructor
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     public Date getTravelDateStart() {
@@ -44,36 +54,36 @@ public class QueryInfo {
         return state;
     }
 
-    public void enableTravelDateQuery(Date startTime, Date endTime){
+    public void enableTravelDateQuery(Date startTime, Date endTime) {
         enableTravelDateQuery = true;
         travelDateStart = startTime;
         travelDateEnd = endTime;
     }
 
-    public void disableTravelDateQuery(){
+    public void disableTravelDateQuery() {
         enableTravelDateQuery = false;
         travelDateStart = null;
         travelDateEnd = null;
     }
 
-    public void enableBoughtDateQuery(Date startTime, Date endTime){
+    public void enableBoughtDateQuery(Date startTime, Date endTime) {
         enableBoughtDateQuery = true;
         boughtDateStart = startTime;
         boughtDateEnd = endTime;
     }
 
-    public void disableBoughtDateQuery(){
+    public void disableBoughtDateQuery() {
         enableBoughtDateQuery = false;
         boughtDateStart = null;
         boughtDateEnd = null;
     }
 
-    public void enableStateQuery(int targetStatus){
+    public void enableStateQuery(int targetStatus) {
         enableStateQuery = true;
         state = targetStatus;
     }
 
-    public void disableStateQuery(){
+    public void disableStateQuery() {
         enableTravelDateQuery = false;
         state = -1;
     }

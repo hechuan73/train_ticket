@@ -1,7 +1,10 @@
 package route.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import route.entity.*;
 import route.repository.RouteRepository;
@@ -10,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @Service
 public class RouteServiceImpl implements RouteService {
 
@@ -17,16 +22,17 @@ public class RouteServiceImpl implements RouteService {
     private RouteRepository routeRepository;
 
     @Override
-    public Route createAndModify(RouteInfo info, HttpHeaders headers) {
+    public Response createAndModify(RouteInfo info, HttpHeaders headers) {
         System.out.println("[Route Service] Create And Modify Start:" + info.getStartStation() + " End:" + info.getEndStation());
-        Route routeResult = null;
+
         String[] stations = info.getStationList().split(",");
         String[] distances = info.getDistanceList().split(",");
         List<String> stationList = new ArrayList<>();
         List<Integer> distanceList = new ArrayList<>();
         if (stations.length != distances.length) {
             System.out.println("Station Number Not Equal To Distance Number");
-            return routeResult;
+
+            return new Response<>(0, "Station Number Not Equal To Distance Number", null);
         }
         for (int i = 0; i < stations.length; i++) {
             stationList.add(stations[i]);
@@ -41,7 +47,8 @@ public class RouteServiceImpl implements RouteService {
             route.setDistances(distanceList);
             routeRepository.save(route);
             System.out.println("Save success");
-            routeResult = route;
+
+            return new Response<>(1, "Save Success", route);
         } else {
             Route route = routeRepository.findById(info.getId());
             if (route == null) {
@@ -55,30 +62,34 @@ public class RouteServiceImpl implements RouteService {
             route.setDistances(distanceList);
             routeRepository.save(route);
             System.out.println("Modify success");
-            routeResult = route;
+            return new Response<>(1, "Modify success", route);
         }
-        return routeResult;
     }
 
     @Override
-    public boolean deleteRoute(String routeId, HttpHeaders headers) {
+    public Response deleteRoute(String routeId, HttpHeaders headers) {
         routeRepository.removeRouteById(routeId);
         Route route = routeRepository.findById(routeId);
         if (route == null) {
-            return true;
+            return new Response<>(1, "Delete Success", routeId);
         } else {
-            return false;
+            return new Response<>(0, "Delete failed, Reason unKnown with this routeId", routeId);
         }
     }
 
     @Override
-    public Route getRouteById(String routeId, HttpHeaders headers) {
+    public Response getRouteById(String routeId, HttpHeaders headers) {
         Route route = routeRepository.findById(routeId);
-        return route;
+        if (route == null) {
+            return new Response<>(0, "No content with the routeId", routeId);
+        } else {
+            return new Response<>(1, "Success", route);
+        }
+
     }
 
     @Override
-    public List<Route> getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers) {
+    public Response getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers) {
 //        ArrayList<Route> routes = routeRepository.findByStartStationIdAndTerminalStationId(info.getStartId(),info.getTerminalId());
         ArrayList<Route> routes = routeRepository.findAll();
         System.out.println("[Route Service] Find All:" + routes.size());
@@ -90,13 +101,21 @@ public class RouteServiceImpl implements RouteService {
                 resultList.add(route);
             }
         }
-        return resultList;
+        if (resultList.size() > 0) {
+            return new Response<>(1, "Success", routes);
+        } else {
+            return new Response<>(0, "No routes with the startId and terminalId", startId + " -- " + terminalId);
+        }
     }
 
     @Override
-    public List<Route> getAllRoutes(HttpHeaders headers) {
+    public Response getAllRoutes(HttpHeaders headers) {
         ArrayList<Route> routes = routeRepository.findAll();
-        return routes;
+        if (routes != null && routes.size() > 0) {
+            return new Response<>(1, "Success", routes);
+        } else {
+            return new Response<>(0, "No Content", routes);
+        }
     }
 
 }

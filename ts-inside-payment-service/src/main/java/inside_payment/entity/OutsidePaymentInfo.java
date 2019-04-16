@@ -1,6 +1,5 @@
 package inside_payment.entity;
 
-
 public class OutsidePaymentInfo {
     public OutsidePaymentInfo(){}
 

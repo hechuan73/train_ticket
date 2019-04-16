@@ -61,8 +61,9 @@ public class AssuranceController {
 
 
     @CrossOrigin(origins = "*")
-    @PostMapping(path = "/assurances/{typeIndex}/{orderId}")
-    public HttpEntity createNewAssurance(int typeIndex, String orderId, @RequestHeader HttpHeaders headers) {
+    @GetMapping(path = "/assurances/{typeIndex}/{orderId}")
+    public HttpEntity createNewAssurance(@PathVariable int typeIndex, @PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        //Assurance
         return ok(assuranceService.create(typeIndex, orderId, headers));
     }
 

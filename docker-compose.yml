@@ -1,13 +1,13 @@
 version: '3'
 services:
 
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    networks:
-      - my-network
+#  rabbitmq:
+#    image: rabbitmq:management
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    networks:
+#      - my-network
 
   # kafka:
   #   container_name: kafka
@@ -18,12 +18,12 @@ services:
   #   networks:
   #     - my-network
 
-  zipkin:
-    image: openzipkin/zipkin
-    ports:
-      - 9411:9411
-    networks:
-      - my-network
+#  zipkin:
+#    image: openzipkin/zipkin
+#    ports:
+#      - 9411:9411
+#    networks:
+#      - my-network
 
   redis:
     image: redis

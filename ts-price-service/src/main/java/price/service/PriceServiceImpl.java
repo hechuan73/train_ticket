@@ -1,5 +1,6 @@
 package price.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @Service
 public class PriceServiceImpl implements PriceService {
 
@@ -17,7 +20,7 @@ public class PriceServiceImpl implements PriceService {
     private PriceConfigRepository priceConfigRepository;
 
     @Override
-    public PriceConfig createNewPriceConfig(PriceConfig createAndModifyPriceConfig, HttpHeaders headers) {
+    public Response createNewPriceConfig(PriceConfig createAndModifyPriceConfig, HttpHeaders headers) {
         System.out.println("[Price Service][Create New Price Config]");
         PriceConfig priceConfig = null;
         // create
@@ -42,7 +45,7 @@ public class PriceServiceImpl implements PriceService {
             priceConfig.setTrainType(createAndModifyPriceConfig.getTrainType());
             priceConfigRepository.save(priceConfig);
         }
-        return priceConfig;
+        return new Response<>(1, "Create success", priceConfig);
     }
 
     @Override
@@ -53,28 +56,39 @@ public class PriceServiceImpl implements PriceService {
     }
 
     @Override
-    public PriceConfig findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
+    public Response findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
         System.out.println("[Price Service][Find By Route And Train Type] Rote:" + routeId + "Train Type:" + trainType);
         PriceConfig priceConfig = priceConfigRepository.findByRouteIdAndTrainType(routeId, trainType);
         System.out.println("[Price Service][Find By Route Id And Train Type]");
-        return priceConfig;
+
+        if (priceConfig == null) {
+            return new Response<>(0, "No that config", routeId + trainType);
+        } else {
+            return new Response<>(1, "Success", priceConfig);
+        }
     }
 
 
     @Override
-    public List<PriceConfig> findAllPriceConfig(HttpHeaders headers) {
+    public Response findAllPriceConfig(HttpHeaders headers) {
         List<PriceConfig> list = priceConfigRepository.findAll();
         if (list == null) {
             list = new ArrayList<>();
         }
-        return list;
+
+        if (list.size() > 0) {
+            return new Response<>(1, "Success", list);
+        } else {
+            return new Response<>(0, "No price config", null);
+        }
+
     }
 
     @Override
-    public boolean deletePriceConfig(PriceConfig c, HttpHeaders headers) {
+    public Response deletePriceConfig(PriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
         if (priceConfig == null) {
-            return false;
+            return new Response<>(0, "No that config", null);
         } else {
             PriceConfig pc = new PriceConfig();
             pc.setId(c.getId());
@@ -83,15 +97,15 @@ public class PriceServiceImpl implements PriceService {
             pc.setBasicPriceRate(c.getBasicPriceRate());
             pc.setFirstClassPriceRate(c.getFirstClassPriceRate());
             priceConfigRepository.delete(pc);
-            return true;
+            return new Response<>(1, "Delete success", pc);
         }
     }
 
     @Override
-    public boolean updatePriceConfig(PriceConfig c, HttpHeaders headers) {
+    public Response updatePriceConfig(PriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
         if (priceConfig == null) {
-            return false;
+            return new Response<>(0, "No that config", null);
         } else {
             priceConfig.setId(c.getId());
             priceConfig.setBasicPriceRate(c.getBasicPriceRate());
@@ -99,7 +113,7 @@ public class PriceServiceImpl implements PriceService {
             priceConfig.setRouteId(c.getRouteId());
             priceConfig.setTrainType(c.getTrainType());
             priceConfigRepository.save(priceConfig);
-            return true;
+            return new Response<>(1, "Update success", priceConfig);
         }
     }
 }

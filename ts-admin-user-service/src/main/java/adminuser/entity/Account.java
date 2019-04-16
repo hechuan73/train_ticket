@@ -5,6 +5,8 @@ import java.util.UUID;
 public class Account {
 
     private UUID id;
+    private String accountId;
+    private String loginId;
 
     private String password;
 
@@ -25,6 +27,22 @@ public class Account {
         documentType = DocumentType.NONE.getCode();
         documentNum = "0123456789";
         email = "0123456789";
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public UUID getId() {

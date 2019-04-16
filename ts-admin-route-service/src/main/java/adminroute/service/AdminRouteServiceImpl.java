@@ -1,12 +1,7 @@
 package adminroute.service;
 
-import adminroute.entity.CreateAndModifyRouteInfo;
-import adminroute.entity.DeleteRouteInfo;
-import adminroute.entity.CreateAndModifyRouteRequest;
-import adminroute.entity.DeleteRouteRequest;
-import adminroute.entity.CreateAndModifyRouteResult;
-import adminroute.entity.DeleteRouteResult;
-import adminroute.entity.GetRoutesListlResult;
+import adminroute.entity.RouteInfo;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,89 +16,64 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     private RestTemplate restTemplate;
 
     @Override
-    public GetRoutesListlResult getAllRoutes(String id, HttpHeaders headers) {
-        if(checkId(id)){
+    public Response getAllRoutes(String id, HttpHeaders headers) {
+        if (checkId(id)) {
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<GetRoutesListlResult> re = restTemplate.exchange(
-                    "http://ts-route-service:11178/route/queryAll",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-route-service:11178/api/v1/routeservice/routes",
                     HttpMethod.GET,
                     requestEntity,
-                    GetRoutesListlResult.class);
-            GetRoutesListlResult result = re.getBody();
+                    Response.class);
+            Response result = re.getBody();
 //            GetRoutesListlResult result = restTemplate.getForObject(
 //                    "http://ts-route-service:11178/route/queryAll",
 //                    GetRoutesListlResult.class);
             return result;
-        }else {
+        } else {
             System.out.println("[Admin Route Service][Wrong Admin ID]");
-            GetRoutesListlResult result = new GetRoutesListlResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + id);
-            result.setRoutes(null);
-            return result;
+            return new Response<>(0, "The loginId is Wrong: \" + id", null);
         }
     }
 
     @Override
-    public CreateAndModifyRouteResult createAndModifyRoute(CreateAndModifyRouteRequest request, HttpHeaders headers) {
-        if(checkId(request.getLoginId())){
-            CreateAndModifyRouteInfo createAndModifyRouteInfo = new CreateAndModifyRouteInfo();
-            createAndModifyRouteInfo.setId(request.getId());
-            createAndModifyRouteInfo.setStationList(request.getStationList());
-            createAndModifyRouteInfo.setDistanceList(request.getDistanceList());
-            createAndModifyRouteInfo.setStartStation(request.getStartStation());
-            createAndModifyRouteInfo.setEndStation(request.getEndStation());
-            HttpEntity requestEntity = new HttpEntity(createAndModifyRouteInfo, headers);
-            ResponseEntity<CreateAndModifyRouteResult> re = restTemplate.exchange(
-                    "http://ts-route-service:11178/route/createAndModify",
+    public Response createAndModifyRoute(RouteInfo request, HttpHeaders headers) {
+        if (checkId(request.getLoginId())) {
+            HttpEntity requestEntity = new HttpEntity(request, headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-route-service:11178/api/v1/routeservice/routes",
                     HttpMethod.POST,
                     requestEntity,
-                    CreateAndModifyRouteResult.class);
-            CreateAndModifyRouteResult result = re.getBody();
+                    Response.class);
+            Response result = re.getBody();
 //            CreateAndModifyRouteResult result = restTemplate.postForObject(
 //                    "http://ts-route-service:11178/route/createAndModify", createAndModifyRouteInfo,CreateAndModifyRouteResult.class);
             return result;
-        }
-        else {
+        } else {
             System.out.println("[Admin Route Service][Wrong Admin ID]");
-            CreateAndModifyRouteResult result = new CreateAndModifyRouteResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + request.getLoginId());
-            result.setRoute(null);
-            return result;
+            return new Response<>(0, "The loginId is Wrong: " + request.getLoginId(), null);
         }
     }
 
     @Override
-    public DeleteRouteResult deleteRoute(DeleteRouteRequest request, HttpHeaders headers) {
-        if(checkId(request.getLoginId())){
-            DeleteRouteInfo deleteRouteInfo = new DeleteRouteInfo();
-            deleteRouteInfo.setRouteId(request.getRouteId());
-            HttpEntity requestEntity = new HttpEntity(deleteRouteInfo, headers);
-            ResponseEntity<DeleteRouteResult> re = restTemplate.exchange(
-                    "http://ts-route-service:11178/route/delete",
-                    HttpMethod.POST,
-                    requestEntity,
-                    DeleteRouteResult.class);
-            DeleteRouteResult result = re.getBody();
+    public Response deleteRoute(String loginId, String routeId, HttpHeaders headers) {
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
+                HttpMethod.POST,
+                requestEntity,
+                Response.class);
+        Response result = re.getBody();
 //            DeleteRouteResult result = restTemplate.postForObject(
 //                    "http://ts-route-service:11178/route/delete", deleteRouteInfo,DeleteRouteResult.class);
-            return result;
-        }
-        else {
-            System.out.println("[Admin Route Service][Wrong Admin ID]");
-            DeleteRouteResult result = new DeleteRouteResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + request.getLoginId());
-            return result;
-        }
+        return result;
+
     }
 
-    private boolean checkId(String id){
-        if("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)){
+    private boolean checkId(String id) {
+        if ("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

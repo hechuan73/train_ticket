@@ -41,6 +41,8 @@ public class Order {
 
     private String price;
 
+    private String differenceMoney; // 差价
+
     public Order(){
         boughtDate = new Date(System.currentTimeMillis());
         travelDate = new Date(123456789);
@@ -52,6 +54,7 @@ public class Order {
         to = "taiyuan";
         status = OrderStatus.PAID.getCode();
         price = "0.0";
+        differenceMoney ="0.0";
     }
 
     @Override
@@ -81,6 +84,14 @@ public class Order {
                 && to.equals(other.getTo())
                 && status == other.getStatus()
                 && price == other.price;
+    }
+
+    public String getDifferenceMoney() {
+        return differenceMoney;
+    }
+
+    public void setDifferenceMoney(String differenceMoney) {
+        this.differenceMoney = differenceMoney;
     }
 
     public UUID getId() {

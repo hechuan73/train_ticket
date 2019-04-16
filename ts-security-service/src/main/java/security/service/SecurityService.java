@@ -1,18 +1,20 @@
 package security.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import security.entity.*;
 
+
 public interface SecurityService {
 
-    GetAllSecurityConfigResult findAllSecurityConfig(HttpHeaders headers);
+    Response findAllSecurityConfig(HttpHeaders headers);
 
-    CreateSecurityConfigResult addNewSecurityConfig(CreateSecurityConfigInfo info, HttpHeaders headers);
+    Response addNewSecurityConfig(SecurityConfig info, HttpHeaders headers);
 
-    UpdateSecurityConfigResult modifySecurityConfig(UpdateSecurityConfigInfo info, HttpHeaders headers);
+    Response modifySecurityConfig(SecurityConfig info, HttpHeaders headers);
 
-    DeleteConfigResult deleteSecurityConfig(DeleteConfigInfo info, HttpHeaders headers);
+    Response deleteSecurityConfig(String id, HttpHeaders headers);
 
-    CheckResult check(CheckInfo info,HttpHeaders headers);
+    Response check(String accountId, HttpHeaders headers);
 
 }

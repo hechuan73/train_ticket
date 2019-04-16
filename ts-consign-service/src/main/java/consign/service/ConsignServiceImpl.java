@@ -2,7 +2,6 @@ package consign.service;
 
 import consign.entity.ConsignRecord;
 import consign.entity.Consign;
-import consign.entity.GetPriceDomain;
 import consign.repository.ConsignRepository;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;

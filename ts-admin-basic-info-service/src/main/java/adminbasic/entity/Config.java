@@ -1,8 +1,5 @@
 package adminbasic.entity;
 
-
-
-
 public class Config {
 
     private String name;

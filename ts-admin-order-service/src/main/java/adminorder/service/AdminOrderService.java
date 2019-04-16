@@ -1,17 +1,15 @@
 package adminorder.service;
 
-import adminorder.entity.AddOrderRequest;
-import adminorder.entity.DeleteOrderRequest;
-import adminorder.entity.UpdateOrderRequest;
-import adminorder.entity.AddOrderResult;
-import adminorder.entity.DeleteOrderResult;
-import adminorder.entity.GetAllOrderResult;
-import adminorder.entity.UpdateOrderResult;
+import adminorder.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
+import java.awt.image.RescaleOp;
+
 public interface AdminOrderService {
-    GetAllOrderResult getAllOrders(String id, HttpHeaders headers);
-    DeleteOrderResult deleteOrder(DeleteOrderRequest request, HttpHeaders headers);
-    UpdateOrderResult updateOrder(UpdateOrderRequest request, HttpHeaders headers);
-    AddOrderResult addOrder(AddOrderRequest request, HttpHeaders headers);
+    Response getAllOrders(String id, HttpHeaders headers);
+
+    Response deleteOrder(String loginid, String orderId,String trainNumber, HttpHeaders headers);
+    Response updateOrder(Order request, HttpHeaders headers);
+    Response addOrder(Order request, HttpHeaders headers);
 }

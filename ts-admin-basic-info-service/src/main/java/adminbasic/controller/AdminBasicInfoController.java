@@ -3,162 +3,166 @@ package adminbasic.controller;
 import adminbasic.entity.*;
 import adminbasic.service.AdminBasicInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/adminbasicservice")
 public class AdminBasicInfoController {
 
     @Autowired
     AdminBasicInfoService adminBasicInfoService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ AdminBasicInfo Service ] !";
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/getAllContacts/{id}", method = RequestMethod.GET)
-    public GetAllContactsResult getAllContacts(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Find All Contacts by admin: " + id);
-        return adminBasicInfoService.getAllContacts(id, headers);
+    @GetMapping(path = "/adminbasic/contacts/{id}")
+    public HttpEntity getAllContacts(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Find All Contacts by admin: " + loginId);
+        return ok(adminBasicInfoService.getAllContacts(loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/deleteContacts", method = RequestMethod.POST)
-    public DeleteContactsResult deleteContacts(@RequestBody DeleteContactsInfo dci, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Delete Contacts by admin: " + dci.getLoginId());
-        return adminBasicInfoService.deleteContact(dci.getLoginId(), dci, headers);
+    @DeleteMapping(path = "/adminbasic/contacts/{loginId}/{contactsId}")
+    public HttpEntity deleteContacts(@PathVariable String loginId, @PathVariable String contactsId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Delete Contacts by admin: " + loginId);
+        return ok(adminBasicInfoService.deleteContact(loginId, contactsId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/modifyContacts", method = RequestMethod.POST)
-    public ModifyContactsResult modifyContacts(@RequestBody ModifyContactsInfo mci, @RequestHeader HttpHeaders headers){
+    @PutMapping(path = "/adminbasic/contacts")
+    public HttpEntity modifyContacts(@RequestBody Contacts mci, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Contacts by admin: " + mci.getLoginId());
-        return adminBasicInfoService.modifyContact(mci.getLoginId(), mci, headers);
+        return ok(adminBasicInfoService.modifyContact(mci, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/addContacts", method = RequestMethod.POST)
-    public AddContactsResult addContacts(@RequestBody Contacts c, @RequestHeader HttpHeaders headers){
+    @PostMapping(path = "/adminbasic/contacts")
+    public HttpEntity addContacts(@RequestBody Contacts c, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Contacts by admin: " + c.getLoginId());
-        return adminBasicInfoService.addContact(c.getLoginId(), c, headers);
+        return ok(adminBasicInfoService.addContact(c.getLoginId(), c, headers));
     }
 
     /////////////////////////station/////////////////////////////////////////////////////////////////////////////////
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/getAllStations/{id}", method = RequestMethod.GET)
-    public GetAllStationResult getAllStations(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Find All Station by admin: " + id);
-        return adminBasicInfoService.getAllStations(id, headers);
+    @GetMapping(path = "/adminbasic/stations/{loginId}")
+    public HttpEntity getAllStations(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Find All Station by admin: " + loginId);
+        return ok(adminBasicInfoService.getAllStations(loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/deleteStation", method = RequestMethod.POST)
-    public boolean deleteStation(@RequestBody Station s, @RequestHeader HttpHeaders headers){
+    @DeleteMapping(path = "/adminbasic/stations")
+    public HttpEntity deleteStation(@RequestBody Station s, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Delete Station by admin: " + s.getLoginId());
-        return adminBasicInfoService.deleteStation(s, headers);
+        return ok(adminBasicInfoService.deleteStation(s, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/modifyStation", method = RequestMethod.POST)
-    public boolean modifyStation(@RequestBody Station s, @RequestHeader HttpHeaders headers){
+    @PutMapping(path = "/adminbasic/stations")
+    public HttpEntity modifyStation(@RequestBody Station s, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Station by admin: " + s.getLoginId());
-        return adminBasicInfoService.modifyStation(s, headers);
+        return ok(adminBasicInfoService.modifyStation(s, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/addStation", method = RequestMethod.POST)
-    public boolean addStation(@RequestBody Station s, @RequestHeader HttpHeaders headers){
+    @PostMapping(path = "/adminbasic/stations")
+    public HttpEntity addStation(@RequestBody Station s, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Station by admin: " + s.getLoginId());
-        return adminBasicInfoService.addStation(s, headers);
+        return ok(adminBasicInfoService.addStation(s, headers));
     }
 
     /////////////////////////train/////////////////////////////////////////////////////////////////////////////////
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/getAllTrains/{id}", method = RequestMethod.GET)
-    public GetAllTrainResult getAllTrains(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Find All Train by admin: " + id);
-        return adminBasicInfoService.getAllTrains(id, headers);
+    @GetMapping(path = "/adminbasic/trains/{loginId}")
+    public HttpEntity getAllTrains(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Find All Train by admin: " + loginId);
+        return ok(adminBasicInfoService.getAllTrains(loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/deleteTrain", method = RequestMethod.POST)
-    public boolean deleteTrain(@RequestBody TrainInfo2 t, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Delete Train by admin: " + t.getLoginId());
-        return adminBasicInfoService.deleteTrain(t, headers);
+    @DeleteMapping(path = "/adminbasic/trains/{id}/{loginId}")
+    public HttpEntity deleteTrain(@PathVariable String id, @PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Delete Train by admin: " + loginId);
+        return ok(adminBasicInfoService.deleteTrain(id, loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/modifyTrain", method = RequestMethod.POST)
-    public boolean modifyTrain(@RequestBody TrainType t, @RequestHeader HttpHeaders headers){
+    @PutMapping(path = "/adminbasic/trains")
+    public HttpEntity modifyTrain(@RequestBody TrainType t, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Train by admin: " + t.getLoginId());
-        return adminBasicInfoService.modifyTrain(t, headers);
+        return ok(adminBasicInfoService.modifyTrain(t, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/addTrain", method = RequestMethod.POST)
-    public boolean addTrain(@RequestBody TrainType t, @RequestHeader HttpHeaders headers){
+    @PostMapping(path = "/adminbasic/trains")
+    public HttpEntity addTrain(@RequestBody TrainType t, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Train by admin: " + t.getLoginId());
-        return adminBasicInfoService.addTrain(t, headers);
+        return ok(adminBasicInfoService.addTrain(t, headers));
     }
 
     /////////////////////////config/////////////////////////////////////////////////////////////////////////////////
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/getAllConfigs/{id}", method = RequestMethod.GET)
-    public GetAllConfigResult getAllConfigs(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Find All Config by admin: " + id);
-        return adminBasicInfoService.getAllConfigs(id, headers);
+    @GetMapping(path = "/adminbasic/configs/{loginId}")
+    public HttpEntity getAllConfigs(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Find All Config by admin: " + loginId);
+        return ok(adminBasicInfoService.getAllConfigs(loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/deleteConfig", method = RequestMethod.POST)
-    public String deleteConfig(@RequestBody ConfigInfo2 c, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Delete Config by admin: " + c.getLoginId());
-        return adminBasicInfoService.deleteConfig(c, headers);
+    @DeleteMapping(path = "/adminbasic/configs/{name}/{loginId}")
+    public HttpEntity deleteConfig(@PathVariable String name, @PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Delete Config by admin: " + loginId);
+        return ok(adminBasicInfoService.deleteConfig(name, loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/modifyConfig", method = RequestMethod.POST)
-    public String modifyConfig(@RequestBody Config c, @RequestHeader HttpHeaders headers){
+    @PutMapping(path = "/adminbasic/configs")
+    public HttpEntity modifyConfig(@RequestBody Config c, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Config by admin: " + c.getLoginId());
-        return adminBasicInfoService.modifyConfig(c, headers);
+        return ok(adminBasicInfoService.modifyConfig(c, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/addConfig", method = RequestMethod.POST)
-    public String addConfig(@RequestBody Config c, @RequestHeader HttpHeaders headers){
+    @PostMapping(path = "/adminbasic/configs")
+    public HttpEntity addConfig(@RequestBody Config c, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Config by admin: " + c.getLoginId());
-        return adminBasicInfoService.addConfig(c, headers);
+        return ok(adminBasicInfoService.addConfig(c, headers));
     }
 
     /////////////////////////price/////////////////////////////////////////////////////////////////////////////////
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/getAllPrices/{id}", method = RequestMethod.GET)
-    public GetAllPriceResult getAllPrices(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        System.out.println("[Admin Basic Info Service][Find All Price by admin: " + id);
-        return adminBasicInfoService.getAllPrices(id, headers);
+    @GetMapping(path = "/adminbasic/prices/{loginId}")
+    public HttpEntity getAllPrices(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Admin Basic Info Service][Find All Price by admin: " + loginId);
+        return ok(adminBasicInfoService.getAllPrices(loginId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/deletePrice", method = RequestMethod.POST)
-    public boolean deletePrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers){
+    @DeleteMapping(path = "/adminbasic/prices")
+    public HttpEntity deletePrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Delete Price by admin: " + pi.getLoginId());
-        return adminBasicInfoService.deletePrice(pi, headers);
+        return ok(adminBasicInfoService.deletePrice(pi, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/modifyPrice", method = RequestMethod.POST)
-    public boolean modifyPrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers){
+    @PutMapping(path = "/adminbasic/prices")
+    public HttpEntity modifyPrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Modify Price by admin: " + pi.getLoginId());
-        return adminBasicInfoService.modifyPrice(pi, headers);
+        return ok(adminBasicInfoService.modifyPrice(pi, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminbasic/addPrice", method = RequestMethod.POST)
-    public ReturnSinglePriceConfigResult addPrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers){
+    @PostMapping(path = "/adminbasic/prices")
+    public HttpEntity addPrice(@RequestBody PriceInfo pi, @RequestHeader HttpHeaders headers) {
         System.out.println("[Admin Basic Info Service][Add Price by admin: " + pi.getLoginId());
-        return adminBasicInfoService.addPrice(pi, headers);
+        return ok(adminBasicInfoService.addPrice(pi, headers));
     }
 
 

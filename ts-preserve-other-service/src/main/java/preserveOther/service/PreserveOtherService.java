@@ -1,11 +1,10 @@
 package preserveOther.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import preserveOther.entity.OrderTicketsInfo;
-import preserveOther.entity.OrderTicketsResult;
 
 public interface PreserveOtherService {
 
-    OrderTicketsResult preserve(OrderTicketsInfo oti,String accountId,String loginToken, HttpHeaders headers);
-
+    Response preserve(OrderTicketsInfo oti, HttpHeaders headers);
 }

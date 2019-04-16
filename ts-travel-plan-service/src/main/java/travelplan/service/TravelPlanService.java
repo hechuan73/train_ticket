@@ -1,16 +1,18 @@
 package travelplan.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import travelplan.entity.*;
 
+
 public interface TravelPlanService {
 
-    TransferTravelSearchResult getTransferSearch(TransferTravelSearchInfo info, HttpHeaders headers);
+    Response getTransferSearch(TransferTravelInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getCheapest(QueryInfo info, HttpHeaders headers);
+    Response getCheapest(TripInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getQuickest(QueryInfo info, HttpHeaders headers);
+    Response getQuickest(TripInfo info, HttpHeaders headers);
 
-    TravelAdvanceResult getMinStation(QueryInfo info, HttpHeaders headers);
+    Response getMinStation(TripInfo info, HttpHeaders headers);
 
 }

@@ -1,5 +1,6 @@
 package price.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 import price.entity.PriceConfig;
@@ -8,16 +9,16 @@ import java.util.List;
 
 public interface PriceService {
 
-    PriceConfig createNewPriceConfig(PriceConfig priceConfig, HttpHeaders headers);
+    Response createNewPriceConfig(PriceConfig priceConfig, HttpHeaders headers);
 
     PriceConfig findById(String id, HttpHeaders headers);
 
-    PriceConfig findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers);
+    Response findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers);
 
-    List<PriceConfig> findAllPriceConfig(HttpHeaders headers);
+    Response findAllPriceConfig(HttpHeaders headers);
 
-    boolean deletePriceConfig(PriceConfig c, HttpHeaders headers);
+    Response deletePriceConfig(PriceConfig c, HttpHeaders headers);
 
-    boolean updatePriceConfig(PriceConfig c, HttpHeaders headers);
+    Response updatePriceConfig(PriceConfig c, HttpHeaders headers);
 
 }

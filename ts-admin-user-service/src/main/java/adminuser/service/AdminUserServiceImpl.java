@@ -1,13 +1,7 @@
 package adminuser.service;
 
-import adminuser.entity.AddAccountRequest;
-import adminuser.entity.AdminDeleteAccountRequest;
-import adminuser.entity.DeleteAccountRequest;
-import adminuser.entity.UpdateAccountRequest;
-import adminuser.entity.DeleteAccountResult;
-import adminuser.entity.FindAllAccountResult;
-import adminuser.entity.ModifyAccountResult;
-import adminuser.entity.RegisterResult;
+import adminuser.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,15 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public FindAllAccountResult getAllUsers(String id, HttpHeaders headers) {
+    public Response getAllUsers(String id, HttpHeaders headers) {
         FindAllAccountResult result = new FindAllAccountResult();
-        if(checkId(id)){
+        if (checkId(id)) {
             System.out.println("[Admin User Service][Get All Users]");
             HttpEntity requestEntity = new HttpEntity(headers);
             ResponseEntity<FindAllAccountResult> re = restTemplate.exchange(
@@ -36,20 +32,20 @@ public class AdminUserServiceImpl implements AdminUserService {
 //            result = restTemplate.getForObject(
 //                    "http://ts-sso-service:12349/account/findAll",
 //                    FindAllAccountResult.class);
-        }else{
+        } else {
             System.out.println("[Admin User Service][Wrong Admin ID]");
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + id);
+            return new Response<>(0, "The loginId is Wrong: " + id, null);
         }
-        return result;
+        ArrayList<Account> accounts = result.getAccountArrayList();
+        return new Response<>(1, "Success", accounts);
     }
 
     @Override
-    public DeleteAccountResult deleteUser(DeleteAccountRequest request, HttpHeaders headers) {
+    public Response deleteUser(String loginId, String accountId, HttpHeaders headers) {
         DeleteAccountResult result = new DeleteAccountResult();
-        if(checkId(request.getLoginId())){
+        if (checkId(loginId)) {
             AdminDeleteAccountRequest adminDeleteAccountRequest = new AdminDeleteAccountRequest();
-            adminDeleteAccountRequest.setAccountId(request.getAccountId());
+            adminDeleteAccountRequest.setAccountId(accountId);
             HttpEntity requestEntity = new HttpEntity(adminDeleteAccountRequest, headers);
             ResponseEntity<DeleteAccountResult> re = restTemplate.exchange(
                     "http://ts-sso-service:12349/account/admindelete",
@@ -59,20 +55,19 @@ public class AdminUserServiceImpl implements AdminUserService {
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-sso-service:12349/account/admindelete", adminDeleteAccountRequest,DeleteAccountResult.class);
-        }
-        else{
+        } else {
             System.out.println("[Admin User Service][Wrong Admin ID]");
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + request.getLoginId());
+            return new Response<>(0, "The loginId is Wrong: " + loginId, null);
         }
-        return result;
+
+        return new Response<>(1, "Success", result.getAccount());
     }
 
     @Override
-    public ModifyAccountResult updateUser(UpdateAccountRequest request, HttpHeaders headers) {
+    public Response updateUser(Account request, HttpHeaders headers) {
         ModifyAccountResult result = new ModifyAccountResult();
-        if(checkId(request.getLoginId())){
-            HttpEntity requestEntity = new HttpEntity(request.getModifyAccountInfo(), headers);
+        if (checkId(request.getLoginId())) {
+            HttpEntity requestEntity = new HttpEntity(request, headers);
             ResponseEntity<ModifyAccountResult> re = restTemplate.exchange(
                     "http://ts-sso-service:12349/account/modify",
                     HttpMethod.POST,
@@ -81,19 +76,17 @@ public class AdminUserServiceImpl implements AdminUserService {
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-sso-service:12349/account/modify", request.getModifyAccountInfo() ,ModifyAccountResult.class);
-        }
-        else{
+        } else {
             System.out.println("[Admin User Service][Wrong Admin ID]");
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + request.getLoginId());
+            return new Response<>(0, "The loginId is Wrong: " + request.getLoginId(), null);
         }
-        return result;
+        return new Response<>(1, result.getMessage(), null);
     }
 
     @Override
-    public RegisterResult addUser(AddAccountRequest request, HttpHeaders headers) {
+    public Response addUser(Account request, HttpHeaders headers) {
         RegisterResult result = new RegisterResult();
-        if(checkId(request.getLoginId())){
+        if (checkId(request.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(request, headers);
             ResponseEntity<RegisterResult> re = restTemplate.exchange(
                     "http://ts-sso-service:12349/account/register",
@@ -103,20 +96,17 @@ public class AdminUserServiceImpl implements AdminUserService {
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-sso-service:12349/account/register", request ,RegisterResult.class);
-        }
-        else{
+        } else {
             System.out.println("[Admin User Service][Wrong Admin ID]");
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + request.getLoginId());
+            return new Response<>(0, "The loginId is Wrong: " + request.getLoginId(), null);
         }
-        return result;
+        return new Response<>(1, result.getMessage(), result.getAccount());
     }
 
-    private boolean checkId(String id){
-        if("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)){
+    private boolean checkId(String id) {
+        if ("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

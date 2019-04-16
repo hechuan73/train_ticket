@@ -1,4 +1,6 @@
 package fdse.microservice.service;
+
+import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
 import org.springframework.http.HttpHeaders;
 
@@ -7,16 +9,22 @@ import java.util.List;
 
 public interface StationService {
     //CRUD
-    boolean create(Station info,HttpHeaders headers);
-    boolean exist(String stationName,HttpHeaders headers);
-    boolean update(Station info,HttpHeaders headers);
-    boolean delete(Station info,HttpHeaders headers);
-    List<Station> query(HttpHeaders headers);
+    Response create(Station info, HttpHeaders headers);
 
-    String queryForId(String stationName,HttpHeaders headers);
-    List<String> queryForIdBatch(List<String> nameList, HttpHeaders headers);
+    boolean exist(String stationName, HttpHeaders headers);
 
-    String  queryById(String stationId,HttpHeaders headers);
-    List<String> queryByIdBatch(List<String> stationIdList, HttpHeaders headers);
+    Response update(Station info, HttpHeaders headers);
+
+    Response delete(Station info, HttpHeaders headers);
+
+    Response query(HttpHeaders headers);
+
+    Response queryForId(String stationName, HttpHeaders headers);
+
+    Response queryForIdBatch(List<String> nameList, HttpHeaders headers);
+
+    Response queryById(String stationId, HttpHeaders headers);
+
+    Response queryByIdBatch(List<String> stationIdList, HttpHeaders headers);
 
 }

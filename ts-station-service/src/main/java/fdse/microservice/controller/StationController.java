@@ -30,42 +30,22 @@ public class StationController {
 
     @GetMapping(value = "/stations")
     public HttpEntity query(@RequestHeader HttpHeaders headers) {
-        List<Station> stations = stationService.query(headers);
-        if (stations != null && stations.size() > 0) {
-            return ok(new Response(1, "Find all content", stations));
-        } else {
-            return ok(new Response(0, "No content", null));
-        }
+        return ok(stationService.query(headers));
     }
 
     @PostMapping(value = "/stations")
     public ResponseEntity<Response> create(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
-        boolean createResult = stationService.create(station, headers);
-        if (createResult) {
-            return new ResponseEntity<>(new Response(1, "Create success", createResult), HttpStatus.CREATED);
-        } else {
-            return ok(new Response(0, "Already exists", createResult));
-        }
+        return new ResponseEntity<>(stationService.create(station, headers), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/stations")
     public HttpEntity update(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
-        boolean updateResult = stationService.update(station, headers);
-        if (updateResult) {
-            return ok(new Response(1, "Update success", station));
-        } else {
-            return ok(new Response(0, "Station not exist", station));
-        }
+        return ok(stationService.update(station, headers));
     }
 
     @DeleteMapping(value = "/stations")
     public ResponseEntity<Response> delete(@RequestBody Station station, @RequestHeader HttpHeaders headers) {
-        boolean deleteResult = stationService.delete(station, headers);
-        if (deleteResult) {
-            return ok(new Response(1, "Delete success", station));
-        } else {
-            return ok(new Response(0, "Station not exist", station));
-        }
+        return ok(stationService.delete(station, headers));
     }
 
 
@@ -80,24 +60,14 @@ public class StationController {
     public HttpEntity queryForStationId(@PathVariable(value = "stationNameForId")
                                                 String stationName, @RequestHeader HttpHeaders headers) {
         // string
-        String stationId = stationService.queryForId(stationName, headers);
-        if (stationId != null) {
-            return ok(new Response(1, "Success", stationId));
-        } else {
-            return ok(new Response(0, "Not exists", stationId));
-        }
+        return ok(stationService.queryForId(stationName, headers));
     }
 
     // 根据车站名 list --->  查询 所有车站 id
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/stations/idlist")
     public HttpEntity queryForIdBatch(@RequestBody List<String> stationNameList, @RequestHeader HttpHeaders headers) {
-        List<String> stationIdList = stationService.queryForIdBatch(stationNameList, headers);
-        if (stationIdList != null && stationIdList.size() > 0) {
-            return ok(new Response(1, "Success", stationIdList));
-        } else {
-            return ok(new Response(0, "No content", stationIdList));
-        }
+        return ok(stationService.queryForIdBatch(stationNameList, headers));
     }
 
     // 根据station id 查询  车站名
@@ -107,24 +77,14 @@ public class StationController {
                                         String stationId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Station Service] Query By Id:" + stationId);
         // string
-        String stationName = stationService.queryById(stationId, headers);
-        if (stationName == null) {
-            return ok(new Response(0, "No that stationId", stationId));
-        } else {
-            return ok(new Response(1, "Success", stationName));
-        }
+        return ok(stationService.queryById(stationId, headers));
     }
 
     // 根据 station  id list  ---> 查询 所有 车站名
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/stations/namelist")
     public HttpEntity queryForNameBatch(@RequestBody List<String> stationIdList, @RequestHeader HttpHeaders headers) {
-        List<String> nameList = stationService.queryByIdBatch(stationIdList, headers);
-        if(nameList != null && nameList.size() >0){
-            return ok(new Response(1, "Success", nameList));
-        }else{
-            return ok(new Response(0, "No stationNamelist according to stationIdList", stationIdList));
-        }
+        return ok(stationService.queryByIdBatch(stationIdList, headers));
     }
 
     //  根据stationId  ----> 查询 车站名

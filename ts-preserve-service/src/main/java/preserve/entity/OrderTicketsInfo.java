@@ -3,6 +3,7 @@ package preserve.entity;
 import java.util.Date;
 
 public class OrderTicketsInfo {
+    private String accountId;
 
     private String contactsId;
 
@@ -32,17 +33,25 @@ public class OrderTicketsInfo {
     //consign
     private String handleDate;
 
-    private String consigneeName="";
+    private String consigneeName = "";
 
-    private String consigneePhone="";
+    private String consigneePhone = "";
 
     private double consigneeWeight;
 
     private boolean isWithin;
 
 
-    public OrderTicketsInfo(){
+    public OrderTicketsInfo() {
         //Default Constructor
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public int getFoodType() {

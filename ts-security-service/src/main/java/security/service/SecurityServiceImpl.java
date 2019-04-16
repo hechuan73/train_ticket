@@ -1,5 +1,6 @@
 package security.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,11 +11,13 @@ import org.springframework.web.client.RestTemplate;
 import security.entity.*;
 import security.repository.SecurityRepository;
 
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class SecurityServiceImpl implements SecurityService{
+public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
     private SecurityRepository securityRepository;
@@ -23,81 +26,60 @@ public class SecurityServiceImpl implements SecurityService{
     RestTemplate restTemplate;
 
     @Override
-    public GetAllSecurityConfigResult findAllSecurityConfig(HttpHeaders headers){
-        GetAllSecurityConfigResult result = new GetAllSecurityConfigResult();
-        result.setStatus(true);
-        result.setMessage("Success");
-        result.setResult(securityRepository.findAll());
-        return result;
+    public Response findAllSecurityConfig(HttpHeaders headers) {
+        ArrayList<SecurityConfig> securityConfigs = securityRepository.findAll();
+        if (securityConfigs != null && securityConfigs.size() > 0)
+            return new Response(1, "Success", securityConfigs);
+        return new Response(0, "No Content", null);
     }
 
     @Override
-    public CreateSecurityConfigResult addNewSecurityConfig(CreateSecurityConfigInfo info, HttpHeaders headers){
+    public Response addNewSecurityConfig(SecurityConfig info, HttpHeaders headers) {
         SecurityConfig sc = securityRepository.findByName(info.getName());
-        CreateSecurityConfigResult result = new CreateSecurityConfigResult();
-        if(sc != null){
-            result.setStatus(false);
-            result.setMessage("Security Config Already Exist");
-            result.setSecurityConfig(null);
-        }else{
+        if (sc != null) {
+            return new Response(0, "Security Config Already Exist", null);
+        } else {
             SecurityConfig config = new SecurityConfig();
             config.setId(UUID.randomUUID());
             config.setName(info.getName());
             config.setValue(info.getValue());
             config.setDescription(info.getDescription());
             securityRepository.save(config);
-            result.setStatus(true);
-            result.setMessage("Success");
-            result.setSecurityConfig(config);
+            return new Response(1, "Success", config);
         }
-        return result;
     }
 
     @Override
-    public UpdateSecurityConfigResult modifySecurityConfig(UpdateSecurityConfigInfo info, HttpHeaders headers){
-        SecurityConfig sc = securityRepository.findById(UUID.fromString(info.getId()));
-        UpdateSecurityConfigResult result = new UpdateSecurityConfigResult();
-        if(sc == null){
-            result.setStatus(false);
-            result.setMessage("Security Config Not Exist");
-            result.setResult(null);
-        }else{
+    public Response modifySecurityConfig(SecurityConfig info, HttpHeaders headers) {
+        SecurityConfig sc = securityRepository.findById(info.getId());
+        if (sc == null) {
+            return new Response(0, "Security Config Not Exist", null);
+        } else {
             sc.setName(info.getName());
             sc.setValue(info.getValue());
             sc.setDescription(info.getDescription());
             securityRepository.save(sc);
-            result.setStatus(true);
-            result.setMessage("Success");
-            result.setResult(sc);
+            return new Response(1, "Success", sc);
         }
-        return result;
     }
 
     @Override
-    public DeleteConfigResult deleteSecurityConfig(DeleteConfigInfo info, HttpHeaders headers){
-        securityRepository.deleteById(UUID.fromString(info.getId()));
-        SecurityConfig sc = securityRepository.findById(UUID.fromString(info.getId()));
-        DeleteConfigResult result = new DeleteConfigResult();
-        if(sc == null){
-            result.setStatus(true);
-            result.setMessage("Success");
-        }else{
-            result.setStatus(false);
-            result.setMessage("Reason Not clear");
+    public Response deleteSecurityConfig(String id, HttpHeaders headers) {
+        securityRepository.deleteById(UUID.fromString(id));
+        SecurityConfig sc = securityRepository.findById(UUID.fromString(id));
+        if (sc == null) {
+            return new Response(1, "Success", id);
+        } else {
+            return new Response(0, "Reason Not clear", id);
         }
-        return result;
     }
 
     @Override
-    public CheckResult check(CheckInfo info,HttpHeaders headers){
-        CheckResult result = new CheckResult();
+    public Response check(String accountId, HttpHeaders headers) {
         //1.获取自己过去一小时的订单数和总有效票数
         System.out.println("[Security Service][Get Order Num Info]");
-        GetOrderInfoForSecurity infoOrder = new GetOrderInfoForSecurity();
-        infoOrder.setAccountId(info.getAccountId());
-        infoOrder.setCheckDate(new Date());
-        GetOrderInfoForSecurityResult orderResult = getSecurityOrderInfoFromOrder(infoOrder,headers);
-        GetOrderInfoForSecurityResult orderOtherResult = getSecurityOrderOtherInfoFromOrder(infoOrder,headers);
+        OrderSecurity orderResult = getSecurityOrderInfoFromOrder(new Date(), accountId, headers);
+        OrderSecurity orderOtherResult = getSecurityOrderOtherInfoFromOrder(new Date(), accountId, headers);
         int orderInOneHour = orderOtherResult.getOrderNumInLastOneHour() + orderResult.getOrderNumInLastOneHour();
         int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderOtherResult.getOrderNumOfValidOrder();
         //2.获取关键配置信息
@@ -107,47 +89,44 @@ public class SecurityServiceImpl implements SecurityService{
         System.out.println("[Security Service] Max In One Hour:" + configMaxInHour.getValue() + " Max Not Use:" + configMaxNotUse.getValue());
         int oneHourLine = Integer.parseInt(configMaxInHour.getValue());
         int totalValidLine = Integer.parseInt(configMaxNotUse.getValue());
-        if(orderInOneHour > oneHourLine || totalValidOrder > totalValidLine){
-            result.setStatus(false);
-            result.setAccountId(info.getAccountId());
-            result.setMessage("Too much order in last one hour or too much valid order");
-        }else{
-            result.setStatus(true);
-            result.setMessage("Success.");
-            result.setAccountId(info.getAccountId());
+        if (orderInOneHour > oneHourLine || totalValidOrder > totalValidLine) {
+            return new Response(0, "Too much order in last one hour or too much valid order", accountId);
+        } else {
+            return new Response(1, "Success.r", accountId);
         }
-        return result;
     }
 
-    private GetOrderInfoForSecurityResult getSecurityOrderInfoFromOrder(GetOrderInfoForSecurity info, HttpHeaders headers){
+    private OrderSecurity getSecurityOrderInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Info For Security] Getting....");
-        HttpEntity requestEntity = new HttpEntity(info,headers);
-        ResponseEntity<GetOrderInfoForSecurityResult> re = restTemplate.exchange(
-                "http://ts-order-service:12031/getOrderInfoForSecurity",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity(null, headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
+                HttpMethod.GET,
                 requestEntity,
-                GetOrderInfoForSecurityResult.class);
-        GetOrderInfoForSecurityResult result = re.getBody();
-//        GetOrderInfoForSecurityResult result = restTemplate.postForObject(
+                Response.class);
+        Response response = re.getBody();
+        OrderSecurity result = (OrderSecurity) response.getData();
+//        OrderSecurity result = restTemplate.postForObject(
 //                "http://ts-order-service:12031/getOrderInfoForSecurity",info,
-//                GetOrderInfoForSecurityResult.class);
+//                OrderSecurity.class);
         System.out.println("[Security Service][Get Order Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
-        + " Total Valid Order:" + result.getOrderNumOfValidOrder());
+                + " Total Valid Order:" + result.getOrderNumOfValidOrder());
         return result;
     }
 
-    private GetOrderInfoForSecurityResult getSecurityOrderOtherInfoFromOrder(GetOrderInfoForSecurity info, HttpHeaders headers){
+    private OrderSecurity getSecurityOrderOtherInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Other Info For Security] Getting....");
-        HttpEntity requestEntity = new HttpEntity(info,headers);
-        ResponseEntity<GetOrderInfoForSecurityResult> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/getOrderOtherInfoForSecurity",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity(null, headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
+                HttpMethod.GET,
                 requestEntity,
-                GetOrderInfoForSecurityResult.class);
-        GetOrderInfoForSecurityResult result = re.getBody();
-//        GetOrderInfoForSecurityResult result = restTemplate.postForObject(
+                Response.class);
+        Response response = re.getBody();
+        OrderSecurity result = (OrderSecurity) response.getData();
+//        OrderSecurity result = restTemplate.postForObject(
 //                "http://ts-order-other-service:12032/getOrderOtherInfoForSecurity",info,
-//                GetOrderInfoForSecurityResult.class);
+//                OrderSecurity.class);
         System.out.println("[Security Service][Get Order Other Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
                 + " Total Valid Order:" + result.getOrderNumOfValidOrder());
         return result;

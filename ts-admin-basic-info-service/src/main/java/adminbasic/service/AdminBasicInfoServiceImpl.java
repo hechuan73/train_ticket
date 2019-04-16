@@ -1,6 +1,7 @@
 package adminbasic.service;
 
 import adminbasic.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -9,417 +10,387 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 
 @Service
-public class  AdminBasicInfoServiceImpl implements AdminBasicInfoService{
+public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Autowired
     private RestTemplate restTemplate;
 
-    private String adminID="1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f";
+    private String adminID = "1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f";
 
 
     @Override
-    public  GetAllContactsResult getAllContacts(String loginId, HttpHeaders headers) {
-        GetAllContactsResult result ;
-        if(adminID.equals(loginId)){
+    public Response getAllContacts(String loginId, HttpHeaders headers) {
+        Response result;
+        if (adminID.equals(loginId)) {
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<GetAllContactsResult> re = restTemplate.exchange(
-                    "http://ts-contacts-service:12347/contacts/findAll",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-contacts-service:12347/api/v1/contactservice/ontacts",
                     HttpMethod.GET,
                     requestEntity,
-                    GetAllContactsResult.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.getForObject(
 //                    "http://ts-contacts-service:12347/contacts/findAll",
 //                    GetAllContactsResult.class);
         } else {
-            result = new GetAllContactsResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + loginId);
+            result = new Response<>(0, "The loginId is Wrong: " + loginId, null);
         }
-
         return result;
     }
 
     @Override
-    public DeleteContactsResult deleteContact(String loginId, DeleteContactsInfo dci, HttpHeaders headers) {
-        DeleteContactsResult result;
-        if(adminID.equals(loginId)){
-            HttpEntity requestEntity = new HttpEntity(dci, headers);
-            ResponseEntity<DeleteContactsResult> re = restTemplate.exchange(
-                    "http://ts-contacts-service:12347/contacts/deleteContacts",
-                    HttpMethod.POST,
+    public Response deleteContact(String loginId, String contactsId, HttpHeaders headers) {
+        Response result;
+        if (adminID.equals(loginId)) {
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-contacts-service:12347/api/v1/contactservice/contacts/" + contactsId,
+                    HttpMethod.DELETE,
                     requestEntity,
-                    DeleteContactsResult.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-contacts-service:12347/contacts/deleteContacts",dci,
 //                    DeleteContactsResult.class);
         } else {
-            result = new DeleteContactsResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + loginId);
+            result = new Response();
+            result.setStatus(0);
+            result.setMsg("The loginId is Wrong: " + loginId);
         }
         return result;
     }
 
     @Override
-    public ModifyContactsResult modifyContact(String loginId, ModifyContactsInfo mci, HttpHeaders headers) {
-        ModifyContactsResult result;
-        if(adminID.equals(loginId)){
+    public Response modifyContact(Contacts mci, HttpHeaders headers) {
+        Response result;
+        if (adminID.equals(mci.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(mci, headers);
-            ResponseEntity<ModifyContactsResult> re = restTemplate.exchange(
-                    "http://ts-contacts-service:12347/contacts/modifyContacts",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-contacts-service:12347/api/v1/contactservice/contacts",
+                    HttpMethod.PUT,
                     requestEntity,
-                    ModifyContactsResult.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-contacts-service:12347/contacts/modifyContacts",mci,
 //                    ModifyContactsResult.class);
         } else {
-            result = new ModifyContactsResult();
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + loginId);
+            result = new Response();
+            result.setStatus(0);
+            result.setMsg("The loginId is Wrong: " + mci.getLoginId());
         }
         return result;
     }
 
 
     @Override
-    public AddContactsResult addContact(String loginId, Contacts c, HttpHeaders headers) {
-        AddContactsResult result;
+    public Response addContact(String loginId, Contacts c, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(loginId)) {
             HttpEntity requestEntity = new HttpEntity(c, headers);
-            ResponseEntity<AddContactsResult> re = restTemplate.exchange(
-                    "http://ts-contacts-service:12347/contacts/admincreate",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-contacts-service:12347/api/v1/contactservice/contacts/admin",
                     HttpMethod.POST,
                     requestEntity,
-                    AddContactsResult.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject(
 //                    "http://ts-contacts-service:12347/contacts/admincreate",c,
 //                    AddContactsResult.class);
 
         } else {
-            result = new AddContactsResult();
-            result.setStatus(false);
-            result.setMessage("The Contact add operation failed.");
+            result = new Response();
+            result.setStatus(0);
+            result.setMsg("The Contact add operation failed.");
         }
         return result;
     }
 
     //////////////station////////////////////////////////////////////////
     @Override
-    public GetAllStationResult getAllStations(String loginId, HttpHeaders headers) {
-        GetAllStationResult result = new GetAllStationResult();;
+    public Response getAllStations(String loginId, HttpHeaders headers) {
         if (adminID.equals(loginId)) {
             List<Station> l;
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<List<Station>> re = restTemplate.exchange(
-                    "http://ts-station-service:12345/station/query",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-station-service:12345/api/v1/stationservice/tations",
                     HttpMethod.GET,
                     requestEntity,
-                    new ParameterizedTypeReference<List<Station>>(){});
-            l = re.getBody();
+                    Response.class);
+            l = (List<Station>) re.getBody().getData();
 //            l= restTemplate.getForObject("http://ts-station-service:12345/station/query", l.getClass());
-            result.setStatus(true);
-            result.setMessage("Success");
-            result.setStationList(l);
+            return new Response<>(1, "Success", l);
         } else {
-            result.setStatus(false);
-            result.setMessage("The loginId is Wrong: " + loginId);
+            return new Response(0, "The loginId is Wrong: " + loginId, null);
         }
-        return result;
+
     }
 
     @Override
-    public boolean addStation(Station s, HttpHeaders headers) {
-        boolean result = false;
+    public Response addStation(Station s, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(s.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(s, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-station-service:12345/station/create",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-station-service:12345/api/v1/stationservice/stations",
                     HttpMethod.POST,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
-
 //            result = restTemplate.postForObject("http://ts-station-service:12345/station/create",s, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "Login Id is not admin id", s);
     }
 
     @Override
-    public boolean deleteStation(Station s, HttpHeaders headers) {
-        boolean result = false;
+    public Response deleteStation(Station s, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(s.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(s, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-station-service:12345/station/delete",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-station-service:12345/api/v1/stationservice/stations",
+                    HttpMethod.DELETE,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
 
 //            result = restTemplate.postForObject("http://ts-station-service:12345/station/delete",s, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "Login Id is not admin id", s);
     }
 
     @Override
-    public boolean modifyStation(Station s, HttpHeaders headers) {
-        boolean result = false;
+    public Response modifyStation(Station s, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(s.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(s, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-station-service:12345/station/update",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-station-service:12345/api/v1/stationservice/stations",
+                    HttpMethod.PATCH,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject("http://ts-station-service:12345/station/update",s, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "Login Id is not admin id", s);
     }
 
     //////////////train////////////////////////////////////////////////
     @Override
-    public GetAllTrainResult getAllTrains(String loginId, HttpHeaders headers) {
-        GetAllTrainResult result = new GetAllTrainResult();
+    public Response getAllTrains(String loginId, HttpHeaders headers) {
+
         if (adminID.equals(loginId)) {
             List<TrainType> l;
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<List<TrainType>> re = restTemplate.exchange(
-                    "http://ts-train-service:14567/train/query",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-train-service:14567/api/v1/trainservice/trains",
                     HttpMethod.GET,
                     requestEntity,
-                    new ParameterizedTypeReference<List<TrainType>>(){});
-            l = re.getBody();
+                    Response.class);
+            l = (List<TrainType>) re.getBody().getData();
 
 //            List<TrainType> l = new ArrayList<TrainType>();
 //            l = restTemplate.getForObject("http://ts-train-service:14567/train/query", l.getClass());
-            result.setStatus(true);
-            result.setMessage("Success");
-            result.setTrainList(l);
-            return result;
+            return new Response<>(1, "Success", l);
         } else {
-            result.setStatus(false);
-            result.setMessage("The loginId is wrong:"+ loginId);
+            return new Response<>(0, "The loginId is wrong:" + loginId, null);
         }
-        return result;
     }
 
     @Override
-    public boolean addTrain(TrainType t, HttpHeaders headers) {
-        boolean result = false;
+    public Response addTrain(TrainType t, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(t.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(t, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-train-service:14567/train/create",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-train-service:14567/api/v1/trainservice/trains",
                     HttpMethod.POST,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject("http://ts-train-service:14567/train/create",t, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + t.getLoginId(), null);
+
     }
 
     @Override
-    public boolean deleteTrain(TrainInfo2 t, HttpHeaders headers) {
-        boolean result = false;
-        if (adminID.equals(t.getLoginId())) {
-            HttpEntity requestEntity = new HttpEntity(t, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-train-service:14567/train/delete",
-                    HttpMethod.POST,
+    public Response deleteTrain(String id, String loginId, HttpHeaders headers) {
+        Response result;
+        if (adminID.equals(loginId)) {
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-train-service:14567/api/v1/trainservice/trains/" + id,
+                    HttpMethod.DELETE,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject("http://ts-train-service:14567/train/delete",t, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + loginId, null);
     }
 
     @Override
-    public boolean modifyTrain(TrainType t, HttpHeaders headers) {
-        boolean result = false;
+    public Response modifyTrain(TrainType t, HttpHeaders headers) {
+        Response result;
         if (adminID.equals(t.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(t, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-train-service:14567/train/update",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-train-service:14567/api/v1/trainservice/trains",
+                    HttpMethod.PUT,
                     requestEntity,
-                    Boolean.class);
+                    Response.class);
             result = re.getBody();
 //            result = restTemplate.postForObject("http://ts-train-service:14567/train/update",t, Boolean.class);
             return result;
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + t.getLoginId(), null);
     }
 
     //////////////config////////////////////////////////////////////////
     @Override
-    public GetAllConfigResult getAllConfigs(String loginId, HttpHeaders headers) {
-        GetAllConfigResult result = new GetAllConfigResult();
+    public Response getAllConfigs(String loginId, HttpHeaders headers) {
+
         if (adminID.equals(loginId)) {
-            List<Config> l;
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<List<Config>> re = restTemplate.exchange(
-                    "http://ts-config-service:15679/config/queryAll",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-config-service:15679/api/v1/config/configs",
                     HttpMethod.GET,
                     requestEntity,
-                    new ParameterizedTypeReference<List<Config>>(){});
-            l = re.getBody();
-
+                    Response.class);
 //            List<Config> l = new ArrayList<Config>();
 //            l = restTemplate.getForObject("http://ts-config-service:15679/config/queryAll", l.getClass());
-            result.setStatus(true);
-            result.setMessage("Success");
-            result.setConfigs(l);
-            return result;
+
+            return re.getBody();
         } else {
-            result.setStatus(false);
-            result.setMessage("The loginId is wrong:"+ loginId);
+            return new Response<>(0, "The loginId is wrong:" + loginId, null);
         }
-        return result;
+
     }
 
     @Override
-    public String addConfig(Config c, HttpHeaders headers) {
-        String result = null;
+    public Response addConfig(Config c, HttpHeaders headers) {
+
         if (adminID.equals(c.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(c, headers);
-            ResponseEntity<String> re = restTemplate.exchange(
-                    "http://ts-config-service:15679/config/create",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-config-service:15679/api/v1/config/configs",
                     HttpMethod.POST,
                     requestEntity,
-                    String.class);
-            result = re.getBody();
+                    Response.class);
 //            result = restTemplate.postForObject("http://ts-config-service:15679/config/create",c, String.class);
-            return result;
+            return re.getBody();
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + c.getLoginId(), null);
     }
 
     @Override
-    public String deleteConfig(ConfigInfo2 ci, HttpHeaders headers) {
-        String result = null;
-        if (adminID.equals(ci.getLoginId())) {
-            HttpEntity requestEntity = new HttpEntity(ci, headers);
-            ResponseEntity<String> re = restTemplate.exchange(
-                    "http://ts-config-service:15679/config/delete",
+    public Response deleteConfig(String name,String loginId, HttpHeaders headers) {
+
+        if (adminID.equals(loginId)) {
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-config-service:15679/api/v1/config/configs/" + name,
                     HttpMethod.POST,
                     requestEntity,
-                    String.class);
-            result = re.getBody();
+                    Response.class);
+
 //            result = restTemplate.postForObject("http://ts-config-service:15679/config/delete",ci, String.class);
-            return result;
+            return re.getBody();
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + loginId, null);
     }
 
     @Override
-    public String modifyConfig(Config c, HttpHeaders headers) {
-        String result = null;
+    public Response modifyConfig(Config c, HttpHeaders headers) {
+
         if (adminID.equals(c.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(c, headers);
-            ResponseEntity<String> re = restTemplate.exchange(
-                    "http://ts-config-service:15679/config/update",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-config-service:15679/api/v1/config/configs",
+                    HttpMethod.PATCH,
                     requestEntity,
-                    String.class);
-            result = re.getBody();
+                    Response.class);
 //            result = restTemplate.postForObject("http://ts-config-service:15679/config/update",c, String.class);
-            return result;
+            return re.getBody();
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + c.getLoginId(), null);
     }
 
     //////////////price////////////////////////////////////////////////
     @Override
-    public GetAllPriceResult getAllPrices(String loginId, HttpHeaders headers) {
-        GetAllPriceResult result = new GetAllPriceResult();
+    public Response getAllPrices(String loginId, HttpHeaders headers) {
+
         if (adminID.equals(loginId)) {
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<GetAllPriceResult> re = restTemplate.exchange(
-                    "http://ts-price-service:16579/price/queryAll",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-price-service:16579/api/v1/priceservice/prices",
                     HttpMethod.GET,
                     requestEntity,
-                    GetAllPriceResult.class);
-            result = re.getBody();
+                    Response.class);
 
 //            result = restTemplate.getForObject("http://ts-price-service:16579/price/queryAll", GetAllPriceResult.class);
-            System.out.println("[!!!!GetAllPriceResult] " + result.getPriceConfig());
-            return result;
+            System.out.println("[!!!!GetAllPriceResult] ");
+            return re.getBody();
         } else {
-            result.setStatus(false);
-            result.setMessage("The loginId is wrong:"+ loginId);
+            return new Response<>(0, "The loginId is wrong:" + loginId, null);
         }
-        return result;
     }
 
     @Override
-    public ReturnSinglePriceConfigResult addPrice(PriceInfo pi, HttpHeaders headers) {
-        ReturnSinglePriceConfigResult result = new ReturnSinglePriceConfigResult();
+    public Response addPrice(PriceInfo pi, HttpHeaders headers) {
         if (adminID.equals(pi.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(pi, headers);
-            ResponseEntity<ReturnSinglePriceConfigResult> re = restTemplate.exchange(
-                    "http://ts-price-service:16579/price/create",
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-price-service:16579/api/v1/priceservice/prices",
                     HttpMethod.POST,
                     requestEntity,
-                    ReturnSinglePriceConfigResult.class);
-            result = re.getBody();
+                    Response.class);
 //            result = restTemplate.postForObject("http://ts-price-service:16579/price/create",pi, ReturnSinglePriceConfigResult.class);
-            return result;
+            return re.getBody();
         } else {
-            result.setStatus(false);
-            result.setMessage("The loginId is wrong:"+ pi.getLoginId());
+            return new Response<>(0, "The loginId is wrong:" + pi.getLoginId(), null);
         }
-        return result;
     }
 
     @Override
-    public boolean deletePrice(PriceInfo pi, HttpHeaders headers) {
-        boolean result = false;
+    public Response deletePrice(PriceInfo pi, HttpHeaders headers) {
+
         if (adminID.equals(pi.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(pi, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-price-service:16579/price/delete",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-price-service:16579/api/v1/priceservice/prices",
+                    HttpMethod.DELETE,
                     requestEntity,
-                    Boolean.class);
-            result = re.getBody();
+                    Response.class);
+
 //            result = restTemplate.postForObject("http://ts-price-service:16579/price/delete",pi, Boolean.class);
-            return result;
+            return re.getBody();
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + pi.getLoginId(), null);
     }
 
     @Override
-    public boolean modifyPrice(PriceInfo pi, HttpHeaders headers) {
-        boolean result = false;
+    public Response modifyPrice(PriceInfo pi, HttpHeaders headers) {
         if (adminID.equals(pi.getLoginId())) {
             HttpEntity requestEntity = new HttpEntity(pi, headers);
-            ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-price-service:16579/price/update",
-                    HttpMethod.POST,
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-price-service:16579/api/v1/priceservice/prices",
+                    HttpMethod.PUT,
                     requestEntity,
-                    Boolean.class);
-            result = re.getBody();
+                    Response.class);
 //            result = restTemplate.postForObject("http://ts-price-service:16579/price/update",pi, Boolean.class);
-            return result;
+            return re.getBody();
         }
-        return result;
+        return new Response<>(0, "The loginId is wrong:" + pi.getLoginId(), null);
     }
-
-
 }

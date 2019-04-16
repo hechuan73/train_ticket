@@ -14,7 +14,7 @@ import javax.imageio.*;
 import java.io.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1verificationcode")
 public class VerificationCodeController {
 
 	@Autowired

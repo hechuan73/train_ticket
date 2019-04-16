@@ -9,6 +9,10 @@ public class RebookInfo {
 
     @Valid
     @NotNull
+    private String loginId;
+
+    @Valid
+    @NotNull
     private String orderId;
 
     @Valid
@@ -29,6 +33,14 @@ public class RebookInfo {
 
     public RebookInfo(){
         //Default Constructor
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     public String getOrderId() {

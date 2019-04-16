@@ -3,6 +3,7 @@ package preserveOther.entity;
 import java.util.Date;
 
 public class OrderTicketsInfo {
+    private String accountId;
 
     private String contactsId;
 
@@ -43,6 +44,14 @@ public class OrderTicketsInfo {
 
     public OrderTicketsInfo(){
         //Default Constructor
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public int getFoodType() {

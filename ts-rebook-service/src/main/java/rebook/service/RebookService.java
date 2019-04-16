@@ -1,10 +1,10 @@
 package rebook.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import rebook.entity.RebookInfo;
-import rebook.entity.RebookResult;
 
 public interface RebookService {
-    RebookResult rebook(RebookInfo info, String loginId, String loginToken, HttpHeaders headers);
-    RebookResult payDifference(RebookInfo info, String loginId, String loginToken, HttpHeaders headers);
+    Response rebook(RebookInfo info, HttpHeaders headers);
+    Response payDifference(RebookInfo info,  HttpHeaders headers);
 }

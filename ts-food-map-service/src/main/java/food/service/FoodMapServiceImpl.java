@@ -1,5 +1,6 @@
 package food.service;
 
+import edu.fudan.common.util.Response;
 import food.entity.FoodStore;
 import food.entity.TrainFood;
 import food.repository.FoodStoreRepository;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 public class FoodMapServiceImpl implements FoodMapService {
@@ -20,14 +23,15 @@ public class FoodMapServiceImpl implements FoodMapService {
     TrainFoodRepository trainFoodRepository;
 
     @Override
-    public FoodStore createFoodStore(FoodStore fs, HttpHeaders headers) {
+    public Response createFoodStore(FoodStore fs, HttpHeaders headers) {
         FoodStore fsTemp = foodStoreRepository.findById(fs.getId());
         if (fsTemp != null) {
             System.out.println("[Food Map Service][Init FoodStore] Already Exists Id:" + fs.getId());
+            return new Response<>(0, "Already Exists Id", null);
         } else {
             foodStoreRepository.save(fs);
+            return new Response<>(1, "Save Success", fs);
         }
-        return fs;
     }
 
     @Override
@@ -42,32 +46,52 @@ public class FoodMapServiceImpl implements FoodMapService {
     }
 
     @Override
-    public List<FoodStore> listFoodStores(HttpHeaders headers) {
+    public Response listFoodStores(HttpHeaders headers) {
         List<FoodStore> foodStores = foodStoreRepository.findAll();
-        return foodStores;
+        if (foodStores != null && foodStores.size() > 0) {
+            return new Response<>(1, "Success", foodStores);
+        } else {
+            return new Response<>(0, "Foodstore is empty", null);
+        }
     }
 
     @Override
-    public List<TrainFood> listTrainFood(HttpHeaders headers) {
+    public Response listTrainFood(HttpHeaders headers) {
         List<TrainFood> trainFoodList = trainFoodRepository.findAll();
-        return trainFoodList;
+        if (trainFoodList != null && trainFoodList.size() > 0) {
+            return new Response<>(1, "Success", trainFoodList);
+        } else {
+            return new Response<>(0, "No content", null);
+        }
     }
 
     @Override
-    public List<FoodStore> listFoodStoresByStationId(String stationId, HttpHeaders headers) {
+    public Response listFoodStoresByStationId(String stationId, HttpHeaders headers) {
         List<FoodStore> foodStoreList = foodStoreRepository.findByStationId(stationId);
-        return foodStoreList;
+        if (foodStoreList != null && foodStoreList.size() > 0) {
+            return new Response<>(1, "Success", foodStoreList);
+        } else {
+            return new Response<>(0, "FoodStore is empty", null);
+        }
     }
 
     @Override
-    public List<TrainFood> listTrainFoodByTripId(String tripId, HttpHeaders headers) {
+    public Response listTrainFoodByTripId(String tripId, HttpHeaders headers) {
         List<TrainFood> trainFoodList = trainFoodRepository.findByTripId(tripId);
-        return trainFoodList;
+        if (trainFoodList != null) {
+            return new Response<>(1, "Success", trainFoodList);
+        } else {
+            return new Response<>(0, "No content", null);
+        }
     }
 
     @Override
-    public  List<FoodStore> getFoodStoresByStationIds(List<String> stationIds) {
+    public Response getFoodStoresByStationIds(List<String> stationIds) {
         List<FoodStore> foodStoreList = foodStoreRepository.findByStationIdIn(stationIds);
-        return foodStoreList;
+        if (foodStoreList != null) {
+            return new Response<>(1, "Success", foodStoreList);
+        } else {
+            return new Response<>(0, "No content", foodStoreList);
+        }
     }
 }

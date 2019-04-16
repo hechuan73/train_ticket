@@ -2,11 +2,16 @@ package config.service;
 
 import config.entity.Config;
 import config.repository.ConfigRepository;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 public class ConfigServiceImpl implements ConfigService {
@@ -14,25 +19,25 @@ public class ConfigServiceImpl implements ConfigService {
     @Autowired
     ConfigRepository repository;
 
-    public String create(Config info, HttpHeaders headers){
-        if(repository.findByName(info.getName()) != null){
+    public Response create(Config info, HttpHeaders headers) {
+        if (repository.findByName(info.getName()) != null) {
             String result = "Config " + info.getName() + " already exists.";
-            return result;
-        }else{
-            Config config = new Config(info.getName(),info.getValue(),info.getDescription());
+            return new Response<>(0, "Already exists.", result);
+        } else {
+            Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
-            return "true";
+            return new Response<>(1, "Create success", config);
         }
     }
 
-    public String update(Config info, HttpHeaders headers){
-        if(repository.findByName(info.getName()) == null){
+    public Response update(Config info, HttpHeaders headers) {
+        if (repository.findByName(info.getName()) == null) {
             String result = "Config " + info.getName() + " doesn't exist.";
-            return result;
-        }else{
-            Config config = new Config(info.getName(),info.getValue(),info.getDescription());
+            return new Response<>(0, "Doesn't exist.", result);
+        } else {
+            Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
-            return "true";
+            return new Response<>(1, "Update success", config);
         }
     }
 
@@ -45,28 +50,34 @@ public class ConfigServiceImpl implements ConfigService {
 //        }
 //    }
 
-    public Config query(String name, HttpHeaders headers){
+    public Response query(String name, HttpHeaders headers) {
         Config config = repository.findByName(name);
-        if( config == null){
-            return null;
-        }else{
-            return config;
+        if (config == null) {
+            return new Response<>(0, "No content", null);
+        } else {
+            return new Response<>(1, "Success", config);
         }
     }
 
-    public String delete(String name, HttpHeaders headers){
+    public Response delete(String name, HttpHeaders headers) {
         Config config = repository.findByName(name);
-        if(config == null){
+        if (config == null) {
             String result = "Config " + name + " doesn't exist.";
-            return result;
-        }else{
+            return new Response<>(0, "Doesn't exist.", result);
+        } else {
             repository.deleteByName(name);
-            return "true";
+            return new Response<>(1, "Delete success", config);
         }
     }
 
     @Override
-    public List<Config> queryAll(HttpHeaders headers){
-        return repository.findAll();
+    public Response queryAll(HttpHeaders headers) {
+        List<Config> configList = repository.findAll();
+
+        if (configList != null && configList.size() > 0) {
+            return new Response<>(1, "Find all  config success", configList);
+        } else {
+            return new Response<>(0, "No content", null);
+        }
     }
 }

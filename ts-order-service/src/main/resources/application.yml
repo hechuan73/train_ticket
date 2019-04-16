@@ -12,3 +12,6 @@ spring:
 #      password: ${MONGODB_PASSWORD}
 #      database: piggymetrics
       port: 27017
+
+swagger:
+  controllerPackage: order.controller

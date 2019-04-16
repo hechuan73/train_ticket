@@ -1,54 +1,58 @@
 package adminbasic.service;
 
 import adminbasic.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
+
+import javax.annotation.Resource;
 
 public interface AdminBasicInfoService {
 
     ////////////contact/////////////////////////////////////////
-    GetAllContactsResult getAllContacts(String loginId, HttpHeaders headers);
+    Response getAllContacts(String loginId, HttpHeaders headers);
 
-    AddContactsResult addContact(String loginId, Contacts c, HttpHeaders headers);
+    Response addContact(String loginId, Contacts c, HttpHeaders headers);
 
-    DeleteContactsResult deleteContact(String loginId, DeleteContactsInfo dci, HttpHeaders headers);
+    Response deleteContact(String loginId, String contactsId, HttpHeaders headers);
 
-    ModifyContactsResult modifyContact(String loginId, ModifyContactsInfo mci, HttpHeaders headers);
+    Response modifyContact(Contacts mci, HttpHeaders headers);
 
     ////////////////////////////station///////////////////////////////
-    GetAllStationResult getAllStations(String loginId, HttpHeaders headers);
+    Response getAllStations(String loginId, HttpHeaders headers);
 
-    boolean addStation(Station s, HttpHeaders headers);
+    Response addStation(Station s, HttpHeaders headers);
 
-    boolean deleteStation( Station s, HttpHeaders headers);
+    Response deleteStation(Station s, HttpHeaders headers);
 
-    boolean modifyStation( Station s, HttpHeaders headers);
+    Response modifyStation(Station s, HttpHeaders headers);
 
     ////////////////////////////train///////////////////////////////
-    GetAllTrainResult getAllTrains(String loginId, HttpHeaders headers);
+    Response getAllTrains(String loginId, HttpHeaders headers);
 
-    boolean addTrain(TrainType t, HttpHeaders headers);
+    Response addTrain(TrainType t, HttpHeaders headers);
 
-    boolean deleteTrain(TrainInfo2 t, HttpHeaders headers);
+    Response deleteTrain(String id, String loginId, HttpHeaders headers);
 
-    boolean modifyTrain( TrainType t, HttpHeaders headers);
+    Response modifyTrain(TrainType t, HttpHeaders headers);
 
     ////////////////////////////config///////////////////////////////
-    GetAllConfigResult getAllConfigs(String loginId, HttpHeaders headers);
+    Response getAllConfigs(String loginId, HttpHeaders headers);
 
-    String addConfig(Config c, HttpHeaders headers);
+    Response addConfig(Config c, HttpHeaders headers);
 
-    String deleteConfig(ConfigInfo2 ci, HttpHeaders headers);
 
-    String modifyConfig( Config c, HttpHeaders headers);
+    Response deleteConfig(String name,String loginId, HttpHeaders headers);
+
+    Response modifyConfig(Config c, HttpHeaders headers);
 
     ////////////////////////////price///////////////////////////////
-    GetAllPriceResult getAllPrices(String loginId, HttpHeaders headers);
+    Response getAllPrices(String loginId, HttpHeaders headers);
 
-    ReturnSinglePriceConfigResult addPrice(PriceInfo pi, HttpHeaders headers);
+    Response addPrice(PriceInfo pi, HttpHeaders headers);
 
-    boolean deletePrice(PriceInfo pi, HttpHeaders headers);
+    Response deletePrice(PriceInfo pi, HttpHeaders headers);
 
-    boolean modifyPrice(PriceInfo pi, HttpHeaders headers);
+    Response modifyPrice(PriceInfo pi, HttpHeaders headers);
 
 //    Contacts login(String name, String password);
 

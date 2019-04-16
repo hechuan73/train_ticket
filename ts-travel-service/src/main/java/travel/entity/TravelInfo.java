@@ -1,11 +1,9 @@
 package travel.entity;
 
-import org.springframework.data.annotation.Id;
 import java.util.Date;
 
-
 public class TravelInfo {
-    @Id
+
     private String tripId;
 
     private String trainTypeId;
@@ -22,7 +20,7 @@ public class TravelInfo {
 
     private Date endTime;
 
-    public TravelInfo(){
+    public TravelInfo() {
         //Default Constructor
     }
 

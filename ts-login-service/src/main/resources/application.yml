@@ -7,3 +7,6 @@ server:
 spring:
   application:
     name: ts-login-service
+
+swagger:
+  controllerPackage: login.controller

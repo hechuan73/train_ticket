@@ -1,34 +1,39 @@
 package seat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import seat.entity.SeatRequest;
+import seat.entity.Seat;
 import seat.entity.Ticket;
 import seat.service.SeatService;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/seatservice")
 public class SeatController {
 
     @Autowired
     private SeatService seatService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home() {
         return "Welcome to [ Seat Service ] !";
     }
 
     //分配座位
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/seat/getSeat", method= RequestMethod.POST)
-    public Ticket create(@RequestBody SeatRequest seatRequest,@RequestHeader HttpHeaders headers){
-        return seatService.distributeSeat(seatRequest,headers);
+    @PostMapping(value = "/seats")
+    public HttpEntity create(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
+        return ok(seatService.distributeSeat(seatRequest, headers));
     }
 
     //查询特定区间余票
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/seat/getLeftTicketOfInterval", method= RequestMethod.POST)
-    public int getLeftTicketOfInterval(@RequestBody SeatRequest seatRequest,@RequestHeader HttpHeaders headers){
-        return seatService.getLeftTicketOfInterval(seatRequest,headers);
+    @PostMapping(value = "/seats/left_tickets")
+    public HttpEntity getLeftTicketOfInterval(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
+        // int
+        return ok(seatService.getLeftTicketOfInterval(seatRequest, headers));
     }
 }

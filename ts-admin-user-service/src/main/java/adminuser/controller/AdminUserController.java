@@ -1,45 +1,43 @@
 package adminuser.controller;
 
-import adminuser.entity.AddAccountRequest;
-import adminuser.entity.DeleteAccountRequest;
-import adminuser.entity.UpdateAccountRequest;
-import adminuser.entity.DeleteAccountResult;
-import adminuser.entity.FindAllAccountResult;
-import adminuser.entity.ModifyAccountResult;
-import adminuser.entity.RegisterResult;
+import adminuser.entity.*;
 import adminuser.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/adminuserservice")
 public class AdminUserController {
     @Autowired
     AdminUserService adminUserService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ AdminUser Service ] !";
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/adminuser/findAll/{id}", method = RequestMethod.GET)
-    public FindAllAccountResult getAllUsers(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        return adminUserService.getAllUsers(id, headers);
+    @GetMapping(path = "/adminuser/{id}")
+    public HttpEntity getAllUsers(@PathVariable String id, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.getAllUsers(id, headers));
     }
 
-    @RequestMapping(value = "/adminuser/addUser", method= RequestMethod.POST)
-    public RegisterResult addUser(@RequestBody AddAccountRequest request, @RequestHeader HttpHeaders headers){
-        return adminUserService.addUser(request, headers);
+    @PostMapping(value = "/adminuser")
+    public HttpEntity addUser(@RequestBody Account request, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.addUser(request, headers));
     }
 
-    @RequestMapping(value = "/adminuser/updateUser", method= RequestMethod.POST)
-    public ModifyAccountResult updateOrder(@RequestBody UpdateAccountRequest request, @RequestHeader HttpHeaders headers){
-        return adminUserService.updateUser(request, headers);
+    @PutMapping(value = "/adminuser")
+    public HttpEntity updateOrder(@RequestBody Account request, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.updateUser(request, headers));
     }
 
-    @RequestMapping(value = "/adminuser/deleteUser", method= RequestMethod.POST)
-    public DeleteAccountResult deleteOrder(@RequestBody DeleteAccountRequest request, @RequestHeader HttpHeaders headers){
-        return adminUserService.deleteUser(request, headers);
+    @DeleteMapping(value = "/adminuser/{loginId}/{accountId}")
+    public HttpEntity deleteOrder(@PathVariable String loginId, @PathVariable String accountId, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.deleteUser(loginId, accountId, headers));
     }
 }

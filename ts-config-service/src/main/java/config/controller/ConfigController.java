@@ -33,58 +33,32 @@ public class ConfigController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/configs")
     public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
-        List<Config> configList = configService.queryAll(headers);
-        if (configList != null && configList.size() > 0) {
-            return ok(new Response(1, "Find all  config success", configList));
-        } else {
-            return ok(new Response(0, "No content", null));
-        }
+        return ok(configService.queryAll(headers));
     }
-
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/configs")
     public HttpEntity<?> createConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
-        String createResult = configService.create(info, headers);
-        if ("true".equals(createResult)) {
-            return new ResponseEntity<>(new Response(1, "Create success", createResult), HttpStatus.CREATED);
-        } else {
-            return ok(new Response(0, "Already exists.", createResult));
-        }
+        return new ResponseEntity<>(configService.create(info, headers), HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "*")
     @PutMapping(value = "/configs")
     public HttpEntity updateConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
-        String updateResult = configService.update(info, headers);
-        if ("true".equals(updateResult)) {
-            return ok(new Response(1, "Update success", updateResult));
-        } else {
-            return ok(new Response(0, "Doesn't exist.", updateResult));
-        }
+        return ok(configService.update(info, headers));
     }
 
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/configs/{configName}")
     public HttpEntity deleteConfig(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
-        String deleteResult = configService.delete(configName, headers);
-        if ("true".equals(deleteResult)) {
-            return ok(new Response(1, "Delete success", deleteResult));
-        } else {
-            return ok(new Response(0, "Doesn't exist.", deleteResult));
-        }
+        return ok(configService.delete(configName, headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/configs/{configName}")
     public HttpEntity retrieve(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
-        Config config = configService.query(configName, headers);
-        if (config == null) {
-            return ok(new Response(0, "No content", null));
-        } else {
-            return ok(new Response(1, "Success", config));
-        }
+        return ok(configService.query(configName, headers));
     }
 
 //    @CrossOrigin(origins = "*")

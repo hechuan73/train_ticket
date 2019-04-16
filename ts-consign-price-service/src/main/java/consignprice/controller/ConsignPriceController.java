@@ -22,9 +22,10 @@ public class ConsignPriceController {
     }
 
     @GetMapping(value = "/consignprice/{weight}/{isWithinRegion}")
-    public HttpEntity getPriceByWeightAndRegion(double weight, boolean isWithinRegion,
+    public HttpEntity getPriceByWeightAndRegion(@PathVariable String weight, @PathVariable String isWithinRegion,
                                                 @RequestHeader HttpHeaders headers) {
-        return ok(service.getPriceByWeightAndRegion(weight, isWithinRegion, headers));
+        return ok(service.getPriceByWeightAndRegion(Double.parseDouble(weight),
+                Boolean.parseBoolean(isWithinRegion), headers));
     }
 
     @GetMapping(value = "/consignprice/price")

@@ -1,13 +1,18 @@
 package fdse.microservice.service;
 
+import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
 import fdse.microservice.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 public class StationServiceImpl implements StationService {
@@ -16,14 +21,13 @@ public class StationServiceImpl implements StationService {
     private StationRepository repository;
 
     @Override
-    public boolean create(Station station, HttpHeaders headers) {
-        boolean result = false;
+    public Response create(Station station, HttpHeaders headers) {
         if (repository.findById(station.getId()) == null) {
             station.setStayTime(station.getStayTime());
             repository.save(station);
-            result = true;
+            return new Response<>(1, "Create success", station);
         }
-        return result;
+        return new Response<>(0, "Already exists", station);
     }
 
 
@@ -37,44 +41,53 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public boolean update(Station info, HttpHeaders headers) {
-        boolean result = false;
+    public Response update(Station info, HttpHeaders headers) {
+
         if (repository.findById(info.getId()) == null) {
-            result = false;
+            return new Response<>(0, "Station not exist", info);
         } else {
             Station station = new Station(info.getId(), info.getName());
             station.setStayTime(info.getStayTime());
             repository.save(station);
-            result = true;
+            return new Response<>(1, "Update success", station);
         }
-        return result;
     }
 
     @Override
-    public boolean delete(Station info, HttpHeaders headers) {
-        boolean result = false;
+    public Response delete(Station info, HttpHeaders headers) {
+
         if (repository.findById(info.getId()) != null) {
             Station station = new Station(info.getId(), info.getName());
             repository.delete(station);
-            result = true;
+            return new Response<>(1, "Delete success", station);
         }
-        return result;
+        return new Response<>(0, "Station not exist", info);
     }
 
     @Override
-    public List<Station> query(HttpHeaders headers) {
-        return repository.findAll();
+    public Response query(HttpHeaders headers) {
+        List<Station> stations = repository.findAll();
+        if (stations != null && stations.size() > 0) {
+            return new Response<>(1, "Find all content", stations);
+        } else {
+            return new Response<>(0, "No content", null);
+        }
     }
 
     @Override
-    public String queryForId(String stationName, HttpHeaders headers) {
+    public Response queryForId(String stationName, HttpHeaders headers) {
         Station station = repository.findByName(stationName);
-        return station.getId();
+
+        if (station.getId() != null) {
+            return new Response<>(1, "Success", station.getId());
+        } else {
+            return new Response<>(0, "Not exists", stationName);
+        }
     }
 
 
     @Override
-    public List<String> queryForIdBatch(List<String> nameList, HttpHeaders headers) {
+    public Response queryForIdBatch(List<String> nameList, HttpHeaders headers) {
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < nameList.size(); i++) {
             Station station = repository.findByName(nameList.get(i));
@@ -84,34 +97,40 @@ public class StationServiceImpl implements StationService {
                 result.add(station.getId());
             }
         }
-        return result;
+
+        if (result.size() > 0) {
+            return new Response<>(1, "Success", result);
+        } else {
+            return new Response<>(0, "No content according to name list", nameList);
+        }
+
     }
 
     @Override
-    public String queryById(String stationId, HttpHeaders headers) {
+    public Response queryById(String stationId, HttpHeaders headers) {
         Station station = repository.findById(stationId);
         if (station != null) {
-            return station.getName();
+            return new Response<>(1, "Success", station.getName());
         } else {
-            return null;
+            return new Response<>(0, "No that stationId", stationId);
         }
     }
 
     @Override
-    public List<String> queryByIdBatch(List<String> idList, HttpHeaders headers) {
+    public Response queryByIdBatch(List<String> idList, HttpHeaders headers) {
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < idList.size(); i++) {
             Station station = repository.findById(idList.get(i));
             if (station != null) {
                 result.add(station.getName());
             }
-//            if (station == null) {
-//                // i think this is a bug
-//                result.add("Not Exist");
-//            } else {
-//                result.add(station.getName());
-//            }
         }
-        return result;
+
+        if (result.size() > 0) {
+            return new Response<>(1, "Success", result);
+        } else {
+            return new Response<>(0, "No stationNamelist according to stationIdList", result);
+        }
+
     }
 }

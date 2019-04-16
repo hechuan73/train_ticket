@@ -29,54 +29,29 @@ public class RouteController {
 
     @PostMapping(path = "/routes")
     public ResponseEntity<Response> createAndModifyRoute(@RequestBody RouteInfo createAndModifyRouteInfo, @RequestHeader HttpHeaders headers) {
-        Route route = routeService.createAndModify(createAndModifyRouteInfo, headers);
-        if (route == null) {
-            return ok(new Response(0, "Station Number Not Equal To Distance Number", createAndModifyRouteInfo));
-        } else {
-            return new ResponseEntity<>(new Response(1, "", route), HttpStatus.CREATED);
-        }
+        return ok(routeService.createAndModify(createAndModifyRouteInfo, headers));
     }
 
     @DeleteMapping(path = "/routes/{routeId}")
     public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        boolean isDeleted = routeService.deleteRoute(routeId, headers);
-        if (isDeleted) {
-            return ok(new Response(1, "Delete Success", routeId));
-        } else {
-            return ok(new Response(0, "Delete failed, Reason unKnown with this routeId", routeId));
-        }
+        return ok(routeService.deleteRoute(routeId, headers));
     }
 
     @GetMapping(path = "/routes/{routeId}")
     public HttpEntity queryById(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        Route route = routeService.getRouteById(routeId, headers);
-        if (route == null) {
-            return ok(new Response(0, "No content with the routeId", routeId));
-        } else {
-            return ok(new Response(1, "Success", route));
-        }
+        return ok(routeService.getRouteById(routeId, headers));
     }
 
     @GetMapping(path = "/routes")
     public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
-        List<Route> routes = routeService.getAllRoutes(headers);
-        if (routes != null && routes.size() > 0) {
-            return ok(new Response(1, "Success", routes));
-        } else {
-            return ok(new Response(0, "No Content", routes));
-        }
+        return ok(routeService.getAllRoutes(headers));
     }
 
     @GetMapping(path = "/routes/{startId}/{terminalId}")
     public HttpEntity queryByStartAndTerminal(@PathVariable String startId,
                                               @PathVariable String terminalId,
                                               @RequestHeader HttpHeaders headers) {
-        List<Route> routes = routeService.getRouteByStartAndTerminal(startId, terminalId, headers);
-        if (routes != null && routes.size() > 0) {
-            return ok(new Response(1, "Success", routes));
-        } else {
-            return ok(new Response(0, "No routes with the startId and terminalId", startId + " -- " + terminalId));
-        }
+        return ok(routeService.getRouteByStartAndTerminal(startId, terminalId, headers));
     }
 
 }

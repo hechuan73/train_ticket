@@ -2,6 +2,7 @@ package travelplan.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TravelAdvanceResultUnit {
 
@@ -13,7 +14,7 @@ public class TravelAdvanceResultUnit {
 
     private String toStationName;
 
-    private ArrayList<String> stopStations;
+    private List<String> stopStations;
 
     private String priceForSecondClassSeat;
 
@@ -63,11 +64,11 @@ public class TravelAdvanceResultUnit {
         this.toStationName = toStationName;
     }
 
-    public ArrayList<String> getStopStations() {
+    public List<String> getStopStations() {
         return stopStations;
     }
 
-    public void setStopStations(ArrayList<String> stopStations) {
+    public void setStopStations(List<String> stopStations) {
         this.stopStations = stopStations;
     }
 

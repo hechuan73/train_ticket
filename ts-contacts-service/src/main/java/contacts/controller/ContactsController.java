@@ -28,36 +28,30 @@ public class ContactsController {
     @GetMapping(path = "/contacts")
     public HttpEntity getAllContacts(@RequestHeader HttpHeaders headers) {
         System.out.println("[Contacts Service][Get All Contacts]");
-        List<Contacts> contacts = contactsService.getAllContacts(headers);
-        if (contacts != null && contacts.size() > 0) {
-            return ok(new Response(1, "Success", contacts));
-        } else {
-            return ok(new Response(0, "No content", null));
-        }
+        return ok(contactsService.getAllContacts(headers));
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/contacts")
     public ResponseEntity<Response> createNewContacts(@RequestBody Contacts aci,
-                                        @RequestHeader HttpHeaders headers) {
+                                                      @RequestHeader HttpHeaders headers) {
         System.out.println("[ContactsService][VerifyLogin] Success");
-        Contacts contacts = contactsService.create(aci, headers);
-        if (contacts == null) {
-            return ok(new Response(0, "Contacts already exists", aci));
-        } else {
-            return new ResponseEntity<>(new Response(1, "Create contacts success", contacts),HttpStatus.CREATED);
-        }
+        return new ResponseEntity<>(contactsService.create(aci, headers), HttpStatus.CREATED);
     }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "/contacts/admin")
+    public HttpEntity<?> createNewContactsAdmin(@RequestBody Contacts aci, @RequestHeader HttpHeaders headers) {
+        aci.setId(UUID.randomUUID());
+        System.out.println("[ContactsService][Create Contacts In Admin]");
+        return new ResponseEntity<>(contactsService.createContacts(aci, headers), HttpStatus.CREATED);
+    }
+
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(path = "/contacts/{contactsId}")
     public HttpEntity deleteContacts(@PathVariable String contactsId, @RequestHeader HttpHeaders headers) {
-        boolean isDeleteSuccess = contactsService.delete(UUID.fromString(contactsId), headers);
-        if (isDeleteSuccess) {
-            return ok(new Response(1, "Delete success", contactsId));
-        } else {
-            return ok(new Response(0, "Delete failed", contactsId));
-        }
+        return ok(contactsService.delete(UUID.fromString(contactsId), headers));
     }
 
 
@@ -65,12 +59,7 @@ public class ContactsController {
     @PutMapping(path = "/contacts")
     public HttpEntity modifyContacts(@RequestBody Contacts info, @RequestHeader HttpHeaders headers) {
         System.out.println("[Contacts Service][Modify Contacts] ContactsId:" + info.getId());
-        Contacts contacts = contactsService.modify(info, headers);
-        if (contacts == null) {
-            return ok(new Response(0, "Contacts not found", info));
-        } else {
-            return ok(new Response(1, "Modify success", contacts));
-        }
+        return ok(contactsService.modify(info, headers));
     }
 
     @CrossOrigin(origins = "*")
@@ -78,35 +67,16 @@ public class ContactsController {
     public HttpEntity findContactsByAccountId(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Contacts Service][Find Contacts By Account Id:" + accountId);
         System.out.println("[ContactsService][VerifyLogin] Success");
-        List<Contacts> contacts = contactsService.findContactsByAccountId(UUID.fromString(accountId), headers);
-        if (contacts != null && contacts.size() > 0) {
-            return ok(new Response(0, "No contacts according to accountId", accountId));
-        } else {
-            return ok(new Response(1, "Success", contacts));
-        }
+        return ok(contactsService.findContactsByAccountId(UUID.fromString(accountId), headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/contacts/{id}")
     public HttpEntity getContactsByContactsId(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         System.out.println("[ContactsService][Contacts Id Print] " + id);
-        Contacts contacts = contactsService.findContactsById(UUID.fromString(id), headers);
         System.out.println("[ContactsService][VerifyLogin] Success.");
-        if (contacts != null) {
-            return ok(new Response(1, "Success", contacts));
-        } else {
-            return ok(new Response(0, "No contacts accorrding to contacts id", id));
-        }
+        return ok(contactsService.findContactsById(UUID.fromString(id), headers));
     }
-
-    //    @CrossOrigin(origins = "*")
-//    @PostMapping(path = "/contacts/admincreate")
-//    public HttpEntity<?> createNewContactsAdmin(@RequestBody Contacts aci, @RequestHeader HttpHeaders headers){
-//        aci.setId(UUID.randomUUID());
-//        System.out.println("[ContactsService][Create Contacts In Admin]");
-//        aci = contactsService.createContacts(aci, headers);
-//        return new ResponseEntity<>(aci, HttpStatus.CREATED);
-//    }
 
 
 //    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers) {

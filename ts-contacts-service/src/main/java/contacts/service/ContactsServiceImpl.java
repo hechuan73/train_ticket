@@ -1,14 +1,19 @@
 package contacts.service;
 
 import contacts.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import contacts.repository.ContactsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 public class ContactsServiceImpl implements ContactsService {
@@ -17,29 +22,40 @@ public class ContactsServiceImpl implements ContactsService {
     private ContactsRepository contactsRepository;
 
     @Override
-    public Contacts findContactsById(UUID id, HttpHeaders headers) {
-        return contactsRepository.findById(id);
+    public Response findContactsById(UUID id, HttpHeaders headers) {
+        Contacts contacts = contactsRepository.findById(id);
+        if (contacts != null) {
+            return new Response<>(1, "Success", contacts);
+        } else {
+            return new Response<>(0, "No contacts accorrding to contacts id", id);
+        }
     }
 
     @Override
-    public List<Contacts> findContactsByAccountId(UUID accountId, HttpHeaders headers) {
+    public Response findContactsByAccountId(UUID accountId, HttpHeaders headers) {
         ArrayList<Contacts> arr = contactsRepository.findByAccountId(accountId);
         System.out.println("[Contacts-Query-Service][Query-Contacts] Result Size:" + arr.size());
-        return arr;
+        if (arr != null && arr.size() > 0) {
+            return new Response<>(1, "Success", arr);
+        } else {
+            return new Response<>(0, "No contacts according to accountId", accountId);
+        }
     }
-//    @Override
-//    public Contacts createContacts(Contacts contacts, HttpHeaders headers) {
-//        Contacts contactsTemp = contactsRepository.findById(contacts.getId());
-//        if (contactsTemp != null) {
-//            System.out.println("[Contacts Service][Init Contacts] Already Exists Id:" + contacts.getId());
-//        } else {
-//            contactsRepository.save(contacts);
-//        }
-//        return contacts;
-//    }
 
     @Override
-    public Contacts create(Contacts addContacts , HttpHeaders headers) {
+    public Response createContacts(Contacts contacts, HttpHeaders headers) {
+        Contacts contactsTemp = contactsRepository.findById(contacts.getId());
+        if (contactsTemp != null) {
+            System.out.println("[Contacts Service][Init Contacts] Already Exists Id:" + contacts.getId());
+            return new Response<>(0, "Already Exists", contactsTemp);
+        } else {
+            contactsRepository.save(contacts);
+            return new Response<>(1, "Create Success", contactsTemp);
+        }
+    }
+
+    @Override
+    public Response create(Contacts addContacts, HttpHeaders headers) {
         Contacts contacts = new Contacts();
         contacts.setId(UUID.randomUUID());
         contacts.setName(addContacts.getName());
@@ -52,32 +68,34 @@ public class ContactsServiceImpl implements ContactsService {
 
         if (accountContacts.contains(contacts)) {
             System.out.println("[Contacts-Add&Delete-Service][AddContacts] Fail.Contacts already exists");
-            contacts = null;
+            return new Response<>(0, "Contacts already exists", null);
         } else {
             contactsRepository.save(contacts);
             System.out.println("[Contacts-Add&Delete-Service][AddContacts] Success.");
+            return new Response<>(1, "Create contacts success", contacts);
         }
-        return contacts;
     }
 
     @Override
-    public boolean delete(UUID contactsId, HttpHeaders headers) {
+    public Response delete(UUID contactsId, HttpHeaders headers) {
         contactsRepository.deleteById(contactsId);
         Contacts contacts = contactsRepository.findById(contactsId);
         if (contacts == null) {
             System.out.println("[Contacts-Add&Delete-Service][DeleteContacts] Success.");
-            return true;
+            return new Response<>(1, "Delete success", contactsId);
         } else {
             System.out.println("[Contacts-Add&Delete-Service][DeleteContacts] Fail.Reason not clear.");
-            return false;
+            return new Response<>(0, "Delete failed", contactsId);
         }
     }
 
     @Override
-    public Contacts modify(Contacts contacts, HttpHeaders headers) {
-        Contacts oldContacts = findContactsById(contacts.getId(), headers);
+    public Response modify(Contacts contacts, HttpHeaders headers) {
+        Response oldContactResponse = findContactsById(contacts.getId(), headers);
+        Contacts oldContacts = (Contacts) oldContactResponse.getData();
         if (oldContacts == null) {
             System.out.println("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");
+            return new Response<>(0, "Contacts not found", oldContacts);
         } else {
             oldContacts.setName(contacts.getName());
             oldContacts.setDocumentType(contacts.getDocumentType());
@@ -85,14 +103,18 @@ public class ContactsServiceImpl implements ContactsService {
             oldContacts.setPhoneNumber(contacts.getPhoneNumber());
             contactsRepository.save(oldContacts);
             System.out.println("[Contacts-Modify-Service][ModifyContacts] Success.");
+            return new Response<>(1, "Modify success", oldContacts);
         }
-        return oldContacts;
     }
 
     @Override
-    public List<Contacts> getAllContacts(HttpHeaders headers) {
+    public Response getAllContacts(HttpHeaders headers) {
         ArrayList<Contacts> contacts = contactsRepository.findAll();
-        return contacts;
+        if (contacts != null && contacts.size() > 0) {
+            return new Response<>(1, "Success", contacts);
+        } else {
+            return new Response<>(0, "No content", null);
+        }
     }
 
 }

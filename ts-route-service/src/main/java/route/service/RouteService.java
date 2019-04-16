@@ -1,5 +1,6 @@
 package route.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import route.entity.*;
 
@@ -7,14 +8,14 @@ import java.util.List;
 
 public interface RouteService {
 
-    List<Route> getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers);
+    Response getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers);
 
-    List<Route> getAllRoutes(HttpHeaders headers);
+    Response getAllRoutes(HttpHeaders headers);
 
-    Route getRouteById(String routeId, HttpHeaders headers);
+    Response getRouteById(String routeId, HttpHeaders headers);
 
-    boolean deleteRoute(String routeId, HttpHeaders headers);
+    Response deleteRoute(String routeId, HttpHeaders headers);
 
-    Route createAndModify(RouteInfo info, HttpHeaders headers);
+    Response createAndModify(RouteInfo info, HttpHeaders headers);
 
 }

@@ -1,7 +1,9 @@
 package travel2.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import travel2.entity.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,25 +11,25 @@ import java.util.List;
  * Created by Chenjie Xu on 2017/6/7.
  */
 public interface Travel2Service {
-    String create(Information info, HttpHeaders headers);
+    Response create(TravelInfo info, HttpHeaders headers);
 
-    Trip retrieve(Information2 info, HttpHeaders headers);
+    Response retrieve(String tripId, HttpHeaders headers);
 
-    String update(Information info, HttpHeaders headers);
+    Response update(TravelInfo info, HttpHeaders headers);
 
-    String delete(Information2 info, HttpHeaders headers);
+    Response delete(String tripId, HttpHeaders headers);
 
-    ArrayList<TripResponse> query(QueryInfo info, HttpHeaders headers);
+    Response query(TripInfo info, HttpHeaders headers);
 
-    GetTripAllDetailResult getTripAllDetailInfo(GetTripAllDetailInfo gtdi, HttpHeaders headers);
+    Response getTripAllDetailInfo(TripAllDetailInfo gtdi, HttpHeaders headers);
 
-    GetRouteResult getRouteByTripId(String tripId, HttpHeaders headers);
+    Response getRouteByTripId(String tripId, HttpHeaders headers);
 
-    GetTrainTypeResult getTrainTypeByTripId(String tripId, HttpHeaders headers);
+    Response getTrainTypeByTripId(String tripId, HttpHeaders headers);
 
-    List<Trip> queryAll(HttpHeaders headers);
+    Response queryAll(HttpHeaders headers);
 
-    GetTripsByRouteIdResult getTripByRoute(GetTripsByRouteIdInfo info, HttpHeaders headers);
+    Response getTripByRoute(ArrayList<String> routeIds, HttpHeaders headers);
 
-    AdminFindAllResult adminQueryAll(HttpHeaders headers);
+    Response adminQueryAll(HttpHeaders headers);
 }

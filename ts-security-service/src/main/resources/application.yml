@@ -12,3 +12,6 @@ spring:
 # HTTP Server
 server:
   port: 11188  # HTTP (Tomcat) port
+
+swagger:
+  controllerPackage: security.controller

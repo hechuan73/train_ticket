@@ -1,5 +1,6 @@
 package foodsearch.service;
 
+import edu.fudan.common.util.Response;
 import foodsearch.entity.*;
 import org.springframework.http.HttpHeaders;
 
@@ -7,15 +8,15 @@ import java.util.List;
 
 public interface FoodService {
 
-    FoodOrder createFoodOrder(FoodOrder afoi, HttpHeaders headers);
-    FoodOrder deleteFoodOrder(String orderId, HttpHeaders headers);
+    Response createFoodOrder(FoodOrder afoi, HttpHeaders headers);
+    Response deleteFoodOrder(String orderId, HttpHeaders headers);
 
-    FoodOrder findByOrderId(String orderId, HttpHeaders headers);
+    Response findByOrderId(String orderId, HttpHeaders headers);
 
-    FoodOrder updateFoodOrder(FoodOrder updateFoodOrder, HttpHeaders headers);
+    Response updateFoodOrder(FoodOrder updateFoodOrder, HttpHeaders headers);
 
-    List<FoodOrder> findAllFoodOrder(HttpHeaders headers);
+    Response findAllFoodOrder(HttpHeaders headers);
 
-    AllTripFood getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers);
+    Response getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers);
 
 }

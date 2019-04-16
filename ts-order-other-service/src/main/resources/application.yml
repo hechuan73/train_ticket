@@ -36,3 +36,6 @@ spring:
           destination: ts-order-other-exchange
           contentType: application/json
           binder: rabbit
+
+swagger:
+  controllerPackage: other.controller
