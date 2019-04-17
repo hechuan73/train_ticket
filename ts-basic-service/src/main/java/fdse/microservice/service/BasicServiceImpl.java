@@ -74,7 +74,7 @@ public class BasicServiceImpl implements BasicService {
     @Override
     public Response queryForStationId(String stationName, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + stationName);
-        HttpEntity requestEntity = new HttpEntity(null, headers);
+        HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
@@ -88,7 +88,7 @@ public class BasicServiceImpl implements BasicService {
 
     public boolean checkStationExists(String stationName, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Check Station Exists] Station Name:" + stationName);
-        HttpEntity requestEntity = new HttpEntity(null, headers);
+        HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
@@ -104,7 +104,7 @@ public class BasicServiceImpl implements BasicService {
 
     public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Query Train Type] Train Type:" + trainTypeId);
-        HttpEntity requestEntity = new HttpEntity(null, headers);
+        HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
                 HttpMethod.GET,
@@ -130,7 +130,7 @@ public class BasicServiceImpl implements BasicService {
 //        GetRouteByIdResult result = restTemplate.getForObject(
 //                "http://ts-route-service:11178/route/queryById/" + routeId,
 //                GetRouteByIdResult.class);
-        if ( result.getStatus() ==1) {
+        if ( result.getStatus() == 0) {
             System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
             return null;
         } else {

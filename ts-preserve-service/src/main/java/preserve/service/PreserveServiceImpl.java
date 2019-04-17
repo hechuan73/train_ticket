@@ -35,7 +35,7 @@ public class PreserveServiceImpl implements PreserveService {
 
         System.out.println("[Preserve Service] [Step 2] Contacts Id:" + oti.getContactsId());
 
-        Response gcr = getContactsById(oti.getContactsId(), headers);
+        Response<Contacts> gcr = getContactsById(oti.getContactsId(), headers);
         if (gcr.getStatus() == 0) {
             System.out.println("[Preserve Service][Get Contacts] Fail." + gcr.getMsg());
             return new Response<>(0, gcr.getMsg(), null);
@@ -76,7 +76,7 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 3] Tickets Enough");
         //4.下达订单请求 设置order的各个信息
         System.out.println("[Preserve Service] [Step 4] Do Order");
-        Contacts contacts = (Contacts) gcr.getData();
+        Contacts contacts =   gcr.getData();
         Order order = new Order();
         order.setId(UUID.randomUUID());
         order.setTrainNumber(oti.getTripId());
@@ -135,7 +135,7 @@ public class PreserveServiceImpl implements PreserveService {
 
         System.out.println("[Preserve Service][Order Price] Price is: " + order.getPrice());
 
-        Response cor = createOrder(order, headers);
+        Response<Order> cor = createOrder(order, headers);
         if (cor.getStatus() == 0) {
             System.out.println("[Preserve Service][Create Order Fail] Create Order Fail." +
                     "Reason:" + cor.getMsg());
@@ -149,7 +149,7 @@ public class PreserveServiceImpl implements PreserveService {
             System.out.println("[Preserve Service][Step 5] Do not need to buy assurance");
         } else {
             Response addAssuranceResult = addAssuranceForOrder(
-                    oti.getAssurance(), ((Order) cor.getData()).getId().toString(), headers);
+                    oti.getAssurance(), cor.getData().getId().toString(), headers);
             if (addAssuranceResult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 5] Buy Assurance Success");
             } else {
@@ -163,7 +163,7 @@ public class PreserveServiceImpl implements PreserveService {
         if (oti.getFoodType() != 0) {
 
             FoodOrder foodOrder = new FoodOrder();
-            foodOrder.setOrderId(((Order) cor.getData()).getId());
+            foodOrder.setOrderId(cor.getData().getId());
             foodOrder.setFoodType(oti.getFoodType());
             foodOrder.setFoodName(oti.getFoodName());
             foodOrder.setPrice(oti.getFoodPrice());
@@ -187,11 +187,11 @@ public class PreserveServiceImpl implements PreserveService {
         //7.增加托运
         if (null != oti.getConsigneeName() && !"".equals(oti.getConsigneeName())) {
             Consign consignRequest = new Consign();
-            consignRequest.setAccountId(((Order) cor.getData()).getAccountId());
+            consignRequest.setAccountId(cor.getData().getAccountId());
             consignRequest.setHandleDate(oti.getHandleDate());
-            consignRequest.setTargetDate(((Order) cor.getData()).getTravelDate().toString());
-            consignRequest.setFrom(((Order) cor.getData()).getFrom());
-            consignRequest.setTo(((Order) cor.getData()).getTo());
+            consignRequest.setTargetDate(cor.getData().getTravelDate().toString());
+            consignRequest.setFrom(cor.getData().getFrom());
+            consignRequest.setTo(cor.getData().getTo());
             consignRequest.setConsignee(oti.getConsigneeName());
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
@@ -330,7 +330,7 @@ public class PreserveServiceImpl implements PreserveService {
         HttpEntity requestCheckResult = new HttpEntity(httpHeaders);
         ResponseEntity<Response> reCheckResult = restTemplate.exchange(
                 "http://ts-security-service:11188/api/v1/securityservice/securityConfigs/" + accountId,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestCheckResult,
                 Response.class);
         Response response = reCheckResult.getBody();
@@ -374,16 +374,17 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
 
-    private Response getContactsById(String contactsId, HttpHeaders httpHeaders) {
+    private Response<Contacts> getContactsById(String contactsId, HttpHeaders httpHeaders) {
         System.out.println("[Preserve Other Service][Get Contacts By Id] Getting....");
 
         HttpEntity requestGetContactsResult = new HttpEntity(httpHeaders);
-        ResponseEntity<Response> reGetContactsResult = restTemplate.exchange(
+        ResponseEntity<Response<Contacts>> reGetContactsResult = restTemplate.exchange(
                 "http://ts-contacts-service:12347/api/v1/contactservice/contacts/" + contactsId,
                 HttpMethod.GET,
                 requestGetContactsResult,
-                Response.class);
-        Response gcr = reGetContactsResult.getBody();
+                new ParameterizedTypeReference<Response<Contacts>>() {
+                });
+        Response<Contacts> gcr = reGetContactsResult.getBody();
 //        GetContactsResult gcr = restTemplate.postForObject(
 //                "http://ts-contacts-service:12347/contacts/getContactsById/"
 //                ,gci,GetContactsResult.class);
@@ -394,12 +395,13 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Other Service][Get Contacts By Id] Creating....");
 
         HttpEntity requestEntityCreateOrderResult = new HttpEntity(coi, httpHeaders);
-        ResponseEntity<Response> reCreateOrderResult = restTemplate.exchange(
+        ResponseEntity<Response<Order>> reCreateOrderResult = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order",
                 HttpMethod.POST,
                 requestEntityCreateOrderResult,
-                Response.class);
-        Response cor = reCreateOrderResult.getBody();
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        Response<Order> cor = reCreateOrderResult.getBody();
 
 //        CreateOrderResult cor = restTemplate.postForObject(
 //                "http://ts-order-service:12031/order/create/"

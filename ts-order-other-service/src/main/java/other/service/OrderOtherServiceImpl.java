@@ -103,7 +103,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     }
 
     @Override
-    public Response queryOrders(QueryInfo qi, String accountId, HttpHeaders headers) {
+    public Response<ArrayList<Order>> queryOrders(QueryInfo qi, String accountId, HttpHeaders headers) {
         //1.Get all orders of the user
         ArrayList<Order> list = orderOtherRepository.findByAccountId(UUID.fromString(accountId));
         System.out.println("[Order Other Service][Query Order][Step 1] Get Orders Number of Account:" + list.size());
@@ -165,7 +165,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
     @Override
     public Response queryOrdersForRefresh(QueryInfo qi, String accountId, HttpHeaders headers) {
-        ArrayList<Order> orders = (ArrayList<Order>) queryOrders(qi, accountId, headers).getData();
+        ArrayList<Order> orders = queryOrders(qi, accountId, headers).getData();
         ArrayList<String> stationIds = new ArrayList<>();
         for (Order order : orders) {
             stationIds.add(order.getFrom());
@@ -188,7 +188,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {
                 });
-
+        System.out.println("Stations name list is : " +re.getBody().toString());
         List<String> names = re.getBody().getData();
         return names;
     }

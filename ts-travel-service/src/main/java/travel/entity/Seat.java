@@ -69,4 +69,15 @@ public class Seat {
     public void setSeatType(int seatType) {
         this.seatType = seatType;
     }
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "travelDate=" + travelDate +
+                ", trainNumber='" + trainNumber + '\'' +
+                ", startStation='" + startStation + '\'' +
+                ", destStation='" + destStation + '\'' +
+                ", seatType=" + seatType +
+                '}';
+    }
 }

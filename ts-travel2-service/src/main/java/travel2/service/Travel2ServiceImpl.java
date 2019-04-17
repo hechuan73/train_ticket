@@ -207,6 +207,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 requestEntity,
                 new ParameterizedTypeReference<Response<TravelResult>>() {
                 });
+        System.out.println("Ticket info  is: " + re.getBody().toString());
         TravelResult resultForTravel =  re.getBody().getData();
 
 //        TravelResult resultForTravel = restTemplate.postForObject(
@@ -220,6 +221,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 requestEntity,
                 new ParameterizedTypeReference<Response<SoldTicket>>() {
                 });
+        System.out.println("Order other Ticket info  is: " + re.getBody().toString());
         SoldTicket result = re2.getBody().getData();
 //        SoldTicket result = restTemplate.postForObject(
 //                "http://ts-order-other-service:12032/orderOther/calculate", information ,SoldTicket.class);
@@ -389,7 +391,7 @@ public class Travel2ServiceImpl implements Travel2Service {
 //                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
 //                seatRequest,Integer.class
 //        );
-
+        System.out.println("Get Rest tickets num is: " + re.getBody().toString());
         return restNumber;
     }
 

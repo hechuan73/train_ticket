@@ -125,7 +125,7 @@ public class FoodServiceImpl implements FoodService {
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(headers);
         ResponseEntity<List<TrainFood>> reGetTrainFoodListResult = restTemplate.exchange(
-                "http://ts-food-map-service:18855/api/v1/foodmap/trainfoods/" + tripId,
+                "http://ts-food-map-service:18855/api/v1/foodmapservice/trainfoods/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetTrainFoodListResult,
                 new ParameterizedTypeReference<List<TrainFood>>() {
@@ -208,7 +208,7 @@ public class FoodServiceImpl implements FoodService {
 
             HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, headers);
             ResponseEntity<Response<List<FoodStore>>> reFoodStoresListResult = restTemplate.exchange(
-                    "http://ts-food-map-service:18855/api/v1/foodmap/foodstores",
+                    "http://ts-food-map-service:18855/api/v1/foodmapservice/foodstores",
                     HttpMethod.POST,
                     requestEntityFoodStoresListResult,
                     new ParameterizedTypeReference<Response<List<FoodStore>>>() {

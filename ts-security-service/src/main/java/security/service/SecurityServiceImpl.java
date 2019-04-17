@@ -29,15 +29,15 @@ public class SecurityServiceImpl implements SecurityService {
     public Response findAllSecurityConfig(HttpHeaders headers) {
         ArrayList<SecurityConfig> securityConfigs = securityRepository.findAll();
         if (securityConfigs != null && securityConfigs.size() > 0)
-            return new Response(1, "Success", securityConfigs);
-        return new Response(0, "No Content", null);
+            return new Response<>(1, "Success", securityConfigs);
+        return new Response<>(0, "No Content", null);
     }
 
     @Override
     public Response addNewSecurityConfig(SecurityConfig info, HttpHeaders headers) {
         SecurityConfig sc = securityRepository.findByName(info.getName());
         if (sc != null) {
-            return new Response(0, "Security Config Already Exist", null);
+            return new Response<>(0, "Security Config Already Exist", null);
         } else {
             SecurityConfig config = new SecurityConfig();
             config.setId(UUID.randomUUID());
@@ -45,7 +45,7 @@ public class SecurityServiceImpl implements SecurityService {
             config.setValue(info.getValue());
             config.setDescription(info.getDescription());
             securityRepository.save(config);
-            return new Response(1, "Success", config);
+            return new Response<>(1, "Success", config);
         }
     }
 
@@ -53,13 +53,13 @@ public class SecurityServiceImpl implements SecurityService {
     public Response modifySecurityConfig(SecurityConfig info, HttpHeaders headers) {
         SecurityConfig sc = securityRepository.findById(info.getId());
         if (sc == null) {
-            return new Response(0, "Security Config Not Exist", null);
+            return new Response<>(0, "Security Config Not Exist", null);
         } else {
             sc.setName(info.getName());
             sc.setValue(info.getValue());
             sc.setDescription(info.getDescription());
             securityRepository.save(sc);
-            return new Response(1, "Success", sc);
+            return new Response<>(1, "Success", sc);
         }
     }
 
@@ -68,9 +68,9 @@ public class SecurityServiceImpl implements SecurityService {
         securityRepository.deleteById(UUID.fromString(id));
         SecurityConfig sc = securityRepository.findById(UUID.fromString(id));
         if (sc == null) {
-            return new Response(1, "Success", id);
+            return new Response<>(1, "Success", id);
         } else {
-            return new Response(0, "Reason Not clear", id);
+            return new Response<>(0, "Reason Not clear", id);
         }
     }
 
@@ -90,15 +90,15 @@ public class SecurityServiceImpl implements SecurityService {
         int oneHourLine = Integer.parseInt(configMaxInHour.getValue());
         int totalValidLine = Integer.parseInt(configMaxNotUse.getValue());
         if (orderInOneHour > oneHourLine || totalValidOrder > totalValidLine) {
-            return new Response(0, "Too much order in last one hour or too much valid order", accountId);
+            return new Response<>(0, "Too much order in last one hour or too much valid order", accountId);
         } else {
-            return new Response(1, "Success.r", accountId);
+            return new Response<>(1, "Success.r", accountId);
         }
     }
 
     private OrderSecurity getSecurityOrderInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Info For Security] Getting....");
-        HttpEntity requestEntity = new HttpEntity(null, headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,
@@ -116,7 +116,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     private OrderSecurity getSecurityOrderOtherInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Other Info For Security] Getting....");
-        HttpEntity requestEntity = new HttpEntity(null, headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,

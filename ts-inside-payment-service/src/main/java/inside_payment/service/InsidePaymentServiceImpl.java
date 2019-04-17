@@ -64,7 +64,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             //      "http://ts-order-other-service:12032/orderOther/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }
 
-        if (result.getStatus() ==1 ) {
+        if (result.getStatus() == 1) {
             Order order = result.getData();
             if (order.getStatus() != OrderStatus.NOTPAID.getCode()) {
                 System.out.println("[Inside Payment Service][Pay] Error. Order status Not allowed to Pay.");
@@ -125,14 +125,14 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 //                    //e.printStackTrace();
 //                    return false;
 //                }
-
-                if ( outsidePaySuccess.getStatus() ==1) {
+                System.out.println("Out pay result: " +outsidePaySuccess.toString());
+                if (outsidePaySuccess.getStatus() == 1) {
                     payment.setType(PaymentType.O);
                     paymentRepository.save(payment);
                     setOrderStatus(info.getTripId(), info.getOrderId(), headers);
-                    return new Response<>(1, "Payment Success", null);
+                    return new Response<>(1, "Payment Success " +    outsidePaySuccess.getMsg(), null);
                 } else {
-                    return new Response<>(0, "Payment Failed", null);
+                    return new Response<>(0, "Payment Failed:  " +  outsidePaySuccess.getMsg(), null);
                 }
             } else {
                 setOrderStatus(info.getTripId(), info.getOrderId(), headers);
@@ -306,7 +306,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
 //            boolean outsidePaySuccess = restTemplate.postForObject(
 //                    "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
-            if ( outsidePaySuccess.getStatus() ==1) {
+            if (outsidePaySuccess.getStatus() == 1) {
                 payment.setType(PaymentType.E);
                 paymentRepository.save(payment);
                 return new Response<>(1, "Pay Difference Success", null);
@@ -336,9 +336,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         Response result;
         if (tripId.startsWith("G") || tripId.startsWith("D")) {
 
-            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(null, headers);
+            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(headers);
             ResponseEntity<Response> reModifyOrderStatusResult = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/modifyOrderStatus/" + orderId + "/" + orderStatus,
+                    "http://ts-order-service:12031/api/v1/orderservice/order/status/" + orderId + "/" + orderStatus,
                     HttpMethod.GET,
                     requestEntityModifyOrderStatusResult,
                     Response.class);
@@ -347,9 +347,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 //            result = restTemplate.postForObject(
 //                    "http://ts-order-service:12031/order/modifyOrderStatus", info, ModifyOrderStatusResult.class);
         } else {
-            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(null, headers);
+            HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(headers);
             ResponseEntity<Response> reModifyOrderStatusResult = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/modifyOrderStatus/" + orderId + "/" + orderStatus,
+                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + orderStatus,
                     HttpMethod.GET,
                     requestEntityModifyOrderStatusResult,
                     Response.class);

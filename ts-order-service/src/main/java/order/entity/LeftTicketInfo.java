@@ -1,4 +1,4 @@
-package seat.entity;
+package order.entity;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

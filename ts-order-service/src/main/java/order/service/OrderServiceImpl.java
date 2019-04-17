@@ -33,8 +33,12 @@ public class OrderServiceImpl implements OrderService {
                 ticketSet.add(new Ticket(Integer.parseInt(tempOrder.getSeatNumber()),
                         tempOrder.getFrom(), tempOrder.getTo()));
             }
-            return new Response<>(1, "Success", ticketSet);
+            LeftTicketInfo leftTicketInfo = new LeftTicketInfo();
+            leftTicketInfo.setSoldTickets(ticketSet);
+            System.out.println("Left ticket info is: " + leftTicketInfo.toString());
+            return new Response<>(1, "Success", leftTicketInfo);
         } else {
+            System.out.println("Left ticket info is empty");
             return new Response<>(0, "Order is Null.", null);
         }
     }
@@ -80,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
         Order newOrder = oai.getNewOrderInfo();
         newOrder.setId(UUID.randomUUID());
         Response cor = create(oai.getNewOrderInfo(), headers);
-        if (cor.getStatus() ==1) {
+        if (cor.getStatus() == 1) {
             System.out.println("[Order Service][Alter Order] Success.");
             return new Response<>(1, "Success", newOrder);
         } else {
@@ -89,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response queryOrders(OrderInfo qi, String accountId, HttpHeaders headers) {
+    public Response<ArrayList<Order>> queryOrders(OrderInfo qi, String accountId, HttpHeaders headers) {
         //1.Get all orders of the user
         ArrayList<Order> list = orderRepository.findByAccountId(UUID.fromString(accountId));
         System.out.println("[Order Service][Query Order][Step 1] Get Orders Number of Account:" + list.size());
@@ -151,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response queryOrdersForRefresh(OrderInfo qi, String accountId, HttpHeaders headers) {
-        ArrayList<Order> orders = (ArrayList<Order>) queryOrders(qi, accountId, headers).getData();
+        ArrayList<Order> orders =   queryOrders(qi, accountId, headers).getData();
         ArrayList<String> stationIds = new ArrayList<>();
         for (Order order : orders) {
             stationIds.add(order.getFrom());
@@ -174,8 +178,8 @@ public class OrderServiceImpl implements OrderService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {
                 });
-
-        List<String> names =   re.getBody().getData();
+        System.out.println("Name List is: "+ re.getBody().toString());
+        List<String> names = re.getBody().getData();
         return names;
     }
 

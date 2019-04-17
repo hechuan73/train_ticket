@@ -108,7 +108,7 @@ public class OrderController {
 
 
     @CrossOrigin(origins = "*")
-    @PostMapping(path = "/order/security/{checkDate}/{accountId}")
+    @GetMapping(path = "/order/security/{checkDate}/{accountId}")
     public HttpEntity securityInfoCheck(@PathVariable Date checkDate, @PathVariable String accountId,
                                         @RequestHeader HttpHeaders headers) {
         System.out.println("[Order Other Service][Security Info Get]");

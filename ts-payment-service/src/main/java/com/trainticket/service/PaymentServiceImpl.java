@@ -25,6 +25,7 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Override
     public Response pay(Payment info, HttpHeaders headers){
+
         if(paymentRepository.findByOrderId(info.getOrderId()) == null){
             Payment payment = new Payment();
             payment.setOrderId(info.getOrderId());
@@ -33,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService{
             paymentRepository.save(payment);
             return new Response<>(1, "Pay Success", null);
         }else{
-            return new Response<>(0, "Pay Failed, order not found", null);
+            return new Response<>(0, "Pay Failed, order not found with order id" +info.getOrderId(), null);
         }
     }
 

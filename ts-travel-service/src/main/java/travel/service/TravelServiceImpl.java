@@ -204,6 +204,7 @@ public class TravelServiceImpl implements TravelService {
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
+        System.out.println("Ts-basic-service ticket info is: " + re.getBody().toString());
         TravelResult resultForTravel = JsonUtils.conveterObject(re.getBody().getData(), TravelResult.class);
 
 //        if(resultForTravel.isStatus() == false && resultForTravel.getMessage().contains("Basic-Service Unavailable")){
@@ -216,19 +217,18 @@ public class TravelServiceImpl implements TravelService {
 
         //车票订单_高铁动车（已购票数）
         requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re2 = restTemplate.exchange(
+        ResponseEntity<Response<SoldTicket>> re2 = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/" + departureTime + "/" + trip.getTripId().toString(),
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response result = re2.getBody();
+                new ParameterizedTypeReference<Response<SoldTicket>>() {
+                });
 
+        Response<SoldTicket> result = re2.getBody();
+        System.out.println("Order info is:" + result.toString());
 //        ResultSoldTicket result = restTemplate.postForObject(
 //                "http://ts-order-service:12031/order/calculate", information ,ResultSoldTicket.class);
-        if (result == null) {
-            System.out.println("soldticket TripInfo doesn't exist");
-            return null;
-        }
+
         //设置返回的车票信息
         TripResponse response = new TripResponse();
         if (queryForStationId(startingPlaceName, headers).equals(trip.getStartingStationId()) &&
@@ -273,7 +273,7 @@ public class TravelServiceImpl implements TravelService {
         response.setEndTime(calendarEnd.getTime());
         System.out.println("[Train Service]计算时间：" + minutesEnd + " 时间:" + calendarEnd.getTime().toString());
 
-        response.setTripId(new TripId(((SoldTicket) result.getData()).getTrainNumber()));
+        response.setTripId(new TripId(result.getData().getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());
         response.setPriceForConfortClass(resultForTravel.getPrices().get("confortClass"));
         response.setPriceForEconomyClass(resultForTravel.getPrices().get("economyClass"));
@@ -338,6 +338,7 @@ public class TravelServiceImpl implements TravelService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<String>>() {
                 });
+        System.out.println("Query for Station id is: " + re.getBody().toString());
 //        String id = restTemplate.postForObject(
 //                "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId", query ,String.class);
         return re.getBody().getData();
@@ -376,6 +377,8 @@ public class TravelServiceImpl implements TravelService {
         seatRequest.setTravelDate(travelDate);
         seatRequest.setSeatType(seatType);
 
+        System.out.println("Seat request To String: " + seatRequest.toString());
+
         HttpEntity requestEntity = new HttpEntity(seatRequest, headers);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",
@@ -383,6 +386,7 @@ public class TravelServiceImpl implements TravelService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
+        System.out.println("Get Rest tickets num is: " + re.getBody().toString());
         int restNumber = re.getBody().getData();
 //        int restNumber = restTemplate.postForObject(
 //                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
