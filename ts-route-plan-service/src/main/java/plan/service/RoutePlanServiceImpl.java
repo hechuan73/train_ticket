@@ -2,6 +2,7 @@ package plan.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import plan.entity.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RoutePlanServiceImpl implements RoutePlanService {
@@ -148,17 +150,17 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         //1.获取这个经过这两个车站的路线
 
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<Route>>> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + fromStationId + "/" + toStationId,
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response routeResult = re.getBody();
+                new ParameterizedTypeReference<Response<ArrayList<Route>>>() {
+                });
 
 //        GetRoutesListlResult routeResult = restTemplate.postForObject(
 //                "http://ts-route-service:11178/route/queryByStartAndTerminal",
 //                searchRouteInfo, GetRoutesListlResult.class);
-        ArrayList<Route> routeList = (ArrayList<Route>) routeResult.getData();
+        ArrayList<Route> routeList = re.getBody().getData();
         System.out.println("[Route Plan Service] Candidate Route Number:" + routeList.size());
         //2.计算这两个车站之间有多少停靠站
         ArrayList<Integer> gapList = new ArrayList<>();
@@ -183,13 +185,14 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         }
         //4.根据路线，去travel或者travel2获取这些车次信息
         requestEntity = new HttpEntity(resultRoutes, headers);
-        ResponseEntity<Response> re2 = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<ArrayList<Trip>>>> re2 = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/trips/routes",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response resultTravelRes = re2.getBody();
-        ArrayList<ArrayList<Trip>> travelTrips = (ArrayList<ArrayList<Trip>>) resultTravelRes.getData();
+                new ParameterizedTypeReference<Response<ArrayList<ArrayList<Trip>>>>() {
+                });
+
+        ArrayList<ArrayList<Trip>> travelTrips = re2.getBody().getData();
 //        GetTripsByRouteIdResult resultTravel = restTemplate.postForObject(
 //                "http://ts-travel-service:12346/travel/getTripsByRouteId",
 //                getTripInfo,GetTripsByRouteIdResult.class
@@ -199,9 +202,9 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 "http://ts-travel2-service:16346/api/v1/travel2service/trips/routes",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response resultTravel2Res = re2.getBody();
-        ArrayList<ArrayList<Trip>> travel2Trips = (ArrayList<ArrayList<Trip>>) resultTravel2Res.getData();
+                new ParameterizedTypeReference<Response<ArrayList<ArrayList<Trip>>>>() {
+                });
+        ArrayList<ArrayList<Trip>> travel2Trips = re2.getBody().getData();
 
 //        GetTripsByRouteIdResult resultTravel2 = restTemplate.postForObject(
 //                "http://ts-travel2-service:16346/travel2/getTripsByRouteId",
@@ -221,7 +224,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         }
         ArrayList<RoutePlanResultUnit> tripResponses = new ArrayList<>();
 
-        ResponseEntity<Response> re3;
+        ResponseEntity<Response<TripAllDetail>> re3;
         for (Trip trip : trips) {
             TripResponse tripResponse;
             TripAllDetailInfo allDetailInfo = new TripAllDetailInfo();
@@ -240,9 +243,10 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                     requestUrl,
                     HttpMethod.POST,
                     requestEntity,
-                    Response.class);
-            Response tripDetailResult = re3.getBody();
-            TripAllDetail tripAllDetail = (TripAllDetail) tripDetailResult.getData();
+                    new ParameterizedTypeReference<Response<TripAllDetail>>() {
+                    });
+
+            TripAllDetail tripAllDetail = re3.getBody().getData();
             tripResponse = tripAllDetail.getTripResponse();
 
 
@@ -270,48 +274,51 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         System.out.println("[Preserve Service][Get Station Name]");
 
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<String>> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response stationId = re.getBody();
+                new ParameterizedTypeReference<Response<String>>() {
+                });
+
 //        String stationId = restTemplate.postForObject("http://ts-station-service:12345/station/queryForId",queryForId,String.class);
-        return (String) stationId.getData();
+        return re.getBody().getData();
     }
 
     private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
         System.out.println("[Route Plan Service][Get Route By Id] Route ID：" + routeId);
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<Route>> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response result = re.getBody();
+                new ParameterizedTypeReference<Response<Route>>() {
+                });
+        Response<Route> result = re.getBody();
 
 //        GetRouteResult result = restTemplate.getForObject(
 //                "http://ts-route-service:11178/route/queryById/" + routeId,
 //                GetRouteResult.class);
-        if ("0".equals(result.getStatus())) {
+        if (result.getStatus() == 0) {
             System.out.println("[Travel Service][Get Route By Id] Fail." + result.getMsg());
             return null;
         } else {
             System.out.println("[Travel Service][Get Route By Id] Success.");
-            return (Route) result.getData();
+            return result.getData();
         }
     }
 
     private ArrayList<TripResponse> getTripFromHighSpeedTravelServive(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
         //s-travel-service:12346/travel/queryWithPackage
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/trips/left",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response list = re.getBody();
-        ArrayList<TripResponse> tripResponses = (ArrayList<TripResponse>) list.getData();
+                new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
+                });
+
+        ArrayList<TripResponse> tripResponses = re.getBody().getData();
         System.out.println("[Route Plan Get Trip][Size]" + tripResponses.size());
         return tripResponses;
     }
@@ -319,18 +326,18 @@ public class RoutePlanServiceImpl implements RoutePlanService {
     private ArrayList<TripResponse> getTripFromNormalTrainTravelService(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
         // ts-travel2-service:16346/travel2/queryWithPackage
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel2-service:16346/api/v1/travel2service/trips/left",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response listRes = re.getBody();
-        ArrayList<TripResponse> list = (ArrayList<TripResponse>) listRes.getData();
+                new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
+                });
+        ArrayList<TripResponse> list = re.getBody().getData();
         System.out.println("[Route Plan Get TripOther][Size]" + list.size());
         return list;
     }
 
-    private ArrayList<String> getStationList(String tripId, HttpHeaders headers) {
+    private List<String> getStationList(String tripId, HttpHeaders headers) {
         //首先获取
 
         String path;
@@ -340,13 +347,13 @@ public class RoutePlanServiceImpl implements RoutePlanService {
             path = "http://ts-travel2-service:16346/api/v1/travel2service/routes/" + tripId;
         }
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<Route>> re = restTemplate.exchange(
                 path,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response routeResponse = re.getBody();
-        Route route = (Route) routeResponse.getData();
+                new ParameterizedTypeReference<Response<Route>>() {
+                });
+        Route route = re.getBody().getData();
         return route.getStations();
     }
 }

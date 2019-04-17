@@ -1,36 +1,37 @@
 package travelplan.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransferTravelResult {
 
-    private ArrayList<TripResponse> firstSectionResult;
+    private List<TripResponse> firstSectionResult;
 
-    private ArrayList<TripResponse> secondSectionResult;
+    private List<TripResponse> secondSectionResult;
 
     public TransferTravelResult() {
         //Default Constructor
     }
 
-    public TransferTravelResult(ArrayList<TripResponse> firstSectionResult, ArrayList<TripResponse> secondSectionResult) {
+    public TransferTravelResult(List<TripResponse> firstSectionResult, List<TripResponse> secondSectionResult) {
 
         this.firstSectionResult = firstSectionResult;
         this.secondSectionResult = secondSectionResult;
     }
 
-    public ArrayList<TripResponse> getFirstSectionResult() {
+    public List<TripResponse> getFirstSectionResult() {
         return firstSectionResult;
     }
 
-    public void setFirstSectionResult(ArrayList<TripResponse> firstSectionResult) {
+    public void setFirstSectionResult(List<TripResponse> firstSectionResult) {
         this.firstSectionResult = firstSectionResult;
     }
 
-    public ArrayList<TripResponse> getSecondSectionResult() {
+    public List<TripResponse> getSecondSectionResult() {
         return secondSectionResult;
     }
 
-    public void setSecondSectionResult(ArrayList<TripResponse> secondSectionResult) {
+    public void setSecondSectionResult(List<TripResponse> secondSectionResult) {
         this.secondSectionResult = secondSectionResult;
     }
 }

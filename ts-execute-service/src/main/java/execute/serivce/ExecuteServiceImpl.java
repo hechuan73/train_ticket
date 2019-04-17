@@ -3,6 +3,7 @@ package execute.serivce;
 import edu.fudan.common.util.Response;
 import execute.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,11 +21,11 @@ public class ExecuteServiceImpl implements ExecuteService {
     public Response ticketExecute(String orderId, HttpHeaders headers) {
         //1.获取订单信息
 
-        Response resultFromOrder = getOrderByIdFromOrder(orderId, headers);
+        Response<Order> resultFromOrder = getOrderByIdFromOrder(orderId, headers);
         //  TicketExecuteResult result = new TicketExecuteResult();
         Order order;
-        if ("1".equals(resultFromOrder.getStatus())) {
-            order = (Order) resultFromOrder.getData();
+        if (resultFromOrder.getStatus() == 1) {
+            order =   resultFromOrder.getData();
             //2.检查订单是否可以进站
             if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
                 return new Response<>(0, "Order Status Wrong", null);
@@ -32,15 +33,15 @@ public class ExecuteServiceImpl implements ExecuteService {
             //3.确认进站 请求修改订单信息
 
             Response resultExecute = executeOrder(orderId, OrderStatus.USED.getCode(), headers);
-            if ("1".equals(resultExecute.getStatus())) {
+            if (resultExecute.getStatus() == 1) {
                 return new Response<>(1, "Success.", null);
             } else {
                 return new Response<>(0, resultExecute.getMsg(), null);
             }
         } else {
             resultFromOrder = getOrderByIdFromOrderOther(orderId, headers);
-            if ("1".equals(resultFromOrder.getStatus())) {
-                order = (Order) resultFromOrder.getData();
+            if (resultFromOrder.getStatus() == 1) {
+                order =   resultFromOrder.getData();
                 //2.检查订单是否可以进站
                 if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
                     return new Response<>(0, "Order Status Wrong", null);
@@ -48,7 +49,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 //3.确认进站 请求修改订单信息
 
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.USED.getCode(), headers);
-                if ("1".equals(resultExecute.getStatus())) {
+                if (resultExecute.getStatus() == 1) {
                     return new Response<>(1, "Success", null);
                 } else {
                     return new Response<>(0, resultExecute.getMsg(), null);
@@ -66,7 +67,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         Response resultFromOrder = getOrderByIdFromOrder(orderId, headers);
         // TicketExecuteResult result = new TicketExecuteResult();
         Order order;
-        if ("1".equals(resultFromOrder.getStatus())) {
+        if (resultFromOrder.getStatus() == 1) {
             order = (Order) resultFromOrder.getData();
             //2.检查订单是否可以进站
             if (order.getStatus() != OrderStatus.PAID.getCode()) {
@@ -75,14 +76,14 @@ public class ExecuteServiceImpl implements ExecuteService {
             //3.确认进站 请求修改订单信息
 
             Response resultExecute = executeOrder(orderId, OrderStatus.COLLECTED.getCode(), headers);
-            if ("1".equals(resultExecute.getStatus())) {
+            if (resultExecute.getStatus() == 1) {
                 return new Response<>(1, "Success", null);
             } else {
                 return new Response<>(0, resultExecute.getMsg(), null);
             }
         } else {
             resultFromOrder = getOrderByIdFromOrderOther(orderId, headers);
-            if ("1".equals(resultFromOrder.getStatus())) {
+            if (resultFromOrder.getStatus() == 1) {
                 order = (Order) resultFromOrder.getData();
                 //2.检查订单是否可以进站
                 if (order.getStatus() != OrderStatus.PAID.getCode()) {
@@ -91,7 +92,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 //3.确认进站 请求修改订单信息
 
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.COLLECTED.getCode(), headers);
-                if ("1".equals(resultExecute.getStatus())) {
+                if (resultExecute.getStatus() == 1) {
                     return new Response<>(1, "Success.", null);
                 } else {
                     return new Response<>(0, resultExecute.getMsg(), null);
@@ -134,30 +135,32 @@ public class ExecuteServiceImpl implements ExecuteService {
         return cor;
     }
 
-    private Response getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
+    private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
         System.out.println("[Execute Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response cor = re.getBody();
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        Response<Order> cor = re.getBody();
 //        GetOrderResult cor = restTemplate.postForObject(
 //                "http://ts-order-service:12031/order/getById/"
 //                ,info,GetOrderResult.class);
         return cor;
     }
 
-    private Response getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
+    private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
         System.out.println("[Execute Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response cor = re.getBody();
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        Response<Order> cor = re.getBody();
 //        GetOrderResult cor = restTemplate.postForObject(
 //                "http://ts-order-other-service:12032/orderOther/getById/"
 //                ,info,GetOrderResult.class);

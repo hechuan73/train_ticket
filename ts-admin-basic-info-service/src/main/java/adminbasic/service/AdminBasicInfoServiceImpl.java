@@ -121,11 +121,11 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                     HttpMethod.GET,
                     requestEntity,
                     Response.class);
-            l = (List<Station>) re.getBody().getData();
+//            l = (List<Station>) re.getBody().getData();
 //            l= restTemplate.getForObject("http://ts-station-service:12345/station/query", l.getClass());
-            return new Response<>(1, "Success", l);
+            return re.getBody();
         } else {
-            return new Response(0, "The loginId is Wrong: " + loginId, null);
+            return new Response<>(0, "The loginId is Wrong: " + loginId, null);
         }
 
     }
@@ -194,11 +194,11 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                     HttpMethod.GET,
                     requestEntity,
                     Response.class);
-            l = (List<TrainType>) re.getBody().getData();
+            // l = (List<TrainType>) re.getBody().getData();
 
 //            List<TrainType> l = new ArrayList<TrainType>();
 //            l = restTemplate.getForObject("http://ts-train-service:14567/train/query", l.getClass());
-            return new Response<>(1, "Success", l);
+            return re.getBody();
         } else {
             return new Response<>(0, "The loginId is wrong:" + loginId, null);
         }
@@ -294,7 +294,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     }
 
     @Override
-    public Response deleteConfig(String name,String loginId, HttpHeaders headers) {
+    public Response deleteConfig(String name, String loginId, HttpHeaders headers) {
 
         if (adminID.equals(loginId)) {
             HttpEntity requestEntity = new HttpEntity(headers);

@@ -4,6 +4,7 @@ import admintravel.entity.AdminTrip;
 import admintravel.entity.TravelInfo;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,40 +21,42 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
     @Override
     public Response getAllTravels(String id, HttpHeaders headers) {
-        Response result = new Response();
+        Response<ArrayList<AdminTrip>> result = new Response<ArrayList<AdminTrip>>();
         ArrayList<AdminTrip> trips = new ArrayList<AdminTrip>();
 
         System.out.println("[Admin Travel Service][Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<AdminTrip>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/admin_trip",
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
+                new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
+                });
         result = re.getBody();
 //            result = restTemplate.getForObject(
 //                    "http://ts-travel-service:12346/travel/adminQueryAll",
 //                    AdminFindAllResult.class);
-        if ("1".equals(result.getStatus())) {
-            ArrayList<AdminTrip> adminTrips = (ArrayList<AdminTrip>) result.getData();
+        if (result.getStatus() == 1) {
+            ArrayList<AdminTrip> adminTrips = result.getData();
             System.out.println("[Admin Travel Service][Get Travel From ts-travel-service successfully!]");
             trips.addAll(adminTrips);
         } else
             System.out.println("[Admin Travel Service][Get Travel From ts-travel-service fail!]");
 
         HttpEntity requestEntity2 = new HttpEntity(headers);
-        ResponseEntity<Response> re2 = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<AdminTrip>>> re2 = restTemplate.exchange(
                 "http://ts-travel2-service:16346/api/v1/travel2service/admin_trip",
                 HttpMethod.GET,
                 requestEntity2,
-                Response.class);
+                new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
+                });
         result = re2.getBody();
 //            result = restTemplate.getForObject(
 //                    "http://ts-travel2-service:16346/travel2/adminQueryAll",
 //                    AdminFindAllResult.class);
-        if ("1".equals(result.getStatus())) {
+        if (result.getStatus() == 1) {
             System.out.println("[Admin Travel Service][Get Travel From ts-travel2-service successfully!]");
-            ArrayList<AdminTrip> adminTrips = (ArrayList<AdminTrip>) result.getData();
+            ArrayList<AdminTrip> adminTrips = result.getData();
             trips.addAll(adminTrips);
         } else
             System.out.println("[Admin Travel Service][Get Travel From ts-travel2-service fail!]");
@@ -64,36 +67,31 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
     @Override
     public Response addTravel(TravelInfo request, HttpHeaders headers) {
-        Response responseBean = new Response();
-        String result;
-        if (checkId(request.getLoginId())) {
-            String requestUrl;
-            if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
-                requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
+        Response resultResponse;
+        String requestUrl;
+        if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
+            requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
 //                result = restTemplate.postForObject(
 //                        "http://ts-travel-service:12346/travel/create", request ,String.class);
-            } else {
-                requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
+        } else {
+            requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
 //                result = restTemplate.postForObject(
 //                        "http://ts-travel2-service:16346/travel2/create", request ,String.class);
-            }
-            HttpEntity requestEntity = new HttpEntity(request, headers);
-            ResponseEntity<String> re = restTemplate.exchange(
-                    requestUrl,
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-            result = re.getBody();
-
-            System.out.println("[Admin Travel Service][Admin add new travel]");
-            responseBean.setStatus(1);
-        } else {
-            result = "Admin add new travel fail: wrong login id";
-            System.out.println("[Admin Travel Service][Admin add new travel fail]");
-            responseBean.setStatus(0);
         }
-        responseBean.setMsg(result);
-        return responseBean;
+        HttpEntity requestEntity = new HttpEntity(request, headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                requestUrl,
+                HttpMethod.POST,
+                requestEntity,
+                Response.class);
+        resultResponse = re.getBody();
+
+        if (resultResponse.getStatus() == 1) {
+            System.out.println("[Admin Travel Service][Admin add new travel]");
+            return new Response<>(1, "[Admin Travel Service][Admin add new travel]", null);
+        } else {
+            return new Response<>(0, "Admin add new travel failed", null);
+        }
     }
 
     @Override

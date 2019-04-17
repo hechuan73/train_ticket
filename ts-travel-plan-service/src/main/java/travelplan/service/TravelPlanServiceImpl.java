@@ -2,6 +2,7 @@ package travelplan.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,8 +30,8 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         queryInfoFirstSection.setStartingPlace(info.getFromStationName());
         queryInfoFirstSection.setEndPlace(info.getViaStationName());
 
-        ArrayList<TripResponse> firstSectionFromHighSpeed;
-        ArrayList<TripResponse> firstSectionFromNormal;
+        List<TripResponse> firstSectionFromHighSpeed;
+        List<TripResponse> firstSectionFromNormal;
         firstSectionFromHighSpeed = tripsFromHighSpeed(queryInfoFirstSection, headers);
         firstSectionFromNormal = tripsFromNormal(queryInfoFirstSection, headers);
 
@@ -39,16 +40,16 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         queryInfoSecondSectoin.setStartingPlace(info.getViaStationName());
         queryInfoSecondSectoin.setEndPlace(info.getToStationName());
 
-        ArrayList<TripResponse> secondSectionFromHighSpeed;
-        ArrayList<TripResponse> secondSectionFromNormal;
+        List<TripResponse> secondSectionFromHighSpeed;
+        List<TripResponse> secondSectionFromNormal;
         secondSectionFromHighSpeed = tripsFromHighSpeed(queryInfoSecondSectoin, headers);
         secondSectionFromNormal = tripsFromNormal(queryInfoSecondSectoin, headers);
 
-        ArrayList<TripResponse> firstSection = new ArrayList<>();
+        List<TripResponse> firstSection = new ArrayList<>();
         firstSection.addAll(firstSectionFromHighSpeed);
         firstSection.addAll(firstSectionFromNormal);
 
-        ArrayList<TripResponse> secondSection = new ArrayList<>();
+        List<TripResponse> secondSection = new ArrayList<>();
         secondSection.addAll(secondSectionFromHighSpeed);
         secondSection.addAll(secondSectionFromNormal);
 
@@ -66,11 +67,9 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         routePlanInfo.setFormStationName(info.getStartingPlace());
         routePlanInfo.setToStationName(info.getEndPlace());
         routePlanInfo.setTravelDate(info.getDepartureTime());
-        Response routePlanResults = getRoutePlanResultCheapest(routePlanInfo, headers);
+        ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultCheapest(routePlanInfo, headers);
 
-        if ("1".equals(routePlanResults.getStatus())) {
-            ArrayList<RoutePlanResultUnit> routePlanResultUnits = (ArrayList<RoutePlanResultUnit>) routePlanResults.getData();
-
+        if (routePlanResultUnits.size() > 0) {
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
                 RoutePlanResultUnit tempUnit = routePlanResultUnits.get(i);
@@ -109,12 +108,11 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         routePlanInfo.setFormStationName(info.getStartingPlace());
         routePlanInfo.setToStationName(info.getEndPlace());
         routePlanInfo.setTravelDate(info.getDepartureTime());
-        Response routePlanResults = getRoutePlanResultQuickest(routePlanInfo, headers);
+        ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultQuickest(routePlanInfo, headers);
 
 
-
-        if ("1".equals(routePlanResults.getStatus())) {
-            ArrayList<RoutePlanResultUnit> routePlanResultUnits = (ArrayList<RoutePlanResultUnit>) routePlanResults.getData();
+        if (routePlanResultUnits.size() > 0) {
+            // ArrayList<RoutePlanResultUnit> routePlanResultUnits =   routePlanResults.getData();
 
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
@@ -157,7 +155,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         Response routePlanResults = getRoutePlanResultMinStation(routePlanInfo, headers);
         /// TravelAdvanceResult travelAdvanceResult = new TravelAdvanceResult();
 
-        if ("1".equals(routePlanResults.getStatus())) {
+        if (routePlanResults.getStatus() == 1) {
             ArrayList<RoutePlanResultUnit> routePlanResultUnits = (ArrayList<RoutePlanResultUnit>) routePlanResults.getData();
 
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
@@ -205,51 +203,51 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         seatRequest.setSeatType(seatType);
 
         HttpEntity requestEntity = new HttpEntity(seatRequest, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<Integer>> re = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response restNumberResponse = re.getBody();
-
+                new ParameterizedTypeReference<Response<Integer>>() {
+                });
 //        int restNumber = restTemplate.postForObject(
 //                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
 //                seatRequest,Integer.class
 //                );
 
-        return (int) restNumberResponse.getData();
+        return re.getBody().getData();
     }
 
-    private Response getRoutePlanResultCheapest(RoutePlanInfo info, HttpHeaders headers) {
+    private ArrayList<RoutePlanResultUnit> getRoutePlanResultCheapest(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
                 "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/cheapestRoute",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response routePlanResults = re.getBody();
+                new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
+                });
 //        RoutePlanResults routePlanResults =
 //                restTemplate.postForObject(
 //                        "http://ts-route-plan-service:14578/routePlan/cheapestRoute",
 //                        info,RoutePlanResults.class
 //                );
-        return routePlanResults;
+        return re.getBody().getData();
     }
 
-    private Response getRoutePlanResultQuickest(RoutePlanInfo info, HttpHeaders headers) {
+    private ArrayList<RoutePlanResultUnit> getRoutePlanResultQuickest(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
                 "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/quickestRoute",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response routePlanResults = re.getBody();
+                new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
+                });
+
 //        RoutePlanResults routePlanResults =
 //                restTemplate.postForObject(
 //                        "http://ts-route-plan-service:14578/routePlan/quickestRoute",
 //                        info,RoutePlanResults.class
 //                );
-        return routePlanResults;
+        return re.getBody().getData();
     }
 
     private Response getRoutePlanResultMinStation(RoutePlanInfo info, HttpHeaders headers) {
@@ -268,55 +266,56 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         return routePlanResults;
     }
 
-    private ArrayList<TripResponse> tripsFromHighSpeed(TripInfo info, HttpHeaders headers) {
+    private List<TripResponse> tripsFromHighSpeed(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<List<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/trips/left",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response resultRes = re.getBody();
-        ArrayList<TripResponse> result = (ArrayList<TripResponse>) resultRes.getData();
+                new ParameterizedTypeReference<Response<List<TripResponse>>>() {
+                });
 //        result = restTemplate.postForObject("http://ts-travel-service:12346/travel/query",info,result.getClass());
-        return result;
+        return re.getBody().getData();
     }
 
     private ArrayList<TripResponse> tripsFromNormal(TripInfo info, HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel2-service:16346/api/v1/travel2service/trips/left",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response resultRes = re.getBody();
-        ArrayList<TripResponse> result = (ArrayList<TripResponse>) resultRes.getData();
+                new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
+                });
+
 //        result = restTemplate.postForObject("http://ts-travel2-service:16346/travel2/query",info,result.getClass());
-        return result;
+        return re.getBody().getData();
     }
 
     private String queryForStationId(String stationName, HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<String>> re = restTemplate.exchange(
                 "http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo/" + stationName,
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response id = re.getBody();
+                new ParameterizedTypeReference<Response<String>>() {
+                });
+
 //        String id = restTemplate.postForObject(
 //                "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId", query ,String.class);
-        return (String) id.getData();
+        return re.getBody().getData();
     }
 
     private List<String> transferStationIdToStationName(ArrayList<String> stations, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(stations, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<List<String>>> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/namelist",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response result = re.getBody();
-        return (List<String>) result.getData();
+                new ParameterizedTypeReference<Response<List<String>>>() {
+                });
+
+        return re.getBody().getData();
     }
 }

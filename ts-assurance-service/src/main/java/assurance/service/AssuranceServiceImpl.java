@@ -21,9 +21,9 @@ public class AssuranceServiceImpl implements AssuranceService {
     public Response findAssuranceById(UUID id, HttpHeaders headers) {
         Assurance assurance = assuranceRepository.findById(id);
         if (assurance == null) {
-            return new Response(0, "No Conotent by this id", id);
+            return new Response<>(0, "No Conotent by this id", id);
         } else {
-            return new Response(1, "Find Assurace Success", assurance);
+            return new Response<>(1, "Find Assurace Success", assurance);
         }
     }
 
@@ -31,9 +31,9 @@ public class AssuranceServiceImpl implements AssuranceService {
     public Response findAssuranceByOrderId(UUID orderId, HttpHeaders headers) {
         Assurance assurance = assuranceRepository.findByOrderId(orderId);
         if (assurance == null) {
-            return new Response(0, "No Content by this orderId", orderId);
+            return new Response<>(0, "No Content by this orderId", orderId);
         } else {
-            return new Response(1, "Find Assurace Success", assurance);
+            return new Response<>(1, "Find Assurace Success", assurance);
         }
     }
 
@@ -44,15 +44,15 @@ public class AssuranceServiceImpl implements AssuranceService {
         AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
         if (a != null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance already exists");
-            return new Response(0, "Fail.Assurance already exists", at);
+            return new Response<>(0, "Fail.Assurance already exists", at);
         } else if (at == null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance type doesn't exist");
-            return new Response(0, "Fail.Assurance type doesn't exist", typeIndex);
+            return new Response<>(0, "Fail.Assurance type doesn't exist", typeIndex);
         } else {
             Assurance assurance = new Assurance(UUID.randomUUID(), UUID.fromString(orderId), at);
             assuranceRepository.save(assurance);
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Success.");
-            return new Response(1, "Success", assurance);
+            return new Response<>(1, "Success", assurance);
         }
     }
 
@@ -63,10 +63,10 @@ public class AssuranceServiceImpl implements AssuranceService {
 //        DeleteAssuranceResult dar = new DeleteAssuranceResult();
         if (a == null) {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            return new Response(1, "Delete Success with Assurance id", a);
+            return new Response<>(1, "Delete Success with Assurance id", a);
         } else {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
-            return new Response(0, "Fail.Assurance not clear", assuranceId);
+            return new Response<>(0, "Fail.Assurance not clear", assuranceId);
         }
     }
 
@@ -77,10 +77,10 @@ public class AssuranceServiceImpl implements AssuranceService {
         // DeleteAssuranceResult dar = new DeleteAssuranceResult();
         if (isExistAssurace == null) {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            return new Response(1, "Delete Success with Order Id", isExistAssurace);
+            return new Response<>(1, "Delete Success with Order Id", isExistAssurace);
         } else {
             System.out.println("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
-            return new Response(0, "Fail.Assurance not clear", orderId);
+            return new Response<>(0, "Fail.Assurance not clear", orderId);
         }
     }
 
@@ -91,17 +91,17 @@ public class AssuranceServiceImpl implements AssuranceService {
         Assurance oldAssurance = (Assurance) oldAssuranceResponse.getData();
         if (oldAssurance == null) {
             System.out.println("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance not found.");
-            return new Response(0, "Fail.Assurance not found.", assuranceId);
+            return new Response<>(0, "Fail.Assurance not found.", assuranceId);
         } else {
             AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
             if (at != null) {
                 oldAssurance.setType(at);
                 assuranceRepository.save(oldAssurance);
                 System.out.println("[Assurance-Modify-Service][ModifyAssurance] Success.");
-                return new Response(1, "Modify Success", oldAssurance);
+                return new Response<>(1, "Modify Success", oldAssurance);
             } else {
                 System.out.println("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance Type not exist.");
-                return new Response(0, "Assurance Type not exist", null);
+                return new Response<>(0, "Assurance Type not exist", null);
             }
         }
     }
@@ -120,9 +120,9 @@ public class AssuranceServiceImpl implements AssuranceService {
                 pa.setTypePrice(a.getType().getPrice());
                 result.add(pa);
             }
-            return new Response(1, "Success", result);
+            return new Response<>(1, "Success", result);
         } else {
-            return new Response(0, "No Content, Assurance is empty", null);
+            return new Response<>(0, "No Content, Assurance is empty", null);
         }
     }
 
@@ -137,10 +137,10 @@ public class AssuranceServiceImpl implements AssuranceService {
             atb.setPrice(at.getPrice());
             atlist.add(atb);
         }
-        if(atlist!= null && atlist.size() > 0){
-            return new Response(1, "Find All Assurance", atlist);
-        }else{
-            return new Response(0, "Assurance is Empty", null);
+        if (atlist.size() > 0) {
+            return new Response<>(1, "Find All Assurance", atlist);
+        } else {
+            return new Response<>(0, "Assurance is Empty", null);
         }
     }
 }

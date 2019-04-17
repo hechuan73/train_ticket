@@ -31,9 +31,9 @@ public class PaymentServiceImpl implements PaymentService{
             payment.setPrice(info.getPrice());
             payment.setUserId(info.getUserId());
             paymentRepository.save(payment);
-            return new Response(1, "Pay Success", null);
+            return new Response<>(1, "Pay Success", null);
         }else{
-            return new Response(0, "Pay Failed, order not found", null);
+            return new Response<>(0, "Pay Failed, order not found", null);
         }
     }
 
@@ -43,16 +43,16 @@ public class PaymentServiceImpl implements PaymentService{
         addMoney.setUserId(info.getUserId());
         addMoney.setMoney(info.getPrice());
         addMoneyRepository.save(addMoney);
-        return new Response(1,"Add Money Success", addMoney);
+        return new Response<>(1,"Add Money Success", addMoney);
     }
 
     @Override
     public Response query(HttpHeaders headers){
         List<Payment> payments = paymentRepository.findAll();
         if(payments!= null && payments.size() >0){
-            return new Response(1,"Query Success",  payments);
+            return new Response<>(1,"Query Success",  payments);
         }else {
-            return new Response(0, "No Content", null);
+            return new Response<>(0, "No Content", null);
         }
     }
 

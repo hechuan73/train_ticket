@@ -147,30 +147,32 @@ public class FoodServiceImpl implements FoodService {
         //车次途经的车站
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetRouteResult = new HttpEntity(null, headers);
-        ResponseEntity<Response> reGetRouteResult = restTemplate.exchange(
+        ResponseEntity<Response<Route>> reGetRouteResult = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/routes/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetRouteResult,
-                Response.class);
-        Response stationResult = reGetRouteResult.getBody();
+                new ParameterizedTypeReference<Response<Route>>() {
+                });
+        Response<Route> stationResult = reGetRouteResult.getBody();
 //        GetRouteResult  stationResult= restTemplate.getForObject
 //                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
 //                                                GetRouteResult.class);
 
 
-        if ("1".equals(stationResult.getStatus())) {
-            Route route = (Route) stationResult.getData();
+        if (stationResult.getStatus() == 1) {
+            Route route = stationResult.getData();
             List<String> stations = route.getStations();
             //去除不经过的站，如果起点终点有的话
             if (null != startStation && !"".equals(startStation)) {
                 /**--------------------------------------------------------------------------------------*/
                 HttpEntity requestEntityStartStationId = new HttpEntity(headers);
-                ResponseEntity<Response> reStartStationId = restTemplate.exchange(
+                ResponseEntity<Response<String>> reStartStationId = restTemplate.exchange(
                         "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + startStation,
                         HttpMethod.POST,
                         requestEntityStartStationId,
-                        Response.class);
-                Response startStationId = reStartStationId.getBody();
+                        new ParameterizedTypeReference<Response<String>>() {
+                        });
+                Response<String> startStationId = reStartStationId.getBody();
 //                String startStationId = restTemplate.postForObject
 //                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
 
@@ -185,11 +187,12 @@ public class FoodServiceImpl implements FoodService {
             if (null != endStation && !"".equals(endStation)) {
                 /**--------------------------------------------------------------------------------------*/
                 HttpEntity requestEntityEndStationId = new HttpEntity(headers);
-                ResponseEntity<Response> reEndStationId = restTemplate.exchange(
+                ResponseEntity<Response<String>> reEndStationId = restTemplate.exchange(
                         "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + endStation,
                         HttpMethod.POST,
                         requestEntityEndStationId,
-                        Response.class);
+                        new ParameterizedTypeReference<Response<String>>() {
+                        });
                 Response endStationId = reEndStationId.getBody();
 //                String endStationId = restTemplate.postForObject
 //                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
@@ -204,14 +207,13 @@ public class FoodServiceImpl implements FoodService {
             }
 
             HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, headers);
-            ResponseEntity<Response> reFoodStoresListResult = restTemplate.exchange(
+            ResponseEntity<Response<List<FoodStore>>> reFoodStoresListResult = restTemplate.exchange(
                     "http://ts-food-map-service:18855/api/v1/foodmap/foodstores",
                     HttpMethod.POST,
                     requestEntityFoodStoresListResult,
-                    Response.class);
-
-            Response response = reFoodStoresListResult.getBody();
-            List<FoodStore> foodStoresListResult = (List<FoodStore>) response.getData();
+                    new ParameterizedTypeReference<Response<List<FoodStore>>>() {
+                    });
+            List<FoodStore> foodStoresListResult = reFoodStoresListResult.getBody().getData();
             if (foodStoresListResult != null && foodStoresListResult.size() > 0) {
                 for (String stationId : stations) {
                     List<FoodStore> res = foodStoresListResult.stream()

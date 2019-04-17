@@ -1,5 +1,6 @@
 package fdse.microservice.service;
 
+import edu.fudan.common.util.JsonUtils;
 import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class BasicServiceImpl implements BasicService {
         System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + stationName);
         HttpEntity requestEntity = new HttpEntity(null, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations/name/" + stationName,
+                "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -96,7 +97,7 @@ public class BasicServiceImpl implements BasicService {
         Response exist = re.getBody();
 //        Boolean exist = restTemplate.postForObject(
 //                "http://ts-station-service:12345/station/exist", new QueryStation(stationName), Boolean.class);
-        if ("1".equals(exist.getStatus()))
+        if (exist.getStatus() ==1)
             return true;
         return false;
     }
@@ -109,11 +110,12 @@ public class BasicServiceImpl implements BasicService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response trainType = re.getBody();
+        Response  response = re.getBody();
 //        TrainType trainType = restTemplate.postForObject(
 //                "http://ts-train-service:14567/train/retrieve", new QueryTrainType(trainTypeId), TrainType.class
 //        );
-        return (TrainType) trainType.getData();
+
+        return JsonUtils.conveterObject(response.getData(), TrainType.class);
     }
 
     private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
@@ -128,12 +130,12 @@ public class BasicServiceImpl implements BasicService {
 //        GetRouteByIdResult result = restTemplate.getForObject(
 //                "http://ts-route-service:11178/route/queryById/" + routeId,
 //                GetRouteByIdResult.class);
-        if ("1".equals(result.getStatus())) {
+        if ( result.getStatus() ==1) {
             System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
             return null;
         } else {
             System.out.println("[Basic Information Service][Get Route By Id] Success.");
-            return (Route) result.getData();
+            return JsonUtils.conveterObject(result.getData(), Route.class);
         }
     }
 
@@ -153,7 +155,8 @@ public class BasicServiceImpl implements BasicService {
 //                info,
 //                ReturnSinglePriceConfigResult.class
 //        );
-        return (PriceConfig) result.getData();
+        System.out.println("Response Resutl to String " + result.toString());
+        return  JsonUtils.conveterObject(result.getData(), PriceConfig.class);
     }
 
 }

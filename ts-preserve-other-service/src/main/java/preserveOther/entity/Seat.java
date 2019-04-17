@@ -2,7 +2,7 @@ package preserveOther.entity;
 
 import java.util.Date;
 
-public class SeatRequest {
+public class Seat {
 
     private Date travelDate;
 
@@ -14,7 +14,7 @@ public class SeatRequest {
 
     private int seatType;
 
-    public SeatRequest(){
+    public Seat(){
         //Default Constructor
     }
 

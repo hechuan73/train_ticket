@@ -36,9 +36,9 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 ticket.setDestStation(tempOrder.getTo());
                 ticketSet.add(ticket);
             }
-            return new Response(1, "Success", ticketSet);
+            return new Response<>(1, "Success", ticketSet);
         } else {
-            return new Response(0, "Seat is Null.", null);
+            return new Response<>(0, "Seat is Null.", null);
         }
     }
 
@@ -46,9 +46,9 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response findOrderById(UUID id, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(id);
         if (order == null) {
-            return new Response(0, "No Content by this id", id);
+            return new Response<>(0, "No Content by this id", id);
         } else {
-            return new Response(1, "Success", order);
+            return new Response<>(1, "Success", order);
         }
     }
 
@@ -59,13 +59,13 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         // CreateOrderResult cor = new CreateOrderResult();
         if (accountOrders.contains(order)) {
             System.out.println("[Order Other Service][Order Create] Fail.Order already exists.");
-            return new Response(0, "Order already exist", order);
+            return new Response<>(0, "Order already exist", order);
         } else {
             order.setId(UUID.randomUUID());
             orderOtherRepository.save(order);
             System.out.println("[Order Other Service][Order Create] Success.");
             System.out.println("[Order Other Service][Order Create] Price:" + order.getPrice());
-            return new Response(1, "Success", order);
+            return new Response<>(1, "Success", order);
         }
     }
 
@@ -87,18 +87,18 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order oldOrder = orderOtherRepository.findById(oldOrderId);
         if (oldOrder == null) {
             System.out.println("[Order Other Service][Alter Order] Fail.Order do not exist.");
-            return new Response(0, "Old Order Does Not Exists", null);
+            return new Response<>(0, "Old Order Does Not Exists", null);
         }
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
         saveChanges(oldOrder, headers);
         Order newOrder = oai.getNewOrderInfo();
         newOrder.setId(UUID.randomUUID());
         Response cor = create(oai.getNewOrderInfo(), headers);
-        if ("1".equals(cor.getStatus())) {
+        if ( cor.getStatus() ==1) {
             System.out.println("[Order Other Service][Alter Order] Success.");
-            return new Response(1, "Alter Order Success", newOrder);
+            return new Response<>(1, "Alter Order Success", newOrder);
         } else {
-            return new Response(0, cor.getMsg(), null);
+            return new Response<>(0, cor.getMsg(), null);
         }
     }
 
@@ -156,10 +156,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 System.out.println("[Order Other Service][Query Order][Step 2][Check All Requirement End]");
             }
             System.out.println("[Order Other Service][Query Order] Get order num:" + finalList.size());
-            return new Response(1, "Get order num", finalList);
+            return new Response<>(1, "Get order num", finalList);
         } else {
             System.out.println("[Order Other Service][Query Order] Get order num:" + list.size());
-            return new Response(1, "Get order num", list);
+            return new Response<>(1, "Get order num", list);
         }
     }
 
@@ -176,19 +176,20 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             orders.get(i).setFrom(names.get(i * 2));
             orders.get(i).setTo(names.get(i * 2 + 1));
         }
-        return new Response(1, "Success", orders);
+        return new Response<>(1, "Success", orders);
     }
 
     public List<String> queryForStationId(List<String> ids, HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(ids, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<List<String>>> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/namelist",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response response = re.getBody();
-        List<String> names = (List<String>) response.getData();
+                new ParameterizedTypeReference<Response<List<String>>>() {
+                });
+
+        List<String> names = re.getBody().getData();
         return names;
     }
 
@@ -198,7 +199,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         //ChangeOrderResult cor = new ChangeOrderResult();
         if (oldOrder == null) {
             System.out.println("[Order Other Service][Modify Order] Fail.Order not found.");
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
@@ -217,7 +218,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             oldOrder.setDocumentType(order.getDocumentType());
             orderOtherRepository.save(oldOrder);
             System.out.println("[Order Other Service] Success.");
-            return new Response(1, "Success", oldOrder);
+            return new Response<>(1, "Success", oldOrder);
         }
     }
 
@@ -227,12 +228,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order oldOrder = orderOtherRepository.findById(orderId);
         if (oldOrder == null) {
             System.out.println("[Order Other Service][Cancel Order] Fail.Order not found.");
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
             oldOrder.setStatus(OrderStatus.CANCEL.getCode());
             orderOtherRepository.save(oldOrder);
             System.out.println("[Order Other Service][Cancel Order] Success.");
-            return new Response(1, "Success", oldOrder);
+            return new Response<>(1, "Success", oldOrder);
         }
     }
 
@@ -269,16 +270,16 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 System.out.println("[Order Other Service][Calculate Sold Tickets] Seat class not exists. Order ID:" + order.getId());
             }
         }
-        return new Response(1, "Success", cstr);
+        return new Response<>(1, "Success", cstr);
     }
 
     @Override
     public Response getAllOrders(HttpHeaders headers) {
         ArrayList<Order> orders = orderOtherRepository.findAll();
         if (orders == null) {
-            return new Response(0, "No Content", null);
+            return new Response<>(0, "No Content", null);
         } else {
-            return new Response(1, "Success.", orders);
+            return new Response<>(1, "Success.", orders);
         }
     }
 
@@ -287,11 +288,11 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         // ModifyOrderStatusResult result = new ModifyOrderStatusResult();
         if (order == null) {
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
             order.setStatus(status);
             orderOtherRepository.save(order);
-            return new Response(1, "Success", order);
+            return new Response<>(1, "Success", order);
         }
     }
 
@@ -299,10 +300,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response getOrderPrice(String orderId, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         if (order == null) {
-            return new Response(0, "Order Not Found", "-1.0");
+            return new Response<>(0, "Order Not Found", "-1.0");
         } else {
             System.out.println("[Order Other Service][Get Order Price] Price:" + order.getPrice());
-            return new Response(1, "Success", order.getPrice());
+            return new Response<>(1, "Success", order.getPrice());
         }
     }
 
@@ -310,11 +311,11 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response payOrder(String orderId, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         if (order == null) {
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
             order.setStatus(OrderStatus.PAID.getCode());
             orderOtherRepository.save(order);
-            return new Response(1, "Success.", order);
+            return new Response<>(1, "Success.", order);
         }
     }
 
@@ -323,9 +324,9 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
 
         if (order == null) {
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
-            return new Response(1, "Success", order);
+            return new Response<>(1, "Success", order);
         }
     }
 
@@ -351,7 +352,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         }
         result.setOrderNumInLastOneHour(countOrderInOneHour);
         result.setOrderNumOfValidOrder(countTotalValidOrder);
-        return new Response(1, "Success . ", result);
+        return new Response<>(1, "Success . ", result);
     }
 
     @Override
@@ -359,10 +360,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         UUID orderUuid = UUID.fromString(orderId);
         Order order = orderOtherRepository.findById(orderUuid);
         if (order == null) {
-            return new Response(0, "Order Not Exist.", null);
+            return new Response<>(0, "Order Not Exist.", null);
         } else {
             orderOtherRepository.deleteById(orderUuid);
-            return new Response(1, "Success.", orderUuid);
+            return new Response<>(1, "Success.", orderUuid);
         }
     }
 
@@ -373,13 +374,13 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         // AddOrderResult result = new AddOrderResult();
         if (accountOrders.contains(order)) {
             System.out.println("[Order Service][Admin Add Order] Fail.Order already exists.");
-            return new Response(0, "Order already exist", null);
+            return new Response<>(0, "Order already exist", null);
         } else {
             order.setId(UUID.randomUUID());
             orderOtherRepository.save(order);
             System.out.println("[Order Service][Admin Add Order] Success.");
             System.out.println("[Order Service][Admin Add Order] Price:" + order.getPrice());
-            return new Response(1, "Success", order);
+            return new Response<>(1, "Success", order);
         }
     }
 
@@ -389,7 +390,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
         if (oldOrder == null) {
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");
-            return new Response(0, "Order Not Found", null);
+            return new Response<>(0, "Order Not Found", null);
         } else {
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
@@ -408,7 +409,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             oldOrder.setDocumentType(order.getDocumentType());
             orderOtherRepository.save(oldOrder);
             System.out.println("[Order Service] [Admin Update Order] Success.");
-            return new Response(1, "Success", oldOrder);
+            return new Response<>(1, "Success", oldOrder);
         }
     }
 }

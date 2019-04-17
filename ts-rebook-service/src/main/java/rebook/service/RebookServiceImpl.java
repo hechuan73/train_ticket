@@ -26,7 +26,7 @@ public class RebookServiceImpl implements RebookService {
 
         Response queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
-        if ("1".equals(queryOrderResult.getStatus())) {
+        if (queryOrderResult.getStatus() == 1) {
             return new Response<>(0, queryOrderResult.getMsg(), null);
         }
 
@@ -57,7 +57,7 @@ public class RebookServiceImpl implements RebookService {
         gtdi.setTravelDate(info.getDate());
         gtdi.setTripId(info.getTripId());
         Response gtdr = getTripAllDetailInformation(gtdi, info.getTripId(), httpHeaders);
-        if ("0".equals(gtdr.getStatus())) {
+        if (gtdr.getStatus() == 0) {
             return new Response<>(0, gtdr.getMsg(), null);
         } else {
             TripResponse tripResponse = ((TripAllDetail) gtdr.getData()).getTripResponse();
@@ -112,7 +112,7 @@ public class RebookServiceImpl implements RebookService {
 
         Response queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
-        if ("0".equals(queryOrderResult.getStatus())) {
+        if ( queryOrderResult.getStatus() ==0) {
             return new Response<>(0, queryOrderResult.getMsg(), null);
         }
         Order order = (Order) queryOrderResult.getData();
@@ -177,7 +177,7 @@ public class RebookServiceImpl implements RebookService {
         if ((tripGD(oldTripId) && tripGD(info.getTripId())) || (!tripGD(oldTripId) && !tripGD(info.getTripId()))) {
 
             Response changeOrderResult = updateOrder(order, info.getTripId(), httpHeaders);
-            if ("1".equals(changeOrderResult.getStatus())) {
+            if (changeOrderResult.getStatus() == 1) {
                 return new Response<>(1, "Success!", order);
             } else {
                 return new Response<>(0, "Can't update Order!", null);
@@ -402,7 +402,7 @@ public class RebookServiceImpl implements RebookService {
 //        boolean result = restTemplate.postForObject(
 //                "http://ts-inside-payment-service:18673/inside_payment/payDifference"
 //                ,info,Boolean.class);
-        if ("1".equals(result.getStatus()))
+        if (result.getStatus() == 1)
             return true;
         return false;
     }
@@ -419,7 +419,7 @@ public class RebookServiceImpl implements RebookService {
 //        boolean result = restTemplate.postForObject(
 //                "http://ts-inside-payment-service:18673/inside_payment/drawBack"
 //                ,info,Boolean.class);
-        if ("1".equals(result.getStatus()))
+        if (result.getStatus() == 1)
             return true;
         return false;
     }

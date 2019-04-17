@@ -3,6 +3,7 @@ package adminorder.service;
 import adminorder.entity.*;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,33 +26,35 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             ArrayList<Order> orders = new ArrayList<Order>();
             //From ts-order-service
             HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<Response> re = restTemplate.exchange(
+            ResponseEntity<Response<ArrayList<Order>>> re = restTemplate.exchange(
                     "http://ts-order-service:12031/api/v1/orderservice/order",
                     HttpMethod.GET,
                     requestEntity,
-                    Response.class);
-            Response result = re.getBody();
+                    new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
+                    });
+            Response<ArrayList<Order>> result = re.getBody();
 //            QueryOrderResult result = restTemplate.getForObject(
 //                    "http://ts-order-service:12031/order/findAll",
 //                    QueryOrderResult.class);
-            if ("1".equals(result.getStatus())) {
+            if (result.getStatus() == 1) {
                 System.out.println("[Admin Order Service][Get Orders From ts-order-service successfully!]");
-                ArrayList<Order> orders1 = (ArrayList<Order>) result.getData();
+                ArrayList<Order> orders1 = result.getData();
                 orders.addAll(orders1);
             } else
                 System.out.println("[Admin Order Service][Get Orders From ts-order-service fail!]");
             //From ts-order-other-service
             HttpEntity requestEntity2 = new HttpEntity(headers);
-            ResponseEntity<Response> re2 = restTemplate.exchange(
+            ResponseEntity<Response<ArrayList<Order>>> re2 = restTemplate.exchange(
                     "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
                     HttpMethod.GET,
                     requestEntity2,
-                    Response.class);
+                    new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
+                    });
             result = re2.getBody();
 //            result = restTemplate.getForObject(
 //                    "http://ts-order-other-service:12032/orderOther/findAll",
 //                    QueryOrderResult.class);
-            if ("1".equals(result.getStatus())) {
+            if (result.getStatus() == 1) {
                 System.out.println("[Admin Order Service][Get Orders From ts-order-other-service successfully!]");
                 ArrayList<Order> orders1 = (ArrayList<Order>) result.getData();
                 orders.addAll(orders1);

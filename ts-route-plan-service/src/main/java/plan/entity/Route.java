@@ -2,15 +2,16 @@ package plan.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 
     private String id;
 
-    private ArrayList<String> stations;
+    private List<String> stations;
 
-    private ArrayList<Integer> distances;
+    private List<Integer> distances;
 
     private String startStationId;
 
@@ -28,19 +29,19 @@ public class Route {
         this.id = id;
     }
 
-    public ArrayList<String> getStations() {
+    public List<String> getStations() {
         return stations;
     }
 
-    public void setStations(ArrayList<String> stations) {
+    public void setStations(List<String> stations) {
         this.stations = stations;
     }
 
-    public ArrayList<Integer> getDistances() {
+    public List<Integer> getDistances() {
         return distances;
     }
 
-    public void setDistances(ArrayList<Integer> distances) {
+    public void setDistances(List<Integer> distances) {
         this.distances = distances;
     }
 

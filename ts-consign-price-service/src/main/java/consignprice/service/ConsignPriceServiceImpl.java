@@ -28,7 +28,7 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
             else
                 price = initialPrice + extraWeight * priceConfig.getBeyondPrice();
         }
-        return new Response(1, "Success", price);
+        return new Response<>(1, "Success", price);
     }
 
     //查询价格信息
@@ -45,7 +45,7 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         sb.append(" and beyond the region is ");
         sb.append(price.getBeyondPrice());
         sb.append("\n");
-        return new Response(1, "Success", sb.toString());
+        return new Response<>(1, "Success", sb.toString());
     }
 
     //创建价格
@@ -65,11 +65,11 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         originalConfig.setWithinPrice(config.getWithinPrice());
         originalConfig.setBeyondPrice(config.getBeyondPrice());
         repository.save(originalConfig);
-        return new Response(1, "Success", originalConfig);
+        return new Response<>(1, "Success", originalConfig);
     }
 
     @Override
     public Response getPriceConfig(HttpHeaders headers) {
-        return new Response(1, "Success", repository.findByIndex(0));
+        return new Response<>(1, "Success", repository.findByIndex(0));
     }
 }

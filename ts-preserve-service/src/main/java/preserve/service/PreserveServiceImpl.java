@@ -2,6 +2,7 @@ package preserve.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,7 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 1] Check Security");
 
         Response result = checkSecurity(oti.getAccountId(), headers);
-        if ("0".equals(result.getStatus())) {
+        if (result.getStatus() == 0) {
             return new Response<>(0, result.getMsg(), null);
         }
         System.out.println("[Preserve Service] [Step 1] Check Security Complete");
@@ -35,7 +36,7 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 2] Contacts Id:" + oti.getContactsId());
 
         Response gcr = getContactsById(oti.getContactsId(), headers);
-        if ("0".equals(gcr.getStatus())) {
+        if (gcr.getStatus() == 0) {
             System.out.println("[Preserve Service][Get Contacts] Fail." + gcr.getMsg());
             return new Response<>(0, gcr.getMsg(), null);
         }
@@ -50,9 +51,9 @@ public class PreserveServiceImpl implements PreserveService {
         gtdi.setTravelDate(oti.getDate());
         gtdi.setTripId(oti.getTripId());
         System.out.println("[Preserve Service] [Step 3] TripId:" + oti.getTripId());
-        Response response = getTripAllDetailInformation(gtdi, headers);
-        TripAllDetail gtdr = (TripAllDetail) response.getData();
-        if ("0".equals(response.getStatus())) {
+        Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, headers);
+        TripAllDetail gtdr = response.getData();
+        if (response.getStatus() == 0) {
             System.out.println("[Preserve Service][Search For Trip Detail Information] " + response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
@@ -99,12 +100,13 @@ public class PreserveServiceImpl implements PreserveService {
         query.setDepartureTime(new Date());
 
         HttpEntity requestEntity = new HttpEntity(query, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<TravelResult>> re = restTemplate.exchange(
                 "http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        TravelResult resultForTravel = (TravelResult) re.getBody().getData();
+                new ParameterizedTypeReference<Response<TravelResult>>() {
+                });
+        TravelResult resultForTravel = re.getBody().getData();
 //            TravelResult resultForTravel = restTemplate.postForObject(
 //                    "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,TravelResult.class);
 
@@ -134,7 +136,7 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service][Order Price] Price is: " + order.getPrice());
 
         Response cor = createOrder(order, headers);
-        if ("0".equals(cor.getStatus())) {
+        if (cor.getStatus() == 0) {
             System.out.println("[Preserve Service][Create Order Fail] Create Order Fail." +
                     "Reason:" + cor.getMsg());
             return new Response<>(0, cor.getMsg(), null);
@@ -148,7 +150,7 @@ public class PreserveServiceImpl implements PreserveService {
         } else {
             Response addAssuranceResult = addAssuranceForOrder(
                     oti.getAssurance(), ((Order) cor.getData()).getId().toString(), headers);
-            if ("1".equals(addAssuranceResult.getStatus())) {
+            if (addAssuranceResult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 5] Buy Assurance Success");
             } else {
                 System.out.println("[Preserve Service][Step 5] Buy Assurance Fail.");
@@ -172,7 +174,7 @@ public class PreserveServiceImpl implements PreserveService {
                 System.out.println("[Food Service]!!!!!!!!!!!!!!!foodstore=" + foodOrder.getFoodType() + "   " + foodOrder.getStationName() + "   " + foodOrder.getStoreName());
             }
             Response afor = createFoodOrder(foodOrder, headers);
-            if ("1".equals(afor.getStatus())) {
+            if (afor.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 6] Buy Food Success");
             } else {
                 System.out.println("[Preserve Service][Step 6] Buy Food Fail.");
@@ -195,7 +197,7 @@ public class PreserveServiceImpl implements PreserveService {
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
             Response icresult = createConsign(consignRequest, headers);
-            if ("1".equals(icresult.getStatus())) {
+            if (icresult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 7] Consign Success");
             } else {
                 System.out.println("[Preserve Service][Step 7] Consign Fail.");
@@ -238,12 +240,13 @@ public class PreserveServiceImpl implements PreserveService {
         seatRequest.setSeatType(seatType);
 
         HttpEntity requestEntityTicket = new HttpEntity(seatRequest, httpHeaders);
-        ResponseEntity<Response> reTicket = restTemplate.exchange(
+        ResponseEntity<Response<Ticket>> reTicket = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats",
                 HttpMethod.POST,
                 requestEntityTicket,
-                Response.class);
-        Ticket ticket = (Ticket) reTicket.getBody().getData();
+                new ParameterizedTypeReference<Response<Ticket>>() {
+                });
+        Ticket ticket = reTicket.getBody().getData();
 
 //        Ticket ticket = restTemplate.postForObject(
 //                "http://ts-seat-service:18898/seat/getSeat"
@@ -309,12 +312,13 @@ public class PreserveServiceImpl implements PreserveService {
 
 
         HttpEntity requestQueryForStationId = new HttpEntity(httpHeaders);
-        ResponseEntity<Response> reQueryForStationId = restTemplate.exchange(
+        ResponseEntity<Response<String>> reQueryForStationId = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestQueryForStationId,
-                Response.class);
-        String stationId = (String) reQueryForStationId.getBody().getData();
+                new ParameterizedTypeReference<Response<String>>() {
+                });
+        String stationId = reQueryForStationId.getBody().getData();
 //        String stationId = restTemplate.postForObject(
 //                "http://ts-station-service:12345/station/queryForId",queryForId,String.class);
         return stationId;
@@ -352,16 +356,17 @@ public class PreserveServiceImpl implements PreserveService {
 //    }
 
 
-    private Response getTripAllDetailInformation(TripAllDetailInfo gtdi, HttpHeaders httpHeaders) {
+    private Response<TripAllDetail> getTripAllDetailInformation(TripAllDetailInfo gtdi, HttpHeaders httpHeaders) {
         System.out.println("[Preserve Other Service][Get Trip All Detail Information] Getting....");
 
         HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
-        ResponseEntity<Response> reGetTripAllDetailResult = restTemplate.exchange(
+        ResponseEntity<Response<TripAllDetail>> reGetTripAllDetailResult = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/trip_detail",
                 HttpMethod.POST,
                 requestGetTripAllDetailResult,
-                Response.class);
-        Response gtdr = reGetTripAllDetailResult.getBody();
+                new ParameterizedTypeReference<Response<TripAllDetail>>() {
+                });
+        Response<TripAllDetail> gtdr = reGetTripAllDetailResult.getBody();
 //        TripAllDetail gtdr = restTemplate.postForObject(
 //                "http://ts-travel-service:12346/travel/getTripAllDetailInfo/"
 //                ,gtdi,TripAllDetail.class);

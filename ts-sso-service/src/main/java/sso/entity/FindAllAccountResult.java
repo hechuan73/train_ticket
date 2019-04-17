@@ -1,6 +1,7 @@
 package sso.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FindAllAccountResult {
 
@@ -8,7 +9,7 @@ public class FindAllAccountResult {
 
     private String message;
 
-    private ArrayList<Account> accountArrayList;
+    private List<Account> accountArrayList;
 
     public FindAllAccountResult() {
         //Default Constructor
@@ -30,11 +31,11 @@ public class FindAllAccountResult {
         this.message = message;
     }
 
-    public ArrayList<Account> getAccountArrayList() {
+    public List<Account> getAccountArrayList() {
         return accountArrayList;
     }
 
-    public void setAccountArrayList(ArrayList<Account> accountArrayList) {
+    public void setAccountArrayList(List<Account> accountArrayList) {
         this.accountArrayList = accountArrayList;
     }
 }

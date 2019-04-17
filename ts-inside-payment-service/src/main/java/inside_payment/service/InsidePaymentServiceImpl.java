@@ -6,6 +6,7 @@ import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,26 +35,28 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         String userId = info.getUserId();
 
 
-        Response result = new Response();
+        Response<Order> result = new Response<>();
         if (info.getTripId().startsWith("G") || info.getTripId().startsWith("D")) {
-            HttpEntity requestGetOrderResults = new HttpEntity(null, headers);
-            ResponseEntity<Response> reGetOrderResults = restTemplate.exchange(
+            HttpEntity requestGetOrderResults = new HttpEntity(headers);
+            ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
                     "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId(),
                     HttpMethod.GET,
                     requestGetOrderResults,
-                    Response.class);
+                    new ParameterizedTypeReference<Response<Order>>() {
+                    });
             result = reGetOrderResults.getBody();
 
 //            result = restTemplate.postForObject("http://ts-order-service:12031/order/getById",getOrderByIdInfo,GetOrderResult.class);
             //result = restTemplate.postForObject(
             //       "http://ts-order-service:12031/order/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         } else {
-            HttpEntity requestGetOrderResults = new HttpEntity(null, headers);
-            ResponseEntity<Response> reGetOrderResults = restTemplate.exchange(
+            HttpEntity requestGetOrderResults = new HttpEntity(headers);
+            ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
                     "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + info.getOrderId(),
                     HttpMethod.GET,
                     requestGetOrderResults,
-                    Response.class);
+                    new ParameterizedTypeReference<Response<Order>>() {
+                    });
             result = reGetOrderResults.getBody();
 
 //            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/getById",getOrderByIdInfo,GetOrderResult.class);
@@ -61,11 +64,11 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             //      "http://ts-order-other-service:12032/orderOther/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
         }
 
-        if ("1".equals(result.getStatus())) {
-            Order order = (Order) result.getData();
+        if (result.getStatus() ==1 ) {
+            Order order = result.getData();
             if (order.getStatus() != OrderStatus.NOTPAID.getCode()) {
                 System.out.println("[Inside Payment Service][Pay] Error. Order status Not allowed to Pay.");
-                return new Response(0, "Error. Order status Not allowed to Pay.", null);
+                return new Response<>(0, "Error. Order status Not allowed to Pay.", null);
             }
 
             Payment payment = new Payment();
@@ -123,23 +126,23 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 //                    return false;
 //                }
 
-                if ("1".equals(outsidePaySuccess.getMsg())) {
+                if ( outsidePaySuccess.getStatus() ==1) {
                     payment.setType(PaymentType.O);
                     paymentRepository.save(payment);
                     setOrderStatus(info.getTripId(), info.getOrderId(), headers);
-                    return new Response(1, "Payment Success", null);
+                    return new Response<>(1, "Payment Success", null);
                 } else {
-                    return new Response(0, "Payment Failed", null);
+                    return new Response<>(0, "Payment Failed", null);
                 }
             } else {
                 setOrderStatus(info.getTripId(), info.getOrderId(), headers);
                 payment.setType(PaymentType.P);
                 paymentRepository.save(payment);
             }
-            return new Response(1, "Payment Success", null);
+            return new Response<>(1, "Payment Success", null);
 
         } else {
-            return new Response(0, "Payment Failed, Order Not Exists", null);
+            return new Response<>(0, "Payment Failed, Order Not Exists", null);
         }
     }
 
@@ -152,9 +155,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             addMoney.setUserId(info.getUserId());
             addMoney.setType(MoneyType.A);
             addMoneyRepository.save(addMoney);
-            return new Response(1, "Create Account Success", null);
+            return new Response<>(1, "Create Account Success", null);
         } else {
-            return new Response(0, "Create Account Failed", null);
+            return new Response<>(0, "Create Account Failed, Account already Exists", null);
         }
     }
 
@@ -166,9 +169,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             addMoney.setMoney(money);
             addMoney.setType(MoneyType.A);
             addMoneyRepository.save(addMoney);
-            return new Response(1, "Add Money Success", null);
+            return new Response<>(1, "Add Money Success", null);
         } else {
-            return new Response(0, "Add Money Failed", null);
+            return new Response<>(0, "Add Money Failed", null);
         }
     }
 
@@ -209,7 +212,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             result.add(balance);
         }
 
-        return new Response(1, "Success", result);
+        return new Response<>(1, "Success", result);
     }
 
     public String queryAccount(String userId, HttpHeaders headers) {
@@ -238,9 +241,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     public Response queryPayment(HttpHeaders headers) {
         List<Payment> payments = paymentRepository.findAll();
         if (payments != null && payments.size() > 0)
-            return new Response(1, "Query Payment Success", payments);
+            return new Response<>(1, "Query Payment Success", payments);
         else
-            return new Response(0, "Query Payment Failed", null);
+            return new Response<>(0, "Query Payment Failed", null);
     }
 
     @Override
@@ -251,9 +254,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             addMoney.setMoney(money);
             addMoney.setType(MoneyType.D);
             addMoneyRepository.save(addMoney);
-            return new Response(1, "Draw Back Money Scuuess", null);
+            return new Response<>(1, "Draw Back Money Scuuess", null);
         } else {
-            return new Response(0, "Draw Back Money Failed", null);
+            return new Response<>(0, "Draw Back Money Failed", null);
         }
     }
 
@@ -303,27 +306,27 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
 //            boolean outsidePaySuccess = restTemplate.postForObject(
 //                    "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
-            if ("1".equals(outsidePaySuccess.getStatus())) {
+            if ( outsidePaySuccess.getStatus() ==1) {
                 payment.setType(PaymentType.E);
                 paymentRepository.save(payment);
-                return new Response(1, "Pay Difference Success", null);
+                return new Response<>(1, "Pay Difference Success", null);
             } else {
-                return new Response(0, "Pay Difference Failed", null);
+                return new Response<>(0, "Pay Difference Failed", null);
             }
         } else {
             payment.setType(PaymentType.E);
             paymentRepository.save(payment);
         }
-        return new Response(1, "Pay Difference Success", null);
+        return new Response<>(1, "Pay Difference Success", null);
     }
 
     @Override
     public Response queryAddMoney(HttpHeaders headers) {
         List<Money> monies = addMoneyRepository.findAll();
         if (monies != null && monies.size() > 0) {
-            return new Response(1, "Query Money Success", null);
+            return new Response<>(1, "Query Money Success", null);
         } else {
-            return new Response(0, "", null);
+            return new Response<>(0, "", null);
         }
     }
 

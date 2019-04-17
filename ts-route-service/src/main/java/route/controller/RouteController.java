@@ -29,16 +29,19 @@ public class RouteController {
 
     @PostMapping(path = "/routes")
     public ResponseEntity<Response> createAndModifyRoute(@RequestBody RouteInfo createAndModifyRouteInfo, @RequestHeader HttpHeaders headers) {
+        System.out.println("Create Route id: " + createAndModifyRouteInfo.getId());
         return ok(routeService.createAndModify(createAndModifyRouteInfo, headers));
     }
 
     @DeleteMapping(path = "/routes/{routeId}")
     public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
+        System.out.println("Route id: " + routeId);
         return ok(routeService.deleteRoute(routeId, headers));
     }
 
     @GetMapping(path = "/routes/{routeId}")
     public HttpEntity queryById(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
+        System.out.println("Route id: " + routeId);
         return ok(routeService.getRouteById(routeId, headers));
     }
 
@@ -51,6 +54,7 @@ public class RouteController {
     public HttpEntity queryByStartAndTerminal(@PathVariable String startId,
                                               @PathVariable String terminalId,
                                               @RequestHeader HttpHeaders headers) {
+        System.out.println("startId : " + startId + ",  terminalId： " +terminalId );
         return ok(routeService.getRouteByStartAndTerminal(startId, terminalId, headers));
     }
 
