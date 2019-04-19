@@ -2,6 +2,7 @@ package security.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -99,13 +100,14 @@ public class SecurityServiceImpl implements SecurityService {
     private OrderSecurity getSecurityOrderInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Info For Security] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response response = re.getBody();
-        OrderSecurity result = (OrderSecurity) response.getData();
+                new ParameterizedTypeReference<Response<OrderSecurity>>() {
+                });
+        Response<OrderSecurity> response = re.getBody();
+        OrderSecurity result =  response.getData();
 //        OrderSecurity result = restTemplate.postForObject(
 //                "http://ts-order-service:12031/getOrderInfoForSecurity",info,
 //                OrderSecurity.class);
@@ -117,13 +119,14 @@ public class SecurityServiceImpl implements SecurityService {
     private OrderSecurity getSecurityOrderOtherInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         System.out.println("[Security Service][Get Order Other Info For Security] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,
                 requestEntity,
-                Response.class);
-        Response response = re.getBody();
-        OrderSecurity result = (OrderSecurity) response.getData();
+                new ParameterizedTypeReference<Response<OrderSecurity>>() {
+                });
+        Response<OrderSecurity> response = re.getBody();
+        OrderSecurity result =  response.getData();
 //        OrderSecurity result = restTemplate.postForObject(
 //                "http://ts-order-other-service:12032/getOrderOtherInfoForSecurity",info,
 //                OrderSecurity.class);

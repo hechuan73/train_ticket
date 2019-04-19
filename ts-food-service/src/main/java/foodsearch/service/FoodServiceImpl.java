@@ -112,7 +112,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Response getAllFood(String date, String startStation, String endStation, String tripId, HttpHeaders headers) {
         System.out.println("data=" + date + "start=" + startStation + "end=" + endStation + "tripid=" + tripId);
-        AllTripFood allTripFood = null;
+        AllTripFood allTripFood = new AllTripFood();
 
         if (null == tripId || tripId.length() <= 2) {
             return new Response<>(0, "Trip id is not suitable", null);
@@ -124,14 +124,14 @@ public class FoodServiceImpl implements FoodService {
 
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(headers);
-        ResponseEntity<List<TrainFood>> reGetTrainFoodListResult = restTemplate.exchange(
+        ResponseEntity<Response<List<TrainFood>>> reGetTrainFoodListResult = restTemplate.exchange(
                 "http://ts-food-map-service:18855/api/v1/foodmapservice/trainfoods/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetTrainFoodListResult,
-                new ParameterizedTypeReference<List<TrainFood>>() {
+                new ParameterizedTypeReference<Response<List<TrainFood>>>() {
                 });
 
-        List<TrainFood> trainFoodListResult = reGetTrainFoodListResult.getBody();
+        List<TrainFood> trainFoodListResult = reGetTrainFoodListResult.getBody().getData();
 //        GetTrainFoodListResult  trainFoodListResult = restTemplate.postForObject
 //                                        ("http://ts-food-map-service:18855/foodmap/getTrainFoodOfTrip",
 //                                                qti, GetTrainFoodListResult.class);
@@ -168,7 +168,7 @@ public class FoodServiceImpl implements FoodService {
                 HttpEntity requestEntityStartStationId = new HttpEntity(headers);
                 ResponseEntity<Response<String>> reStartStationId = restTemplate.exchange(
                         "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + startStation,
-                        HttpMethod.POST,
+                        HttpMethod.GET,
                         requestEntityStartStationId,
                         new ParameterizedTypeReference<Response<String>>() {
                         });
@@ -189,7 +189,7 @@ public class FoodServiceImpl implements FoodService {
                 HttpEntity requestEntityEndStationId = new HttpEntity(headers);
                 ResponseEntity<Response<String>> reEndStationId = restTemplate.exchange(
                         "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + endStation,
-                        HttpMethod.POST,
+                        HttpMethod.GET,
                         requestEntityEndStationId,
                         new ParameterizedTypeReference<Response<String>>() {
                         });

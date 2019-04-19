@@ -9,7 +9,7 @@ var appConsign = new Vue({
             var that = this;
             $.ajax({
                 type: "get",
-                url: "/consign/findByAccountId/" + accountid,
+                url: "/api/v1/consignservice/consigns/account/" + accountid,
                 dataType: "json",
                 xhrFields: {
                     withCredentials: true
@@ -107,12 +107,15 @@ var appConsign = new Vue({
     },
     mounted() {
         var username = sessionStorage.getItem("client_name");
-        if (username == null || username == "Not Login") {
-           // alert("Please login first!");
-        }
-        else {
-            document.getElementById("client_name").innerHTML = username;
-            this.queryMyConsign();
-        }
+        console.log("UserName" +username);
+        // if (username == null || username == "Not Login") {
+        //    // alert("Please login first!");
+        // }
+        // else {
+        //     document.getElementById("client_name").innerHTML = username;
+        //     this.queryMyConsign();
+        // }
+
+        this.queryMyConsign();
     }
 });

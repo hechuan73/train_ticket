@@ -1,6 +1,4 @@
-/**
- * Created by ldw on 20178/7/17.
- */
+
 var enterStation = new Vue({
     el: '#enterStation',
     data: {
@@ -26,20 +24,19 @@ var enterStation = new Vue({
                 executeInfo.orderId = this.enter_order_id;
                 var data = JSON.stringify(executeInfo);
                 $.ajax({
-                    type: "post",
-                    url: "/execute/execute",
+                    type: "get",
+                    url: "/api/v1/executeservice/execute/execute/" + executeInfo.orderId,
                     contentType: "application/json",
                     dataType: "json",
-                    data: data,
                     xhrFields: {
                         withCredentials: true
                     },
                     success: function (result) {
-                        var obj = result;
-                        if (obj["status"] == true) {
-                            alert(obj["message"]);
+
+                        if (result.status == 1) {
+                            alert("server send message: " + result.msg);
                         } else {
-                            alert(obj["message"]);
+                            alert(result.msg);
                         }
                     },
                     complete: function () {

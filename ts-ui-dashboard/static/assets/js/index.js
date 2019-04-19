@@ -1,6 +1,3 @@
-/**
- * Created by ldw on 20178/7/17.
- */
 
 var reserveApp = new Vue({
     el: '#reserveApp',
@@ -113,13 +110,13 @@ var reserveApp = new Vue({
             this.travelList =[];
 
             if (train_type == 0) {
-                this.queryForTravelInfo(travelQueryData, "/travel/query");
-                this.queryForTravelInfo(travelQueryData, "/travel2/query");
+                this.queryForTravelInfo(travelQueryData, "/api/v1/travelservice/trips/left");
+                this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
             } else if (train_type == 1) {
                 //http://10.141.212.22/travel/query
-                this.queryForTravelInfo(travelQueryData, "/travel/query");
+                this.queryForTravelInfo(travelQueryData, "/api/v1/travelservice/trips/left");
             } else if (train_type == 2) {
-                this.queryForTravelInfo(travelQueryData, "/travel2/query");
+                this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
             }
 
         },
@@ -137,8 +134,8 @@ var reserveApp = new Vue({
                     withCredentials: true
                 },
                 success: function (result) {
-                    if (result[0] != null) {
-                        var obj = result;
+                    if (result.status ==1) {
+                        var obj = result.data;
                         var size = obj.length;
                         that.tempTravelList = obj;
                         that.initSeatClass(size);
@@ -164,71 +161,73 @@ var reserveApp = new Vue({
                 seatPrice = this.travelList[index].priceForEconomyClass;
             }
             var that = this;
-            if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
-
-                $('#my-prompt').modal({
-                    relatedTarget: this,
-                    onConfirm: function (e) {
-                        var loginInfo = new Object();
-                        loginInfo.email = e.data[0];
-                        if (loginInfo.email == null || loginInfo.email == "") {
-                            alert("Email Can Not Be Empty.");
-                            return;
-                        }
-                        if (that.checkEmailFormat(loginInfo.email) == false) {
-                            alert("Email Format Wrong.");
-                            return;
-                        }
-
-                        loginInfo.password = e.data[1];
-                        if (loginInfo.password == null || loginInfo.password == "") {
-                            alert("Password Can Not Be Empty.");
-                            return;
-                        }
-                        loginInfo.verificationCode = e.data[2];
-                        if (loginInfo.verificationCode == null || loginInfo.verificationCode == "") {
-                            alert("Verification Code Can Not Be Empty.");
-                            return;
-                        }
-
-                        var data = JSON.stringify(loginInfo);
-                        $.ajax({
-                            type: "post",
-                            url: "/login",
-                            contentType: "application/json",
-                            dataType: "json",
-                            data: data,
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            success: function (result) {
-                                var obj = result;
-                                if (obj["status"] == true) {
-                                    sessionStorage.setItem("client_id", obj["account"].id);
-                                    sessionStorage.setItem("client_name", obj["account"].name);
-                                    document.cookie = "loginId=" + obj["account"].id;
-                                    document.cookie = "loginToken=" + obj["token"];
-                                    document.getElementById("client_name").innerHTML = obj["account"].name;
-                                    location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
-                                        that.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + that.selectedDate;
-
-                                } else {
-                                    alert(obj["message"]);
-                                }
-                            },
-                            error: function (e) {
-                                alert("login error, please login again!");
-                            }
-                        });
-                    },
-                    onCancel: function (e) {
-                        // alert('cancel!');
-                    }
-                });
-            } else {
-                location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
-                    this.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + this.selectedDate;
-            }
+            // if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
+                // login window
+            //     $('#my-prompt').modal({
+            //         relatedTarget: this,
+            //         onConfirm: function (e) {
+            //             var loginInfo = new Object();
+            //             loginInfo.email = e.data[0];
+            //             if (loginInfo.email == null || loginInfo.email == "") {
+            //                 alert("Email Can Not Be Empty.");
+            //                 return;
+            //             }
+            //             if (that.checkEmailFormat(loginInfo.email) == false) {
+            //                 alert("Email Format Wrong.");
+            //                 return;
+            //             }
+            //
+            //             loginInfo.password = e.data[1];
+            //             if (loginInfo.password == null || loginInfo.password == "") {
+            //                 alert("Password Can Not Be Empty.");
+            //                 return;
+            //             }
+            //             loginInfo.verificationCode = e.data[2];
+            //             if (loginInfo.verificationCode == null || loginInfo.verificationCode == "") {
+            //                 alert("Verification Code Can Not Be Empty.");
+            //                 return;
+            //             }
+            //
+            //             var data = JSON.stringify(loginInfo);
+            //             $.ajax({
+            //                 type: "post",
+            //                 url: "/login",
+            //                 contentType: "application/json",
+            //                 dataType: "json",
+            //                 data: data,
+            //                 xhrFields: {
+            //                     withCredentials: true
+            //                 },
+            //                 success: function (result) {
+            //                     var obj = result;
+            //                     if (obj["status"] == true) {
+            //                         sessionStorage.setItem("client_id", obj["account"].id);
+            //                         sessionStorage.setItem("client_name", obj["account"].name);
+            //                         document.cookie = "loginId=" + obj["account"].id;
+            //                         document.cookie = "loginToken=" + obj["token"];
+            //                         document.getElementById("client_name").innerHTML = obj["account"].name;
+            //                         location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
+            //                             that.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + that.selectedDate;
+            //
+            //                     } else {
+            //                         alert(obj["message"]);
+            //                     }
+            //                 },
+            //                 error: function (e) {
+            //                     alert("login error, please login again!");
+            //                 }
+            //             });
+            //         },
+            //         onCancel: function (e) {
+            //             // alert('cancel!');
+            //         }
+            //     });
+            // } else {
+            //     location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
+            //         this.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + this.selectedDate;
+            // }
+            location.href = "client_ticket_book.html?tripId=" + tripId + "&from=" + from + "&to=" + to + "&seatType=" +
+                this.selectedSeats[index] + "&seat_price=" + seatPrice + "&date=" + this.selectedDate;
         },
         checkDateFormat(date) {
             var dateFormat = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;

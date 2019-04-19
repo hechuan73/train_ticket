@@ -1,6 +1,4 @@
-/**
- * Created by ldw on 20178/7/17.
- */
+
 var collectTicket = new Vue({
         el: '#collectTicket',
         data: {
@@ -26,20 +24,19 @@ var collectTicket = new Vue({
                     executeInfo.orderId = this.collect_order_id;
                     var data = JSON.stringify(executeInfo);
                     $.ajax({
-                        type: "post",
-                        url: "/execute/collected",
+                        type: "get",
+                        url: "/api/v1/executeservice/execute/collected/" + executeInfo.orderId,
                         contentType: "application/json",
                         dataType: "json",
-                        data: data,
                         xhrFields: {
                             withCredentials: true
                         },
                         success: function (result) {
-                            var obj = result;
-                            if (obj["status"] == true) {
-                                alert(obj["message"] + " - you can enter station with your order id !");
+
+                            if (result.status == 1) {
+                                alert(result.msg + " - you can enter station with your order id !");
                             } else {
-                                alert(obj["message"]);
+                                alert(result.msg );
                             }
                         },
                         complete: function () {

@@ -111,7 +111,7 @@ public class OrderController {
     @GetMapping(path = "/order/security/{checkDate}/{accountId}")
     public HttpEntity securityInfoCheck(@PathVariable Date checkDate, @PathVariable String accountId,
                                         @RequestHeader HttpHeaders headers) {
-        System.out.println("[Order Other Service][Security Info Get]");
+        System.out.println("[Order Other Service][Security Info Get]" + accountId);
         return ok(orderService.checkSecurityAboutOrder(checkDate, accountId, headers));
     }
 

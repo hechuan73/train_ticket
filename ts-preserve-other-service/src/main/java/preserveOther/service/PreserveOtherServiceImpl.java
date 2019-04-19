@@ -401,7 +401,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
 
         HttpEntity requestEntityCreateOrderResult = new HttpEntity(coi, httpHeaders);
         ResponseEntity<Response<Order>> reCreateOrderResult = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOthers",
+                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
                 HttpMethod.POST,
                 requestEntityCreateOrderResult,
                 new ParameterizedTypeReference<Response<Order>>() {

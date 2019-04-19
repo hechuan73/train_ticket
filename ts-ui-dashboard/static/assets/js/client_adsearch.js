@@ -1,6 +1,3 @@
-/**
- * Created by ldw on 20178/7/17.
- */
 
 var adSearch = new Vue({
         el: '#adSearch',
@@ -45,11 +42,11 @@ var adSearch = new Vue({
 
                 var selectType = this.selectedSearchType;
                 if (selectType == 0) {
-                    this.advanceSearchForMinStopInfo(advanceSearchData, "/travelPlan/getMinStation");
+                    this.advanceSearchForMinStopInfo(advanceSearchData, "/api/v1/travelplanservice/travelPlan/minStation");
                 } else if (selectType == 1) {
-                    this.advanceSearchForCheapestInfo(advanceSearchData, "/travelPlan/getCheapest");
+                    this.advanceSearchForCheapestInfo(advanceSearchData, "/api/v1/travelplanservice/travelPlan/cheapest");
                 } else if (selectType == 2) {
-                    this.advanceSearchForQuickestInfo(advanceSearchData, "/travelPlan/getQuickest");
+                    this.advanceSearchForQuickestInfo(advanceSearchData, "/api/v1/travelplanservice/travelPlan/quickest");
                 } else {
                     alert("Select Search Type Wrong");
                 }
@@ -69,8 +66,8 @@ var adSearch = new Vue({
                         withCredentials: true
                     },
                     success: function (result) {
-                        if (result.status = true) {
-                            var obj = result["travelAdvanceResultUnits"];
+                        if (result.status = 1) {
+                            var obj = result.data["travelAdvanceResultUnits"];
                             that.adTicketSearchResult = obj;
 
                             that.initSeatClaass(obj.length);

@@ -1,6 +1,4 @@
-/**
- * Created by ldw on 20178/7/17.
- */
+
 var appConsign = new Vue({
     el: '#orderListApp',
     data: {
@@ -40,6 +38,8 @@ var appConsign = new Vue({
     methods: {
         queryMyOrderList() {
             var myOrdersQueryInfo = new Object();
+            //todo
+            myOrdersQueryInfo.loginId ="4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f";
             myOrdersQueryInfo.enableStateQuery = false;
             myOrdersQueryInfo.enableTravelDateQuery = false;
             myOrdersQueryInfo.enableBoughtDateQuery = false;
@@ -50,8 +50,8 @@ var appConsign = new Vue({
             this.tempOrderList = [];
             this.myOrderList = [];
             var myOrdersQueryData = JSON.stringify(myOrdersQueryInfo);
-            this.queryForMyOrderThree("/order/queryForRefresh", myOrdersQueryData);
-            this.queryForMyOrderThree("/orderOther/queryForRefresh",myOrdersQueryData);
+            this.queryForMyOrderThree("/api/v1/orderservice/order/refresh", myOrdersQueryData);
+            this.queryForMyOrderThree("/api/v1/orderOtherService/orderOther/refresh",myOrdersQueryData);
         },
         queryForMyOrderThree(path, data) {
             var that = this;
@@ -65,9 +65,11 @@ var appConsign = new Vue({
                     withCredentials: true
                 },
                 success: function (result) {
-                    var size = result.length;
+                    console.log(result);
+
+                    var size = result.data.length;
                     for (var i = 0; i < size; i++) {
-                        that.tempOrderList[i] = result[i];
+                        that.tempOrderList[i] = result.data[i];
                         // that.tempOrderList[i].from = that.getStationNameById(that.tempOrderList[i].from);
                         // that.tempOrderList[i].to = that.getStationNameById(that.tempOrderList[i].to);
                         that.tempOrderList[i].boughtDate = that.convertNumberToDateTimeString(that.tempOrderList[i].boughtDate)
@@ -516,12 +518,14 @@ var appConsign = new Vue({
     },
     mounted() {
         var username = sessionStorage.getItem("client_name");
-        if (username == null || username == "Not Login") {
-            // alert("Please login first!");
-        }
-        else {
-            document.getElementById("client_name").innerHTML = username;
-            this.queryMyOrderList();
-        }
+        console.log("username: " + username);
+        // if (username == null || username == "Not Login") {
+        //     // alert("Please login first!");
+        // }
+        // else {
+        //     document.getElementById("client_name").innerHTML = username;
+        //     this.queryMyOrderList();
+        // }
+        this.queryMyOrderList();
     }
 });
