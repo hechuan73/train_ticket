@@ -1,0 +1,13 @@
+server:
+  port: 12349
+spring:
+  application:
+    name: ts-auth-service
+  data:
+    mongodb:
+      host: ts-auth-mongo
+      database: ts
+      port: 27017
+
+swagger:
+  controllerPackage: auth.controller

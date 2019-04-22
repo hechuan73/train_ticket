@@ -2,6 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <groupId>fdse.microservice</groupId>
+    <artifactId>ts-auth-service</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
     <parent>
         <artifactId>ts-service</artifactId>
         <groupId>org.services</groupId>
@@ -9,9 +16,24 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ts-common</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.services</groupId>
+            <artifactId>ts-common</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -22,6 +44,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
