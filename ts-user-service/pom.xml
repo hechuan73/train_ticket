@@ -9,7 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+
+    <groupId>fdse.microservice</groupId>
     <artifactId>ts-user-service</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

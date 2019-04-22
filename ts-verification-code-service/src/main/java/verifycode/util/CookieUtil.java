@@ -1,4 +1,4 @@
-package com.trainticket.verificationcode.util;
+package verifycode.util;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

@@ -32,7 +32,6 @@ services:
     networks:
       - my-network
 
-
   ts-ui-dashboard:
     build: ts-ui-dashboard
     image: ts/ts-ui-dashboard
@@ -42,14 +41,38 @@ services:
     networks:
       - my-network
 
-  ts-login-service:
-    build: ts-login-service
-    image: ts/ts-login-service
+  ts-auth-service:
+    build: ts-auth-service
+    image: ts/ts-auth-service
+    restart: always
+    ports:
+      - 12349:12349
+    networks:
+      - my-network
+
+  ts-auth-mongo:
+    image: mongo
+    networks:
+      - my-network
+
+  ts-user-service:
+    build: ts-user-service
+    image: ts/ts-user-service
     restart: always
     ports:
       - 12342:12342
     networks:
       - my-network
+
+  ts-verification-code-service:
+    build: ts-verification-code-service
+    image: ts/ts-verification-code-service
+    restart: always
+    ports:
+      - 15678:15678
+    networks:
+      - my-network
+
 
   ts-account-mongo:
     image: mongo
@@ -66,42 +89,6 @@ services:
       - my-network
 
   ts-route-mongo:
-    image: mongo
-    networks:
-        - my-network
-
-
-  ts-register-service:
-    build: ts-register-service
-    image: ts/ts-register-service
-    restart: always
-    ports:
-      - 12344:12344
-    networks:
-      - my-network
-
-
-  ts-sso-service:
-    build: ts-sso-service
-    image: ts/ts-sso-service
-    restart: always
-    ports:
-      - 12349:12349
-    networks:
-      - my-network
-
-
-
-  ts-verification-code-service:
-    build: ts-verification-code-service
-    image: ts/ts-verification-code-service
-    restart: always
-    ports:
-      - 15678:15678
-    networks:
-      - my-network
-
-  ts-verification-code-mongo:
     image: mongo
     networks:
         - my-network
@@ -546,17 +533,17 @@ services:
                   - my-network
 
   ts-admin-user-service:
-                  build: ts-admin-user-service
-                  image: ts/ts-admin-user-service
-                  restart: always
-                  ports:
-                    - 16115:16115
-                  deploy:
-                    replicas: 1
-                    restart_policy:
-                      condition: on-failure
-                  networks:
-                    - my-network
+    build: ts-admin-user-service
+    image: ts/ts-admin-user-service
+    restart: always
+    ports:
+      - 16115:16115
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - my-network
 
 networks:
     my-network:

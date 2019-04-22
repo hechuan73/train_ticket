@@ -10,7 +10,7 @@ spring:
       host: ts-order-mongo
 #      username: user
 #      password: ${MONGODB_PASSWORD}
-#      database: piggymetrics
+      database: ts
       port: 27017
 
 swagger:
