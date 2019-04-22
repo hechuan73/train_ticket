@@ -14,6 +14,8 @@ public class initData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        // a man can not buy too many tickets in one hour
         SecurityConfig info1 = new SecurityConfig();
         info1.setName("max_order_1_hour");
         info1.setValue(Integer.MAX_VALUE + "");
