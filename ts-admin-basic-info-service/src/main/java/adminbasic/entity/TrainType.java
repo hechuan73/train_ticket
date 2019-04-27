@@ -12,15 +12,6 @@ public class TrainType {
 
     private int averageSpeed;
 
-    private String loginId;
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
 
     public TrainType(){
         //Default Constructor

@@ -40,11 +40,13 @@ app.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: "/adminroute/findAll/" + param.id,
+            url: "/api/v1/adminrouteservice/adminroute",
+            headers: {"Authorization": "Bearer "+param.admin_token},
             withCredentials: true,
         }).success(function (data, status, headers, config) {
-            if (data.status) {
-                information.routeRecords = data.routes;
+            console.log(data);
+            if (data.status == 1) {
+                information.routeRecords = data.data;
                 deferred.resolve(information);
             }
             else{
@@ -63,7 +65,7 @@ app.factory('loadDataService', function ($http, $q) {
  * */
 app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
     var param = {};
-    param.id = sessionStorage.getItem("admin_id");
+    param.admin_token = sessionStorage.getItem("admin_token");
 
     //刷新页面
     $scope.reloadRoute = function () {
@@ -85,29 +87,32 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
     }
     
     //Add new route
+    // has route id ---> update , no add new
     $scope.addNewRoute = function () {
         $('#add_prompt').modal({
             relatedTarget: this,
             onConfirm: function(e) {
                 $http({
                     method: "post",
-                    url: "/adminroute/createAndModifyRoute",
+                    url: "/api/v1/adminrouteservice/adminroute",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data:{
-                        loginId: sessionStorage.getItem("admin_id"),
                         stationList: $scope.add_route_stations,
                         distanceList: $scope.add_route_distances,
                         startStation: $scope.add_route_start_station,
                         endStation: $scope.add_route_terminal_station
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert("Add the route fail!" + data.message);
+                        alert("Add the route fail!" + data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -129,10 +134,10 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             onConfirm: function(e) {
                 $http({
                     method: "post",
-                    url: "/adminroute/createAndModifyRoute",
+                    url: "/api/v1/adminrouteservice/adminroute",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data:{
-                        loginId: sessionStorage.getItem("admin_id"),
                         id: $scope.update_route_id,
                         stationList: $scope.update_route_stations + "",
                         distanceList: $scope.update_route_distances + "",
@@ -140,13 +145,15 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                         endStation: $scope.update_route_terminal_station
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert("Update the route fail!" + data.message);
+                        alert("Update the route fail!" + data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -161,21 +168,20 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(options) {
                 $http({
-                    method: "post",
-                    url: "/adminroute/deleteRoute",
-                    withCredentials: true,
-                    data: {
-                        loginId: sessionStorage.getItem("admin_id"),
-                        routeId: routeId
-                    }
+                    method: "get",
+                    url: "/api/v1/adminrouteservice/adminroute/" + routeId,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.mgs);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert("Delete the route fail!" + data.message);
+                        alert("Delete the route fail!" + data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             // closeOnConfirm: false,

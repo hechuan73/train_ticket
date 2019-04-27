@@ -1,6 +1,6 @@
 package adminuser.controller;
 
-import adminuser.entity.*;
+import adminuser.dto.UserDto;
 import adminuser.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api/v1/adminuserservice")
+@RequestMapping("/api/v1/adminuserservice/users")
 public class AdminUserController {
+
     @Autowired
     AdminUserService adminUserService;
 
@@ -21,23 +22,24 @@ public class AdminUserController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/adminuser/{id}")
-    public HttpEntity getAllUsers(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        return ok(adminUserService.getAllUsers(id, headers));
+    @GetMapping
+    public HttpEntity getAllUsers(@RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.getAllUsers(headers));
     }
 
-    @PostMapping(value = "/adminuser")
-    public HttpEntity addUser(@RequestBody Account request, @RequestHeader HttpHeaders headers) {
-        return ok(adminUserService.addUser(request, headers));
+    @PutMapping
+    public HttpEntity updateOrder(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.updateUser(userDto, headers));
     }
 
-    @PutMapping(value = "/adminuser")
-    public HttpEntity updateOrder(@RequestBody Account request, @RequestHeader HttpHeaders headers) {
-        return ok(adminUserService.updateUser(request, headers));
+
+    @PostMapping
+    public HttpEntity addUser(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.addUser(userDto, headers));
     }
 
-    @DeleteMapping(value = "/adminuser/{loginId}/{accountId}")
-    public HttpEntity deleteOrder(@PathVariable String loginId, @PathVariable String accountId, @RequestHeader HttpHeaders headers) {
-        return ok(adminUserService.deleteUser(loginId, accountId, headers));
+    @DeleteMapping(value = "/{userId}")
+    public HttpEntity deleteOrder(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
+        return ok(adminUserService.deleteUser(userId, headers));
     }
 }

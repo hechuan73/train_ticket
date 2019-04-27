@@ -8,7 +8,7 @@ public class Config {
 
     private String description;
 
-    private String loginId;
+
 
     public Config() {
 
@@ -16,15 +16,6 @@ public class Config {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
 
     public String getName() {
         return name;

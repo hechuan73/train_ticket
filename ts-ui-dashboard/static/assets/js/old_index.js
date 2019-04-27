@@ -40,16 +40,20 @@ app.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: "/adminorder/findAll/" + param.id,
+            url: "/api/v1/adminorderservice/adminorder",
+            headers: {"Authorization": "Bearer "+param.admin_token},
             withCredentials: true,
         }).success(function (data, status, headers, config) {
-            if (data.status) {
-                information.orderRecords = data.orders;
+            if (data.status == 1) {
+                console.log(data);
+                information.orderRecords = data.data;
                 deferred.resolve(information);
             }
             else{
                 alert("Request the order list fail!" + data.message);
             }
+        }).error(function(data, header, config, status){
+            alert(data.message)
         });
 
         return promise;
@@ -63,7 +67,7 @@ app.factory('loadDataService', function ($http, $q) {
  * */
 app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
     var param = {};
-    param.id = sessionStorage.getItem("admin_id");
+    param.admin_token = sessionStorage.getItem("admin_token");
 
     //刷新页面
     $scope.reloadRoute = function () {
@@ -121,6 +125,8 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                     else{
                         alert("Request the order list fail!" + data.message);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -152,11 +158,11 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(e) {
                 $http({
-                    method: "post",
-                    url: "/adminorder/updateOrder",
+                    method: "put",
+                    url: "/api/v1/adminorderservice/adminorder",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data:{
-                        loginid: sessionStorage.getItem("admin_id"),
                         order:{
                             id: $scope.update_order_id,
                             boughtDate: $scope.update_order_bought_date,
@@ -177,13 +183,15 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                         }
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert("Request the order list fail!" + data.message);
+                        alert("Request the order list fail!" + data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -198,22 +206,20 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(options) {
                 $http({
-                    method: "post",
-                    url: "/adminorder/deleteOrder",
-                    withCredentials: true,
-                    data: {
-                        loginid: sessionStorage.getItem("admin_id"),
-                        orderId: orderId,
-                        trainNumber: trainNumber
-                    }
+                    method: "delete",
+                    url: "/api/v1/adminorderservice/adminorder/"+orderId +"/"+ trainNumber,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert("Request the order list fail!" + data.message);
+                        alert("Request the order list fail!" + data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             // closeOnConfirm: false,

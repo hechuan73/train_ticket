@@ -1,6 +1,7 @@
 package order.service;
 
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import order.entity.*;
 import order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -385,7 +387,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
+        log.info("UPDATE ORDER INFO: " +order.toString());
         Order oldOrder = orderRepository.findById(order.getId());
+        System.out.println(oldOrder.toString());
 
         if (oldOrder == null) {
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");

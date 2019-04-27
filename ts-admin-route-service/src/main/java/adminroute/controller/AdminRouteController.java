@@ -22,9 +22,9 @@ public class AdminRouteController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/adminroute/{loginId}")
-    public HttpEntity getAllRoutes(@PathVariable String loginId, @RequestHeader HttpHeaders headers) {
-        return ok(adminRouteService.getAllRoutes(loginId, headers));
+    @GetMapping(path = "/adminroute")
+    public HttpEntity getAllRoutes(@RequestHeader HttpHeaders headers) {
+        return ok(adminRouteService.getAllRoutes(headers));
     }
 
     @PostMapping(value = "/adminroute")
@@ -32,8 +32,8 @@ public class AdminRouteController {
         return ok(adminRouteService.createAndModifyRoute(request, headers));
     }
 
-    @DeleteMapping(value = "/adminroute/{loginId}/{routeId}")
-    public HttpEntity deleteRoute(@PathVariable String loginId, @PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        return ok(adminRouteService.deleteRoute(loginId, routeId, headers));
+    @DeleteMapping(value = "/adminroute/{routeId}")
+    public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
+        return ok(adminRouteService.deleteRoute(routeId, headers));
     }
 }

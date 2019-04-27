@@ -13,6 +13,7 @@
     <groupId>fdse.microservice</groupId>
     <artifactId>ts-user-service</artifactId>
     <version>1.0</version>
+
     <packaging>jar</packaging>
 
     <dependencies>
@@ -20,6 +21,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.services</groupId>
+            <artifactId>ts-common</artifactId>
+            <version>0.1.0</version>
+        </dependency>
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

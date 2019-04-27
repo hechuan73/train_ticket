@@ -21,9 +21,9 @@ public class AdminTravelController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/admintravel/{id}")
-    public HttpEntity getAllTravels(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        return ok(adminTravelService.getAllTravels(id, headers));
+    @GetMapping(path = "/admintravel")
+    public HttpEntity getAllTravels(@RequestHeader HttpHeaders headers) {
+        return ok(adminTravelService.getAllTravels(headers));
     }
 
     @PostMapping(value = "/admintravel")

@@ -35,7 +35,7 @@ public class InitUser implements CommandLineRunner {
             userRepository.save(user);
         }
 
-        User whetherExistAdmin = userRepository.findByUsername("user").orElse(new User());
+        User whetherExistAdmin = userRepository.findByUsername("admin").orElse(new User());
         if (whetherExistAdmin.getUsername() == null) {
             User admin = User.builder()
                     .userId(UUID.randomUUID())
@@ -43,7 +43,6 @@ public class InitUser implements CommandLineRunner {
                     .password(passwordEncoder.encode("222222"))
                     .roles(new HashSet<>(Arrays.asList("ROLE_ADMIN")))
                     .build();
-
             userRepository.save(admin);
         }
     }

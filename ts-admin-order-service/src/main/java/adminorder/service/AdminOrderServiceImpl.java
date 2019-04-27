@@ -19,90 +19,82 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RestTemplate restTemplate;
 
     @Override
-    public Response getAllOrders(String id, HttpHeaders headers) {
-        if (checkId(id)) {
-            System.out.println("[Admin Order Service][Get All Orders]");
-            //Get all of the orders
-            ArrayList<Order> orders = new ArrayList<Order>();
-            //From ts-order-service
-            HttpEntity requestEntity = new HttpEntity(headers);
-            ResponseEntity<Response<ArrayList<Order>>> re = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order",
-                    HttpMethod.GET,
-                    requestEntity,
-                    new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
-                    });
-            Response<ArrayList<Order>> result = re.getBody();
+    public Response getAllOrders(HttpHeaders headers) {
+
+        System.out.println("[Admin Order Service][Get All Orders]");
+        //Get all of the orders
+        ArrayList<Order> orders = new ArrayList<Order>();
+        //From ts-order-service
+        HttpEntity requestEntity = new HttpEntity(headers);
+        ResponseEntity<Response<ArrayList<Order>>> re = restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order",
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
+                });
+        Response<ArrayList<Order>> result = re.getBody();
 //            QueryOrderResult result = restTemplate.getForObject(
 //                    "http://ts-order-service:12031/order/findAll",
 //                    QueryOrderResult.class);
-            if (result.getStatus() == 1) {
-                System.out.println("[Admin Order Service][Get Orders From ts-order-service successfully!]");
-                ArrayList<Order> orders1 = result.getData();
-                orders.addAll(orders1);
-            } else
-                System.out.println("[Admin Order Service][Get Orders From ts-order-service fail!]");
-            //From ts-order-other-service
-            HttpEntity requestEntity2 = new HttpEntity(headers);
-            ResponseEntity<Response<ArrayList<Order>>> re2 = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
-                    HttpMethod.GET,
-                    requestEntity2,
-                    new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
-                    });
-            result = re2.getBody();
+        if (result.getStatus() == 1) {
+            System.out.println("[Admin Order Service][Get Orders From ts-order-service successfully!]");
+            ArrayList<Order> orders1 = result.getData();
+            orders.addAll(orders1);
+        } else {
+            System.out.println("[Admin Order Service][Get Orders From ts-order-service fail!]");
+        }
+        //From ts-order-other-service
+        HttpEntity requestEntity2 = new HttpEntity(headers);
+        ResponseEntity<Response<ArrayList<Order>>> re2 = restTemplate.exchange(
+                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
+                HttpMethod.GET,
+                requestEntity2,
+                new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
+                });
+        result = re2.getBody();
 //            result = restTemplate.getForObject(
 //                    "http://ts-order-other-service:12032/orderOther/findAll",
 //                    QueryOrderResult.class);
-            if (result.getStatus() == 1) {
-                System.out.println("[Admin Order Service][Get Orders From ts-order-other-service successfully!]");
-                ArrayList<Order> orders1 = (ArrayList<Order>) result.getData();
-                orders.addAll(orders1);
-            } else
-                System.out.println("[Admin Order Service][Get Orders From ts-order-other-service fail!]");
-            //Return orders
-            return new Response<>(1, "Get the orders successfully!", orders);
+        if (result.getStatus() == 1) {
+            System.out.println("[Admin Order Service][Get Orders From ts-order-other-service successfully!]");
+            ArrayList<Order> orders1 = (ArrayList<Order>) result.getData();
+            orders.addAll(orders1);
         } else {
-            System.out.println("[Admin Order Service][Wrong Admin ID]");
-            return new Response<>(0, "The loginId is Wrong: " + id, null);
+            System.out.println("[Admin Order Service][Get Orders From ts-order-other-service fail!]");
         }
+        //Return orders
+        return new Response<>(1, "Get the orders successfully!", orders);
+
     }
 
     @Override
-    public Response deleteOrder(String loginid, String orderId, String trainNumber, HttpHeaders headers) {
-        if (checkId(loginid)) {
-
-            Response deleteOrderResult;
-
-
-            if (trainNumber.startsWith("G") || trainNumber.startsWith("D")) {
-                System.out.println("[Admin Order Service][Delete Order]");
-                HttpEntity requestEntity = new HttpEntity(headers);
-                ResponseEntity<Response> re = restTemplate.exchange(
-                        "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
-                        HttpMethod.DELETE,
-                        requestEntity,
-                        Response.class);
-                deleteOrderResult = re.getBody();
+    public Response deleteOrder(String orderId, String trainNumber, HttpHeaders headers) {
+        Response deleteOrderResult;
+        if (trainNumber.startsWith("G") || trainNumber.startsWith("D")) {
+            System.out.println("[Admin Order Service][Delete Order]");
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
+                    HttpMethod.DELETE,
+                    requestEntity,
+                    Response.class);
+            deleteOrderResult = re.getBody();
 //                deleteOrderResult = restTemplate.postForObject(
 //                        "http://ts-order-service:12031/order/delete", deleteOrderInfo,DeleteOrderResult.class);
-            } else {
-                System.out.println("[Admin Order Service][Delete Order Other]");
-                HttpEntity requestEntity = new HttpEntity(headers);
-                ResponseEntity<Response> re = restTemplate.exchange(
-                        "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
-                        HttpMethod.DELETE,
-                        requestEntity,
-                        Response.class);
-                deleteOrderResult = re.getBody();
+        } else {
+            System.out.println("[Admin Order Service][Delete Order Other]");
+            HttpEntity requestEntity = new HttpEntity(headers);
+            ResponseEntity<Response> re = restTemplate.exchange(
+                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
+                    HttpMethod.DELETE,
+                    requestEntity,
+                    Response.class);
+            deleteOrderResult = re.getBody();
 //                deleteOrderResult = restTemplate.postForObject(
 //                        "http://ts-order-other-service:12032/orderOther/delete", deleteOrderInfo,DeleteOrderResult.class);
-            }
-            return deleteOrderResult;
-        } else {
-            System.out.println("[Admin Order Service][Wrong Admin ID]");
-            return new Response<>(0, "The loginId is Wrong: " + loginid, null);
         }
+        return deleteOrderResult;
+
     }
 
     @Override
@@ -166,11 +158,5 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     }
 
-    private boolean checkId(String id) {
-        if ("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 }

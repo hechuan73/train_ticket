@@ -14,19 +14,13 @@ public class Station {
 
     private int stayTime;
 
-    private String loginId;
+
 
     public Station(){
         //Default Constructor
     }
 
-    public String getLoginId() {
-        return loginId;
-    }
 
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
 
     public Station(String id, String name) {
         this.id = id;

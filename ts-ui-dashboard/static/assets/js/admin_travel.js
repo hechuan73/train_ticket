@@ -40,16 +40,19 @@ app.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: "/admintravel/findAll/" + param.id,
+            url: "/api/v1/admintravelservice/admintravel",
+            headers: {"Authorization": "Bearer "+param.admin_token},
             withCredentials: true,
         }).success(function (data, status, headers, config) {
-            if (data.status) {
-                information.travelRecords = data.trips;
+            if (data.status == 1) {
+                information.travelRecords = data.data;
                 deferred.resolve(information);
             }
             else{
                 alert("Request the order list fail!" + data.message);
             }
+        }).error(function(data, header, config, status){
+            alert(data.message)
         });
 
         return promise;
@@ -63,7 +66,7 @@ app.factory('loadDataService', function ($http, $q) {
  * */
 app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
     var param = {};
-    param.id = sessionStorage.getItem("admin_id");
+    param.admin_token = sessionStorage.getItem("admin_token");
 
     //刷新页面
     $scope.reloadRoute = function () {
@@ -108,6 +111,8 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                     else{
                         alert(data.message);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -127,24 +132,26 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(e) {
                 $http({
-                    method: "post",
-                    url: "/admintravel/updateTravel",
+                    method: "put",
+                    url: "/api/v1/admintravelservice/admintravel",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data:{
-                        loginId: sessionStorage.getItem("admin_id"),
                         tripId: $scope.update_travel_id,
                         trainTypeId: $scope.update_travel_train_type_id,
                         routeId: $scope.update_travel_route_id,
                         startingTime: $scope.update_travel_start_time
                     }
                 }).success(function (data, status, headers, config) {
-                    if(data.status){
-                        alert(data.message);
+                    if(data.status == 1){
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert(data.message);
+                        alert(data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             onCancel: function(e) {
@@ -160,21 +167,20 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(options) {
                 $http({
-                    method: "post",
-                    url: "/admintravel/deleteTravel",
-                    withCredentials: true,
-                    data: {
-                        loginId: sessionStorage.getItem("admin_id"),
-                        tripId: tripId
-                    }
+                    method: "delete",
+                    url: "/api/v1/admintravelservice/admintravel/" + tripId,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if(data.status){
-                        alert(data.message);
+                    if(data.status ==1 ){
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
-                        alert(data.message);
+                        alert(data.msg);
                     }
+                }).error(function(data, header, config, status){
+                    alert(data.message)
                 });
             },
             // closeOnConfirm: false,

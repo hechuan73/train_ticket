@@ -1,18 +1,21 @@
 package user.controller;
 
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import user.dto.UserDto;
-import user.entity.User;
 import user.service.UserService;
 
-import java.util.List;
+import java.util.UUID;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/userservice/users")
 public class UserController {
 
     @Autowired
@@ -24,19 +27,30 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<Response> getAllUser(@RequestHeader HttpHeaders headers) {
+        return ok(userService.getAllUsers(headers));
     }
 
     @GetMapping("/{userName}")
-    public Object getUserByUserName(@PathVariable String userName) {
-        return userService.findByUserName(userName);
+    public Object getUserByUserName(@PathVariable String userName, @RequestHeader HttpHeaders headers) {
+        return userService.findByUserName(userName, headers);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto));
+    public ResponseEntity<Response> registerUser(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto, headers));
     }
 
+    // only admin token can delete
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Response> deleteUserById(@PathVariable String userId,
+                                                   @RequestHeader HttpHeaders headers) {
+        return ok(userService.deleteUser(UUID.fromString(userId), headers));
+    }
 
+    @PutMapping
+    public ResponseEntity<Response> updateUser(@RequestBody UserDto user,
+                                               @RequestHeader HttpHeaders headers) {
+        return ok(userService.updateUser(user, headers));
+    }
 }

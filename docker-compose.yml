@@ -46,7 +46,7 @@ services:
     image: ts/ts-auth-service
     restart: always
     ports:
-      - 12349:12349
+      - 12340:12340
     networks:
       - my-network
 
@@ -61,6 +61,11 @@ services:
     restart: always
     ports:
       - 12342:12342
+    networks:
+      - my-network
+
+  ts-user-mongo:
+    image: mongo
     networks:
       - my-network
 

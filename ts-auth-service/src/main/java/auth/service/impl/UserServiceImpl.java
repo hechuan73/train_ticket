@@ -7,16 +7,14 @@ import auth.entity.User;
 import auth.exception.UserOperationException;
 import auth.repository.UserRepository;
 import auth.service.UserService;
+import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -56,6 +54,13 @@ public class UserServiceImpl implements UserService {
 
         checkUserCreateInfo(user);
         return userRepository.save(user);
+    }
+
+    @Override
+    public Response deleteByUserId(UUID userId) {
+        log.info("DELETE USER :" + userId);
+         userRepository.deleteByUserId(userId);
+        return new Response(1, "DELETE USER SUCCESS", null);
     }
 
 

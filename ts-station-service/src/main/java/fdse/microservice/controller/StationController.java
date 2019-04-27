@@ -19,6 +19,8 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/api/v1/stationservice")
 public class StationController {
 
+
+
     //private static final Logger log = LoggerFactory.getLogger(Application.class);
     @Autowired
     private StationService stationService;

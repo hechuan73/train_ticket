@@ -13,29 +13,29 @@ spring:
       database: ts
       port: 27017
 
-  rabbitmq:
-    host: rabbitmq
-    listener:
-      retry:
-        enabled: false
-        max-attempts: 1
-    template:
-      retry:
-        enabled: false
-        max-attempts: 1
-  cloud:
-    stream:
-      bindings:
-        output:
-          # group: ts-return-cancel
-          destination: ts-order-other-exchange
-          contentType: application/json
-          binder: rabbit
-        input:
-          group: ts-order-other-service
-          destination: ts-order-other-exchange
-          contentType: application/json
-          binder: rabbit
+#  rabbitmq:
+#    host: rabbitmq
+#    listener:
+#      retry:
+#        enabled: false
+#        max-attempts: 1
+#    template:
+#      retry:
+#        enabled: false
+#        max-attempts: 1
+#  cloud:
+#    stream:
+#      bindings:
+#        output:
+#          # group: ts-return-cancel
+#          destination: ts-order-other-exchange
+#          contentType: application/json
+#          binder: rabbit
+#        input:
+#          group: ts-order-other-service
+#          destination: ts-order-other-exchange
+#          contentType: application/json
+#          binder: rabbit
 
 swagger:
   controllerPackage: other.controller

@@ -9,16 +9,16 @@ import javax.annotation.Resource;
 public interface AdminBasicInfoService {
 
     ////////////contact/////////////////////////////////////////
-    Response getAllContacts(String loginId, HttpHeaders headers);
+    Response getAllContacts(  HttpHeaders headers);
 
-    Response addContact(String loginId, Contacts c, HttpHeaders headers);
+    Response addContact(  Contacts c, HttpHeaders headers);
 
-    Response deleteContact(String loginId, String contactsId, HttpHeaders headers);
+    Response deleteContact( String contactsId, HttpHeaders headers);
 
     Response modifyContact(Contacts mci, HttpHeaders headers);
 
     ////////////////////////////station///////////////////////////////
-    Response getAllStations(String loginId, HttpHeaders headers);
+    Response getAllStations(  HttpHeaders headers);
 
     Response addStation(Station s, HttpHeaders headers);
 
@@ -27,26 +27,26 @@ public interface AdminBasicInfoService {
     Response modifyStation(Station s, HttpHeaders headers);
 
     ////////////////////////////train///////////////////////////////
-    Response getAllTrains(String loginId, HttpHeaders headers);
+    Response getAllTrains(  HttpHeaders headers);
 
     Response addTrain(TrainType t, HttpHeaders headers);
 
-    Response deleteTrain(String id, String loginId, HttpHeaders headers);
+    Response deleteTrain(String id,   HttpHeaders headers);
 
     Response modifyTrain(TrainType t, HttpHeaders headers);
 
     ////////////////////////////config///////////////////////////////
-    Response getAllConfigs(String loginId, HttpHeaders headers);
+    Response getAllConfigs(  HttpHeaders headers);
 
     Response addConfig(Config c, HttpHeaders headers);
 
 
-    Response deleteConfig(String name,String loginId, HttpHeaders headers);
+    Response deleteConfig(String name, HttpHeaders headers);
 
     Response modifyConfig(Config c, HttpHeaders headers);
 
     ////////////////////////////price///////////////////////////////
-    Response getAllPrices(String loginId, HttpHeaders headers);
+    Response getAllPrices(  HttpHeaders headers);
 
     Response addPrice(PriceInfo pi, HttpHeaders headers);
 

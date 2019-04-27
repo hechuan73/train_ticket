@@ -1,25 +1,38 @@
 package auth.controller;
 
-import auth.dto.AuthDto;
+
+import auth.dto.BasicAuthDto;
+import auth.dto.TokenDto;
 import auth.entity.User;
+import auth.service.TokenService;
 import auth.service.UserService;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @GetMapping("/hello")
     public Object getHello() {
         return "Hello";
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenDto> getToken(@RequestBody BasicAuthDto dao) {
+        return ResponseEntity.ok(tokenService.getToken(dao));
     }
 
     @GetMapping
@@ -27,16 +40,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getAllUser());
     }
 
-    /**
-     * only while  user register, this method will be called by ts-user-service
-     * to create a default role user
-     *
-     * @param dto uuid id , username  password
-     * @return
-     */
-    @PostMapping("/auth")
-    public ResponseEntity<Void> createDefaultUser(@RequestBody AuthDto dto) {
-        userService.createDefaultAuthUser(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Response> deleteUserById(@PathVariable String userId) {
+        return ResponseEntity.ok(userService.deleteByUserId(UUID.fromString(userId)));
     }
 }

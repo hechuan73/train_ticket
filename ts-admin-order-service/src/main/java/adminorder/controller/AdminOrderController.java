@@ -22,9 +22,9 @@ public class AdminOrderController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(path = "/adminorder/{loginid}")
-    public HttpEntity getAllOrders(@PathVariable String loginid, @RequestHeader HttpHeaders headers) {
-        return ok(adminOrderService.getAllOrders(loginid, headers));
+    @GetMapping(path = "/adminorder")
+    public HttpEntity getAllOrders(@RequestHeader HttpHeaders headers) {
+        return ok(adminOrderService.getAllOrders(headers));
     }
 
     @PostMapping(value = "/adminorder")
@@ -37,9 +37,9 @@ public class AdminOrderController {
         return ok(adminOrderService.updateOrder(request, headers));
     }
 
-    @DeleteMapping(value = "/adminorder/{loginid}/{orderId}/{trainNumber}")
-    public HttpEntity deleteOrder(@PathVariable String loginid, @PathVariable String orderId, @PathVariable String trainNumber, @RequestHeader HttpHeaders headers) {
-        return ok(adminOrderService.deleteOrder(loginid, orderId, trainNumber, headers));
+    @DeleteMapping(value = "/adminorder/{orderId}/{trainNumber}")
+    public HttpEntity deleteOrder(@PathVariable String orderId, @PathVariable String trainNumber, @RequestHeader HttpHeaders headers) {
+        return ok(adminOrderService.deleteOrder(orderId, trainNumber, headers));
     }
 
 }

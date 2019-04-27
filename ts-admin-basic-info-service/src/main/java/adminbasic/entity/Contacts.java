@@ -17,18 +17,10 @@ public class Contacts implements Serializable{
 
     private String phoneNumber;
 
-    private String loginId;
+
 
     public Contacts() {
         //Default Constructor
-    }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
     }
 
     public UUID getId() {

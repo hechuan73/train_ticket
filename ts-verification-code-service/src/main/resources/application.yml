@@ -7,4 +7,4 @@ spring:
     name: ts-verification-code-service
 
 swagger:
-  controllerPackage: com.trainticket.verificationcode.controller
+  controllerPackage: verifycode.controller

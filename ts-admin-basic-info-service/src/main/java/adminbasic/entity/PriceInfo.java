@@ -12,9 +12,8 @@ public class PriceInfo {
 
     private double firstClassPriceRate;
 
-    private String loginId;
 
-    public PriceInfo(){
+    public PriceInfo() {
 
     }
 
@@ -57,15 +56,4 @@ public class PriceInfo {
     public void setFirstClassPriceRate(double firstClassPriceRate) {
         this.firstClassPriceRate = firstClassPriceRate;
     }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
-
-
 }

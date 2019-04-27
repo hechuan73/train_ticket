@@ -16,11 +16,12 @@ import java.util.ArrayList;
 
 @Service
 public class AdminTravelServiceImpl implements AdminTravelService {
+
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public Response getAllTravels(String id, HttpHeaders headers) {
+    public Response getAllTravels(HttpHeaders headers) {
         Response<ArrayList<AdminTrip>> result = new Response<ArrayList<AdminTrip>>();
         ArrayList<AdminTrip> trips = new ArrayList<AdminTrip>();
 
@@ -143,13 +144,4 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         return result;
     }
-
-    private boolean checkId(String id) {
-        if ("1d1a11c1-11cb-1cf1-b1bb-b11111d1da1f".equals(id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

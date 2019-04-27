@@ -5,7 +5,7 @@ import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminTravelService {
-    Response getAllTravels(String id, HttpHeaders headers);
+    Response getAllTravels(  HttpHeaders headers);
 
     Response addTravel(TravelInfo request, HttpHeaders headers);
 

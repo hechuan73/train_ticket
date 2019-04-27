@@ -1,12 +1,12 @@
 server:
-  port: 12349
+  port: 12340
 spring:
   application:
     name: ts-auth-service
   data:
     mongodb:
       host: ts-auth-mongo
-      database: ts
+      database: ts-auth-mongo
       port: 27017
 
 swagger:

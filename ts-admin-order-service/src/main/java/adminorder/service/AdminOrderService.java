@@ -7,9 +7,9 @@ import org.springframework.http.HttpHeaders;
 import java.awt.image.RescaleOp;
 
 public interface AdminOrderService {
-    Response getAllOrders(String id, HttpHeaders headers);
+    Response getAllOrders(HttpHeaders headers);
 
-    Response deleteOrder(String loginid, String orderId,String trainNumber, HttpHeaders headers);
+    Response deleteOrder(  String orderId,String trainNumber, HttpHeaders headers);
     Response updateOrder(Order request, HttpHeaders headers);
     Response addOrder(Order request, HttpHeaders headers);
 }
