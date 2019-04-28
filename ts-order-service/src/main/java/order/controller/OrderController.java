@@ -126,7 +126,7 @@ public class OrderController {
     }
 
     @CrossOrigin(origins = "*")
-    @PutMapping(path = "/order/adminUpdate")
+    @PutMapping(path = "/order/admin")
     public HttpEntity updateOrder(@RequestBody Order order, @RequestHeader HttpHeaders headers) {
         // Order
         return ok(orderService.updateOrder(order, headers));

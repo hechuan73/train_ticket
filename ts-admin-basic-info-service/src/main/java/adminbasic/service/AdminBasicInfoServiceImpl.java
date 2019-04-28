@@ -2,17 +2,20 @@ package adminbasic.service;
 
 import adminbasic.entity.*;
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Autowired
@@ -57,7 +60,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response modifyContact(Contacts mci, HttpHeaders headers) {
         Response result;
-
+        log.info("MODIFY CONTACTS: " + mci.toString());
         HttpEntity requestEntity = new HttpEntity(mci, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-contacts-service:12347/api/v1/contactservice/contacts",
@@ -148,10 +151,11 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
-                HttpMethod.PATCH,
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
         result = re.getBody();
+
 //            result = restTemplate.postForObject("http://ts-station-service:12345/station/update",s, Boolean.class);
         return result;
 
@@ -259,7 +263,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-config-service:15679/api/v1/configservice/configs/" + name,
-                HttpMethod.POST,
+                HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
 
@@ -274,7 +278,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-config-service:15679/api/v1/configservice/configs",
-                HttpMethod.PATCH,
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 //            result = restTemplate.postForObject("http://ts-config-service:15679/config/update",c, String.class);

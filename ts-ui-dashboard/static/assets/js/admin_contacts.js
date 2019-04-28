@@ -46,18 +46,15 @@ contactsModule.controller("contactCtrl", function ($scope, $http, loadDataServic
                 // var msg = '你要删除的链接 ID 为 ' + contact.id;
                 // alert(msg);
                 $http({
-                    method: "post",
-                    url: "/adminbasic/deleteContacts",
-                    withCredentials: true,
-                    data: {
-                        loginId: sessionStorage.getItem("admin_id"),
-                        contactsId: contact.id
-                    }
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/contacts/" + contact.id,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
+                    if (data.status == 1) {
                         alert("Delete contact successfully!");
                     } else {
-                        alert(data.message);
+                        alert(data.msg);
                     }
                     $window.location.reload();
                 }).error(function(data, header, config, status){
@@ -81,23 +78,23 @@ contactsModule.controller("contactCtrl", function ($scope, $http, loadDataServic
             relatedTarget: this,
             onConfirm: function (options) {
                 var data = new Object();
-                data.contactsId = contact.id;
+                data.id = contact.id;
                 data.name = $('#update-contact-name').val();
                 data.documentType = $('#update-contact-document-type').val();
                 data.documentNumber = $('#update-contact-document-number').val();
                 data.phoneNumber = $('#update-contact-phone-number').val();
-                data.loginId = sessionStorage.getItem("admin_id");
                 // alert(JSON.stringify(data));
                 $http({
-                    method: "post",
-                    url: "/adminbasic/modifyContacts",
+                    method: "put",
+                    url: "/api/v1/adminbasicservice/adminbasic/contacts",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data: data
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
+                    if (data.status ==1 ) {
                         alert("Update contact successfully!");
                     } else {
-                        alert(data.message);
+                        alert(data.msg);
                     }
                     $window.location.reload();
                 }).error(function(data, header, config, status){
@@ -126,18 +123,18 @@ contactsModule.controller("contactCtrl", function ($scope, $http, loadDataServic
                     data.documentType = $('#add-contact-document-type').val();
                     data.documentNumber = $('#add-contact-document-number').val();
                     data.phoneNumber = $('#add-contact-phone-number').val();
-                    data.loginId = sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
                         method: "post",
-                        url: "/adminbasic/addContacts",
+                        url: "/api/v1/adminbasicservice/adminbasic/contacts",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
                         data: data
                     }).success(function (data, status, headers, config) {
-                        if (data.status) {
+                        if (data.status == 1) {
                             alert("Add contact successfully!");
                         } else {
-                            alert(data.message);
+                            alert(data.msg);
                         }
                         $window.location.reload();
                     }).error(function(data, header, config, status){

@@ -105,14 +105,14 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 //                result = restTemplate.postForObject(
 //                        "http://ts-travel-service:12346/travel/update", request ,String.class);
         } else {
-            requestUrl = "http://ts-travel2-service:16346/travel2/api/v1/travel2service/trips";
+            requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
 //                result = restTemplate.postForObject(
 //                        "http://ts-travel2-service:16346/travel2/update", request ,String.class);
         }
         HttpEntity requestEntity = new HttpEntity(request, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 requestUrl,
-                HttpMethod.POST,
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
         result = re.getBody();

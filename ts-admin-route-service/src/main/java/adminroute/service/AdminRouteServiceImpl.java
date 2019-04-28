@@ -3,6 +3,7 @@ package adminroute.service;
 import adminroute.entity.Route;
 import adminroute.entity.RouteInfo;
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class AdminRouteServiceImpl implements AdminRouteService {
     @Autowired
     private RestTemplate restTemplate;
@@ -55,7 +57,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
-                HttpMethod.POST,
+                HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
         Response result = re.getBody();

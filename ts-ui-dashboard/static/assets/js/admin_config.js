@@ -23,7 +23,7 @@ configModule.factory('loadDataService', function ($http, $q) {
             else {
                 alert("Request the configure list fail!" + data.message);
             }
-        }).error(function(data, header, config, status){
+        }).error(function (data, header, config, status) {
             alert(data.message)
         });
         return promise;
@@ -45,21 +45,18 @@ configModule.controller("configCtrl", function ($scope, $http, loadDataService, 
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method: "post",
-                    url: "/adminbasic/deleteConfig",
-                    withCredentials: true,
-                    data: {
-                        loginId: sessionStorage.getItem("admin_id"),
-                        name: config.name
-                    }
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs/" + config.name,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if (data) {
+                    if (data.status == 1) {
                         alert("Delete config successfully!");
                     } else {
                         alert("Update config failed!");
                     }
                     $window.location.reload();
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
@@ -82,21 +79,21 @@ configModule.controller("configCtrl", function ($scope, $http, loadDataService, 
                 data.name = $('#update-config-name').val();
                 data.value = $('#update-config-value').val();
                 data.description = $('#update-config-desc').val();
-                data.loginId = sessionStorage.getItem("admin_id");
                 // alert(JSON.stringify(data));
                 $http({
-                    method: "post",
-                    url: "/adminbasic/modifyConfig",
+                    method: "put",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data: data
                 }).success(function (data, status, headers, config) {
-                    if (data) {
+                    if (data.status == 1) {
                         alert("Update configure successfully!");
                     } else {
                         alert("Update configure failed!");
                     }
                     $window.location.reload();
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
 
@@ -119,21 +116,21 @@ configModule.controller("configCtrl", function ($scope, $http, loadDataService, 
                 data.name = $('#add-config-name').val();
                 data.value = $('#add-config-value').val();
                 data.description = $('#add-config-desc').val();
-                data.loginId = sessionStorage.getItem("admin_id");
                 // alert(JSON.stringify(data));
                 $http({
                     method: "post",
-                    url: "/adminbasic/addConfig",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data: data
                 }).success(function (data, status, headers, config) {
-                    if (data) {
+                    if (data.status == 1) {
                         alert("Add Configure successfully!");
                     } else {
                         alert("Add Configure failed!");
                     }
                     $window.location.reload();
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
 

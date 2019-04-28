@@ -2,6 +2,7 @@ package adminorder.service;
 
 import adminorder.entity.*;
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 
 @Service
+@Slf4j
 public class AdminOrderServiceImpl implements AdminOrderService {
     @Autowired
     private RestTemplate restTemplate;
@@ -101,11 +103,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public Response updateOrder(Order request, HttpHeaders headers) {
 
         Response updateOrderResult;
+        log.info("UPDATE ORDER INFO : " + request.toString());
         if (request.getTrainNumber().startsWith("G") || request.getTrainNumber().startsWith("D")) {
+
             System.out.println("[Admin Order Service][Update Order]");
             HttpEntity requestEntity = new HttpEntity(request, headers);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/adminUpdate",
+                    "http://ts-order-service:12031/api/v1/orderservice/order/admin",
                     HttpMethod.PUT,
                     requestEntity,
                     Response.class);
@@ -116,7 +120,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             System.out.println("[Admin Order Service][Add New Order Other]");
             HttpEntity requestEntity = new HttpEntity(request, headers);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/adminUpdate",
+                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/admin",
                     HttpMethod.PUT,
                     requestEntity,
                     Response.class);

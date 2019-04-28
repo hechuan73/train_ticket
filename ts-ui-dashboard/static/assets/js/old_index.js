@@ -41,7 +41,7 @@ app.factory('loadDataService', function ($http, $q) {
         $http({
             method: "get",
             url: "/api/v1/adminorderservice/adminorder",
-            headers: {"Authorization": "Bearer "+param.admin_token},
+            headers: {"Authorization": "Bearer " + param.admin_token},
             withCredentials: true,
         }).success(function (data, status, headers, config) {
             if (data.status == 1) {
@@ -49,10 +49,10 @@ app.factory('loadDataService', function ($http, $q) {
                 information.orderRecords = data.data;
                 deferred.resolve(information);
             }
-            else{
+            else {
                 alert("Request the order list fail!" + data.message);
             }
-        }).error(function(data, header, config, status){
+        }).error(function (data, header, config, status) {
             alert(data.message)
         });
 
@@ -65,7 +65,7 @@ app.factory('loadDataService', function ($http, $q) {
 /*
  * 加载列表
  * */
-app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
+app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
     var param = {};
     param.admin_token = sessionStorage.getItem("admin_token");
 
@@ -82,59 +82,57 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
 
     $scope.decodeInfo = function (obj) {
         var des = "";
-        for(var name in obj){
+        for (var name in obj) {
             des += name + ":" + obj[name] + ";";
         }
         alert(des);
     }
-    
+
     //Add new order
     $scope.addNewOrder = function () {
         $('#add_prompt').modal({
             relatedTarget: this,
-            onConfirm: function(e) {
+            onConfirm: function (e) {
                 $http({
                     method: "post",
-                    url: "/adminorder/addOrder",
+                    url: "/api/v1/adminorderservice/adminorder",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:{
-                        loginid: sessionStorage.getItem("admin_id"),
-                        order:{
-                            boughtDate: $scope.add_order_bought_date,
-                            travelDate: $scope.add_order_travel_date,
-                            travelTime: $scope.add_order_travel_time,
-                            accountId: $scope.add_order_account,
-                            contactsName: $scope.add_order_passenger,
-                            documentType: $scope.add_order_document_type,
-                            contactsDocumentNumber: $scope.add_order_document_number,
-                            trainNumber: $scope.add_order_train_number,
-                            coachNumber: $scope.add_order_coach_number,
-                            seatClass: $scope.add_order_seat_class,
-                            seatNumber: $scope.add_order_seat_number,
-                            from: $scope.add_order_from,
-                            to: $scope.add_order_to,
-                            status: $scope.add_order_status,
-                            price: $scope.add_order_price
-                        }
+                    data: {
+                        boughtDate: $scope.add_order_bought_date,
+                        travelDate: $scope.add_order_travel_date,
+                        travelTime: $scope.add_order_travel_time,
+                        accountId: $scope.add_order_account,
+                        contactsName: $scope.add_order_passenger,
+                        documentType: $scope.add_order_document_type,
+                        contactsDocumentNumber: $scope.add_order_document_number,
+                        trainNumber: $scope.add_order_train_number,
+                        coachNumber: $scope.add_order_coach_number,
+                        seatClass: $scope.add_order_seat_class,
+                        seatNumber: $scope.add_order_seat_number,
+                        from: $scope.add_order_from,
+                        to: $scope.add_order_to,
+                        status: $scope.add_order_status,
+                        price: $scope.add_order_price
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
-                    else{
-                        alert("Request the order list fail!" + data.message);
+                    else {
+                        alert("Request the order list fail!" + data.msg);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
-            onCancel: function(e) {
+            onCancel: function (e) {
                 alert('You have canceled the operation!');
             }
         });
     }
-    
+
     //Update exist order
     $scope.updateOrder = function (record) {
         $scope.update_order_id = record.id;
@@ -156,58 +154,58 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
 
         $('#update_prompt').modal({
             relatedTarget: this,
-            onConfirm: function(e) {
+            onConfirm: function (e) {
                 $http({
                     method: "put",
                     url: "/api/v1/adminorderservice/adminorder",
                     headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:{
-                        order:{
-                            id: $scope.update_order_id,
-                            boughtDate: $scope.update_order_bought_date,
-                            travelDate: $scope.update_order_travel_date,
-                            travelTime: $scope.update_order_travel_time,
-                            accountId: $scope.update_order_account,
-                            contactsName: $scope.update_order_passenger,
-                            documentType: $scope.update_add_order_document_type,
-                            contactsDocumentNumber: $scope.update_order_document_number,
-                            trainNumber: $scope.update_order_train_number,
-                            coachNumber: $scope.update_order_coach_number,
-                            seatClass: $scope.update_order_seat_class,
-                            seatNumber: $scope.update_order_seat_number,
-                            from: $scope.update_order_from,
-                            to: $scope.update_order_to,
-                            status: $scope.update_order_status,
-                            price: $scope.update_order_price
-                        }
+                    data: {
+
+                        id: $scope.update_order_id,
+                        boughtDate: $scope.update_order_bought_date,
+                        travelDate: $scope.update_order_travel_date,
+                        travelTime: $scope.update_order_travel_time,
+                        accountId: $scope.update_order_account,
+                        contactsName: $scope.update_order_passenger,
+                        documentType: $scope.update_add_order_document_type,
+                        contactsDocumentNumber: $scope.update_order_document_number,
+                        trainNumber: $scope.update_order_train_number,
+                        coachNumber: $scope.update_order_coach_number,
+                        seatClass: $scope.update_order_seat_class,
+                        seatNumber: $scope.update_order_seat_number,
+                        from: $scope.update_order_from,
+                        to: $scope.update_order_to,
+                        status: $scope.update_order_status,
+                        price: $scope.update_order_price
+
                     }
                 }).success(function (data, status, headers, config) {
                     if (data.status == 1) {
                         alert(data.msg);
                         $scope.reloadRoute();
                     }
-                    else{
+                    else {
                         alert("Request the order list fail!" + data.msg);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
-            onCancel: function(e) {
+            onCancel: function (e) {
                 alert('You have canceled the operation!');
             }
         });
     }
 
     //Delete order
-    $scope.deleteOrder = function(orderId,trainNumber){
+    $scope.deleteOrder = function (orderId, trainNumber) {
         $('#delete_confirm').modal({
             relatedTarget: this,
-            onConfirm: function(options) {
+            onConfirm: function (options) {
                 $http({
                     method: "delete",
-                    url: "/api/v1/adminorderservice/adminorder/"+orderId +"/"+ trainNumber,
+                    url: "/api/v1/adminorderservice/adminorder/" + orderId + "/" + trainNumber,
                     headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true
                 }).success(function (data, status, headers, config) {
@@ -215,15 +213,15 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                         alert(data.msg);
                         $scope.reloadRoute();
                     }
-                    else{
+                    else {
                         alert("Request the order list fail!" + data.msg);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
             // closeOnConfirm: false,
-            onCancel: function() {
+            onCancel: function () {
                 alert('You have canceled the operation!');
             }
         });

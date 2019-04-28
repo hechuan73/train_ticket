@@ -28,7 +28,7 @@ public class AdminUserController {
     }
 
     @PutMapping
-    public HttpEntity updateOrder(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
+    public HttpEntity updateUser(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
         return ok(adminUserService.updateUser(userDto, headers));
     }
 
@@ -39,7 +39,7 @@ public class AdminUserController {
     }
 
     @DeleteMapping(value = "/{userId}")
-    public HttpEntity deleteOrder(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
+    public HttpEntity deleteUser(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
         return ok(adminUserService.deleteUser(userId, headers));
     }
 }

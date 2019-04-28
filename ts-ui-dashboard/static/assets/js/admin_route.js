@@ -168,7 +168,7 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
             relatedTarget: this,
             onConfirm: function(options) {
                 $http({
-                    method: "get",
+                    method: "delete",
                     url: "/api/v1/adminrouteservice/adminroute/" + routeId,
                     headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true

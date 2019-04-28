@@ -96,10 +96,10 @@ app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
             onConfirm: function (e) {
                 $http({
                     method: "post",
-                    url: "/adminuser/addUser",
+                    url: "/api/v1/adminuserservice/users",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data: {
-                        loginId: sessionStorage.getItem("admin_id"),
                         name: $scope.add_user_name,
                         password: $scope.add_user_password,
                         gender: $scope.add_user_gender,
@@ -108,12 +108,12 @@ app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
                         documentNum: $scope.add_user_document_number
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data.status) {
-                        alert(data.message);
+                    if (data.status == 1) {
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else {
-                        alert("Add the route fail!" + data.message);
+                        alert("Add the route fail!" + data.msg);
                     }
                 }).error(function (data, header, config, status) {
                     alert(data.message)
@@ -127,8 +127,8 @@ app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
 
     //Update exist user
     $scope.updateUser = function (record) {
-        $scope.update_user_id = record.id;
-        $scope.update_user_name = record.name;
+        $scope.update_user_id = record.userId;
+        $scope.update_user_name = record.userName;
         $scope.update_user_password = record.password;
         $scope.update_user_gender = record.gender;
         $scope.update_user_email = record.email;

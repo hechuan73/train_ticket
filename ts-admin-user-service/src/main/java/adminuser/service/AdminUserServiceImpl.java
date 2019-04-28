@@ -3,6 +3,7 @@ package adminuser.service;
 import adminuser.dto.UserDto;
 import adminuser.entity.*;
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     private RestTemplate restTemplate;
@@ -54,7 +56,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         HttpEntity requestEntity = new HttpEntity(userDto, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 USER_SERVICE_IP_URI,
-                HttpMethod.POST,
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
         return re.getBody();
@@ -62,6 +64,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public Response addUser(UserDto userDto, HttpHeaders headers) {
+        log.info("ADD USER INFO : "+userDto.toString());
         HttpEntity requestEntity = new HttpEntity(userDto, headers);
         ResponseEntity<Response<User>> re = restTemplate.exchange(
                 USER_SERVICE_IP_URI + "/register",

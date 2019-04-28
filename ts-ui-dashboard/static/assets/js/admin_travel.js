@@ -41,17 +41,17 @@ app.factory('loadDataService', function ($http, $q) {
         $http({
             method: "get",
             url: "/api/v1/admintravelservice/admintravel",
-            headers: {"Authorization": "Bearer "+param.admin_token},
+            headers: {"Authorization": "Bearer " + param.admin_token},
             withCredentials: true,
         }).success(function (data, status, headers, config) {
             if (data.status == 1) {
                 information.travelRecords = data.data;
                 deferred.resolve(information);
             }
-            else{
+            else {
                 alert("Request the order list fail!" + data.message);
             }
-        }).error(function(data, header, config, status){
+        }).error(function (data, header, config, status) {
             alert(data.message)
         });
 
@@ -64,7 +64,7 @@ app.factory('loadDataService', function ($http, $q) {
 /*
  * 加载列表
  * */
-app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
+app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
     var param = {};
     param.admin_token = sessionStorage.getItem("admin_token");
 
@@ -81,46 +81,46 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
 
     $scope.decodeInfo = function (obj) {
         var des = "";
-        for(var name in obj){
+        for (var name in obj) {
             des += name + ":" + obj[name] + ";";
         }
         alert(des);
     }
-    
+
     //Add new travel
     $scope.addNewTravel = function () {
         $('#add_prompt').modal({
             relatedTarget: this,
-            onConfirm: function(e) {
+            onConfirm: function (e) {
                 $http({
                     method: "post",
-                    url: "/admintravel/addTravel",
+                    url: "/api/v1/admintravelservice/admintravel",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:{
-                        loginId: sessionStorage.getItem("admin_id"),
+                    data: {
                         tripId: $scope.add_travel_id,
                         trainTypeId: $scope.add_travel_train_type_id,
                         routeId: $scope.add_travel_route_id,
                         startingTime: $scope.add_travel_start_time
                     }
                 }).success(function (data, status, headers, config) {
-                    if(data.status){
+                    if (data.status) {
                         alert(data.message);
                         $scope.reloadRoute();
                     }
-                    else{
+                    else {
                         alert(data.message);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
-            onCancel: function(e) {
+            onCancel: function (e) {
                 alert('You have canceled the operation!');
             }
         });
     }
-    
+
     //Update exist travel
     $scope.updateTravel = function (record) {
         $scope.update_travel_id = record.trip.tripId.type + "" + record.trip.tripId.number;
@@ -130,61 +130,61 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
 
         $('#update_prompt').modal({
             relatedTarget: this,
-            onConfirm: function(e) {
+            onConfirm: function (e) {
                 $http({
                     method: "put",
                     url: "/api/v1/admintravelservice/admintravel",
                     headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:{
+                    data: {
                         tripId: $scope.update_travel_id,
                         trainTypeId: $scope.update_travel_train_type_id,
                         routeId: $scope.update_travel_route_id,
                         startingTime: $scope.update_travel_start_time
                     }
                 }).success(function (data, status, headers, config) {
-                    if(data.status == 1){
+                    if (data.status == 1) {
                         alert(data.msg);
                         $scope.reloadRoute();
                     }
-                    else{
+                    else {
                         alert(data.msg);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
-            onCancel: function(e) {
+            onCancel: function (e) {
                 alert('You have canceled the operation!');
             }
         });
     }
 
     //Delete travel
-    $scope.deleteTravel = function(travelId){
+    $scope.deleteTravel = function (travelId) {
         var tripId = travelId.type + "" + travelId.number;
         $('#delete_confirm').modal({
             relatedTarget: this,
-            onConfirm: function(options) {
+            onConfirm: function (options) {
                 $http({
                     method: "delete",
                     url: "/api/v1/admintravelservice/admintravel/" + tripId,
                     headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if(data.status ==1 ){
+                    if (data.status == 1) {
                         alert(data.msg);
                         $scope.reloadRoute();
                     }
-                    else{
+                    else {
                         alert(data.msg);
                     }
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
             // closeOnConfirm: false,
-            onCancel: function() {
+            onCancel: function () {
                 alert('You have canceled the operation!');
             }
         });

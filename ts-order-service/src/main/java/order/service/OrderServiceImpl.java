@@ -389,12 +389,11 @@ public class OrderServiceImpl implements OrderService {
     public Response updateOrder(Order order, HttpHeaders headers) {
         log.info("UPDATE ORDER INFO: " +order.toString());
         Order oldOrder = orderRepository.findById(order.getId());
-        System.out.println(oldOrder.toString());
-
         if (oldOrder == null) {
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");
             return new Response<>(0, "Order Not Found, Can't update", null);
         } else {
+            System.out.println(oldOrder.toString());
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
             oldOrder.setTravelDate(order.getTravelDate());

@@ -46,17 +46,17 @@ stationModule.controller("stationCtrl", function ($scope, $http, loadDataService
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method: "post",
-                    url: "/adminbasic/deleteStation",
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/stations",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
                     data: {
-                        loginId: sessionStorage.getItem("admin_id"),
                         id: station.id,
                         name: station.name,
                         stayTime: station.stayTime
                     }
                 }).success(function (data, status, headers, config) {
-                    if (data) {
+                    if (data.status ==1) {
                         alert("Delete station successfully!");
                     } else {
                         alert("Update station failed!");
@@ -86,15 +86,15 @@ stationModule.controller("stationCtrl", function ($scope, $http, loadDataService
                     data.id = station.id;
                     data.name = $('#update-station-name').val();
                     data.stayTime = parseInt($('#update-station-stay-time').val());
-                    data.loginId = sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
-                        method: "post",
-                        url: "/adminbasic/modifyStation",
+                        method: "put",
+                        url: "/api/v1/adminbasicservice/adminbasic/stations",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
                         data: data
                     }).success(function (data, status, headers, config) {
-                        if (data) {
+                        if (data.status ==1) {
                             alert("Update station successfully!");
                         } else {
                             alert("Update station failed!");
@@ -127,15 +127,15 @@ stationModule.controller("stationCtrl", function ($scope, $http, loadDataService
                     data.id = $('#add-station-id').val();
                     data.name = $('#add-station-name').val();
                     data.stayTime = parseInt($('#add-station-stay-time').val());
-                    data.loginId = sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
                         method: "post",
-                        url: "/adminbasic/addStation",
+                        url: "/api/v1/adminbasicservice/adminbasic/stations",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
                         data: data
                     }).success(function (data, status, headers, config) {
-                        if (data) {
+                        if (data.status == 1) {
                             alert("Add station successfully!");
                         } else {
                             alert("Add station failed!");

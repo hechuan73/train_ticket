@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
             User userSaveResult = userRepository.save(user);
             log.info("Send authorization message to ts-auth-service....");
 
-            return new Response<>(1,"REGISTER USER SUCCESS", userSaveResult);
+            return new Response<>(1, "REGISTER USER SUCCESS", userSaveResult);
         } else {
             return new Response(0, "USER HAS ALREADY EXISTS", null);
         }
@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response deleteUser(UUID userId, HttpHeaders headers) {
+        log.info("DELETE USER BY ID :" + userId);
         User user = userRepository.findByUserId(userId);
         if (user != null) {
             // first  only admin token can delete success
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
         RestTemplate restTemplate = new RestTemplate();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
-        restTemplate.exchange(AUHT_SERVICE_URI +"/users/" + userId,
+        restTemplate.exchange(AUHT_SERVICE_URI + "/users/" + userId,
                 HttpMethod.DELETE,
                 httpEntity,
                 Response.class);

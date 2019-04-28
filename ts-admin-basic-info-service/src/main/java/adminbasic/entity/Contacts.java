@@ -1,9 +1,14 @@
 package adminbasic.entity;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.UUID;
 
-public class Contacts implements Serializable{
+@ToString
+@Data
+public class Contacts implements Serializable {
 
     private UUID id;
 
@@ -18,59 +23,6 @@ public class Contacts implements Serializable{
     private String phoneNumber;
 
 
-
-    public Contacts() {
-        //Default Constructor
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(int documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -84,7 +36,7 @@ public class Contacts implements Serializable{
         }
         Contacts other = (Contacts) obj;
         return name.equals(other.getName())
-                && accountId .equals( other.getAccountId() )
+                && accountId.equals(other.getAccountId())
                 && documentNumber.equals(other.getDocumentNumber())
                 && phoneNumber.equals(other.getPhoneNumber())
                 && documentType == other.getDocumentType();

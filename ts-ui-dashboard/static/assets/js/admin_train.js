@@ -23,7 +23,7 @@ trainModule.factory('loadDataService', function ($http, $q) {
             else {
                 alert("Request the train list fail!" + data.message);
             }
-        }).error(function(data, header, config, status){
+        }).error(function (data, header, config, status) {
             alert(data.message)
         });
         return promise;
@@ -45,24 +45,18 @@ trainModule.controller("trainCtrl", function ($scope, $http, loadDataService, $w
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method: "post",
-                    url: "/adminbasic/deleteTrain",
-                    withCredentials: true,
-                    data: {
-                        loginId: sessionStorage.getItem("admin_id"),
-                        id: train.id,
-                        economyClass: train.economyClass,
-                        confortClass: train.confortClass,
-                        averageSpeed: train.averageSpeed
-                    }
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/trains/" + train.id,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
                 }).success(function (data, status, headers, config) {
-                    if (data) {
+                    if (data.status ==1) {
                         alert("Delete train successfully!");
                     } else {
                         alert("Update train failed!");
                     }
                     $window.location.reload();
-                }).error(function(data, header, config, status){
+                }).error(function (data, header, config, status) {
                     alert(data.message)
                 });
             },
@@ -88,27 +82,26 @@ trainModule.controller("trainCtrl", function ($scope, $http, loadDataService, $w
                     data.economyClass = parseInt($('#update-train-economy-class').val());
                     data.confortClass = parseInt($('#update-train-confort-class').val());
                     data.averageSpeed = parseInt($('#update-train-average-speed').val());
-                    data.loginId = sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
-                        method: "post",
-                        url: "/adminbasic/modifyTrain",
+                        method: "put",
+                        url: "/api/v1/adminbasicservice/adminbasic/trains",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
                         data: data
                     }).success(function (data, status, headers, config) {
-                        if (data) {
+                        if (data.status == 1) {
                             alert("Update train successfully!");
                         } else {
                             alert("Update train failed!");
                         }
                         $window.location.reload();
-                    }).error(function(data, header, config, status){
+                    }).error(function (data, header, config, status) {
                         alert(data.message)
                     });
                 } else {
                     alert("The economyClass, confortClass and averageSpeed must be an integer!");
                 }
-
             },
             onCancel: function () {
 
@@ -131,21 +124,21 @@ trainModule.controller("trainCtrl", function ($scope, $http, loadDataService, $w
                     data.economyClass = parseInt($('#add-train-economy-class').val());
                     data.confortClass = parseInt($('#add-train-confort-class').val());
                     data.averageSpeed = parseInt($('#add-train-average-speed').val());
-                    data.loginId = sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
                         method: "post",
-                        url: "/adminbasic/addTrain",
+                        url: "/api/v1/adminbasicservice/adminbasic/trains",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
                         data: data
                     }).success(function (data, status, headers, config) {
-                        if (data) {
+                        if (data.status ==1) {
                             alert("Add Train successfully!");
                         } else {
                             alert("Add Train failed!");
                         }
                         $window.location.reload();
-                    }).error(function(data, header, config, status){
+                    }).error(function (data, header, config, status) {
                         alert(data.message)
                     });
                 } else {
