@@ -27,8 +27,8 @@ public class InitUser implements CommandLineRunner {
         if (whetherExistUser.getUsername() == null) {
             User user = User.builder()
                     .userId(UUID.randomUUID())
-                    .username("user")
-                    .password(passwordEncoder.encode("1234"))
+                    .username("fdse_microservices")
+                    .password(passwordEncoder.encode("111111"))
                     .roles(new HashSet<>(Arrays.asList("ROLE_USER")))
                     .build();
 

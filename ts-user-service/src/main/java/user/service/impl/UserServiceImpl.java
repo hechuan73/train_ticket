@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response updateUser(UserDto userDto, HttpHeaders headers) {
+        log.info("UPDATE USER :" + userDto.toString());
         User oldUser = userRepository.findByUserName(userDto.getUserName());
         if (oldUser != null) {
             User newUser = oldUser.builder().email(userDto.getEmail())
@@ -117,6 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteUserAuth(UUID userId, HttpHeaders headers) {
+        log.info("DELETE USER BY ID :" + userId);
         RestTemplate restTemplate = new RestTemplate();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
