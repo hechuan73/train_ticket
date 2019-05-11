@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/code")
+@RequestMapping("/api/v1/verifycode")
 @Slf4j
 public class VerifyCodeController {
 
@@ -44,10 +44,8 @@ public class VerifyCodeController {
     @GetMapping(value = "/verify/{verifyCode}")
     public boolean verifyCode(@PathVariable String verifyCode, HttpServletRequest request,
                               HttpServletResponse response, @RequestHeader HttpHeaders headers) {
-
         log.info("receivedCode  " +verifyCode);
         boolean result = verifyCodeService.verifyCode(request, response, verifyCode, headers);
         return result;
     }
-
 }

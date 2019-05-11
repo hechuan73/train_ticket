@@ -152,10 +152,10 @@
                                         <div class="input-box">
                                             <form role="form" class="form-horizontal">
                                                 <div class="form-group">
-                                                    <label class="col-sm-2 control-label">Email: </label>
+                                                    <label class="col-sm-2 control-label">UserName: </label>
                                                     <div class="col-sm-10">
                                                         <input id="flow_preserve_login_email" class="form-control"
-                                                               v-model="email">
+                                                               v-model="userName">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -175,7 +175,7 @@
                                                 <div class="form-group ">
                                                     <div class="col-sm-offset-2 col-sm-10">
                                                         <img id="flow_preserve_login_verification_code_img"
-                                                             class="captcha_img" src="/verification/generate">
+                                                             class="captcha_img" src="/api/v1/verifycode/generate">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

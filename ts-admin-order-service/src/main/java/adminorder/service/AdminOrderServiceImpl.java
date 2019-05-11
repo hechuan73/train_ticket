@@ -35,9 +35,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
                 });
         Response<ArrayList<Order>> result = re.getBody();
-//            QueryOrderResult result = restTemplate.getForObject(
-//                    "http://ts-order-service:12031/order/findAll",
-//                    QueryOrderResult.class);
+
         if (result.getStatus() == 1) {
             System.out.println("[Admin Order Service][Get Orders From ts-order-service successfully!]");
             ArrayList<Order> orders1 = result.getData();
@@ -54,9 +52,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
                 });
         result = re2.getBody();
-//            result = restTemplate.getForObject(
-//                    "http://ts-order-other-service:12032/orderOther/findAll",
-//                    QueryOrderResult.class);
+
         if (result.getStatus() == 1) {
             System.out.println("[Admin Order Service][Get Orders From ts-order-other-service successfully!]");
             ArrayList<Order> orders1 = (ArrayList<Order>) result.getData();
@@ -81,8 +77,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             deleteOrderResult = re.getBody();
-//                deleteOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-service:12031/order/delete", deleteOrderInfo,DeleteOrderResult.class);
+
         } else {
             System.out.println("[Admin Order Service][Delete Order Other]");
             HttpEntity requestEntity = new HttpEntity(headers);
@@ -92,8 +87,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             deleteOrderResult = re.getBody();
-//                deleteOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-other-service:12032/orderOther/delete", deleteOrderInfo,DeleteOrderResult.class);
+
         }
         return deleteOrderResult;
 
@@ -114,8 +108,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             updateOrderResult = re.getBody();
-//                updateOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-service:12031/order/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
+
         } else {
             System.out.println("[Admin Order Service][Add New Order Other]");
             HttpEntity requestEntity = new HttpEntity(request, headers);
@@ -125,8 +118,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             updateOrderResult = re.getBody();
-//                updateOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-other-service:12032/orderOther/adminUpdate", request.getOrder() ,UpdateOrderResult.class);
+
         }
         return updateOrderResult;
     }
@@ -144,8 +136,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             addOrderResult = re.getBody();
-//                addOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-service:12031/order/adminAddOrder", request.getOrder() ,AddOrderResult.class);
+
         } else {
             System.out.println("[Admin Order Service][Add New Order Other]");
             HttpEntity requestEntity = new HttpEntity(request, headers);
@@ -155,8 +146,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     requestEntity,
                     Response.class);
             addOrderResult = re.getBody();
-//                addOrderResult = restTemplate.postForObject(
-//                        "http://ts-order-other-service:12032/orderOther/adminAddOrder", request.getOrder() ,AddOrderResult.class);
+
         }
         return addOrderResult;
 

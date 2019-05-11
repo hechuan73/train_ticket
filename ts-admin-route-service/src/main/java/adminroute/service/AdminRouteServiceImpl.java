@@ -29,9 +29,6 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//            GetRoutesListlResult result = restTemplate.getForObject(
-//                    "http://ts-route-service:11178/route/queryAll",
-//                    GetRoutesListlResult.class);
         return result;
 
     }
@@ -46,8 +43,6 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Route>>() {
                 });
-//            CreateAndModifyRouteResult result = restTemplate.postForObject(
-//                    "http://ts-route-service:11178/route/createAndModify", createAndModifyRouteInfo,CreateAndModifyRouteResult.class);
         return re.getBody();
     }
 
@@ -61,8 +56,6 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//            DeleteRouteResult result = restTemplate.postForObject(
-//                    "http://ts-route-service:11178/route/delete", deleteRouteInfo,DeleteRouteResult.class);
         return result;
 
     }

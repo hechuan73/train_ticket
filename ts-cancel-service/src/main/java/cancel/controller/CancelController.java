@@ -41,23 +41,4 @@ public class CancelController {
             return null;
         }
     }
-
-//    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers) {
-//        System.out.println("[Order Service][Verify Login] Verifying....");
-//
-//        HttpEntity requestTokenResult = new HttpEntity(null, headers);
-//        ResponseEntity<VerifyResult> reTokenResult = restTemplate.exchange(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                HttpMethod.GET,
-//                requestTokenResult,
-//                VerifyResult.class);
-//        VerifyResult tokenResult = reTokenResult.getBody();
-////        VerifyResult tokenResult = restTemplate.getForObject(
-////                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-////                VerifyResult.class);
-//
-//
-//        return tokenResult;
-//    }
-
 }

@@ -113,9 +113,6 @@ public class ExecuteServiceImpl implements ExecuteService {
                 requestEntity,
                 Response.class);
         Response cor = re.getBody();
-//        ModifyOrderStatusResult cor = restTemplate.postForObject(
-//                "http://ts-order-service:12031/order/modifyOrderStatus"
-//                ,info,ModifyOrderStatusResult.class);
         return cor;
     }
 
@@ -125,13 +122,10 @@ public class ExecuteServiceImpl implements ExecuteService {
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + status,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestEntity,
                 Response.class);
         Response cor = re.getBody();
-//        ModifyOrderStatusResult cor = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/order/modifyOrderStatus"
-//                ,info,ModifyOrderStatusResult.class);
         return cor;
     }
 
@@ -140,14 +134,11 @@ public class ExecuteServiceImpl implements ExecuteService {
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
         Response<Order> cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-service:12031/order/getById/"
-//                ,info,GetOrderResult.class);
         return cor;
     }
 
@@ -161,9 +152,6 @@ public class ExecuteServiceImpl implements ExecuteService {
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
         Response<Order> cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/orderOther/getById/"
-//                ,info,GetOrderResult.class);
         return cor;
     }
 

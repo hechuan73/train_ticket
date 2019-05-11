@@ -31,38 +31,25 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     @Override
     public Response pay(PaymentInfo info, HttpHeaders headers) {
-//        QueryOrderResult result;
+
         String userId = info.getUserId();
 
-
         Response<Order> result = new Response<>();
+        String requestOrderURL = "";
         if (info.getTripId().startsWith("G") || info.getTripId().startsWith("D")) {
-            HttpEntity requestGetOrderResults = new HttpEntity(headers);
-            ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId(),
-                    HttpMethod.GET,
-                    requestGetOrderResults,
-                    new ParameterizedTypeReference<Response<Order>>() {
-                    });
-            result = reGetOrderResults.getBody();
-
-//            result = restTemplate.postForObject("http://ts-order-service:12031/order/getById",getOrderByIdInfo,GetOrderResult.class);
-            //result = restTemplate.postForObject(
-            //       "http://ts-order-service:12031/order/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
+            requestOrderURL =  "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId();
         } else {
-            HttpEntity requestGetOrderResults = new HttpEntity(headers);
-            ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + info.getOrderId(),
-                    HttpMethod.GET,
-                    requestGetOrderResults,
-                    new ParameterizedTypeReference<Response<Order>>() {
-                    });
-            result = reGetOrderResults.getBody();
-
-//            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/getById",getOrderByIdInfo,GetOrderResult.class);
-            //result = restTemplate.postForObject(
-            //      "http://ts-order-other-service:12032/orderOther/price", new QueryOrder(info.getOrderId()),QueryOrderResult.class);
+            requestOrderURL = "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + info.getOrderId();
         }
+        HttpEntity requestGetOrderResults = new HttpEntity(headers);
+        ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
+                requestOrderURL,
+                HttpMethod.GET,
+                requestGetOrderResults,
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        result = reGetOrderResults.getBody();
+
 
         if (result.getStatus() == 1) {
             Order order = result.getData();
@@ -304,8 +291,6 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
                     Response.class);
             Response outsidePaySuccess = reOutsidePaySuccess.getBody();
 
-//            boolean outsidePaySuccess = restTemplate.postForObject(
-//                    "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
             if (outsidePaySuccess.getStatus() == 1) {
                 payment.setType(PaymentType.E);
                 paymentRepository.save(payment);
@@ -344,8 +329,6 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
                     Response.class);
             result = reModifyOrderStatusResult.getBody();
 
-//            result = restTemplate.postForObject(
-//                    "http://ts-order-service:12031/order/modifyOrderStatus", info, ModifyOrderStatusResult.class);
         } else {
             HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(headers);
             ResponseEntity<Response> reModifyOrderStatusResult = restTemplate.exchange(
@@ -355,8 +338,6 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
                     Response.class);
             result = reModifyOrderStatusResult.getBody();
 
-//            result = restTemplate.postForObject(
-//                    "http://ts-order-other-service:12032/orderOther/modifyOrderStatus", info, ModifyOrderStatusResult.class);
         }
         return result;
     }

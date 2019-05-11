@@ -132,10 +132,6 @@ public class FoodServiceImpl implements FoodService {
                 });
 
         List<TrainFood> trainFoodListResult = reGetTrainFoodListResult.getBody().getData();
-//        GetTrainFoodListResult  trainFoodListResult = restTemplate.postForObject
-//                                        ("http://ts-food-map-service:18855/foodmap/getTrainFoodOfTrip",
-//                                                qti, GetTrainFoodListResult.class);
-
 
         if (trainFoodListResult != null) {
             trainFoodList = trainFoodListResult;
@@ -154,10 +150,6 @@ public class FoodServiceImpl implements FoodService {
                 new ParameterizedTypeReference<Response<Route>>() {
                 });
         Response<Route> stationResult = reGetRouteResult.getBody();
-//        GetRouteResult  stationResult= restTemplate.getForObject
-//                                        ("http://ts-travel-service:12346/travel/getRouteByTripId/"+tripId,
-//                                                GetRouteResult.class);
-
 
         if (stationResult.getStatus() == 1) {
             Route route = stationResult.getData();
@@ -173,8 +165,6 @@ public class FoodServiceImpl implements FoodService {
                         new ParameterizedTypeReference<Response<String>>() {
                         });
                 Response<String> startStationId = reStartStationId.getBody();
-//                String startStationId = restTemplate.postForObject
-//                        ("http://ts-station-service:12345/station/queryForId", q1, String.class);
 
                 for (int i = 0; i < stations.size(); i++) {
                     if (stations.get(i).equals(startStationId.getData())) {
@@ -194,8 +184,6 @@ public class FoodServiceImpl implements FoodService {
                         new ParameterizedTypeReference<Response<String>>() {
                         });
                 Response endStationId = reEndStationId.getBody();
-//                String endStationId = restTemplate.postForObject
-//                        ("http://ts-station-service:12345/station/queryForId", q2, String.class);
 
                 for (int i = stations.size() - 1; i >= 0; i--) {
                     if (stations.get(i).equals(endStationId.getData())) {

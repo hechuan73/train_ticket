@@ -2,6 +2,8 @@ package user.dto;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -9,6 +11,8 @@ import lombok.*;
 @ToString
 public class UserDto {
 
+    private UUID userId;
+    
     private String userName;
 
     private String password;

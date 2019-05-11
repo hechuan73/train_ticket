@@ -1,6 +1,7 @@
 package preserveOther.service;
 
 import edu.fudan.common.util.Response;
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -114,8 +115,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 new ParameterizedTypeReference<Response<TravelResult>>() {
                 });
         TravelResult resultForTravel = re.getBody().getData();
-//            TravelResult resultForTravel = restTemplate.postForObject(
-//                    "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,TravelResult.class);
 
         order.setSeatClass(oti.getSeatType());
         System.out.println("[Preserve Other Service][Order] Order Travel Date:" + oti.getDate().toString());
@@ -158,7 +157,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         if (oti.getAssurance() == 0) {
             System.out.println("[Preserve Service][Step 5] Do not need to buy assurance");
         } else {
-            Response addAssuranceResult = addAssuranceForOrder(
+            Response<Assurance> addAssuranceResult = addAssuranceForOrder(
                     oti.getAssurance(), cor.getData().getId().toString(), httpHeaders);
             if (addAssuranceResult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 5] Preserve Buy Assurance Success");
@@ -215,17 +214,16 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
 
         //8.发送notification
         System.out.println("[Preserve Service]");
-        GetAccountByIdInfo getAccountByIdInfo = new GetAccountByIdInfo();
-        getAccountByIdInfo.setAccountId(order.getAccountId().toString());
-        GetAccountByIdResult getAccountByIdResult = getAccount(getAccountByIdInfo, httpHeaders);
+
+        User getUser = getAccount(order.getAccountId().toString(), httpHeaders);
 
         NotifyInfo notifyInfo = new NotifyInfo();
         notifyInfo.setDate(new Date().toString());
 
-        notifyInfo.setEmail(getAccountByIdResult.getAccount().getEmail());
+        notifyInfo.setEmail(getUser.getEmail());
         notifyInfo.setStartingPlace(order.getFrom());
         notifyInfo.setEndPlace(order.getTo());
-        notifyInfo.setUsername(getAccountByIdResult.getAccount().getName());
+        notifyInfo.setUsername(getUser.getUserName());
         notifyInfo.setSeatNumber(order.getSeatNumber());
         notifyInfo.setOrderNumber(order.getId().toString());
         notifyInfo.setPrice(order.getPrice());
@@ -254,9 +252,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 });
         Ticket ticket = reTicket.getBody().getData();
 
-//        Ticket ticket = restTemplate.postForObject(
-//                "http://ts-seat-service:18898/seat/getSeat"
-//                ,seatRequest,Ticket.class);
         return ticket;
     }
 
@@ -270,46 +265,37 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestEntitySendEmail,
                 Boolean.class);
         boolean result = reSendEmail.getBody();
-//        boolean result = restTemplate.postForObject(
-//                "http://ts-notification-service:17853/notification/order_cancel_success",
-//                notifyInfo,
-//                Boolean.class
-//        );
+
         return result;
     }
 
-    public GetAccountByIdResult getAccount(GetAccountByIdInfo info, HttpHeaders httpHeaders) {
-        System.out.println("[Cancel Order Service][Get Account By Id]");
+    public User getAccount(String accountId, HttpHeaders httpHeaders) {
+        System.out.println("[Cancel Order Service][Get Order By Id]");
 
-        HttpEntity requestEntitySendEmail = new HttpEntity(info, httpHeaders);
-        ResponseEntity<GetAccountByIdResult> reSendEmail = restTemplate.exchange(
-                "http://ts-sso-service:12349/account/findById",
-                HttpMethod.POST,
+        HttpEntity requestEntitySendEmail = new HttpEntity(httpHeaders);
+        ResponseEntity<Response<User>> getAccount = restTemplate.exchange(
+                "http://ts-user-service:12342/api/v1/userservice/users/id/" + accountId,
+                HttpMethod.GET,
                 requestEntitySendEmail,
-                GetAccountByIdResult.class);
-        GetAccountByIdResult result = reSendEmail.getBody();
-//        GetAccountByIdResult result = restTemplate.postForObject(
-//                "http://ts-sso-service:12349/account/findById",
-//                info,
-//                GetAccountByIdResult.class
-//        );
-        return result;
+                new ParameterizedTypeReference<Response<User>>() {
+                });
+        Response<User> result = getAccount.getBody();
+        return result.getData();
+
+
     }
 
-    private Response addAssuranceForOrder(int assuranceType, String orderId, HttpHeaders httpHeaders) {
+    private Response<Assurance> addAssuranceForOrder(int assuranceType, String orderId, HttpHeaders httpHeaders) {
         System.out.println("[Preserve Service][Add Assurance Type For Order]");
         HttpEntity requestAddAssuranceResult = new HttpEntity(httpHeaders);
-        ResponseEntity<Response> reAddAssuranceResult = restTemplate.exchange(
+        ResponseEntity<Response<Assurance>> reAddAssuranceResult = restTemplate.exchange(
                 "http://ts-assurance-service:18888/api/v1/assuranceservice/assurances/" + assuranceType + "/" + orderId,
                 HttpMethod.GET,
                 requestAddAssuranceResult,
-                Response.class);
-        Response result = reAddAssuranceResult.getBody();
-//        AddAssuranceResult result = restTemplate.postForObject(
-//                "http://ts-assurance-service:18888/assurance/create",
-//                info,
-//                AddAssuranceResult.class
-//        );
+                new ParameterizedTypeReference<Response<Assurance>>() {
+                });
+        Response<Assurance> result = reAddAssuranceResult.getBody();
+
         return result;
     }
 
@@ -341,26 +327,10 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestCheckResult,
                 Response.class);
         Response response = reCheckResult.getBody();
-//        CheckResult result = restTemplate.postForObject("http://ts-security-service:11188/security/check",
-//                info,CheckResult.class);
+
         return response;
     }
 
-//    private VerifyResult verifySsoLogin(String loginToken, HttpHeaders httpHeaders) {
-//        System.out.println("[Preserve Other Service][Verify Login] Verifying....");
-//
-//        HttpEntity requestCheckResult = new HttpEntity(null, httpHeaders);
-//        ResponseEntity<VerifyResult> reCheckResult = restTemplate.exchange(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                HttpMethod.GET,
-//                requestCheckResult,
-//                VerifyResult.class);
-//        VerifyResult tokenResult = reCheckResult.getBody();
-////        VerifyResult tokenResult = restTemplate.getForObject(
-////                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-////                VerifyResult.class);
-//        return tokenResult;
-//    }
 
     private Response<TripAllDetail> getTripAllDetailInformation(TripAllDetailInfo gtdi, HttpHeaders httpHeaders) {
         System.out.println("[Preserve Other Service][Get Trip All Detail Information] Getting....");
@@ -373,9 +343,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 new ParameterizedTypeReference<Response<TripAllDetail>>() {
                 });
         Response<TripAllDetail> gtdr = reGetTripAllDetailResult.getBody();
-//        TripAllDetail gtdr = restTemplate.postForObject(
-//                "http://ts-travel2-service:16346/travel2/getTripAllDetailInfo/"
-//                ,gtdi,TripAllDetail.class);
+
         return gtdr;
     }
 
@@ -390,9 +358,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 new ParameterizedTypeReference<Response<Contacts>>() {
                 });
         Response<Contacts> gcr = reGetContactsResult.getBody();
-//        GetContactsResult gcr = restTemplate.postForObject(
-//                "http://ts-contacts-service:12347/contacts/getContactsById/"
-//                ,gci,GetContactsResult.class);
+
         return gcr;
     }
 
@@ -408,9 +374,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 });
         Response<Order> cor = reCreateOrderResult.getBody();
 
-//        CreateOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/orderOther/create"
-//                ,coi,CreateOrderResult.class);
+
         return cor;
     }
 
@@ -424,9 +388,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestEntityAddFoodOrderResult,
                 Response.class);
         Response afr = reAddFoodOrderResult.getBody();
-//        AddFoodOrderResult afr = restTemplate.postForObject(
-//                "http://ts-food-service:18856/food/createFoodOrder"
-//                ,afi,AddFoodOrderResult.class);
+
         return afr;
     }
 
@@ -440,9 +402,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestEntityResultForTravel,
                 Response.class);
         Response icr = reResultForTravel.getBody();
-//        InsertConsignRecordResult icr = restTemplate.postForObject(
-//                "http://ts-consign-service:16111/consign/insertConsign"
-//                ,cr,InsertConsignRecordResult.class);
+
 
         return icr;
     }

@@ -81,8 +81,6 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response id = re.getBody();
-//        String id = restTemplate.postForObject(
-//                "http://ts-station-service:12345/station/queryForId", info, String.class);
         return  id;
     }
 
@@ -95,9 +93,7 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response exist = re.getBody();
-//        Boolean exist = restTemplate.postForObject(
-//                "http://ts-station-service:12345/station/exist", new QueryStation(stationName), Boolean.class);
-        if (exist.getStatus() ==1)
+       if (exist.getStatus() ==1)
             return true;
         return false;
     }
@@ -111,9 +107,6 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response  response = re.getBody();
-//        TrainType trainType = restTemplate.postForObject(
-//                "http://ts-train-service:14567/train/retrieve", new QueryTrainType(trainTypeId), TrainType.class
-//        );
 
         return JsonUtils.conveterObject(response.getData(), TrainType.class);
     }
@@ -127,9 +120,6 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//        GetRouteByIdResult result = restTemplate.getForObject(
-//                "http://ts-route-service:11178/route/queryById/" + routeId,
-//                GetRouteByIdResult.class);
         if ( result.getStatus() == 0) {
             System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
             return null;
@@ -150,11 +140,7 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//        ReturnSinglePriceConfigResult result = restTemplate.postForObject(
-//                "http://ts-price-service:16579/price/query",
-//                info,
-//                ReturnSinglePriceConfigResult.class
-//        );
+
         System.out.println("Response Resutl to String " + result.toString());
         return  JsonUtils.conveterObject(result.getData(), PriceConfig.class);
     }

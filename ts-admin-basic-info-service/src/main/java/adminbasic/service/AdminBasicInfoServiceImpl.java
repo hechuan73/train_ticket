@@ -32,9 +32,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.getForObject(
-//                    "http://ts-contacts-service:12347/contacts/findAll",
-//                    GetAllContactsResult.class);
 
         return result;
     }
@@ -50,9 +47,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject(
-//                    "http://ts-contacts-service:12347/contacts/deleteContacts",dci,
-//                    DeleteContactsResult.class);
 
         return result;
     }
@@ -68,9 +62,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject(
-//                    "http://ts-contacts-service:12347/contacts/modifyContacts",mci,
-//                    ModifyContactsResult.class);
 
         return result;
     }
@@ -87,10 +78,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject(
-//                    "http://ts-contacts-service:12347/contacts/admincreate",c,
-//                    AddContactsResult.class);
-
 
         return result;
     }
@@ -106,8 +93,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-//            l = (List<Station>) re.getBody().getData();
-//            l= restTemplate.getForObject("http://ts-station-service:12345/station/query", l.getClass());
+
         return re.getBody();
 
 
@@ -172,10 +158,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        // l = (List<TrainType>) re.getBody().getData();
 
-//            List<TrainType> l = new ArrayList<TrainType>();
-//            l = restTemplate.getForObject("http://ts-train-service:14567/train/query", l.getClass());
         return re.getBody();
 
     }
@@ -237,8 +220,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-//            List<Config> l = new ArrayList<Config>();
-//            l = restTemplate.getForObject("http://ts-config-service:15679/config/queryAll", l.getClass());
 
         return re.getBody();
     }

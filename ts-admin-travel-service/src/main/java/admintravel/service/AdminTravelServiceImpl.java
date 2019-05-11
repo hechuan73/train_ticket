@@ -34,9 +34,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
                 new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
                 });
         result = re.getBody();
-//            result = restTemplate.getForObject(
-//                    "http://ts-travel-service:12346/travel/adminQueryAll",
-//                    AdminFindAllResult.class);
+
         if (result.getStatus() == 1) {
             ArrayList<AdminTrip> adminTrips = result.getData();
             System.out.println("[Admin Travel Service][Get Travel From ts-travel-service successfully!]");
@@ -52,9 +50,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
                 new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
                 });
         result = re2.getBody();
-//            result = restTemplate.getForObject(
-//                    "http://ts-travel2-service:16346/travel2/adminQueryAll",
-//                    AdminFindAllResult.class);
+
         if (result.getStatus() == 1) {
             System.out.println("[Admin Travel Service][Get Travel From ts-travel2-service successfully!]");
             ArrayList<AdminTrip> adminTrips = result.getData();
@@ -72,12 +68,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         String requestUrl;
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
             requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel-service:12346/travel/create", request ,String.class);
         } else {
             requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel2-service:16346/travel2/create", request ,String.class);
         }
         HttpEntity requestEntity = new HttpEntity(request, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -102,12 +94,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         String requestUrl = "";
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
             requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel-service:12346/travel/update", request ,String.class);
         } else {
             requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel2-service:16346/travel2/update", request ,String.class);
         }
         HttpEntity requestEntity = new HttpEntity(request, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -127,12 +115,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         String requestUtl = "";
         if (tripId.charAt(0) == 'G' || tripId.charAt(0) == 'D') {
             requestUtl = "http://ts-travel-service:12346/api/v1/travelservice/trips/" + tripId;
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel-service:12346/travel/delete", request ,String.class);
         } else {
             requestUtl = "http://ts-travel2-service:16346/api/v1/travel2service/trips/" + tripId;
-//                result = restTemplate.postForObject(
-//                        "http://ts-travel2-service:16346/travel2/delete", request ,String.class);
         }
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(

@@ -50,8 +50,6 @@ public class ConsignServiceImpl implements ConsignService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Double>>() {
                 });
-//        double price = restTemplate.postForObject(
-//                "http://ts-consign-price-service:16110/consignPrice/getPrice", entity ,double.class);
         consignRecord.setPrice(re.getBody().getData());
         //存储
         ConsignRecord result = repository.save(consignRecord);
@@ -87,8 +85,6 @@ public class ConsignServiceImpl implements ConsignService {
                     new ParameterizedTypeReference<Response<Double>>() {
                     });
 
-//            double price = restTemplate.postForObject(
-//                    "http://ts-consign-price-service:16110/consignPrice/getPrice", entity ,double.class);
             originalRecord.setPrice(re.getBody().getData());
         } else {
             originalRecord.setPrice(originalRecord.getPrice());

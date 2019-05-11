@@ -34,7 +34,7 @@ $("#rebook_pay_button").click(function(){
     $("#rebook_pay_status").text("false");
     $.ajax({
         type: "post",
-        url: "/rebook/payDifference",
+        url: "/api/v1/rebookservice/rebook/difference",
         contentType: "application/json",
         dataType: "json",
         data: singleRebookInfoData,

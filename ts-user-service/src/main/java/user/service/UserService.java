@@ -13,7 +13,9 @@ public interface UserService {
 
     Response getAllUsers(HttpHeaders headers);
 
-    User findByUserName(String userName, HttpHeaders headers);
+    Response findByUserName(String userName, HttpHeaders headers);
+    Response findByUserId(String userId, HttpHeaders headers);
+
 
     Response deleteUser(UUID userId, HttpHeaders headers);
 

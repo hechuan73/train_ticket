@@ -25,6 +25,7 @@ function parseURL() {
         "<td class='booking_date'> " + date + "</td>" +
         "</tr>"
     );
+    bookingPage();
     initFoodSelect(tripId, from, to, date);
     refresh_booking_contacts();
 
@@ -32,30 +33,33 @@ function parseURL() {
 
 var bookingPage = function () {
     var username = sessionStorage.getItem("client_name");
-    if (username == null) {
+    if (username == null || username == 'Not Login') {
         alert("Please login first!");
-        // location.href = "index.html";
+        location.href = "index.html";
     }
     else {
         document.getElementById("client_name").innerHTML = username;
     }
 };
 
-
 $("#refresh_booking_contacts_button").click(function () {
     refresh_booking_contacts();
 });
 
 function refresh_booking_contacts() {
-    if (getCookie("loginId").length < 1 || getCookie("loginToken").length < 1) {
+    console.log("refresh contacts")
+    if (sessionStorage.getItem("client_token")  == null || sessionStorage.getItem("client_id") == null) {
         alert("Please Login");
+
     }
+
     $("#refresh_booking_contacts_button").attr("disabled", true);
     $.ajax({
         type: "get",
-        url: "/api/v1/contactservice/contacts/account/" + "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f",
+        url: "/api/v1/contactservice/contacts/account/" + sessionStorage.getItem("client_id"),
         contentType: "application/json",
         dataType: "json",
+        headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
         xhrFields: {
             withCredentials: true
         },
@@ -110,6 +114,7 @@ function getAssuranceType() {
         url: "/api/v1/assuranceservice/assurances/types",
         contentType: "application/json",
         dataType: "json",
+        headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
         xhrFields: {
             withCredentials: true
         },
@@ -178,6 +183,7 @@ function initFoodSelect(tripId, from, to, date) {
         url: "/api/v1/foodservice/foods/" + data.date + "/" + data.startStation + "/" + data.endStation + "/" + data.tripId,
         contentType: "application/json",
         dataType: "json",
+        headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
         xhrFields: {
             withCredentials: true
         },
@@ -207,7 +213,7 @@ function initFoodSelect(tripId, from, to, date) {
                     trainFoodSelect.appendChild(opt2);
                 }
 
-                preserveFoodStoreListMap = result.foodStoreListMap;
+                preserveFoodStoreListMap = result.data.foodStoreListMap;
                 console.log(" preserveFoodStoreListMap:");
                 console.log(preserveFoodStoreListMap);
                 var foodStationSelect = document.getElementById("food-station-list");
@@ -315,8 +321,10 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
         seatType = "economy seat";
     }
     var date = showVal[5].split("=")[1];
+
+
     if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
-        alert("Please Login");
+        alert("Please Login!");
     }
     var contactsId = "";
     var radios = $(".booking_contacts_select");
@@ -404,8 +412,8 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
                 //  submit   ticket
                 // $("#ticket_confirm_confirm_btn").attr("disabled",true);
                 var orderTicketInfo = new Object();
-                // todo
-                orderTicketInfo.accountId = "4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f";
+
+                orderTicketInfo.accountId =  sessionStorage.getItem("client_id");
                 orderTicketInfo.contactsId = $("#sub_consNum").text();
                 orderTicketInfo.tripId = $("#sub_tripId").text();
                 // orderTicketInfo.seatType = $("#sub_setType").text();
@@ -480,6 +488,7 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
                     contentType: "application/json",
                     dataType: "json",
                     data: orderTicketsData,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                     xhrFields: {
                         withCredentials: true
                     },
@@ -507,12 +516,15 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
 });
 
 function preserveCreateNewContacts() {
-    if (getCookie("loginId").length < 1 || getCookie("loginToken").length < 1) {
-        alert("Please Login");
+
+    if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
+        alert("Please Login.");
     }
+
     $("#ticket_select_contacts_confirm_btn").attr("disabled", true);
     var addContactsInfo = new Object();
     addContactsInfo.name = $("#booking_new_contacts_name").val();
+    addContactsInfo.accountId = sessionStorage.getItem("client_id");
     addContactsInfo.documentType = $("#booking_new_contacts_documentType").val();
     addContactsInfo.documentNumber = $("#booking_new_contacts_documentNum").val();
     addContactsInfo.phoneNumber = $("#booking_new_contacts_phoneNum").val();
@@ -521,6 +533,7 @@ function preserveCreateNewContacts() {
         type: "post",
         url: "/api/v1/contactservice/contacts",
         contentType: "application/json",
+        headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
         dataType: "json",
         data: data,
         xhrFields: {
@@ -529,7 +542,7 @@ function preserveCreateNewContacts() {
         success: function (result) {
             $("#ticket_confirm_contactsId").text(result.data["id"]);
             $("#ticket_confirm_contactsName").text(result.data["name"]);
-            $("#ticket_confirm_documentType").text(convertNumberToDocumentType(result.dtat["documentType"]));
+            $("#ticket_confirm_documentType").text(convertNumberToDocumentType(result.data["documentType"]));
             $("#ticket_confirm_documentNumber").text(result.data["documentNumber"]);
             refresh_booking_contacts();
         },

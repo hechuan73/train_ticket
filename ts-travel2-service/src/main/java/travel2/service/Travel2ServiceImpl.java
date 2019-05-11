@@ -210,8 +210,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         System.out.println("Ticket info  is: " + re.getBody().toString());
         TravelResult resultForTravel =  re.getBody().getData();
 
-//        TravelResult resultForTravel = restTemplate.postForObject(
-//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForTravel", query ,TravelResult.class);
+
 
         //车票订单_高铁动车（已购票数）
         requestEntity = new HttpEntity(headers);
@@ -223,8 +222,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 });
         System.out.println("Order other Ticket info  is: " + re.getBody().toString());
         SoldTicket result = re2.getBody().getData();
-//        SoldTicket result = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/orderOther/calculate", information ,SoldTicket.class);
+
         if (result == null) {
             System.out.println("soldticket Info doesn't exist");
             return null;
@@ -326,8 +324,6 @@ public class Travel2ServiceImpl implements Travel2Service {
                 new ParameterizedTypeReference<Response<TrainType>>() {
                 });
 
-//        TrainType trainType = restTemplate.postForObject(
-//                "http://ts-train-service:14567/train/retrieve", info, TrainType.class);
         return re.getBody().getData();
     }
 
@@ -341,8 +337,6 @@ public class Travel2ServiceImpl implements Travel2Service {
                 });
 
 
-//        String id = restTemplate.postForObject(
-//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId", query ,String.class);
         return re.getBody().getData();
     }
 
@@ -355,9 +349,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//        GetRouteResult result = restTemplate.getForObject(
-//                "http://ts-route-service:11178/route/queryById/" + routeId,
-//                GetRouteResult.class);
+
         if (result.getStatus() == 0 ) {
             System.out.println("[Travel Other Service][Get Route By Id] Fail." + result.getMsg());
             return null;
@@ -387,10 +379,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
         int restNumber =   re.getBody().getData();
-//        int restNumber = restTemplate.postForObject(
-//                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
-//                seatRequest,Integer.class
-//        );
+
         System.out.println("Get Rest tickets num is: " + re.getBody().toString());
         return restNumber;
     }

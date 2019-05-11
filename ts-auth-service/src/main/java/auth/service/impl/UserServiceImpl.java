@@ -10,6 +10,7 @@ import auth.service.UserService;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getAllUser(HttpHeaders headers) {
         return userRepository.findAll();
     }
 
@@ -43,10 +44,10 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public User createDefaultAuthUser(AuthDto dto) {
+    public User createDefaultAuthUser(AuthDto dto, HttpHeaders headers) {
         log.info("Register User Info is:  " + dto.getUserName());
         User user = User.builder()
-                .userId(dto.getUserId())
+                .userId(UUID.fromString(dto.getUserId()))
                 .username(dto.getUserName())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .roles(new HashSet<>(Arrays.asList(AuthConstant.ROLE_USER)))
@@ -57,9 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response deleteByUserId(UUID userId) {
+    public Response deleteByUserId(UUID userId, HttpHeaders headers) {
         log.info("DELETE USER :" + userId);
-         userRepository.deleteByUserId(userId);
+        userRepository.deleteByUserId(userId);
         return new Response(1, "DELETE USER SUCCESS", null);
     }
 

@@ -15,9 +15,9 @@ controllerModule.controller("loginCtrl", function ($scope,$http) {
                 password: password
             }
         }).success(function(data, status, headers, config){
-            if (data != null) {
-                sessionStorage.setItem("admin_name", data.username);
-                sessionStorage.setItem("admin_token", data.token);
+            if (data.status == 1) {
+                sessionStorage.setItem("admin_name", data.data.username);
+                sessionStorage.setItem("admin_token", data.data.token);
                 location.href = "../../admin.html";
             }else{
                 alert("Wrong user name and password!");

@@ -9,6 +9,7 @@ var loadBody = function () {
     if (username == null) {
         alert("Please login first!");
         location.href = "adminlogin.html";
+        return;
     }
     else {
         document.getElementById("admin_name").innerHTML = username;
@@ -42,7 +43,7 @@ app.factory('loadDataService', function ($http, $q) {
             method: "get",
             url: "/api/v1/adminuserservice/users",
             headers: {"Authorization": "Bearer " + param.admin_token},
-            withCredentials: true,
+            withCredentials: true
         }).success(function (data, status, headers, config) {
             console.log(data)
             if (data.status == 1) {

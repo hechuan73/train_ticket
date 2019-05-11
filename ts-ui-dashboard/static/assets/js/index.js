@@ -14,8 +14,8 @@ var reserveApp = new Vue({
         travelList: [],
         tempTravelList: [],
         selectedSeats: [],
-        email: 'fdse_microservices@163.com',
-        password: 'DefaultPassword',
+        email: 'fdse_microservice@163.com',
+        password: '111111',
         verifyCode: '1234'
     },
     methods: {
@@ -57,7 +57,7 @@ var reserveApp = new Vue({
             }
             logoutInfo.token = this.getCookie("loginToken");
             if (logoutInfo.token == null || logoutInfo.token == "") {
-                alert("No cookie named 'loginToken' exist.  please login");
+               // alert("No cookie named 'loginToken' exist.  please login");
                 location.href = "client_login.html";
                 return;
             }
@@ -123,13 +123,14 @@ var reserveApp = new Vue({
         queryForTravelInfo(data, path) {
             $("#travel_booking_button").attr("disabled", true);
             var that = this;
-            $('#my-svg').shCircleLoader({namespace: 'runLoad',});
+            $('#my-svg').shCircleLoader({namespace: 'runLoad'});
             $.ajax({
                 type: "post",
                 url: path,
                 contentType: "application/json",
                 dataType: "json",
                 data: data,
+                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 xhrFields: {
                     withCredentials: true
                 },

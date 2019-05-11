@@ -44,10 +44,10 @@ public class AssuranceServiceImpl implements AssuranceService {
         AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
         if (a != null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance already exists");
-            return new Response<>(0, "Fail.Assurance already exists", at);
+            return new Response<>(0, "Fail.Assurance already exists", null);
         } else if (at == null) {
             System.out.println("[Assurance-Add&Delete-Service][AddAssurance] Fail.Assurance type doesn't exist");
-            return new Response<>(0, "Fail.Assurance type doesn't exist", typeIndex);
+            return new Response<>(0, "Fail.Assurance type doesn't exist", null);
         } else {
             Assurance assurance = new Assurance(UUID.randomUUID(), UUID.fromString(orderId), at);
             assuranceRepository.save(assurance);

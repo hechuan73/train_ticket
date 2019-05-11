@@ -32,8 +32,12 @@ public class UserController {
     }
 
     @GetMapping("/{userName}")
-    public Object getUserByUserName(@PathVariable String userName, @RequestHeader HttpHeaders headers) {
-        return userService.findByUserName(userName, headers);
+    public ResponseEntity<Response> getUserByUserName(@PathVariable String userName, @RequestHeader HttpHeaders headers) {
+        return ok(userService.findByUserName(userName, headers));
+    }
+    @GetMapping("/id/{userId}")
+    public ResponseEntity<Response> getUserByUserId(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
+        return ok(userService.findByUserId(userId, headers));
     }
 
     @PostMapping("/register")

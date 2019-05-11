@@ -9,6 +9,7 @@ import auth.service.UserService;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,17 +32,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> getToken(@RequestBody BasicAuthDto dao) {
-        return ResponseEntity.ok(tokenService.getToken(dao));
+    public ResponseEntity<Response> getToken(@RequestBody BasicAuthDto dao , @RequestHeader HttpHeaders headers) {
+        return ResponseEntity.ok(tokenService.getToken(dao, headers));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser() {
-        return ResponseEntity.ok().body(userService.getAllUser());
+    public ResponseEntity<List<User>> getAllUser(@RequestHeader HttpHeaders headers) {
+        return ResponseEntity.ok().body(userService.getAllUser(headers));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Response> deleteUserById(@PathVariable String userId) {
-        return ResponseEntity.ok(userService.deleteByUserId(UUID.fromString(userId)));
+    public ResponseEntity<Response> deleteUserById(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
+        return ResponseEntity.ok(userService.deleteByUserId(UUID.fromString(userId), headers));
     }
 }

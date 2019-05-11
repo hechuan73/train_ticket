@@ -10,8 +10,9 @@ var collectTicket = new Vue({
             },
             checkLogin(){
                 var username = sessionStorage.getItem("client_name");
-                if (username == null) {
-                    // alert("Please login first!");
+                if (username == null || username == "Not Login") {
+                    alert("Please login first!");
+                    location.href = "client_login.html";
                 }
                 else {
                     document.getElementById("client_name").innerHTML = username;
@@ -28,6 +29,7 @@ var collectTicket = new Vue({
                         url: "/api/v1/executeservice/execute/collected/" + executeInfo.orderId,
                         contentType: "application/json",
                         dataType: "json",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                         xhrFields: {
                             withCredentials: true
                         },

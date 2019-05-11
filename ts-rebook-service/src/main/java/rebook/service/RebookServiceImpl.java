@@ -2,6 +2,7 @@ package rebook.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,13 +25,16 @@ public class RebookServiceImpl implements RebookService {
     @Override
     public Response rebook(RebookInfo info, HttpHeaders httpHeaders) {
 
-        Response queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
+        Response<Order> queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
         if (queryOrderResult.getStatus() == 1) {
-            return new Response<>(0, queryOrderResult.getMsg(), null);
+            if (queryOrderResult.getData().getStatus() != 1)
+                return new Response<>(0, "you order not suitable to rebook!", null);
+        } else {
+            return new Response(0, "order not found", null);
         }
 
-        Order order = (Order) queryOrderResult.getData();
+        Order order = queryOrderResult.getData();
         int status = order.getStatus();
         if (status == OrderStatus.NOTPAID.getCode()) {
             return new Response<>(0, "You haven't paid the original ticket!", null);
@@ -56,11 +60,11 @@ public class RebookServiceImpl implements RebookService {
         gtdi.setTo(queryForStationName(order.getTo(), httpHeaders));
         gtdi.setTravelDate(info.getDate());
         gtdi.setTripId(info.getTripId());
-        Response gtdr = getTripAllDetailInformation(gtdi, info.getTripId(), httpHeaders);
+        Response<TripAllDetail> gtdr = getTripAllDetailInformation(gtdi, info.getTripId(), httpHeaders);
         if (gtdr.getStatus() == 0) {
             return new Response<>(0, gtdr.getMsg(), null);
         } else {
-            TripResponse tripResponse = ((TripAllDetail) gtdr.getData()).getTripResponse();
+            TripResponse tripResponse = gtdr.getData().getTripResponse();
             if (info.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() <= 0) {
                     return new Response<>(0, "Seat Not Enough", null);
@@ -103,7 +107,7 @@ public class RebookServiceImpl implements RebookService {
             String difference = priceNew.subtract(priceOld).toString();
             Order orderMoneyDifference = new Order();
             orderMoneyDifference.setDifferenceMoney(difference);
-            return new Response<>(1, "Please pay the different money!", orderMoneyDifference);
+            return new Response<>(2, "Please pay the different money!", orderMoneyDifference);
         }
     }
 
@@ -112,7 +116,7 @@ public class RebookServiceImpl implements RebookService {
 
         Response queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
-        if ( queryOrderResult.getStatus() ==0) {
+        if (queryOrderResult.getStatus() == 0) {
             return new Response<>(0, queryOrderResult.getMsg(), null);
         }
         Order order = (Order) queryOrderResult.getData();
@@ -195,21 +199,18 @@ public class RebookServiceImpl implements RebookService {
         Seat seatRequest = new Seat();
         seatRequest.setTravelDate(date);
         seatRequest.setTrainNumber(tripId);
-        seatRequest.setStartStation(startStationId);
         seatRequest.setSeatType(seatType);
+        seatRequest.setStartStation(startStationId);
         seatRequest.setDestStation(endStataionId);
 
         HttpEntity requestEntityTicket = new HttpEntity(seatRequest, httpHeaders);
-        ResponseEntity<Response> reTicket = restTemplate.exchange(
+        ResponseEntity<Response<Ticket>> reTicket = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats",
                 HttpMethod.POST,
                 requestEntityTicket,
-                Response.class);
-        Ticket ticket = (Ticket) reTicket.getBody().getData();
-
-//        Ticket ticket = restTemplate.postForObject(
-//                "http://ts-seat-service:18898/seat/getSeat"
-//                ,seatRequest,Ticket.class);
+                new ParameterizedTypeReference<Response<Ticket>>() {
+                });
+        Ticket ticket = reTicket.getBody().getData();
         return ticket;
     }
 
@@ -220,24 +221,6 @@ public class RebookServiceImpl implements RebookService {
         } else {
             return false;
         }
-    }
-
-    private VerifyResult verifySsoLogin(String loginToken, HttpHeaders headers) {
-        System.out.println("[Order Service][Verify Login] Verifying....");
-
-        HttpEntity requestTokenResult = new HttpEntity(null, headers);
-        ResponseEntity<VerifyResult> reTokenResult = restTemplate.exchange(
-                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-                HttpMethod.GET,
-                requestTokenResult,
-                VerifyResult.class);
-        VerifyResult tokenResult = reTokenResult.getBody();
-//        VerifyResult tokenResult = restTemplate.getForObject(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                VerifyResult.class);
-
-
-        return tokenResult;
     }
 
     private boolean checkTime(Date travelDate, Date travelTime) {
@@ -272,8 +255,8 @@ public class RebookServiceImpl implements RebookService {
     }
 
 
-    private Response getTripAllDetailInformation(TripAllDetailInfo gtdi, String tripId, HttpHeaders httpHeaders) {
-        Response gtdr;
+    private Response<TripAllDetail> getTripAllDetailInformation(TripAllDetailInfo gtdi, String tripId, HttpHeaders httpHeaders) {
+        Response<TripAllDetail> gtdr;
         String requestUrl = "";
         if (tripId.startsWith("G") || tripId.startsWith("D")) {
             requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trip_detail";
@@ -283,11 +266,12 @@ public class RebookServiceImpl implements RebookService {
             //ts-travel2-service:16346/travel2/getTripAllDetailInfo
         }
         HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
-        ResponseEntity<Response> reGetTripAllDetailResult = restTemplate.exchange(
+        ResponseEntity<Response<TripAllDetail>> reGetTripAllDetailResult = restTemplate.exchange(
                 requestUrl,
                 HttpMethod.POST,
                 requestGetTripAllDetailResult,
-                Response.class);
+                new ParameterizedTypeReference<Response<TripAllDetail>>() {
+                });
         gtdr = reGetTripAllDetailResult.getBody();
         return gtdr;
     }
@@ -350,8 +334,8 @@ public class RebookServiceImpl implements RebookService {
         return reDeleteOrder.getBody();
     }
 
-    private Response getOrderByRebookInfo(RebookInfo info, HttpHeaders httpHeaders) {
-        Response queryOrderResult;
+    private Response<Order> getOrderByRebookInfo(RebookInfo info, HttpHeaders httpHeaders) {
+        Response<Order> queryOrderResult;
         //改签只能改签一次，查询订单状态来判断是否已经改签过
         String requestUrl = "";
         if (info.getOldTripId().startsWith("G") || info.getOldTripId().startsWith("D")) {
@@ -362,11 +346,12 @@ public class RebookServiceImpl implements RebookService {
             //ts-order-other-service:12032/orderOther/getById
         }
         HttpEntity requestEntityGetOrderByRebookInfo = new HttpEntity(httpHeaders);
-        ResponseEntity<Response> reGetOrderByRebookInfo = restTemplate.exchange(
+        ResponseEntity<Response<Order>> reGetOrderByRebookInfo = restTemplate.exchange(
                 requestUrl,
                 HttpMethod.GET,
                 requestEntityGetOrderByRebookInfo,
-                Response.class);
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
         queryOrderResult = reGetOrderByRebookInfo.getBody();
         return queryOrderResult;
     }

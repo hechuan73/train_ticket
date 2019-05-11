@@ -129,11 +129,6 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 Boolean.class);
         boolean result = re.getBody();
-//        boolean result = restTemplate.postForObject(
-//                "http://ts-notification-service:17853/notification/order_cancel_success",
-//                notifyInfo,
-//                Boolean.class
-//        );
         return result;
     }
 
@@ -275,11 +270,6 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 GetAccountByIdResult.class);
         GetAccountByIdResult result = re.getBody();
-//        GetAccountByIdResult result = restTemplate.postForObject(
-//                "http://ts-sso-service:12349/account/findById",
-//                info,
-//                GetAccountByIdResult.class
-//        );
         return result;
     }
 
@@ -293,9 +283,6 @@ public class CancelServiceImpl implements CancelService {
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
         Response<Order> cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-service:12031/order/getById/"
-//                ,info,GetOrderResult.class);
         return cor;
     }
 
@@ -309,9 +296,6 @@ public class CancelServiceImpl implements CancelService {
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
         Response<Order> cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/orderOther/getById/"
-//                ,info,GetOrderResult.class);
         return cor;
     }
 

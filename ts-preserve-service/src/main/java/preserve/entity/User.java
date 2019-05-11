@@ -1,4 +1,5 @@
-package auth.dto;
+package preserve.entity;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +8,22 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-/***
- *  user-service register user , then send to auth-service
- */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class AuthDto {
-    private String userId;
+@NoArgsConstructor
+public class User {
+
+    private UUID userId;
     private String userName;
     private String password;
+
+    private int gender;
+
+    private int documentType;
+
+    private String documentNum;
+
+    private String email;
+
 }

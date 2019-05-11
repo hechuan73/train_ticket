@@ -3,10 +3,7 @@ package user.service.impl;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import user.dto.AuthDto;
@@ -32,7 +29,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
         log.info("Save User Name id：" + userDto.getUserName());
-        UUID userId = UUID.randomUUID();
+        UUID userId = userDto.getUserId();
+        if (userDto.getUserId() == null)
+            userId = UUID.randomUUID();
+
         User user = User.builder()
                 .userId(userId)
                 .userName(userDto.getUserName())
@@ -45,8 +45,7 @@ public class UserServiceImpl implements UserService {
         // avoid same user name
         User user1 = userRepository.findByUserName(userDto.getUserName());
         if (user1 == null) {
-
-            createDefaultAuthUser(AuthDto.builder().userId(user.getUserId())
+            createDefaultAuthUser(AuthDto.builder().userId(UUID.randomUUID() +"")
                     .userName(user.getUserName())
                     .password(user.getPassword()).build(), headers);
 
@@ -62,8 +61,7 @@ public class UserServiceImpl implements UserService {
     private void createDefaultAuthUser(AuthDto dto, HttpHeaders headers) {
         log.info("CALL TO AUTH");
         RestTemplate restTemplate = new RestTemplate();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<AuthDto> httpEntity = new HttpEntity<AuthDto>(dto, headers);
+        HttpEntity  httpEntity = new HttpEntity(dto, headers);
         restTemplate.exchange(AUHT_SERVICE_URI + "/auth",
                 HttpMethod.POST,
                 httpEntity,
@@ -79,8 +77,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String userName, HttpHeaders headers) {
-        return userRepository.findByUserName(userName);
+    public Response findByUserName(String userName, HttpHeaders headers) {
+        User user = userRepository.findByUserName(userName);
+        if(user != null)
+            return new Response<>(1, "Find User Success", user);
+        return new Response<>(0, "No User", null);
+    }
+
+    @Override
+    public Response findByUserId(String userId, HttpHeaders headers) {
+        User user = userRepository.findByUserId(UUID.fromString(userId));
+        if(user != null)
+            return new Response<>(1, "Find User Success", user);
+        return new Response<>(0, "No User", null);
     }
 
     @Override
@@ -120,7 +129,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserAuth(UUID userId, HttpHeaders headers) {
         log.info("DELETE USER BY ID :" + userId);
         RestTemplate restTemplate = new RestTemplate();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
         restTemplate.exchange(AUHT_SERVICE_URI + "/users/" + userId,
                 HttpMethod.DELETE,
