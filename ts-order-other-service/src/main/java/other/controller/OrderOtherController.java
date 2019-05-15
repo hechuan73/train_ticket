@@ -143,19 +143,4 @@ public class OrderOtherController {
         System.out.println("[Order Other Service][Find All Order]");
         return ok(orderService.getAllOrders(headers));
     }
-//    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers) {
-//        System.out.println("[Order Other Service][Verify Login] Verifying....");
-//        System.out.println("=======Token: " + loginToken + "=======");
-//        HttpEntity requestTokenResult = new HttpEntity(headers);
-//        ResponseEntity<VerifyResult> reTokenResult = restTemplate.exchange(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                HttpMethod.GET,
-//                requestTokenResult,
-//                VerifyResult.class);
-//        //        VerifyResult tokenResult = restTemplate.getForObject(
-////                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-////                VerifyResult.class);
-//
-//        return reTokenResult.getBody();
-//    }
 }

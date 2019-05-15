@@ -3,6 +3,7 @@ package price.config;
 import edu.fudan.common.security.jwt.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -61,7 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/priceservice/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/v1/priceservice/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/priceservice/prices").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/priceservice/prices").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/v1/priceservice/prices").hasAnyRole("ADMIN")
                 .antMatchers("/swagger-ui.html", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/v2/**").permitAll()
                 .anyRequest().authenticated()

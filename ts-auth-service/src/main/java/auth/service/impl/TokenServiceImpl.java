@@ -43,10 +43,10 @@ public class TokenServiceImpl implements TokenService {
     public Response getToken(BasicAuthDto dto, HttpHeaders headers) {
         String username = dto.getUsername();
         String password = dto.getPassword();
-        String verifyCode = dto.getVerifyCode();
-        // if verifycode is not empty ,is not admin , common user need verify
-        if (!StringUtils.isEmpty(verifyCode)) {
+        String verifyCode = dto.getVerificationCode();
+        log.info("LOGIN USER :" + username + " __ " + password + " __ " + verifyCode);
 
+        if (!StringUtils.isEmpty(verifyCode)) {
             HttpEntity requestEntity = new HttpEntity(headers);
             ResponseEntity<Boolean> re = restTemplate.exchange(
                     "http://ts-verification-code-service:15678/api/v1/verifycode/verify/" + verifyCode,
@@ -55,10 +55,10 @@ public class TokenServiceImpl implements TokenService {
                     Boolean.class);
             boolean id = re.getBody();
             if (!id) { // failed code
-                return new Response<>(0, "verifycode failed", null);
+                return new Response<>(0, "verify code failed", null);
             }
-
         }
+
         // verify username and password
         UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(upat);
@@ -68,8 +68,8 @@ public class TokenServiceImpl implements TokenService {
                         InfoConstant.USER_NAME_NOT_FOUND_1, username
                 )));
         String token = jwtProvider.createToken(user);
-        log.info(token  + "USER TOKEN");
-        log.info(user.getUserId() +"   USER ID");
-        return new Response<>(1, "login success", new TokenDto(user.getUserId(),username, token));
+        log.info(token + "USER TOKEN");
+        log.info(user.getUserId() + "   USER ID");
+        return new Response<>(1, "login success", new TokenDto(user.getUserId(), username, token));
     }
 }

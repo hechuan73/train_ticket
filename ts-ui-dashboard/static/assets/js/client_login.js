@@ -11,12 +11,16 @@ var loginApp = new Vue({
         },
         checkIfLogin() {
             var username = sessionStorage.getItem("client_name");
-            if (username == null) {
+            if (username == null || username == 'Not Login') {
                 alert("Please login first!");
             }
             else {
                 document.getElementById("client_name").innerHTML = username;
             }
+        },
+        reloadYZM() {
+            console.log("brush verification code")
+            document.getElementById("flow_preserve_login_verification_code_img").src = "/api/v1/verifycode/generate?" +Math.random();
         },
         login() {
             var loginInfo = new Object();
@@ -63,7 +67,7 @@ var loginApp = new Vue({
                         sessionStorage.setItem("client_token", "-1");
                         sessionStorage.setItem("client_name", "Not Login");
                         document.getElementById("client_name").innerHTML = "Not Login";
-                        $("#flow_preserve_login_msg").text(obj["message"]);
+                        $("#flow_preserve_login_msg").text(obj["msg"]);
                     }
                 }
             });

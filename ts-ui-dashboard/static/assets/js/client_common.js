@@ -14,6 +14,7 @@ $("#logout_button").click(function () {
     }
 
     sessionStorage.setItem("client_id", "-1");
+    sessionStorage.setItem("client_token", "-1");
     sessionStorage.setItem("client_name", "Not Login");
     document.getElementById("client_name").innerHTML = "Not Login";
     location.href = "client_login.html";

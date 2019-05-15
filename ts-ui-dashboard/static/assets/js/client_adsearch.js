@@ -22,8 +22,8 @@ var adSearch = new Vue({
         checkLogin() {
             var username = sessionStorage.getItem("client_name");
             if (username == null || username == "Not Login") {
-                alert("Please login first!");
-                location.href = "client_login.html";
+                // alert("Please login first!");
+                // location.href = "client_login.html";
             }
             else {
                 document.getElementById("client_name").innerHTML = username;
@@ -61,7 +61,6 @@ var adSearch = new Vue({
                 url: path,
                 contentType: "application/json",
                 dataType: "json",
-                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 data: data,
                 xhrFields: {
                     withCredentials: true
@@ -75,6 +74,12 @@ var adSearch = new Vue({
                             that.adTicketSearchResult[i].startingTime = that.flow_advance_convertNumberToTimeString(obj[i]["startingTime"]);
                             that.adTicketSearchResult[i].endTime = that.flow_advance_convertNumberToTimeString(obj[i]["endTime"]);
                         }
+                    }
+                },error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
                     }
                 },
                 complete: function () {
@@ -98,7 +103,6 @@ var adSearch = new Vue({
                 contentType: "application/json",
                 dataType: "json",
                 data: data,
-                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 xhrFields: {
                     withCredentials: true
                 },
@@ -111,6 +115,12 @@ var adSearch = new Vue({
                             that.adTicketSearchResult[i].startingTime = that.flow_advance_convertNumberToTimeString(obj[i]["startingTime"]);
                             that.adTicketSearchResult[i].endTime = that.flow_advance_convertNumberToTimeString(obj[i]["endTime"]);
                         }
+                    }
+                },error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
                     }
                 },
                 complete: function () {
@@ -128,7 +138,6 @@ var adSearch = new Vue({
                 url: path,
                 contentType: "application/json",
                 dataType: "json",
-                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 data: data,
                 xhrFields: {
                     withCredentials: true
@@ -143,6 +152,12 @@ var adSearch = new Vue({
                             that.adTicketSearchResult[i].endTime = that.flow_advance_convertNumberToTimeString(obj[i]["endTime"]);
                         }
                      //   flow_advance_addListenerToBookingTable();
+                    }
+                },error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
                     }
                 },
                 complete: function () {

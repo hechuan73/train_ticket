@@ -47,7 +47,7 @@
 
             <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
                 <li id="goto_admin">
-                    <a href="admin.html" class="tpl-header-list-link">
+                    <a href="adminlogin.html" class="tpl-header-list-link">
                         <span>admin-panel</span>
                     </a>
                 </li>
@@ -76,7 +76,7 @@
             <div class="tpl-left-nav-list">
                 <ul class="tpl-left-nav-menu">
                     <li class="tpl-left-nav-item">
-                        <a href="index.html" class="nav-link tpl-left-nav-link-list">
+                        <a href="index.html" class="nav-link tpl-left-nav-link-list" class="active">
                             <i class="am-icon-list-alt"></i>
                             <span>Ticket Reserve</span>
                             <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
@@ -161,7 +161,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label">Password: </label>
                                                     <div class="col-sm-10">
-                                                        <input id="flow_preserve_login_password" class="form-control"
+                                                        <input id="flow_preserve_login_password" type="password" class="form-control"
                                                              v-model="password">
                                                     </div>
                                                 </div>
@@ -173,9 +173,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group ">
-                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                    <div class="col-sm-offset-2 col-sm-10" v-on:click="reloadYZM()">
                                                         <img id="flow_preserve_login_verification_code_img"
                                                              class="captcha_img" src="/api/v1/verifycode/generate">
+
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

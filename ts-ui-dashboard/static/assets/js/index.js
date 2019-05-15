@@ -42,6 +42,7 @@ var reserveApp = new Vue({
             var username = sessionStorage.getItem("client_name");
             if (username == null) {
                 // alert("Please login first!");
+
             }
             else {
                 document.getElementById("client_name").innerHTML = username;
@@ -113,7 +114,7 @@ var reserveApp = new Vue({
                 this.queryForTravelInfo(travelQueryData, "/api/v1/travelservice/trips/left");
                 this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
             } else if (train_type == 1) {
-                //http://10.141.212.22/travel/query
+
                 this.queryForTravelInfo(travelQueryData, "/api/v1/travelservice/trips/left");
             } else if (train_type == 2) {
                 this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
@@ -130,7 +131,6 @@ var reserveApp = new Vue({
                 contentType: "application/json",
                 dataType: "json",
                 data: data,
-                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 xhrFields: {
                     withCredentials: true
                 },

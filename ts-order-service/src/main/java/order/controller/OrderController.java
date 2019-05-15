@@ -60,7 +60,6 @@ public class OrderController {
     public HttpEntity queryOrdersForRefresh(@RequestBody OrderInfo qi,
                                             @RequestHeader HttpHeaders headers) {
         System.out.println("[Order Other Service][Query Orders] Query Orders for " + qi.getLoginId());
-        // ArrayList<Order>
         return ok(orderService.queryOrdersForRefresh(qi, qi.getLoginId(), headers));
     }
 
@@ -150,23 +149,5 @@ public class OrderController {
         // ArrayList<Order>
         return ok(orderService.getAllOrders(headers));
     }
-
-//    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers) {
-//        System.out.println("[Order Service][Verify Login] Verifying....");
-//
-//        HttpEntity requestTokenResult = new HttpEntity(null, headers);
-//        ResponseEntity<VerifyResult> reTokenResult = restTemplate.exchange(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                HttpMethod.GET,
-//                requestTokenResult,
-//                VerifyResult.class);
-//        VerifyResult tokenResult = reTokenResult.getBody();
-////        VerifyResult tokenResult = restTemplate.getForObject(
-////                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-////                VerifyResult.class);
-//
-//
-//        return tokenResult;
-//    }
 
 }

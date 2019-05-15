@@ -17,8 +17,6 @@ var appConsign = new Vue({
                 },
                 success: function (result) {
                     if (result.status == 1) {
-
-
                         var size = result.data.length;
                         that.myConsigns = new Array(size);
                         for (var i = 0; i < size; i++) {
@@ -28,11 +26,15 @@ var appConsign = new Vue({
                             //  that.myConsigns[i].handleDate = that.convertNumberToDateTimeString(that.myConsigns[i].handleDate);
                             that.myConsigns[i].targetDate = that.convertNumberToDateTimeString(that.myConsigns[i].targetDate);
                         }
-
                     } else {
                         alert("no consign!")
                     }
-
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
 
@@ -72,7 +74,11 @@ var appConsign = new Vue({
                     location.href = "client_login.html";
                 },
                 error: function (e) {
-                    alert("logout error");
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
         },
@@ -93,6 +99,12 @@ var appConsign = new Vue({
                 },
                 success: function (result) {
                     stationName = result["name"];
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
             //alert("Return Station Name:" + stationName);
@@ -114,10 +126,9 @@ var appConsign = new Vue({
         var username = sessionStorage.getItem("client_name");
         console.log("UserName" + username);
         if (username == null || username == "Not Login") {
-            alert("Please login first!");
+
             location.href = "client_login.html";
-        }
-        else {
+        } else {
             document.getElementById("client_name").innerHTML = username;
             this.queryMyConsign();
         }

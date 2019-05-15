@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Repository
-public interface ConsignRepository extends MongoRepository<ConsignRecord,String> {
+public interface ConsignRepository extends MongoRepository<ConsignRecord, String> {
     ArrayList<ConsignRecord> findByAccountId(UUID accountId);
+
+    ConsignRecord findByOrderId(UUID accountId);
 
     ArrayList<ConsignRecord> findByConsignee(String consignee);
 

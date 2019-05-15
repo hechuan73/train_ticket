@@ -96,7 +96,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order newOrder = oai.getNewOrderInfo();
         newOrder.setId(UUID.randomUUID());
         Response cor = create(oai.getNewOrderInfo(), headers);
-        if ( cor.getStatus() ==1) {
+        if (cor.getStatus() == 1) {
             System.out.println("[Order Other Service][Alter Order] Success.");
             return new Response<>(1, "Alter Order Success", newOrder);
         } else {
@@ -190,7 +190,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {
                 });
-        System.out.println("Stations name list is : " +re.getBody().toString());
+        System.out.println("Stations name list is : " + re.getBody().toString());
         List<String> names = re.getBody().getData();
         return names;
     }
@@ -207,17 +207,19 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             oldOrder.setBoughtDate(order.getBoughtDate());
             oldOrder.setTravelDate(order.getTravelDate());
             oldOrder.setTravelTime(order.getTravelTime());
-            oldOrder.setCoachNumber(order.getCoachNumber());
             oldOrder.setSeatClass(order.getSeatClass());
+            oldOrder.setCoachNumber(order.getCoachNumber());
+
             oldOrder.setSeatNumber(order.getSeatNumber());
-            oldOrder.setFrom(order.getFrom());
             oldOrder.setTo(order.getTo());
+            oldOrder.setFrom(order.getFrom());
             oldOrder.setStatus(order.getStatus());
             oldOrder.setTrainNumber(order.getTrainNumber());
             oldOrder.setPrice(order.getPrice());
             oldOrder.setContactsName(order.getContactsName());
-            oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
             oldOrder.setDocumentType(order.getDocumentType());
+            oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
+
             orderOtherRepository.save(oldOrder);
             System.out.println("[Order Other Service] Success.");
             return new Response<>(1, "Success", oldOrder);
@@ -388,7 +390,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
-        log.info("UPDATE ORDER INFO :" +order.toString());
+        log.info("UPDATE ORDER INFO :" + order.toString());
         Order oldOrder = orderOtherRepository.findById(order.getId());
         if (oldOrder == null) {
             System.out.println("[Order Service][Admin Update Order] Fail.Order not found.");

@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     *  allow cors domain
+     * allow cors domain
      * header 在默认的情况下只能从头部取出6个字段，想要其他字段只能自己在头里指定
      * credentials 默认不发送Cookie, 如果需要Cookie,这个值只能为true
      * 本次请求检查的有效期
@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/basicservice/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/v1/basicservice/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/v2/**").permitAll()
                 .anyRequest().authenticated()

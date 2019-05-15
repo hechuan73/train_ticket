@@ -39,8 +39,7 @@ public class TicketInfoServiceImpl implements TicketInfoService {
                 requestEntity,
                 Response.class);
         Response idResponse = re.getBody();
-//        String id = restTemplate.postForObject(
-//                "http://ts-basic-service:15680/basic/queryForStationId", info,String.class);
+
         return idResponse;
     }
 }

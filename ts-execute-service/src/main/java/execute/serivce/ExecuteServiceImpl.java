@@ -64,13 +64,13 @@ public class ExecuteServiceImpl implements ExecuteService {
     public Response ticketCollect(String orderId, HttpHeaders headers) {
         //1.获取订单信息
 
-        Response resultFromOrder = getOrderByIdFromOrder(orderId, headers);
+        Response<Order> resultFromOrder = getOrderByIdFromOrder(orderId, headers);
         // TicketExecuteResult result = new TicketExecuteResult();
         Order order;
         if (resultFromOrder.getStatus() == 1) {
-            order = (Order) resultFromOrder.getData();
+            order =  resultFromOrder.getData();
             //2.检查订单是否可以进站
-            if (order.getStatus() != OrderStatus.PAID.getCode()) {
+            if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
                 return new Response<>(0, "Order Status Wrong", null);
             }
             //3.确认进站 请求修改订单信息
@@ -86,11 +86,10 @@ public class ExecuteServiceImpl implements ExecuteService {
             if (resultFromOrder.getStatus() == 1) {
                 order = (Order) resultFromOrder.getData();
                 //2.检查订单是否可以进站
-                if (order.getStatus() != OrderStatus.PAID.getCode()) {
+                if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
                     return new Response<>(0, "Order Status Wrong", null);
                 }
                 //3.确认进站 请求修改订单信息
-
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.COLLECTED.getCode(), headers);
                 if (resultExecute.getStatus() == 1) {
                     return new Response<>(1, "Success.", null);

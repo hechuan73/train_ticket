@@ -23,8 +23,7 @@ public class CancelServiceImpl implements CancelService {
 
     @Override
     public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) throws Exception {
-        GetOrderByIdInfo getFromOrderInfo = new GetOrderByIdInfo();
-        getFromOrderInfo.setOrderId(orderId);
+
         Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
         if (orderResult.getStatus() == 1) {
             System.out.println("[Cancel Order Service][Cancel Order] Order found G|H");
@@ -45,19 +44,18 @@ public class CancelServiceImpl implements CancelService {
                     if (status) {
                         System.out.println("[Cancel Order Service][Draw Back Money] Success.");
 
-                        GetAccountByIdInfo getAccountByIdInfo = new GetAccountByIdInfo();
-                        getAccountByIdInfo.setAccountId(order.getAccountId().toString());
+
                         // todo
-                        GetAccountByIdResult result = getAccount(getAccountByIdInfo, headers);
-                        if (result.isStatus() == false) {
-                            return null;
+                        Response<User> result = getAccount(order.getAccountId().toString(), headers);
+                        if (result.getStatus() == 0) {
+                            return new Response<>(0, "Cann't find userinfo by user id.", null);
                         }
                         NotifyInfo notifyInfo = new NotifyInfo();
                         notifyInfo.setDate(new Date().toString());
-                        notifyInfo.setEmail(result.getAccount().getEmail());
+                        notifyInfo.setEmail(result.getData().getEmail());
                         notifyInfo.setStartingPlace(order.getFrom());
                         notifyInfo.setEndPlace(order.getTo());
-                        notifyInfo.setUsername(result.getAccount().getName());
+                        notifyInfo.setUsername(result.getData().getUserName());
                         notifyInfo.setSeatNumber(order.getSeatNumber());
                         notifyInfo.setOrderNumber(order.getId().toString());
                         notifyInfo.setPrice(order.getPrice());
@@ -152,8 +150,7 @@ public class CancelServiceImpl implements CancelService {
                 return new Response<>(0, "Order Status Cancel Not Permitted, Refound error", null);
             }
         } else {
-            GetOrderByIdInfo getFromOtherOrderInfo = new GetOrderByIdInfo();
-            getFromOtherOrderInfo.setOrderId(orderId);
+
             Response<Order> orderOtherResult = getOrderByIdFromOrderOther(orderId, headers);
             if (orderOtherResult.getStatus() == 1) {
                 Order order =   orderOtherResult.getData();
@@ -218,7 +215,6 @@ public class CancelServiceImpl implements CancelService {
     private Response cancelFromOrder(Order order, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Change Order Status] Changing....");
 
-//        ChangeOrderResult result = restTemplate.postForObject("http://ts-order-service:12031/order/update",info,ChangeOrderResult.class);
         HttpEntity requestEntity = new HttpEntity(order, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order",
@@ -239,7 +235,7 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//        ChangeOrderResult result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/update",info,ChangeOrderResult.class);
+
         return result;
     }
 
@@ -253,7 +249,7 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-//        String result = restTemplate.postForObject("http://ts-inside-payment-service:18673/inside_payment/drawBack",info,String.class);
+
         if (result.getStatus() == 1) {
             return true;
         } else {
@@ -261,15 +257,16 @@ public class CancelServiceImpl implements CancelService {
         }
     }
 
-    public GetAccountByIdResult getAccount(GetAccountByIdInfo info, HttpHeaders headers) {
+    public Response<User> getAccount(String orderId, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Get By Id]");
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<GetAccountByIdResult> re = restTemplate.exchange(
-                "http://ts-sso-service:12349/account/findById",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity( headers);
+        ResponseEntity<Response<User>> re = restTemplate.exchange(
+                "http://ts-user-service:12342/api/v1/userservice/users/id/" + orderId,
+                HttpMethod.GET,
                 requestEntity,
-                GetAccountByIdResult.class);
-        GetAccountByIdResult result = re.getBody();
+                new ParameterizedTypeReference<Response<User>>() {
+                });
+        Response<User> result = re.getBody();
         return result;
     }
 

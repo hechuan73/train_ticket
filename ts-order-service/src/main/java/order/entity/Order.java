@@ -49,6 +49,8 @@ public class Order {
 
     private String price;
 
+
+
     public Order(){
         boughtDate = new Date(System.currentTimeMillis());
         travelDate = new Date(123456789);

@@ -1,6 +1,7 @@
 package preserveOther.service;
 
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class PreserveOtherServiceImpl implements PreserveOtherService {
 
     @Autowired
@@ -84,7 +86,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         System.out.println("[Preserve Other Service] [Step 4] Do Order");
         Contacts contacts = gcr.getData();
         Order order = new Order();
-        order.setId(UUID.randomUUID());
+        UUID orderId = UUID.randomUUID();
+        order.setId(orderId);
         order.setTrainNumber(oti.getTripId());
         order.setAccountId(UUID.fromString(oti.getAccountId()));
 
@@ -128,8 +131,6 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                             SeatClass.FIRSTCLASS.getCode(), httpHeaders);
             order.setSeatClass(SeatClass.FIRSTCLASS.getCode());
             order.setSeatNumber("" + ticket.getSeatNo());
-//                int firstClassRemainNum = gtdr.getTripResponse().getConfortClass();
-//                order.setSeatNumber("FirstClass-" + firstClassRemainNum);
             order.setPrice(resultForTravel.getPrices().get("confortClass"));
         } else {
             Ticket ticket =
@@ -138,8 +139,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                             SeatClass.SECONDCLASS.getCode(), httpHeaders);
             order.setSeatClass(SeatClass.SECONDCLASS.getCode());
             order.setSeatNumber("" + ticket.getSeatNo());
-//                int secondClassRemainNum = gtdr.getTripResponse().getEconomyClass();
-//                order.setSeatNumber("SecondClass-" + secondClassRemainNum);
+
             order.setPrice(resultForTravel.getPrices().get("economyClass"));
         }
         System.out.println("[Preserve Other Service][Order Price] Price is: " + order.getPrice());
@@ -192,6 +192,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         //7.增加托运
         if (null != oti.getConsigneeName() && !"".equals(oti.getConsigneeName())) {
             Consign consignRequest = new Consign();
+            consignRequest.setOrderId(cor.getData().getId());
             consignRequest.setAccountId(cor.getData().getAccountId());
             consignRequest.setHandleDate(oti.getHandleDate());
             consignRequest.setTargetDate(cor.getData().getTravelDate().toString());
@@ -201,6 +202,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
+            log.info("CONSIGN INFO : " +consignRequest.toString());
             Response icresult = createConsign(consignRequest, httpHeaders);
             if (icresult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 7] Consign Success");

@@ -23,20 +23,6 @@ public class ConsignController {
         return "Welcome to [ Consign Service ] !";
     }
 
-
-//    {
-//        "accountId": "f150e530-9142-4cd8-80f1-695693dc704f",
-//            "consignee": "string",
-//            "from": "string",
-//            "handleDate": "Fri Apr 12 13:29:40 CST 2019",
-//            "id": "f150e530-9142-4cd8-80f1-695693dc704f",
-//            "phone": "string",
-//            "targetDate": "Fri Apr 12 13:29:40 CST 2019",
-//            "to": "string",
-//            "weight": 12.3,
-//            "within": true
-//    }
-//
     @PostMapping(value = "/consigns")
     public HttpEntity insertConsign(@RequestBody Consign request,
                                     @RequestHeader HttpHeaders headers) {
@@ -53,6 +39,13 @@ public class ConsignController {
         UUID newid = UUID.fromString(id);
         return ok(service.queryByAccountId(newid, headers));
     }
+
+    @GetMapping(value = "/consigns/order/{id}")
+    public HttpEntity findByOrderId(@PathVariable String id, @RequestHeader HttpHeaders headers) {
+        UUID newid = UUID.fromString(id);
+        return ok(service.queryByOrderId(newid, headers));
+    }
+
 
     @GetMapping(value = "/consigns/{consignee}")
     public HttpEntity findByConsignee(@PathVariable String consignee, @RequestHeader HttpHeaders headers) {

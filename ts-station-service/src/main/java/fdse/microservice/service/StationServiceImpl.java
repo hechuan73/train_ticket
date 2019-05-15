@@ -78,7 +78,7 @@ public class StationServiceImpl implements StationService {
     public Response queryForId(String stationName, HttpHeaders headers) {
         Station station = repository.findByName(stationName);
 
-        if (station.getId() != null) {
+        if (station  != null) {
             return new Response<>(1, "Success", station.getId());
         } else {
             return new Response<>(0, "Not exists", stationName);

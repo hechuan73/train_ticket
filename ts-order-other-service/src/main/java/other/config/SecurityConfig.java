@@ -3,6 +3,7 @@ package other.config;
 import edu.fudan.common.security.jwt.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     *  allow cors domain
+     * allow cors domain
      * header 在默认的情况下只能从头部取出6个字段，想要其他字段只能自己在头里指定
      * credentials 默认不发送Cookie, 如果需要Cookie,这个值只能为true
      * 本次请求检查的有效期
@@ -61,7 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/orderOtherService/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/v1/orderOtherService/orderOther/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/orderOtherService/orderOther").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orderOtherService/orderOther").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/orderOtherService/orderOther").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/orderOtherService/orderOther/admin").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orderOtherService/orderOther/admin").hasAnyRole("ADMIN")
+
                 .antMatchers("/swagger-ui.html", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/v2/**").permitAll()
                 .anyRequest().authenticated()

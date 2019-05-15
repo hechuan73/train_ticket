@@ -1,6 +1,7 @@
 package preserve.service;
 
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class PreserveServiceImpl implements PreserveService {
 
     @Autowired
@@ -44,7 +46,7 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 3] Check tickets num");
         TripAllDetailInfo gtdi = new TripAllDetailInfo();
 
-        gtdi.setFrom(oti.getFrom());//todo
+        gtdi.setFrom(oti.getFrom());
         gtdi.setTo(oti.getTo());
 
         gtdi.setTravelDate(oti.getDate());
@@ -77,7 +79,8 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 4] Do Order");
         Contacts contacts = gcr.getData();
         Order order = new Order();
-        order.setId(UUID.randomUUID());
+        UUID orderId = UUID.randomUUID();
+        order.setId(orderId);
         order.setTrainNumber(oti.getTripId());
         order.setAccountId(UUID.fromString(oti.getAccountId()));
 
@@ -183,7 +186,9 @@ public class PreserveServiceImpl implements PreserveService {
 
         //7.增加托运
         if (null != oti.getConsigneeName() && !"".equals(oti.getConsigneeName())) {
+
             Consign consignRequest = new Consign();
+            consignRequest.setOrderId(cor.getData().getId());
             consignRequest.setAccountId(cor.getData().getAccountId());
             consignRequest.setHandleDate(oti.getHandleDate());
             consignRequest.setTargetDate(cor.getData().getTravelDate().toString());
@@ -193,6 +198,7 @@ public class PreserveServiceImpl implements PreserveService {
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
+            log.info("CONSIGN INFO : " +consignRequest.toString());
             Response icresult = createConsign(consignRequest, headers);
             if (icresult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 7] Consign Success");

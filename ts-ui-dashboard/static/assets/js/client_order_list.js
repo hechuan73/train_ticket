@@ -1,4 +1,3 @@
-
 var appConsign = new Vue({
     el: '#orderListApp',
     data: {
@@ -12,7 +11,7 @@ var appConsign = new Vue({
         from: "Shang Hai",
         to: "Su Zhou",
         selectedOrderId: '',
-        oldTripId:'',
+        oldTripId: '',
         status: -1,
         dateOfToday: '',
         trainTypeSelected: 1,
@@ -22,7 +21,7 @@ var appConsign = new Vue({
             {text: 'Other', value: 2}
         ],
         selectSeatOptions: 2,
-        selectedSeats : [],
+        selectedSeats: [],
         seatOptions: [
             {text: 'priceForEconomyClass', value: 2},
             {text: 'priceForConfortClass', value: 3}
@@ -33,6 +32,7 @@ var appConsign = new Vue({
         consignName: '',
         consignPhone: '',
         consignWeight: '',
+        consignId: '',
         vancher: {}
     },
     methods: {
@@ -51,7 +51,7 @@ var appConsign = new Vue({
             this.myOrderList = [];
             var myOrdersQueryData = JSON.stringify(myOrdersQueryInfo);
             this.queryForMyOrderThree("/api/v1/orderservice/order/refresh", myOrdersQueryData);
-            this.queryForMyOrderThree("/api/v1/orderOtherService/orderOther/refresh",myOrdersQueryData);
+            this.queryForMyOrderThree("/api/v1/orderOtherService/orderOther/refresh", myOrdersQueryData);
         },
         queryForMyOrderThree(path, data) {
             var that = this;
@@ -76,6 +76,12 @@ var appConsign = new Vue({
                         that.tempOrderList[i].boughtDate = that.convertNumberToDateTimeString(that.tempOrderList[i].boughtDate)
                     }
                     that.myOrderList = that.myOrderList.concat(that.tempOrderList);
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
         },
@@ -93,6 +99,12 @@ var appConsign = new Vue({
                 },
                 success: function (result) {
                     stationName = result.data["name"];
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
             return stationName;
@@ -121,12 +133,18 @@ var appConsign = new Vue({
                             withCredentials: true
                         },
                         success: function (result) {
-                            if (result.status ==1) {
+                            if (result.status == 1) {
                                 $("#preserve_collect_order_id").val(info.orderId);
                                 alert("Success");
                                 window.location.reload();
                             } else {
                                 alert("Pay Fail. Reason Not Clear.Please check the order status before you try.");
+                            }
+                        }, error: function (e) {
+                            var message = e.responseJSON.message;
+                            console.log(message);
+                            if (message.indexOf("Token") != -1) {
+                                alert("Token is expired! please login first!");
                             }
                         },
                         complete: function () {
@@ -148,6 +166,7 @@ var appConsign = new Vue({
             $("#ticket_cancel_order_id").text(orderId);
 
             $("#ticket_cancel_panel").css('display', 'block');
+            $('#my-svg-change-order').shCircleLoader({namespace: 'runLoad'});
             $.ajax({
                 type: "get",
                 url: "/api/v1/cancelservice/cancel/refound/" + orderId,
@@ -163,6 +182,15 @@ var appConsign = new Vue({
                     } else {
                         $("#cancel_money_refund").text("Error ");
                     }
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
+                },
+                complete: function () {
+                    $('#my-svg-change-order').shCircleLoader('destroy');
                 }
             });
         },
@@ -195,7 +223,7 @@ var appConsign = new Vue({
                         success: function (result) {
                             if (result["status"] == 1) {
                                 alert(result["msg"]);
-                            } else if(result["status"] == 2) {
+                            } else if (result["status"] == 2) {
                                 // pay difference money
                                 that.differenceMoney = result.data["differenceMoney"];
                                 if (result.data['differenceMoney'] != null || result.data['differenceMoney'] != 'null') {
@@ -227,12 +255,19 @@ var appConsign = new Vue({
                                         }
                                     });
                                 }
-                            }else{
+                            } else {
                                 alert(result["msg"]);
                             }
                         },
                         error: function (e) {
-                            alert("unKnow rebook error！")
+
+                            var message = e.responseJSON.message;
+                            console.log(message);
+                            if (message.indexOf("Token") != -1) {
+                                alert("Token is expired! please login first!");
+                            } else {
+                                alert("unKnow rebook error！")
+                            }
                         }
                     });
                 },
@@ -251,7 +286,7 @@ var appConsign = new Vue({
 
             $.ajax({
                 type: "get",
-                url: "/api/v1/cancelservice/cancel/" + orderId +"/" +sessionStorage.getItem("client_id"),
+                url: "/api/v1/cancelservice/cancel/" + orderId + "/" + sessionStorage.getItem("client_id"),
                 contentType: "application/json",
                 headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
                 dataType: "json",
@@ -265,15 +300,24 @@ var appConsign = new Vue({
                     }
 
                     window.location.reload();
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 }
             });
         },
-        initSeatClaass(size){
+        initSeatClaass(size) {
             this.selectedSeats = new Array(size);
-            for (var i = 0; i< size; i++)
+            for (var i = 0; i < size; i++)
                 this.selectedSeats[i] = 2;
         },
-        consignOrder(from, to, buyghtDate) {
+        consignOrder(orderId, from, to, buyghtDate) {
+            // 根据order Id 查询出consign
+            this.queryConsignByOrderId(orderId);
+
             var that = this;
             $('#my-prompt-consign').modal({
                 relatedTarget: this,
@@ -297,14 +341,28 @@ var appConsign = new Vue({
                     consignInfo.targetDate = buyghtDate;
                     consignInfo.from = from;
                     consignInfo.to = to;
+                    consignInfo.orderId = orderId;
                     consignInfo.consignee = that.consignName;
+
+                    if (!that.checkNum(that.consignPhone)) {
+                        alert('Please input a positive integer (phone)!')
+                        return;
+                    }
+
                     consignInfo.phone = that.consignPhone;
+                    // weight must be a number
+                    if (!that.checkNum(that.consignWeight)) {
+                        alert('Please input a positive integer (weight)!')
+                        return;
+                    }
+
                     consignInfo.weight = that.consignWeight;
+                    consignInfo.id = that.consignId;
                     consignInfo.isWithin = false;
                     var data = JSON.stringify(consignInfo);
 
                     $.ajax({
-                        type: "post",
+                        type: "put",
                         url: "/api/v1/consignservice/consigns",
                         contentType: "application/json",
                         headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
@@ -319,6 +377,12 @@ var appConsign = new Vue({
                             } else {
                                 alert(result["msg"]);
                             }
+                        }, error: function (e) {
+                            var message = e.responseJSON.message;
+                            console.log(message);
+                            if (message.indexOf("Token") != -1) {
+                                alert("Token is expired! please login first!");
+                            }
                         }
                     });
                 },
@@ -327,7 +391,41 @@ var appConsign = new Vue({
                 }
             });
         },
-        changeMyOrder(from, to, status, selectedOrderId,oldTripId) {
+
+        queryConsignByOrderId(orderId) {
+            var that = this;
+            $.ajax({
+                type: "get",
+                url: "/api/v1/consignservice/consigns/order/" + orderId,
+                contentType: "application/json",
+                headers: {"Authorization": "Bearer " + sessionStorage.getItem("client_token")},
+                dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    if (result["status"] == 1) {
+                        that.consignName = result.data.consignee;
+                        that.consignPhone = result.data.phone;
+                        that.consignWeight = result.data.weight;
+                        that.consignId = result.data.id;
+                    } else {
+                        that.consignName = '';
+                        that.consignPhone = '';
+                        that.consignWeight = '';
+                        that.consignId = '';
+                    }
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
+                }
+            });
+        },
+
+        changeMyOrder(from, to, status, selectedOrderId, oldTripId) {
             this.from = from;
             this.to = to;
             this.status = status;
@@ -346,11 +444,11 @@ var appConsign = new Vue({
             }
             var travelQueryData = JSON.stringify(travelQueryInfo);
 
-            this.tempSearchRoutes =[];
+            this.tempSearchRoutes = [];
             this.searchRoutes = [];
 
             if (this.trainTypeSelected == 0) {
-                this.queryForTravelInfo(travelQueryData,"/api/v1/travel2service/trips/left");
+                this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
                 this.queryForRebookTravelInfo(travelQueryData, "/api/v1/travelservice/trips/left");
             }
             if (this.trainTypeSelected == 1) {
@@ -360,11 +458,22 @@ var appConsign = new Vue({
                 this.queryForTravelInfo(travelQueryData, "/api/v1/travel2service/trips/left");
             }
         },
-        checkDateFormat(date){
-            var dateFormat = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
-            if(!dateFormat.test(date)){
+        checkNum(num) {
+            if (num == "") {
                 return false;
-            }else{
+            }
+            if (!(/(^[1-9]\d*$)/.test(num))) {
+
+                return false;
+            } else {
+                return true;
+            }
+        },
+        checkDateFormat(date) {
+            var dateFormat = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+            if (!dateFormat.test(date)) {
+                return false;
+            } else {
                 return true;
             }
         },
@@ -384,7 +493,7 @@ var appConsign = new Vue({
                     withCredentials: true
                 },
                 success: function (result) {
-                    if (result["status"] ==1) {
+                    if (result["status"] == 1) {
                         var obj = result.data;
                         var size = obj.length;
                         that.tempSearchRoutes = obj;
@@ -396,10 +505,16 @@ var appConsign = new Vue({
                         that.searchRoutes = that.searchRoutes.concat(that.tempSearchRoutes);
                         that.initSeatClaass(that.searchRoutes.length);
                     }
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 },
                 complete: function () {
                     $('#my-svg').shCircleLoader('destroy');
-                  //  $("#travel_booking_button").attr("disabled", false);
+                    //  $("#travel_booking_button").attr("disabled", false);
                 }
             });
         },
@@ -427,6 +542,12 @@ var appConsign = new Vue({
                         }
                         that.searchRoutes = that.searchRoutes.concat(that.tempSearchRoutes);
                         that.initSeatClaass(that.searchRoutes.length);
+                    }
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
                     }
                 },
                 complete: function () {
@@ -456,6 +577,12 @@ var appConsign = new Vue({
                 success: function (result) {
                     that.vancher = result;
                     that.vancher.travelDate = that.convertToYYYYMMDD(that.vancher.travelDate);
+                }, error: function (e) {
+                    var message = e.responseJSON.message;
+                    console.log(message);
+                    if (message.indexOf("Token") != -1) {
+                        alert("Token is expired! please login first!");
+                    }
                 },
                 complete: function () {
 
@@ -526,10 +653,9 @@ var appConsign = new Vue({
         var username = sessionStorage.getItem("client_name");
         console.log("username: " + username);
         if (username == null || username == "Not Login") {
-            alert("Please login first!");
+
             location.href = "client_login.html";
-        }
-        else {
+        } else {
             document.getElementById("client_name").innerHTML = username;
             this.queryMyOrderList();
         }

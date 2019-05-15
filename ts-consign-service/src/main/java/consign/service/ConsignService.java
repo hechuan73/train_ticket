@@ -14,5 +14,7 @@ public interface ConsignService {
 
     Response queryByAccountId(UUID accountId, HttpHeaders headers);
 
+    Response queryByOrderId(UUID orderId, HttpHeaders headers);
+
     Response queryByConsignee(String consignee, HttpHeaders headers);
 }
