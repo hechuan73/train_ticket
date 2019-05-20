@@ -10,9 +10,4 @@ This project is ticket seller application in microservice architecture, includin
 - python，dijango
 - go，webgo
 
----
-## Supported Cluster Orchestration
-- K8S + Istio
-- Docker Swarm
-
 About details, see [Wiki Pages](https://github.com/FudanSELab/train-ticket/wiki)
