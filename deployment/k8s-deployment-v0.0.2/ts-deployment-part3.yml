@@ -13,7 +13,7 @@ spec:
       - name: ts-ui-dashboard
         # image: 10.141.211.160:5000/header_newpage/ts-ui-dashboard
         # image: kylinxiang/ts-ui-dashboard-service:1.0
-        image: 10.141.211.160:5000/header/ts-ui-dashboard
+        image: ts/ts-ui-dashboard
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
