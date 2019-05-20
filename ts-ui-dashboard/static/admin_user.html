@@ -190,12 +190,12 @@
                                                     <div class="am-btn-group am-btn-group-xs">
                                                         <button class="am-btn am-btn-default am-btn-xs am-text-secondary" ng-click="updateUser(record)"><span class="am-icon-pencil-square-o"></span> Update</button>
                                                         <!--<button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-copy"></span> 复制</button>-->
-                                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger" ng-click="deleteUser(record.id)"><span class="am-icon-trash-o"></span> Delete</button>
+                                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger" ng-click="deleteUser(record.userId)"><span class="am-icon-trash-o"></span> Delete</button>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{record.id}}</td>
-                                            <td>{{record.name}}</td>
+                                            <td>{{record.userId}}</td>
+                                            <td>{{record.userName}}</td>
                                             <td>{{record.password}}</td>
                                             <td>{{record.gender}}</td>
                                             <td>{{record.email}}</td>

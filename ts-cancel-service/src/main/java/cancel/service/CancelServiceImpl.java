@@ -1,66 +1,61 @@
 package cancel.service;
 
-import cancel.domain.*;
+import cancel.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 @Service
-public class CancelServiceImpl implements CancelService{
+public class CancelServiceImpl implements CancelService {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public CancelOrderResult cancelOrder(CancelOrderInfo info,String loginToken,String loginId, HttpHeaders headers) throws Exception{
-        GetOrderByIdInfo getFromOrderInfo = new GetOrderByIdInfo();
-        getFromOrderInfo.setOrderId(info.getOrderId());
-        GetOrderResult orderResult = getOrderByIdFromOrder(getFromOrderInfo, headers);
-        if(orderResult.isStatus() == true){
+    public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) throws Exception {
+
+        Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
+        if (orderResult.getStatus() == 1) {
             System.out.println("[Cancel Order Service][Cancel Order] Order found G|H");
-            Order order = orderResult.getOrder();
-            if(order.getStatus() == OrderStatus.NOTPAID.getCode()
-                    || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()){
+            Order order =  orderResult.getData();
+            if (order.getStatus() == OrderStatus.NOTPAID.getCode()
+                    || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
 
                 order.setStatus(OrderStatus.CANCEL.getCode());
-                ChangeOrderInfo changeOrderInfo = new ChangeOrderInfo();
-                changeOrderInfo.setLoginToken(loginToken);
-                changeOrderInfo.setOrder(order);
 
-                ChangeOrderResult changeOrderResult = cancelFromOrder(changeOrderInfo, headers);
-                if(changeOrderResult.isStatus() == true){
-                    CancelOrderResult finalResult = new CancelOrderResult();
-                    finalResult.setStatus(true);
-                    finalResult.setMessage("Success.");
+                Response changeOrderResult = cancelFromOrder(order, headers);
+                // 0 -- not find order   1 - cancel success
+                if (changeOrderResult.getStatus() == 1) {
+
                     System.out.println("[Cancel Order Service][Cancel Order] Success.");
                     //Draw back money
                     String money = calculateRefund(order);
-                    boolean status = drawbackMoney(money,loginId, headers);
-                    if(status == true){
+                    boolean status = drawbackMoney(money, loginId, headers);
+                    if (status) {
                         System.out.println("[Cancel Order Service][Draw Back Money] Success.");
 
-                        GetAccountByIdInfo getAccountByIdInfo = new GetAccountByIdInfo();
-                        getAccountByIdInfo.setAccountId(order.getAccountId().toString());
-                        GetAccountByIdResult result = getAccount(getAccountByIdInfo, headers);
-                        if(result.isStatus() == false){
-                            return null;
-                        }
 
+                        // todo
+                        Response<User> result = getAccount(order.getAccountId().toString(), headers);
+                        if (result.getStatus() == 0) {
+                            return new Response<>(0, "Cann't find userinfo by user id.", null);
+                        }
                         NotifyInfo notifyInfo = new NotifyInfo();
                         notifyInfo.setDate(new Date().toString());
-
-
-                        notifyInfo.setEmail(result.getAccount().getEmail());
+                        notifyInfo.setEmail(result.getData().getEmail());
                         notifyInfo.setStartingPlace(order.getFrom());
                         notifyInfo.setEndPlace(order.getTo());
-                        notifyInfo.setUsername(result.getAccount().getName());
+                        notifyInfo.setUsername(result.getData().getUserName());
                         notifyInfo.setSeatNumber(order.getSeatNumber());
                         notifyInfo.setOrderNumber(order.getId().toString());
                         notifyInfo.setPrice(order.getPrice());
@@ -69,177 +64,118 @@ public class CancelServiceImpl implements CancelService{
 
                         sendEmail(notifyInfo, headers);
 
-                    }else{
+                    } else {
                         System.out.println("[Cancel Order Service][Draw Back Money] Fail.");
                     }
-
-                    return finalResult;
-                }else{
-                    CancelOrderResult finalResult = new CancelOrderResult();
-                    finalResult.setStatus(false);
-                    finalResult.setMessage(changeOrderResult.getMessage());
-                    System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMessage());
-                    return finalResult;
+                    return new Response<>(1, "Success.", null);
+                } else {
+                    System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMsg());
+                    return new Response<>(0, changeOrderResult.getMsg(), null);
                 }
 
-            }else{
-                CancelOrderResult result = new CancelOrderResult();
-                result.setStatus(false);
-                result.setMessage("Order Status Cancel Not Permitted");
+            } else {
                 System.out.println("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
-                return result;
+                return new Response<>(0, "Order Status Cancel Not Permitted", null);
             }
-        }else{
-            GetOrderByIdInfo getFromOtherOrderInfo = new GetOrderByIdInfo();
-            getFromOtherOrderInfo.setOrderId(info.getOrderId());
-            GetOrderResult orderOtherResult = getOrderByIdFromOrderOther(getFromOtherOrderInfo, headers);
-            if(orderOtherResult.isStatus() == true){
+        } else {
+
+            Response<Order> orderOtherResult = getOrderByIdFromOrderOther(orderId, headers);
+            if (orderOtherResult.getStatus() == 1) {
                 System.out.println("[Cancel Order Service][Cancel Order] Order found Z|K|Other");
 
-                Order order = orderOtherResult.getOrder();
-                if(order.getStatus() == OrderStatus.NOTPAID.getCode()
-                        || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()){
+                Order order =   orderOtherResult.getData();
+                if (order.getStatus() == OrderStatus.NOTPAID.getCode()
+                        || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
 
                     System.out.println("[Cancel Order Service][Cancel Order] Order status ok");
 
                     order.setStatus(OrderStatus.CANCEL.getCode());
-                    ChangeOrderInfo changeOrderInfo = new ChangeOrderInfo();
-                    changeOrderInfo.setLoginToken(loginToken);
-                    changeOrderInfo.setOrder(order);
-                    ChangeOrderResult changeOrderResult = cancelFromOtherOrder(changeOrderInfo, headers);
+                    Response changeOrderResult = cancelFromOtherOrder(order, headers);
 
-                    if(changeOrderResult.isStatus() == true){
-                        CancelOrderResult finalResult = new CancelOrderResult();
-                        finalResult.setStatus(true);
-                        finalResult.setMessage("Success.");
+                    if (changeOrderResult.getStatus() == 1) {
                         System.out.println("[Cancel Order Service][Cancel Order] Success.");
                         //Draw back money
                         String money = calculateRefund(order);
-                        boolean status = drawbackMoney(money,loginId, headers);
-                        if(status == true){
+                        boolean status = drawbackMoney(money, loginId, headers);
+                        if (status) {
                             System.out.println("[Cancel Order Service][Draw Back Money] Success.");
-                        }else{
+                        } else {
                             System.out.println("[Cancel Order Service][Draw Back Money] Fail.");
                         }
-                        return finalResult;
-                    }else{
-                        CancelOrderResult finalResult = new CancelOrderResult();
-                        finalResult.setStatus(false);
-                        finalResult.setMessage(changeOrderResult.getMessage());
-                        System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMessage());
-                        return finalResult;
+                        return new Response<>(1, "Success.", null);
+                    } else {
+                        System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMsg());
+                        return new Response<>(0, "Fail.Reason:" + changeOrderResult.getMsg(), null);
                     }
-                }else{
-                    CancelOrderResult result = new CancelOrderResult();
-                    result.setStatus(false);
-                    result.setMessage("Order Status Cancel Not Permitted");
+                } else {
                     System.out.println("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
-                    return result;
+                    return new Response<>(0, "Order Status Cancel Not Permitted", null);
                 }
-            }else{
-                CancelOrderResult result = new CancelOrderResult();
-                result.setStatus(false);
-                result.setMessage("Order Not Found");
+            } else {
                 System.out.println("[Cancel Order Service][Cancel Order] Order Not Found.");
-                return result;
+                return new Response<>(0, "Order Not Found.", null);
             }
         }
     }
 
-    public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders headers ){
+    public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Send Email]");
         HttpEntity requestEntity = new HttpEntity(notifyInfo, headers);
         ResponseEntity<Boolean> re = restTemplate.exchange(
-                "http://ts-notification-service:17853/notification/order_cancel_success",
+                "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
                 HttpMethod.POST,
                 requestEntity,
                 Boolean.class);
         boolean result = re.getBody();
-//        boolean result = restTemplate.postForObject(
-//                "http://ts-notification-service:17853/notification/order_cancel_success",
-//                notifyInfo,
-//                Boolean.class
-//        );
         return result;
     }
 
     @Override
-    public CalculateRefundResult calculateRefund(CancelOrderInfo info, HttpHeaders headers){
-        GetOrderByIdInfo getFromOrderInfo = new GetOrderByIdInfo();
-        getFromOrderInfo.setOrderId(info.getOrderId());
-        GetOrderResult orderResult = getOrderByIdFromOrder(getFromOrderInfo, headers);
-        if(orderResult.isStatus() == true){
-            Order order = orderResult.getOrder();
-            if(order.getStatus() == OrderStatus.NOTPAID.getCode()
-                    || order.getStatus() == OrderStatus.PAID.getCode()){
-                if(order.getStatus() == OrderStatus.NOTPAID.getCode()){
-                    CalculateRefundResult result = new CalculateRefundResult();
-                    result.setStatus(true);
-                    result.setMessage("Success");
-                    result.setRefund("0");
-                    System.out.println("[Cancel Order][Refund Price] From Order Service.Not Paid.");
-                    return result;
-                }else{
-                    CalculateRefundResult result = new CalculateRefundResult();
-                    result.setStatus(true);
-                    result.setMessage("Success");
-                    result.setRefund(calculateRefund(order));
-                    System.out.println("[Cancel Order][Refund Price] From Order Service.Paid.");
-                    return result;
-                }
-            }else{
-                CalculateRefundResult result = new CalculateRefundResult();
-                result.setStatus(false);
-                result.setMessage("Order Status Cancel Not Permitted");
-                result.setRefund("error");
-                System.out.println("[Cancel Order][Refund Price] Order. Cancel Not Permitted.");
+    public Response calculateRefund(String orderId, HttpHeaders headers) {
 
-                return result;
-            }
-        }else{
-            GetOrderByIdInfo getFromOtherOrderInfo = new GetOrderByIdInfo();
-            getFromOtherOrderInfo.setOrderId(info.getOrderId());
-            GetOrderResult orderOtherResult = getOrderByIdFromOrderOther(getFromOtherOrderInfo, headers);
-            if(orderOtherResult.isStatus() == true){
-                Order order = orderOtherResult.getOrder();
-                if(order.getStatus() == OrderStatus.NOTPAID.getCode()
-                        || order.getStatus() == OrderStatus.PAID.getCode()){
-                    if(order.getStatus() == OrderStatus.NOTPAID.getCode()){
-                        CalculateRefundResult result = new CalculateRefundResult();
-                        result.setStatus(true);
-                        result.setMessage("Success");
-                        result.setRefund("0");
-                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Not Paid.");
-                        return result;
-                    }else{
-                        CalculateRefundResult result = new CalculateRefundResult();
-                        result.setStatus(true);
-                        result.setMessage("Success");
-                        result.setRefund(calculateRefund(order));
-                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Paid.");
-                        return result;
-                    }
-                }else{
-                    CalculateRefundResult result = new CalculateRefundResult();
-                    result.setStatus(false);
-                    result.setMessage("Order Status Cancel Not Permitted");
-                    result.setRefund("error");
-                    System.out.println("[Cancel Order][Refund Price] Order Other. Cancel Not Permitted.");
-                    return result;
+        Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
+        if (orderResult.getStatus() == 1) {
+            Order order =   orderResult.getData();
+            if (order.getStatus() == OrderStatus.NOTPAID.getCode()
+                    || order.getStatus() == OrderStatus.PAID.getCode()) {
+                if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
+                    System.out.println("[Cancel Order][Refund Price] From Order Service.Not Paid.");
+                    return new Response<>(1, "Success. Refoud 0", 0);
+                } else {
+                    System.out.println("[Cancel Order][Refund Price] From Order Service.Paid.");
+                    return new Response<>(1, "Success. ", calculateRefund(order));
                 }
-            }else{
-                CalculateRefundResult result = new CalculateRefundResult();
-                result.setStatus(false);
-                result.setMessage("Order Not Found");
-                result.setRefund("error");
+            } else {
+                System.out.println("[Cancel Order][Refund Price] Order. Cancel Not Permitted.");
+                return new Response<>(0, "Order Status Cancel Not Permitted, Refound error", null);
+            }
+        } else {
+
+            Response<Order> orderOtherResult = getOrderByIdFromOrderOther(orderId, headers);
+            if (orderOtherResult.getStatus() == 1) {
+                Order order =   orderOtherResult.getData();
+                if (order.getStatus() == OrderStatus.NOTPAID.getCode()
+                        || order.getStatus() == OrderStatus.PAID.getCode()) {
+                    if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
+                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Not Paid.");
+                        return new Response<>(1, "Success, Refound 0", 0);
+                    } else {
+                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Paid.");
+                        return new Response<>(1, "Success", calculateRefund(order));
+                    }
+                } else {
+                    System.out.println("[Cancel Order][Refund Price] Order Other. Cancel Not Permitted.");
+                    return new Response<>(0, "Order Status Cancel Not Permitted", null);
+                }
+            } else {
                 System.out.println("[Cancel Order][Refund Price] Order not found.");
-                return result;
+                return new Response<>(0, "Order Not Found", null);
             }
         }
     }
 
-    private String calculateRefund(Order order){
-        if(order.getStatus() == OrderStatus.NOTPAID.getCode()){
+    private String calculateRefund(Order order) {
+        if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
             return "0.00";
         }
         System.out.println("[Cancel Order] Order Travel Date:" + order.getTravelDate().toString());
@@ -255,17 +191,17 @@ public class CancelServiceImpl implements CancelService{
         int minute = cal2.get(Calendar.MINUTE);
         int second = cal2.get(Calendar.SECOND);
         Date startTime = new Date(year,
-                                  month,
-                                  day,
-                                  hour,
-                                  minute,
-                                  second);
+                month,
+                day,
+                hour,
+                minute,
+                second);
         System.out.println("[Cancel Order] nowDate  :" + nowDate.toString());
         System.out.println("[Cancel Order] startTime:" + startTime.toString());
-        if(nowDate.after(startTime)){
+        if (nowDate.after(startTime)) {
             System.out.println("[Cancel Order] Ticket expire refund 0");
             return "0";
-        }else{
+        } else {
             double totalPrice = Double.parseDouble(order.getPrice());
             double price = totalPrice * 0.8;
             DecimalFormat priceFormat = new java.text.DecimalFormat("0.00");
@@ -276,89 +212,87 @@ public class CancelServiceImpl implements CancelService{
     }
 
 
-    private ChangeOrderResult cancelFromOrder(ChangeOrderInfo info,  HttpHeaders headers){
+    private Response cancelFromOrder(Order order, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Change Order Status] Changing....");
-        ChangeOrderResult result = restTemplate.postForObject("http://ts-order-service:12031/order/update",info,ChangeOrderResult.class);
+
+        HttpEntity requestEntity = new HttpEntity(order, headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order",
+                HttpMethod.PUT,
+                requestEntity,
+                Response.class);
+        Response result = re.getBody();
+
         return result;
     }
 
-    private ChangeOrderResult cancelFromOtherOrder(ChangeOrderInfo info, HttpHeaders headers){
+    private Response cancelFromOtherOrder(Order info, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Change Order Status] Changing....");
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<ChangeOrderResult> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/orderOther/update",
-                HttpMethod.POST,
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
+                HttpMethod.PUT,
                 requestEntity,
-                ChangeOrderResult.class);
-        ChangeOrderResult result = re.getBody();
-//        ChangeOrderResult result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/update",info,ChangeOrderResult.class);
+                Response.class);
+        Response result = re.getBody();
+
         return result;
     }
 
-    public boolean drawbackMoney(String money,String userId, HttpHeaders headers){
+    public boolean drawbackMoney(String money, String userId, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Draw Back Money] Draw back money...");
-        DrawBackInfo info = new DrawBackInfo();
-        info.setMoney(money);
-        info.setUserId(userId);
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<String> re = restTemplate.exchange(
-                "http://ts-inside-payment-service:18673/inside_payment/drawBack",
-                HttpMethod.POST,
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + money,
+                HttpMethod.GET,
                 requestEntity,
-               String.class);
-        String result = re.getBody();
-//        String result = restTemplate.postForObject("http://ts-inside-payment-service:18673/inside_payment/drawBack",info,String.class);
-        if(result.equals("true")){
+                Response.class);
+        Response result = re.getBody();
+
+        if (result.getStatus() == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public GetAccountByIdResult getAccount(GetAccountByIdInfo info, HttpHeaders headers){
+    public Response<User> getAccount(String orderId, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Get By Id]");
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<GetAccountByIdResult> re = restTemplate.exchange(
-                "http://ts-sso-service:12349/account/findById",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity( headers);
+        ResponseEntity<Response<User>> re = restTemplate.exchange(
+                "http://ts-user-service:12342/api/v1/userservice/users/id/" + orderId,
+                HttpMethod.GET,
                 requestEntity,
-                GetAccountByIdResult.class);
-        GetAccountByIdResult result = re.getBody();
-//        GetAccountByIdResult result = restTemplate.postForObject(
-//                "http://ts-sso-service:12349/account/findById",
-//                info,
-//                GetAccountByIdResult.class
-//        );
+                new ParameterizedTypeReference<Response<User>>() {
+                });
+        Response<User> result = re.getBody();
         return result;
     }
 
-    private GetOrderResult getOrderByIdFromOrder(GetOrderByIdInfo info, HttpHeaders headers){
+    private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Get Order] Getting....");
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<GetOrderResult> re = restTemplate.exchange(
-                "http://ts-order-service:12031/order/getById/",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity(headers);
+        ResponseEntity<Response<Order>> re = restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
+                HttpMethod.GET,
                 requestEntity,
-                GetOrderResult.class);
-        GetOrderResult cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-service:12031/order/getById/"
-//                ,info,GetOrderResult.class);
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        Response<Order> cor = re.getBody();
         return cor;
     }
 
-    private GetOrderResult getOrderByIdFromOrderOther(GetOrderByIdInfo info, HttpHeaders headers){
+    private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
         System.out.println("[Cancel Order Service][Get Order] Getting....");
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<GetOrderResult> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/orderOther/getById/",
-                HttpMethod.POST,
+        HttpEntity requestEntity = new HttpEntity(  headers);
+        ResponseEntity<Response<Order>> re = restTemplate.exchange(
+                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
+                HttpMethod.GET,
                 requestEntity,
-                GetOrderResult.class);
-        GetOrderResult cor = re.getBody();
-//        GetOrderResult cor = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/orderOther/getById/"
-//                ,info,GetOrderResult.class);
+                new ParameterizedTypeReference<Response<Order>>() {
+                });
+        Response<Order> cor = re.getBody();
         return cor;
     }
 

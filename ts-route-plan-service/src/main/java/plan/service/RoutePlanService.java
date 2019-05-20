@@ -1,15 +1,15 @@
 package plan.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
-import plan.domain.GetRoutePlanInfo;
-import plan.domain.RoutePlanResults;
+import plan.entity.RoutePlanInfo;
 
 public interface RoutePlanService {
 
-    RoutePlanResults searchCheapestResult(GetRoutePlanInfo info,HttpHeaders headers);
+    Response searchCheapestResult(RoutePlanInfo info, HttpHeaders headers);
 
-    RoutePlanResults searchQuickestResult(GetRoutePlanInfo info,HttpHeaders headers);
+    Response searchQuickestResult(RoutePlanInfo info, HttpHeaders headers);
 
-    RoutePlanResults searchMinStopStations(GetRoutePlanInfo info,HttpHeaders headers);
+    Response searchMinStopStations(RoutePlanInfo info, HttpHeaders headers);
 
 }

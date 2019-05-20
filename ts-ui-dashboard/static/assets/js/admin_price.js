@@ -1,10 +1,10 @@
-var priceModule = angular.module("myApp",[]);
+var priceModule = angular.module("myApp", []);
 
 priceModule.factory('loadDataService', function ($http, $q) {
 
     var service = {};
 
-    service.loadAdminBasic = function(url){
+    service.loadAdminBasic = function (url) {
         var deferred = $q.defer();
         var promise = deferred.promise;
         //返回的数据对象
@@ -12,16 +12,19 @@ priceModule.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: url + "/" + sessionStorage.getItem("admin_id"),
+            url: url,
+            headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
             withCredentials: true
         }).success(function (data, status, headers, config) {
             if (data.status) {
-                information = data;
+                information = data.data;
                 deferred.resolve(information);
             }
-            else{
+            else {
                 alert("Request the Price list fail!" + data.message);
             }
+        }).error(function(data, header, config, status){
+            alert(data.message)
         });
         return promise;
     };
@@ -29,38 +32,40 @@ priceModule.factory('loadDataService', function ($http, $q) {
     return service;
 });
 
-priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $window) {
+priceModule.controller("priceCtrl", function ($scope, $http, loadDataService, $window) {
 
     //首次加载显示数据
-    loadDataService.loadAdminBasic("/adminbasic/getAllPrices").then(function (result) {
+    loadDataService.loadAdminBasic("/api/v1/adminbasicservice/adminbasic/prices").then(function (result) {
         console.log(result);
-        $scope.prices = result.priceConfig;
+        $scope.prices = result;
     });
 
-    $scope.deletePrice = function(price) {
+    $scope.deletePrice = function (price) {
         $('#delete-price-confirm').modal({
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method:"post",
-                    url: "/adminbasic/deletePrice",
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/prices",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:{
-                        loginId:sessionStorage.getItem("admin_id"),
-                        id:price.id,
-                        routeId:price.routeId,
-                        trainType:price.trainType,
-                        basicPriceRate:price.basicPriceRate,
-                        firstClassPriceRate:price.firstClassPriceRate
+                    data: {
+                        id: price.id,
+                        routeId: price.routeId,
+                        trainType: price.trainType,
+                        basicPriceRate: price.basicPriceRate,
+                        firstClassPriceRate: price.firstClassPriceRate
                     }
-                }).success(function(data, status, headers, config){
-                    if (data) {
-                       alert("Delete price successfully!");
-                    }else{
+                }).success(function (data, status, headers, config) {
+                    if (data.status ==1) {
+                        alert("Delete price successfully!");
+                    } else {
                         alert("Update price failed!");
                     }
                     $window.location.reload();
-                })
+                }).error(function(data, header, config, status){
+                    alert(data.message)
+                });
             },
             // closeOnConfirm: false,
             onCancel: function () {
@@ -69,7 +74,7 @@ priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $wi
         });
     };
 
-    $scope.updatePrice = function(price) {
+    $scope.updatePrice = function (price) {
         $('#update-price-route-id').val(price.routeId);
         $('#update-price-train-type').val(price.trainType);
         $('#update-price-basic-price-rate').val(price.basicPriceRate);
@@ -78,28 +83,30 @@ priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $wi
         $('#update-price-table').modal({
             relatedTarget: this,
             onConfirm: function (options) {
-                if(parseFloat($('#update-price-basic-price-rate').val()) && parseFloat($('#update-price-first-class-price-rate').val()) ){
+                if (parseFloat($('#update-price-basic-price-rate').val()) && parseFloat($('#update-price-first-class-price-rate').val())) {
                     var data = new Object();
                     data.id = price.id;
                     data.routeId = $('#update-price-route-id').val();
                     data.trainType = $('#update-price-train-type').val();
                     data.basicPriceRate = parseFloat($('#update-price-basic-price-rate').val());
                     data.firstClassPriceRate = parseFloat($('#update-price-first-class-price-rate').val());
-                    data.loginId=sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
-                        method:"post",
-                        url: "/adminbasic/modifyPrice",
+                        method: "put",
+                        url: "/api/v1/adminbasicservice/adminbasic/prices",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
-                        data:data
-                    }).success(function(data, status, headers, config){
-                        if (data) {
+                        data: data
+                    }).success(function (data, status, headers, config) {
+                        if (data.status ==1 ) {
                             alert("Update price successfully!");
-                        }else{
+                        } else {
                             alert("Update price failed!");
                         }
                         $window.location.reload();
-                    })
+                    }).error(function(data, header, config, status){
+                        alert(data.message)
+                    });
                 } else {
                     alert("The basic price rate and the first class price rate must be a number!");
                 }
@@ -112,7 +119,7 @@ priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $wi
         });
     };
 
-    $scope.addPrice = function() {
+    $scope.addPrice = function () {
         $('#add-price-route-id').val("");
         $('#add-price-train-type').val("");
         $('#add-price-basic-price-rate').val("");
@@ -121,28 +128,30 @@ priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $wi
         $('#add-price-table').modal({
             relatedTarget: this,
             onConfirm: function (options) {
-                if(parseFloat($('#add-price-basic-price-rate').val()) && parseFloat($('#add-price-first-class-price-rate').val()) ){
+                if (parseFloat($('#add-price-basic-price-rate').val()) && parseFloat($('#add-price-first-class-price-rate').val())) {
                     var data = new Object();
                     data.routeId = $('#add-price-route-id').val();
                     data.trainType = $('#add-price-train-type').val();
                     data.basicPriceRate = parseFloat($('#add-price-basic-price-rate').val());
                     data.firstClassPriceRate = parseFloat($('#add-price-first-class-price-rate').val());
-                    data.loginId=sessionStorage.getItem("admin_id");
                     // alert(JSON.stringify(data));
                     $http({
-                        method:"post",
-                        url: "/adminbasic/addPrice",
+                        method: "post",
+                        url: "/api/v1/adminbasicservice/adminbasic/prices",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
-                        data:data
-                    }).success(function(data, status, headers, config){
-                        if (data) {
+                        data: data
+                    }).success(function (data, status, headers, config) {
+                        if (data.status ==1) {
                             alert("Add Price successfully!");
-                        }else{
+                        } else {
                             alert("Add Price failed!");
                         }
                         $window.location.reload();
-                    })
-                }  else {
+                    }).error(function(data, header, config, status){
+                        alert(data.message)
+                    });
+                } else {
                     alert("The basic price rate and the first class price rate must be a number!");
                 }
             },
@@ -151,7 +160,6 @@ priceModule.controller("priceCtrl", function ($scope,$http, loadDataService, $wi
             }
         });
     };
-
 
 
 });

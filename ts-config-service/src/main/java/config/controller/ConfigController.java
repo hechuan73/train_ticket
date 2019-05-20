@@ -4,59 +4,68 @@ package config.controller;
  * Created by Chenjie Xu on 2017/5/11.
  */
 
-import config.domain.Config;
-import config.domain.Information;
-import config.domain.Information2;
+import config.entity.Config;
 import config.service.ConfigService;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("api/v1/configservice")
 public class ConfigController {
+
     @Autowired
     private ConfigService configService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
-    public String home(@RequestHeader HttpHeaders headers){
+    @GetMapping(path = "/welcome")
+    public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ Config Service ] !";
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/create", method = RequestMethod.POST)
-    public String delete(@RequestBody Information info, @RequestHeader HttpHeaders headers){
-        return configService.create(info, headers);
+    @GetMapping(value = "/configs")
+    public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
+        return ok(configService.queryAll(headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/update", method = RequestMethod.POST)
-    public String update(@RequestBody Information info, @RequestHeader HttpHeaders headers){
-        return configService.update(info, headers);
+    @PostMapping(value = "/configs")
+    public HttpEntity<?> createConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
+        return new ResponseEntity<>(configService.create(info, headers), HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/retrieve", method = RequestMethod.POST)
-    public Config retrieve(@RequestBody Information2 info, @RequestHeader HttpHeaders headers){
-        return configService.retrieve(info, headers);
+    @PutMapping(value = "/configs")
+    public HttpEntity updateConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
+        return ok(configService.update(info, headers));
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @DeleteMapping(value = "/configs/{configName}")
+    public HttpEntity deleteConfig(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
+        return ok(configService.delete(configName, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/query", method = RequestMethod.POST)
-    public String query(@RequestBody Information2 info, @RequestHeader HttpHeaders headers){
-        return configService.query(info, headers);
+    @GetMapping(value = "/configs/{configName}")
+    public HttpEntity retrieve(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
+        return ok(configService.query(configName, headers));
     }
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/delete", method = RequestMethod.POST)
-    public String delete(@RequestBody Information2 info, @RequestHeader HttpHeaders headers){
-        return configService.delete(info, headers);
-    }
+//    @CrossOrigin(origins = "*")
+//    @RequestMapping(value="/config/query", method = RequestMethod.POST)
+//    public String query(@PathVariable String name, @RequestHeader HttpHeaders headers){
+//        return configService.query(info, headers);
+//    }
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value="/config/queryAll", method = RequestMethod.GET)
-    public List<Config> queryAll(@RequestHeader HttpHeaders headers){
-        return configService.queryAll(headers);
-    }
+
 }

@@ -4,3 +4,6 @@ server:
 spring:
   application:
     name: ts-seat-service
+
+swagger:
+  controllerPackage: seat.controller

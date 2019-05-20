@@ -10,3 +10,5 @@ spring:
       database: ts
       port: 27017
 
+swagger:
+  controllerPackage: contacts.controller

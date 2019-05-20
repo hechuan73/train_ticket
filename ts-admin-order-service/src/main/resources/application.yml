@@ -5,3 +5,6 @@ spring:
   application:
     name: ts-admin-order-service
 
+
+swagger:
+  controllerPackage: adminorder.controller

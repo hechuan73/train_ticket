@@ -3,7 +3,7 @@ package contacts.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import contacts.domain.Contacts;
+import contacts.entity.Contacts;
 import java.util.ArrayList;
 import java.util.UUID;
 

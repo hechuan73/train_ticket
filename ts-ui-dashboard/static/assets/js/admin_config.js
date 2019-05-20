@@ -1,10 +1,10 @@
-var configModule = angular.module("myApp",[]);
+var configModule = angular.module("myApp", []);
 
 configModule.factory('loadDataService', function ($http, $q) {
 
     var service = {};
 
-    service.loadAdminBasic = function(url){
+    service.loadAdminBasic = function (url) {
         var deferred = $q.defer();
         var promise = deferred.promise;
         //返回的数据对象
@@ -12,16 +12,19 @@ configModule.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: url + "/" + sessionStorage.getItem("admin_id"),
+            url: url,
+            headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
             withCredentials: true
         }).success(function (data, status, headers, config) {
-            if (data.status) {
+            if (data.status == 1) {
                 information = data;
                 deferred.resolve(information);
             }
-            else{
+            else {
                 alert("Request the configure list fail!" + data.message);
             }
+        }).error(function (data, header, config, status) {
+            alert(data.message)
         });
         return promise;
     };
@@ -29,34 +32,33 @@ configModule.factory('loadDataService', function ($http, $q) {
     return service;
 });
 
-configModule.controller("configCtrl", function ($scope,$http, loadDataService, $window) {
+configModule.controller("configCtrl", function ($scope, $http, loadDataService, $window) {
 
     //首次加载显示数据
-    loadDataService.loadAdminBasic("/adminbasic/getAllConfigs").then(function (result) {
-        // console.log(result);
-        $scope.configs = result.configs;
+    loadDataService.loadAdminBasic("/api/v1/adminbasicservice/adminbasic/configs").then(function (result) {
+        console.log(result);
+        $scope.configs = result.data;
     });
 
-    $scope.deleteConfig = function(config) {
+    $scope.deleteConfig = function (config) {
         $('#delete-config-confirm').modal({
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method:"post",
-                    url: "/adminbasic/deleteConfig",
-                    withCredentials: true,
-                    data:{
-                        loginId:sessionStorage.getItem("admin_id"),
-                        name:config.name
-                    }
-                }).success(function(data, status, headers, config){
-                    if (data) {
-                       alert("Delete config successfully!");
-                    }else{
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs/" + config.name,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
+                }).success(function (data, status, headers, config) {
+                    if (data.status == 1) {
+                        alert("Delete config successfully!");
+                    } else {
                         alert("Update config failed!");
                     }
                     $window.location.reload();
-                })
+                }).error(function (data, header, config, status) {
+                    alert(data.message)
+                });
             },
             // closeOnConfirm: false,
             onCancel: function () {
@@ -65,7 +67,7 @@ configModule.controller("configCtrl", function ($scope,$http, loadDataService, $
         });
     };
 
-    $scope.updateConfig = function(config) {
+    $scope.updateConfig = function (config) {
         $('#update-config-name').val(config.name);
         $('#update-config-value').val(config.value);
         $('#update-config-desc').val(config.description);
@@ -77,21 +79,23 @@ configModule.controller("configCtrl", function ($scope,$http, loadDataService, $
                 data.name = $('#update-config-name').val();
                 data.value = $('#update-config-value').val();
                 data.description = $('#update-config-desc').val();
-                data.loginId=sessionStorage.getItem("admin_id");
                 // alert(JSON.stringify(data));
                 $http({
-                    method:"post",
-                    url: "/adminbasic/modifyConfig",
+                    method: "put",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:data
-                }).success(function(data, status, headers, config){
-                    if (data) {
+                    data: data
+                }).success(function (data, status, headers, config) {
+                    if (data.status == 1) {
                         alert("Update configure successfully!");
-                    }else{
+                    } else {
                         alert("Update configure failed!");
                     }
                     $window.location.reload();
-                })
+                }).error(function (data, header, config, status) {
+                    alert(data.message)
+                });
 
             },
             onCancel: function () {
@@ -100,7 +104,7 @@ configModule.controller("configCtrl", function ($scope,$http, loadDataService, $
         });
     };
 
-    $scope.addConfig = function() {
+    $scope.addConfig = function () {
         $('#add-config-name').val("");
         $('#add-config-value').val("");
         $('#add-config-desc').val("");
@@ -112,21 +116,23 @@ configModule.controller("configCtrl", function ($scope,$http, loadDataService, $
                 data.name = $('#add-config-name').val();
                 data.value = $('#add-config-value').val();
                 data.description = $('#add-config-desc').val();
-                data.loginId=sessionStorage.getItem("admin_id");
                 // alert(JSON.stringify(data));
                 $http({
-                    method:"post",
-                    url: "/adminbasic/addConfig",
+                    method: "post",
+                    url: "/api/v1/adminbasicservice/adminbasic/configs",
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                     withCredentials: true,
-                    data:data
-                }).success(function(data, status, headers, config){
-                    if (data) {
+                    data: data
+                }).success(function (data, status, headers, config) {
+                    if (data.status == 1) {
                         alert("Add Configure successfully!");
-                    }else{
+                    } else {
                         alert("Add Configure failed!");
                     }
                     $window.location.reload();
-                })
+                }).error(function (data, header, config, status) {
+                    alert(data.message)
+                });
 
             },
             onCancel: function () {
@@ -134,7 +140,4 @@ configModule.controller("configCtrl", function ($scope,$http, loadDataService, $
             }
         });
     };
-
-
-
 });

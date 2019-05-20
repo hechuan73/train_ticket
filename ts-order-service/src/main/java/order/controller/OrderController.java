@@ -1,189 +1,153 @@
 package order.controller;
 
-import order.domain.*;
+import order.entity.*;
 import order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import java.util.ArrayList;
+
+import java.util.Date;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
+@RequestMapping("/api/v1/orderservice")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home() {
         return "Welcome to [ Order Service ] !";
     }
 
     /***************************For Normal Use***************************/
 
-    @RequestMapping(value="/order/getTicketListByDateAndTripId", method = RequestMethod.POST)
-    public LeftTicketInfo getTicketListByDateAndTripId(@RequestBody SeatRequest seatRequest, @RequestHeader HttpHeaders headers){
+    @PostMapping(value = "/order/tickets")
+    public HttpEntity getTicketListByDateAndTripId(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
         System.out.println("[Order Service][Get Sold Ticket] Date:" + seatRequest.getTravelDate().toString());
-        return orderService.getSoldTickets(seatRequest,headers);
+        return ok(orderService.getSoldTickets(seatRequest, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/create", method = RequestMethod.POST)
-    public CreateOrderResult createNewOrder(@RequestBody CreateOrderInfo coi, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Create Order] Create Order form " + coi.getOrder().getFrom() + " --->"
-            + coi.getOrder().getTo() + " at " + coi.getOrder().getTravelDate());
-        VerifyResult tokenResult = verifySsoLogin(coi.getLoginToken(), headers);
-        if(tokenResult.isStatus() == true){
-            System.out.println("[Order Service][Verify Login] Success");
-            return orderService.create(coi.getOrder(),headers);
-        }else{
-            System.out.println("[Order Service][Verify Login] Fail");
-            CreateOrderResult cor = new CreateOrderResult();
-            cor.setStatus(false);
-            cor.setMessage("Not Login");
-            cor.setOrder(null);
-            return cor;
-        }
+    @PostMapping(path = "/order")
+    public HttpEntity createNewOrder(@RequestBody Order createOrder, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Service][Create Order] Create Order form " + createOrder.getFrom() + " --->"
+                + createOrder.getTo() + " at " + createOrder.getTravelDate());
+        System.out.println("[Order Service][Verify Login] Success");
+        return ok(orderService.create(createOrder, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/adminAddOrder", method = RequestMethod.POST)
-    public AddOrderResult addcreateNewOrder(@RequestBody Order order, @RequestHeader HttpHeaders headers){
-        return orderService.addNewOrder(order,headers);
+    @PostMapping(path = "/order/admin")
+    public HttpEntity addcreateNewOrder(@RequestBody Order order, @RequestHeader HttpHeaders headers) {
+        return ok(orderService.addNewOrder(order, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/query", method = RequestMethod.POST)
-    public ArrayList<Order> queryOrders(@RequestBody QueryInfo qi,@CookieValue String loginId,@CookieValue String loginToken, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Query Orders] Query Orders for " + loginId);
-        VerifyResult tokenResult = verifySsoLogin(loginToken, headers);
-        if(tokenResult.isStatus() == true){
-            System.out.println("[Order Service][Verify Login] Success");
-            return orderService.queryOrders(qi,loginId,headers);
-        }else{
-            System.out.println("[Order Service][Verify Login] Fail");
-            return new ArrayList<Order>();
-        }
+    @PostMapping(path = "/order/query")
+    public HttpEntity queryOrders(@RequestBody OrderInfo qi,
+                                  @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Query Orders] Query Orders for " + qi.getLoginId());
+        System.out.println("[Order Other Service][Verify Login] Success");
+        return ok(orderService.queryOrders(qi, qi.getLoginId(), headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/queryForRefresh", method = RequestMethod.POST)
-    public ArrayList<Order> queryOrdersForRefresh(@RequestBody QueryInfo qi,@CookieValue String loginId,@CookieValue String loginToken, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Query Orders] Query Orders for " + loginId);
-        VerifyResult tokenResult = verifySsoLogin(loginToken, headers);
-        if(tokenResult.isStatus() == true){
-            System.out.println("[Order Service][Verify Login] Success");
-            return orderService.queryOrdersForRefresh(qi,loginId,headers);
-        }else{
-            System.out.println("[Order Service][Verify Login] Fail");
-            return new ArrayList<>();
-        }
+    @PostMapping(path = "/order/refresh")
+    public HttpEntity queryOrdersForRefresh(@RequestBody OrderInfo qi,
+                                            @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Query Orders] Query Orders for " + qi.getLoginId());
+        return ok(orderService.queryOrdersForRefresh(qi, qi.getLoginId(), headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/calculate", method = RequestMethod.POST)
-    public CalculateSoldTicketResult calculateSoldTicket(@RequestBody CalculateSoldTicketInfo csti, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Calculate Sold Tickets] Date:" + csti.getTravelDate() + " TrainNumber:"
-                + csti.getTrainNumber());
-        return orderService.queryAlreadySoldOrders(csti,headers);
+    @GetMapping(path = "/order/{travelDate}/{trainNumber}")
+    public HttpEntity calculateSoldTicket(@PathVariable Date travelDate, @PathVariable String trainNumber,
+                                          @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Calculate Sold Tickets] Date:" + travelDate + " TrainNumber:"
+                + trainNumber);
+        return ok(orderService.queryAlreadySoldOrders(travelDate, trainNumber, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/price", method = RequestMethod.POST)
-    public GetOrderPriceResult getOrderPrice(@RequestBody GetOrderPrice info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Get Order Price] Order Id:" + info.getOrderId());
-        return orderService.getOrderPrice(info,headers);
+    @GetMapping(path = "/order/price/{orderId}")
+    public HttpEntity getOrderPrice(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Get Order Price] Order Id:" + orderId);
+        // String
+        return ok(orderService.getOrderPrice(orderId, headers));
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "/order/orderPay/{orderId}")
+    public HttpEntity payOrder(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Pay Order] Order Id:" + orderId);
+        // Order
+        return ok(orderService.payOrder(orderId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/payOrder", method = RequestMethod.POST)
-    public PayOrderResult payOrder(@RequestBody PayOrderInfo info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Pay Order] Order Id:" + info.getOrderId());
-        return orderService.payOrder(info,headers);
+    @GetMapping(path = "/order/{orderId}")
+    public HttpEntity getOrderById(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Get Order By Id] Order Id:" + orderId);
+        // Order
+        return ok(orderService.getOrderById(orderId, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/getById", method = RequestMethod.POST)
-    public GetOrderResult getOrderById(@RequestBody GetOrderByIdInfo info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Get Order By Id] Order Id:" + info.getOrderId());
-        return orderService.getOrderById(info,headers);
+    @GetMapping(path = "/order/status/{orderId}/{status}")
+    public HttpEntity modifyOrder(@PathVariable String orderId, @PathVariable int status, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Modify Order Status] Order Id:" + orderId);
+        // Order
+        return ok(orderService.modifyOrder(orderId, status, headers));
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "/order/security/{checkDate}/{accountId}")
+    public HttpEntity securityInfoCheck(@PathVariable Date checkDate, @PathVariable String accountId,
+                                        @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Security Info Get]" + accountId);
+        return ok(orderService.checkSecurityAboutOrder(checkDate, accountId, headers));
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @PutMapping(path = "/order")
+    public HttpEntity saveOrderInfo(@RequestBody Order orderInfo,
+                                    @RequestHeader HttpHeaders headers) {
+
+        System.out.println("[Order Other Service][Verify Login] Success");
+        return ok(orderService.saveChanges(orderInfo, headers));
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/modifyOrderStatus", method = RequestMethod.POST)
-    public ModifyOrderStatusResult modifyOrder(@RequestBody ModifyOrderStatusInfo info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Modify Order Status] Order Id:" + info.getOrderId());
-        return orderService.modifyOrder(info,headers);
+    @PutMapping(path = "/order/admin")
+    public HttpEntity updateOrder(@RequestBody Order order, @RequestHeader HttpHeaders headers) {
+        // Order
+        return ok(orderService.updateOrder(order, headers));
     }
 
-    @CrossOrigin(origins = "*")
-    @RequestMapping(path="/getOrderInfoForSecurity", method = RequestMethod.POST)
-    public GetOrderInfoForSecurityResult securityInfoCheck(@RequestBody GetOrderInfoForSecurity info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Security Info Get]");
-        return orderService.checkSecurityAboutOrder(info,headers);
-    }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/update", method = RequestMethod.POST)
-    public ChangeOrderResult saveOrderInfo(@RequestBody ChangeOrderInfo orderInfo, @RequestHeader HttpHeaders headers){
-        VerifyResult tokenResult = verifySsoLogin(orderInfo.getLoginToken(), headers);
-        if(tokenResult.isStatus() == true){
-            System.out.println("[Order Service][Verify Login] Success");
-            return orderService.saveChanges(orderInfo.getOrder(),headers);
-        }else{
-            System.out.println("[Order Service][Verify Login] Fail");
-            ChangeOrderResult cor = new ChangeOrderResult();
-            cor.setStatus(false);
-            cor.setMessage("Not Login");
-            cor.setOrder(null);
-            return cor;
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/order/adminUpdate", method = RequestMethod.POST)
-    public UpdateOrderResult updateOrder(@RequestBody Order order, @RequestHeader HttpHeaders headers){
-        return orderService.updateOrder(order,headers);
-    }
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/delete",method = RequestMethod.POST)
-    public DeleteOrderResult deleteOrder(@RequestBody DeleteOrderInfo info, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Delete Order] Order Id:" + info.getOrderId());
-        return orderService.deleteOrder(info,headers);
+    @DeleteMapping(path = "/order/{orderId}")
+    public HttpEntity deleteOrder(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Delete Order] Order Id:" + orderId);
+        // Order
+        return ok(orderService.deleteOrder(orderId, headers));
     }
 
     /***************For super admin(Single Service Test*******************/
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path="/order/findAll", method = RequestMethod.GET)
-    public QueryOrderResult findAllOrder(@RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Find All Order]");
-        return orderService.getAllOrders(headers);
-    }
-
-    private VerifyResult verifySsoLogin(String loginToken, @RequestHeader HttpHeaders headers){
-        System.out.println("[Order Service][Verify Login] Verifying....");
-
-        HttpEntity requestTokenResult = new HttpEntity(null,headers);
-        ResponseEntity<VerifyResult> reTokenResult  = restTemplate.exchange(
-                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-                HttpMethod.GET,
-                requestTokenResult,
-                VerifyResult.class);
-        VerifyResult tokenResult = reTokenResult.getBody();
-//        VerifyResult tokenResult = restTemplate.getForObject(
-//                "http://ts-sso-service:12349/verifyLoginToken/" + loginToken,
-//                VerifyResult.class);
-
-
-        return tokenResult;
+    @GetMapping(path = "/order")
+    public HttpEntity findAllOrder(@RequestHeader HttpHeaders headers) {
+        System.out.println("[Order Other Service][Find All Order]");
+        // ArrayList<Order>
+        return ok(orderService.getAllOrders(headers));
     }
 
 }

@@ -12,3 +12,6 @@ spring:
 #      password: ${MONGODB_PASSWORD}
       database: ts
       port: 27017
+
+swagger:
+  controllerPackage: com.trainticket.controller

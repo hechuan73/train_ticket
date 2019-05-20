@@ -3,7 +3,7 @@ package security.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import security.domain.SecurityConfig;
+import security.entity.SecurityConfig;
 import java.util.ArrayList;
 import java.util.UUID;
 

@@ -1,6 +1,7 @@
 package inside_payment.service;
 
-import inside_payment.domain.*;
+import edu.fudan.common.util.Response;
+import inside_payment.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,21 +12,21 @@ import java.util.List;
  */
 public interface InsidePaymentService {
 
-    boolean pay(PaymentInfo info, HttpServletRequest request, HttpHeaders headers);
+    Response pay(PaymentInfo info , HttpHeaders headers);
 
-    boolean createAccount(CreateAccountInfo info, HttpHeaders headers);
+    Response createAccount(AccountInfo info, HttpHeaders headers);
 
-    boolean addMoney(AddMoneyInfo info, HttpHeaders headers);
+    Response addMoney(String userId,String money, HttpHeaders headers);
 
-    List<Payment> queryPayment(HttpHeaders headers);
+    Response queryPayment(HttpHeaders headers);
 
-    List<Balance> queryAccount(HttpHeaders headers);
+    Response queryAccount(HttpHeaders headers);
 
-    boolean drawBack(DrawBackInfo info, HttpHeaders headers);
+    Response drawBack(String userId, String money, HttpHeaders headers);
 
-    boolean payDifference(PaymentDifferenceInfo info, HttpServletRequest request, HttpHeaders headers);
+    Response payDifference(PaymentInfo info, HttpHeaders headers);
 
-    List<AddMoney> queryAddMoney(HttpHeaders headers);
+    Response queryAddMoney(HttpHeaders headers);
 
     void initPayment(Payment payment, HttpHeaders headers);
 

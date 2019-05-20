@@ -1,62 +1,66 @@
 package foodsearch.controller;
 
-import foodsearch.domain.*;
+import foodsearch.entity.*;
 import foodsearch.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
+@RequestMapping("/api/v1/foodservice")
 public class FoodController {
 
     @Autowired
     FoodService foodService;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home() {
         return "Welcome to [ Food Service ] !";
     }
 
-    @RequestMapping(path = "/food/getFood", method = RequestMethod.POST)
-    public GetAllFoodOfTripResult getFood(@RequestBody GetAllFoodOfTripInfo gati, @RequestHeader HttpHeaders headers){
-        System.out.println("[Food Service]Get the Get Food Request!");
-        return foodService.getAllFood(gati.getDate(), gati.getStartStation(), gati.getEndStation(), gati.getTripId(), headers);
+    // get
+    @GetMapping(path = "/orders")
+    public HttpEntity findAllFoodOrder(@RequestHeader HttpHeaders headers) {
+        System.out.println("[Food Service]Try to Find all FoodOrder!");
+        return ok(foodService.findAllFoodOrder(headers));
     }
 
-    @RequestMapping(path = "/food/createFoodOrder", method = RequestMethod.POST)
-    public AddFoodOrderResult createFoodOrder(@RequestBody AddFoodOrderInfo afoi, @RequestHeader HttpHeaders headers){
+    // add
+    @PostMapping(path = "/orders")
+    public HttpEntity createFoodOrder(@RequestBody FoodOrder addFoodOrder, @RequestHeader HttpHeaders headers) {
         System.out.println("[Food Service]Try to Create a FoodOrder!");
-        return foodService.createFoodOrder(afoi, headers);
+        return ok(foodService.createFoodOrder(addFoodOrder, headers));
     }
 
-    @RequestMapping(path = "/food/cancelFoodOrder", method = RequestMethod.POST)
-    public CancelFoodOrderResult cancelFoodOrder(@RequestBody CancelFoodOrderInfo cfoi, @RequestHeader HttpHeaders headers){
-        System.out.println("[Food Service]Try to Cancel a FoodOrder!");
-        return foodService.cancelFoodOrder(cfoi, headers);
-    }
-
-    @RequestMapping(path = "/food/updateFoodOrder", method = RequestMethod.POST)
-    public UpdateFoodOrderResult updateFoodOrder(@RequestBody UpdateFoodOrderInfo ufoi, @RequestHeader HttpHeaders headers){
+    // update
+    @PutMapping(path = "/orders")
+    public HttpEntity updateFoodOrder(@RequestBody FoodOrder updateFoodOrder, @RequestHeader HttpHeaders headers) {
         System.out.println("[Food Service]Try to Update a FoodOrder!");
-        return foodService.updateFoodOrder(ufoi, headers);
+        return ok(foodService.updateFoodOrder(updateFoodOrder, headers));
     }
 
-    @RequestMapping(path = "/food/findAllFoodOrder", method = RequestMethod.GET)
-    public List<FoodOrder> findAllFoodOrder(@RequestHeader HttpHeaders headers){
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @DeleteMapping(path = "/orders/{orderId}")
+    public HttpEntity deleteFoodOrder(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
+        System.out.println("[Food Service]Try to Cancel a FoodOrder!");
+        return ok(foodService.deleteFoodOrder(orderId, headers));
+    }
+
+    @GetMapping(path = "/orders/{orderId}")
+    public HttpEntity findFoodOrderByOrderId(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
         System.out.println("[Food Service]Try to Find all FoodOrder!");
-        return foodService.findAllFoodOrder(headers);
+        return ok(foodService.findByOrderId(orderId, headers));
     }
 
-    @RequestMapping(path = "/food/findFoodOrderByOrderId", method = RequestMethod.POST)
-    public FindByOrderIdResult findFoodOrderByOrderId(@RequestBody FindByOrderIdInfo foi, @RequestHeader HttpHeaders headers){
-        System.out.println("[Food Service]Try to Find all FoodOrder!");
-        return foodService.findByOrderId(foi.getOrderId(), headers);
+    // 里面依赖很多其它服务，没有改完全
+    @GetMapping(path = "/foods/{date}/{startStation}/{endStation}/{tripId}")
+    public HttpEntity getAllFood(@PathVariable String date, @PathVariable String startStation,
+                                 @PathVariable String endStation, @PathVariable String tripId,
+                                 @RequestHeader HttpHeaders headers) {
+        System.out.println("[Food Service]Get the Get Food Request!");
+        return ok(foodService.getAllFood(date, startStation, endStation, tripId, headers));
     }
-
 }

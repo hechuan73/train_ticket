@@ -1,10 +1,10 @@
-var trainModule = angular.module("myApp",[]);
+var trainModule = angular.module("myApp", []);
 
 trainModule.factory('loadDataService', function ($http, $q) {
 
     var service = {};
 
-    service.loadAdminBasic = function(url){
+    service.loadAdminBasic = function (url) {
         var deferred = $q.defer();
         var promise = deferred.promise;
         //返回的数据对象
@@ -12,16 +12,19 @@ trainModule.factory('loadDataService', function ($http, $q) {
 
         $http({
             method: "get",
-            url: url + "/" + sessionStorage.getItem("admin_id"),
+            url: url,
+            headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
             withCredentials: true
         }).success(function (data, status, headers, config) {
-            if (data.status) {
-                information = data;
+            if (data.status == 1) {
+                information = data.data;
                 deferred.resolve(information);
             }
-            else{
+            else {
                 alert("Request the train list fail!" + data.message);
             }
+        }).error(function (data, header, config, status) {
+            alert(data.message)
         });
         return promise;
     };
@@ -29,37 +32,33 @@ trainModule.factory('loadDataService', function ($http, $q) {
     return service;
 });
 
-trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $window) {
+trainModule.controller("trainCtrl", function ($scope, $http, loadDataService, $window) {
 
     //首次加载显示数据
-    loadDataService.loadAdminBasic("/adminbasic/getAllTrains").then(function (result) {
-        // console.log(result);
-        $scope.trains = result.trainList;
+    loadDataService.loadAdminBasic("/api/v1/adminbasicservice/adminbasic/trains").then(function (result) {
+        console.log(result);
+        $scope.trains = result;
     });
 
-    $scope.deleteTrain = function(train) {
+    $scope.deleteTrain = function (train) {
         $('#delete-train-confirm').modal({
             relatedTarget: this,
             onConfirm: function (options) {
                 $http({
-                    method:"post",
-                    url: "/adminbasic/deleteTrain",
-                    withCredentials: true,
-                    data:{
-                        loginId:sessionStorage.getItem("admin_id"),
-                        id:train.id,
-                        economyClass:train.economyClass,
-                        confortClass:train.confortClass,
-                        averageSpeed:train.averageSpeed
-                    }
-                }).success(function(data, status, headers, config){
-                    if (data) {
-                       alert("Delete train successfully!");
-                    }else{
+                    method: "delete",
+                    url: "/api/v1/adminbasicservice/adminbasic/trains/" + train.id,
+                    headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
+                    withCredentials: true
+                }).success(function (data, status, headers, config) {
+                    if (data.status ==1) {
+                        alert("Delete train successfully!");
+                    } else {
                         alert("Update train failed!");
                     }
                     $window.location.reload();
-                })
+                }).error(function (data, header, config, status) {
+                    alert(data.message)
+                });
             },
             // closeOnConfirm: false,
             onCancel: function () {
@@ -68,7 +67,7 @@ trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $wi
         });
     };
 
-    $scope.updateTrain = function(train) {
+    $scope.updateTrain = function (train) {
         $('#update-train-id').val(train.id);
         $('#update-train-economy-class').val(train.economyClass);
         $('#update-train-confort-class').val(train.confortClass);
@@ -77,31 +76,32 @@ trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $wi
         $('#update-train-table').modal({
             relatedTarget: this,
             onConfirm: function (options) {
-                if(parseInt( $('#update-train-economy-class').val()) && parseInt( $('#update-train-confort-class').val()) && parseInt( $('#update-train-average-speed').val())){
+                if (parseInt($('#update-train-economy-class').val()) && parseInt($('#update-train-confort-class').val()) && parseInt($('#update-train-average-speed').val())) {
                     var data = new Object();
                     data.id = train.id;
-                    data.economyClass = parseInt( $('#update-train-economy-class').val());
-                    data.confortClass = parseInt( $('#update-train-confort-class').val());
-                    data.averageSpeed = parseInt( $('#update-train-average-speed').val());
-                    data.loginId=sessionStorage.getItem("admin_id");
+                    data.economyClass = parseInt($('#update-train-economy-class').val());
+                    data.confortClass = parseInt($('#update-train-confort-class').val());
+                    data.averageSpeed = parseInt($('#update-train-average-speed').val());
                     // alert(JSON.stringify(data));
                     $http({
-                        method:"post",
-                        url: "/adminbasic/modifyTrain",
+                        method: "put",
+                        url: "/api/v1/adminbasicservice/adminbasic/trains",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
-                        data:data
-                    }).success(function(data, status, headers, config){
-                        if (data) {
+                        data: data
+                    }).success(function (data, status, headers, config) {
+                        if (data.status == 1) {
                             alert("Update train successfully!");
-                        }else{
+                        } else {
                             alert("Update train failed!");
                         }
                         $window.location.reload();
-                    })
+                    }).error(function (data, header, config, status) {
+                        alert(data.message)
+                    });
                 } else {
                     alert("The economyClass, confortClass and averageSpeed must be an integer!");
                 }
-
             },
             onCancel: function () {
 
@@ -109,7 +109,7 @@ trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $wi
         });
     };
 
-    $scope.addTrain = function() {
+    $scope.addTrain = function () {
         $('#add-train-id').val("");
         $('#add-train-economy-class').val("");
         $('#add-train-confort-class').val("");
@@ -118,28 +118,30 @@ trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $wi
         $('#add-train-table').modal({
             relatedTarget: this,
             onConfirm: function (options) {
-                if(parseInt( $('#add-train-economy-class').val()) && parseInt( $('#add-train-confort-class').val()) && parseInt( $('#add-train-average-speed').val())){
+                if (parseInt($('#add-train-economy-class').val()) && parseInt($('#add-train-confort-class').val()) && parseInt($('#add-train-average-speed').val())) {
                     var data = new Object();
                     data.id = $('#add-train-id').val();
-                    data.economyClass = parseInt( $('#add-train-economy-class').val());
-                    data.confortClass = parseInt( $('#add-train-confort-class').val());
-                    data.averageSpeed = parseInt( $('#add-train-average-speed').val());
-                    data.loginId=sessionStorage.getItem("admin_id");
+                    data.economyClass = parseInt($('#add-train-economy-class').val());
+                    data.confortClass = parseInt($('#add-train-confort-class').val());
+                    data.averageSpeed = parseInt($('#add-train-average-speed').val());
                     // alert(JSON.stringify(data));
                     $http({
-                        method:"post",
-                        url: "/adminbasic/addTrain",
+                        method: "post",
+                        url: "/api/v1/adminbasicservice/adminbasic/trains",
+                        headers: {"Authorization": "Bearer " + sessionStorage.getItem("admin_token")},
                         withCredentials: true,
-                        data:data
-                    }).success(function(data, status, headers, config){
-                        if (data) {
+                        data: data
+                    }).success(function (data, status, headers, config) {
+                        if (data.status ==1) {
                             alert("Add Train successfully!");
-                        }else{
+                        } else {
                             alert("Add Train failed!");
                         }
                         $window.location.reload();
-                    })
-                } else{
+                    }).error(function (data, header, config, status) {
+                        alert(data.message)
+                    });
+                } else {
                     alert("The staytime must be an integer!");
                 }
 
@@ -149,7 +151,6 @@ trainModule.controller("trainCtrl", function ($scope,$http, loadDataService, $wi
             }
         });
     };
-
 
 
 });

@@ -1,6 +1,6 @@
 package order.init;
 
-import order.domain.Order;
+import order.entity.Order;
 import order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

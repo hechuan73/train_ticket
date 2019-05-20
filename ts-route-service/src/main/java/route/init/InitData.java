@@ -3,7 +3,7 @@ package route.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import route.domain.CreateAndModifyRouteInfo;
+import route.entity.RouteInfo;
 import route.service.RouteService;
 
 @Component
@@ -14,7 +14,7 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args)throws Exception{
-        CreateAndModifyRouteInfo info = new CreateAndModifyRouteInfo();
+        RouteInfo info = new RouteInfo();
         info.setId("0b23bd3e-876a-4af3-b920-c50a90c90b04");
         info.setStartStation("shanghai");
         info.setEndStation("taiyuan");

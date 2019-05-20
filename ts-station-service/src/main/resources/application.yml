@@ -12,3 +12,6 @@ spring:
 # HTTP Server
 server:
   port: 12345  # HTTP (Tomcat) port
+
+swagger:
+  controllerPackage: fdse.microservice

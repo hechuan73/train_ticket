@@ -26,7 +26,8 @@ spring:
             enable: true
             required: true
 
-      
+swagger:
+  controllerPackage: notification.controller
 #  main:
 #    banner-mode: off
 

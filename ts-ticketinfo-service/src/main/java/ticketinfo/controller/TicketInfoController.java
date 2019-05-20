@@ -5,31 +5,35 @@ package ticketinfo.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-import ticketinfo.domain.QueryForStationId;
-import ticketinfo.domain.QueryForTravel;
-import ticketinfo.domain.ResultForTravel;
+import ticketinfo.entity.Travel;
 import ticketinfo.service.TicketInfoService;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/ticketinfoservice")
 public class TicketInfoController {
 
     @Autowired
     TicketInfoService service;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home() {
         return "Welcome to [ TicketInfo Service ] !";
     }
 
-    @RequestMapping(value="/ticketinfo/queryForTravel", method = RequestMethod.POST)
-    public ResultForTravel queryForTravel(@RequestBody QueryForTravel info,@RequestHeader HttpHeaders headers){
-        return service.queryForTravel(info,headers);
+    @PostMapping(value = "/ticketinfo")
+    public HttpEntity queryForTravel(@RequestBody Travel info, @RequestHeader HttpHeaders headers) {
+        // TravelResult
+        return ok(service.queryForTravel(info, headers));
     }
 
-    @RequestMapping(value="/ticketinfo/queryForStationId", method = RequestMethod.POST)
-    public String queryForStationId(@RequestBody QueryForStationId info,@RequestHeader HttpHeaders headers){
-        return service.queryForStationId(info,headers);
+    @GetMapping(value = "/ticketinfo/{name}")
+    public HttpEntity queryForStationId(@PathVariable String name, @RequestHeader HttpHeaders headers) {
+        // String id
+        return ok(service.queryForStationId(name, headers));
     }
 }

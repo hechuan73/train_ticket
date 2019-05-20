@@ -149,7 +149,7 @@ public class Orders_fragement3 extends BaseFragment implements SwipeRefreshLayou
             allOrderList.addAll(orderList);
             List<OrderList> temps = new ArrayList<>();
             for (OrderList order : allOrderList) {
-                if ("0".equals(order.getStatus() + "")) {
+                if (order.getStatus() == 0) {
                     temps.add(order);
                 }
             }

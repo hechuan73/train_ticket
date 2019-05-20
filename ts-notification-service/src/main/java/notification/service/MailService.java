@@ -3,7 +3,7 @@ package notification.service;
 
 import javax.mail.internet.MimeMessage;
 
-import notification.domain.Mail;
+import notification.entity.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;

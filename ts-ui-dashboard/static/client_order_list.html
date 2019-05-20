@@ -49,7 +49,7 @@
 
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
             <li id="goto_admin">
-                <a href="admin.html" class="tpl-header-list-link">
+                <a href="adminlogin.html" class="tpl-header-list-link">
                     <span>admin-panel</span>
                 </a>
             </li>
@@ -143,7 +143,7 @@
 
             </div>
 
-            <div class="change_cancel_table">
+            <div class="change_cancel_table"><div id="my-svg-change-order"></div>
                 <table class="am-table am-table-striped am-table-hover table-main">
                     <thead>
                     <tr>
@@ -192,7 +192,7 @@
                         <td>{{item.contactsDocumentNumber}}</td>
                         <td>
                             <button v-if="item.status == '0' ||  item.status == '1' || item.status == '2'"
-                                    v-on:click="consignOrder(item.from, item.to, item.boughtDate)"
+                                    v-on:click="consignOrder(item.id, item.from, item.to, item.boughtDate)"
                                     class="am-btn am-btn-default am-btn-xs am-text-secondary am-btn">
                                 <span class="am-icon-pencil-square-o"></span> Consign
                             </button>

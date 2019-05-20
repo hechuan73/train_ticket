@@ -14,3 +14,6 @@ server:
 spring:
   application:
     name: ts-preserve-service
+
+swagger:
+  controllerPackage: preserve.controller

@@ -1,17 +1,15 @@
 package adminuser.service;
 
-import adminuser.domain.request.AddAccountRequest;
-import adminuser.domain.request.DeleteAccountRequest;
-import adminuser.domain.request.UpdateAccountRequest;
-import adminuser.domain.response.DeleteAccountResult;
-import adminuser.domain.response.FindAllAccountResult;
-import adminuser.domain.response.ModifyAccountResult;
-import adminuser.domain.response.RegisterResult;
+import adminuser.dto.UserDto;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 public interface AdminUserService {
-    FindAllAccountResult getAllUsers(String id, HttpHeaders headers);
-    DeleteAccountResult deleteUser(DeleteAccountRequest request, HttpHeaders headers);
-    ModifyAccountResult updateUser(UpdateAccountRequest request, HttpHeaders headers);
-    RegisterResult addUser(AddAccountRequest request, HttpHeaders headers);
+    Response getAllUsers(HttpHeaders headers);
+
+    Response deleteUser(String userId, HttpHeaders headers);
+
+    Response updateUser(UserDto userDto, HttpHeaders headers);
+
+    Response addUser(UserDto userDto, HttpHeaders headers);
 }

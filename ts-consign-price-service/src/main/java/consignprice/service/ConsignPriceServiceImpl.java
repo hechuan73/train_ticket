@@ -1,41 +1,41 @@
 package consignprice.service;
 
-import consignprice.domain.GetPriceDomain;
-import consignprice.domain.PriceConfig;
+import consignprice.entity.ConsignPrice;
 import consignprice.repository.ConsignPriceConfigRepository;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class ConsignPriceServiceImpl implements ConsignPriceService {
+
     @Autowired
     private ConsignPriceConfigRepository repository;
 
     //计价
     @Override
-    public double getPriceByWeightAndRegion(GetPriceDomain domain, HttpHeaders headers) {
-        PriceConfig priceConfig = repository.findByIndex(0);
+    public Response getPriceByWeightAndRegion(double weight, boolean isWithinRegion, HttpHeaders headers) {
+        ConsignPrice priceConfig = repository.findByIndex(0);
+        double price = 0;
         double initialPrice = priceConfig.getInitialPrice();
-        if(domain.getWeight() <= priceConfig.getInitialWeight()){
-            return initialPrice;
-        }
-        else{
-            double extraWeight = domain.getWeight() - priceConfig.getInitialWeight();
-            if(domain.isWithinRegion())
-                return initialPrice + extraWeight * priceConfig.getWithinPrice();
+        if (weight <= priceConfig.getInitialWeight()) {
+            price = initialPrice;
+        } else {
+            double extraWeight = weight - priceConfig.getInitialWeight();
+            if (isWithinRegion)
+                price = initialPrice + extraWeight * priceConfig.getWithinPrice();
             else
-                return initialPrice + extraWeight * priceConfig.getBeyondPrice();
+                price = initialPrice + extraWeight * priceConfig.getBeyondPrice();
         }
+        return new Response<>(1, "Success", price);
     }
 
     //查询价格信息
     @Override
-    public String queryPriceInformation(HttpHeaders headers) {
+    public Response queryPriceInformation(HttpHeaders headers) {
         StringBuilder sb = new StringBuilder();
-        PriceConfig price = repository.findByIndex(0);
+        ConsignPrice price = repository.findByIndex(0);
         sb.append("The price of weight within ");
         sb.append(price.getInitialWeight());
         sb.append(" is ");
@@ -45,19 +45,19 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         sb.append(" and beyond the region is ");
         sb.append(price.getBeyondPrice());
         sb.append("\n");
-        return sb.toString();
+        return new Response<>(1, "Success", sb.toString());
     }
 
     //创建价格
     @Override
-    public boolean createAndModifyPrice(PriceConfig config, HttpHeaders headers) {
+    public Response createAndModifyPrice(ConsignPrice config, HttpHeaders headers) {
         System.out.println("[Consign Price Service][Create New Price Config]");
         //更新price
-        PriceConfig originalConfig;
-        if(repository.findByIndex(0) != null)
+        ConsignPrice originalConfig;
+        if (repository.findByIndex(0) != null)
             originalConfig = repository.findByIndex(0);
         else
-            originalConfig = new PriceConfig();
+            originalConfig = new ConsignPrice();
         originalConfig.setId(config.getId());
         originalConfig.setIndex(0);
         originalConfig.setInitialPrice(config.getInitialPrice());
@@ -65,11 +65,11 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         originalConfig.setWithinPrice(config.getWithinPrice());
         originalConfig.setBeyondPrice(config.getBeyondPrice());
         repository.save(originalConfig);
-        return true;
+        return new Response<>(1, "Success", originalConfig);
     }
 
     @Override
-    public PriceConfig getPriceConfig(HttpHeaders headers) {
-        return repository.findByIndex(0);
+    public Response getPriceConfig(HttpHeaders headers) {
+        return new Response<>(1, "Success", repository.findByIndex(0));
     }
 }

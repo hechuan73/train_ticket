@@ -5,3 +5,7 @@ server:
 spring:
   application:
     name: ts-ticketinfo-service
+
+
+swagger:
+  controllerPackage: ticketinfo.controller

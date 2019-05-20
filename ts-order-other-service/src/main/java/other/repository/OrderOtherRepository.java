@@ -1,6 +1,6 @@
 package other.repository;
 
-import other.domain.Order;
+import other.entity.Order;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,14 +1,13 @@
 package ticketinfo.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
-import ticketinfo.domain.QueryForStationId;
-import ticketinfo.domain.QueryForTravel;
-import ticketinfo.domain.ResultForTravel;
+import ticketinfo.entity.Travel;
 
 /**
  * Created by Chenjie Xu on 2017/6/6.
  */
 public interface TicketInfoService {
-    ResultForTravel queryForTravel(QueryForTravel info,HttpHeaders headers);
-    String queryForStationId(QueryForStationId info,HttpHeaders headers);
+    Response queryForTravel(Travel info, HttpHeaders headers);
+    Response queryForStationId(String name,HttpHeaders headers);
 }

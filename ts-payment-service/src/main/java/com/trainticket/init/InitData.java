@@ -1,6 +1,6 @@
 package com.trainticket.init;
 
-import com.trainticket.domain.Payment;
+import com.trainticket.entity.Payment;
 import com.trainticket.repository.PaymentRepository;
 import com.trainticket.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -50,7 +50,7 @@
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
 
             <li id="goto_admin">
-                <a href="admin.html" class="tpl-header-list-link">
+                <a href="adminlogin.html" class="tpl-header-list-link">
                     <span>admin-panel</span>
                 </a>
             </li>
@@ -84,7 +84,7 @@
 
             <ul class="tpl-left-nav-menu">
                 <li class="tpl-left-nav-item">
-                    <a href="index.html" class="nav-link active">
+                    <a href="index.html" class="nav-link">
                         <i class="am-icon-list-alt"></i>
                         <span>Ticket Reserve</span>
                         <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
@@ -268,12 +268,12 @@
                                         <div class="am-modal-hd">Login</div>
                                         <div class="am-g">
                                             <div class="am-form-group am-u-sm-5">
-                                                <label>Email:</label>
+                                                <label>UserName:</label>
                                             </div>
                                             <div class="am-form-group am-u-sm-7">
                                                 <input type="text" id="user-login-email"
                                                        class="am-form-field am-modal-prompt-input"
-                                                       placeholder="User Email" v-model="email">
+                                                       placeholder="User Name">
                                             </div>
                                         </div>
                                         <div class="am-g">
@@ -302,7 +302,7 @@
                                             </div>
                                             <div class="am-form-group am-u-sm-7">
                                                 <img id="flow_preserve_login_verification_code_img"
-                                                     class="captcha_img" src="/verification/generate">
+                                                     class="captcha_img" src="/api/v1/verifycode/generate">
                                             </div>
                                         </div>
 

@@ -1,7 +1,7 @@
 package notification.service;
 
-import notification.domain.Mail;
-import notification.domain.NotifyInfo;
+import notification.entity.Mail;
+import notification.entity.NotifyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;

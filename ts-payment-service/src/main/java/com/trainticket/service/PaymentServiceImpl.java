@@ -1,11 +1,10 @@
 package com.trainticket.service;
 
-import com.trainticket.domain.AddMoney;
-import com.trainticket.domain.AddMoneyInfo;
-import com.trainticket.domain.Payment;
-import com.trainticket.domain.PaymentInfo;
+import com.trainticket.entity.Money;
+import com.trainticket.entity.Payment;
 import com.trainticket.repository.AddMoneyRepository;
 import com.trainticket.repository.PaymentRepository;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -25,31 +24,37 @@ public class PaymentServiceImpl implements PaymentService{
     AddMoneyRepository addMoneyRepository;
 
     @Override
-    public boolean pay(PaymentInfo info, HttpHeaders headers){
+    public Response pay(Payment info, HttpHeaders headers){
+
         if(paymentRepository.findByOrderId(info.getOrderId()) == null){
             Payment payment = new Payment();
             payment.setOrderId(info.getOrderId());
             payment.setPrice(info.getPrice());
             payment.setUserId(info.getUserId());
             paymentRepository.save(payment);
-            return true;
+            return new Response<>(1, "Pay Success", null);
         }else{
-            return false;
+            return new Response<>(0, "Pay Failed, order not found with order id" +info.getOrderId(), null);
         }
     }
 
     @Override
-    public boolean addMoney(AddMoneyInfo info, HttpHeaders headers){
-        AddMoney addMoney = new AddMoney();
+    public Response addMoney(Payment info, HttpHeaders headers){
+        Money addMoney = new Money();
         addMoney.setUserId(info.getUserId());
-        addMoney.setMoney(info.getMoney());
+        addMoney.setMoney(info.getPrice());
         addMoneyRepository.save(addMoney);
-        return true;
+        return new Response<>(1,"Add Money Success", addMoney);
     }
 
     @Override
-    public List<Payment> query(HttpHeaders headers){
-        return paymentRepository.findAll();
+    public Response query(HttpHeaders headers){
+        List<Payment> payments = paymentRepository.findAll();
+        if(payments!= null && payments.size() >0){
+            return new Response<>(1,"Query Success",  payments);
+        }else {
+            return new Response<>(0, "No Content", null);
+        }
     }
 
     @Override

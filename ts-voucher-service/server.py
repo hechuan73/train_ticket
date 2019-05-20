@@ -19,7 +19,7 @@ class GetVoucherHandler(tornado.web.RequestHandler):
         if(queryVoucher == None):
             #根据订单id请求订单的详细信息
             orderResult = self.queryOrderByIdAndType(orderId,type)
-            order = orderResult['order']
+            order = orderResult['data']
 
             # jsonStr = json.dumps(orderResult)
             # self.write(jsonStr)
@@ -50,13 +50,11 @@ class GetVoucherHandler(tornado.web.RequestHandler):
         type = int(type)
         #普通列车
         if(type == 0):
-            url='http://ts-order-other-service:12032/order/getById'
+            url='http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/' + orderId
         else:
-            url='http://ts-order-service:12031/order/getById'
-        values ={'orderId':orderId}
-        jdata = json.dumps(values).encode(encoding='utf-8')# 对数据进行JSON格式化编码
+            url='http://ts-order-service:12031/api/v1/orderservice/order/'+orderId
         header_dict = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
-        req = urllib.request.Request(url=url,data=jdata,headers=header_dict)# 生成页面请求的完整数据
+        req = urllib.request.Request(url=url,headers=header_dict)# 生成页面请求的完整数据
         response = urllib.request.urlopen(req)# 发送页面请求
         return json.loads(response.read())# 获取服务器返回的页面信息
 

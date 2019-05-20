@@ -1,6 +1,6 @@
 package other.init;
 
-import other.domain.*;
+import other.entity.*;
 import other.service.OrderOtherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +31,7 @@ public class InitData implements CommandLineRunner {
         order1.setSeatNumber("6A");
         order1.setStatus(OrderStatus.PAID.getCode());
         order1.setTo("taiyuan");
-        order1.setTrainNumber("G1235");
+        order1.setTrainNumber("K1235");
         order1.setTravelDate(new Date(123456799));
         order1.setTravelTime(new Date(123456799));
         service.create(order1,null);

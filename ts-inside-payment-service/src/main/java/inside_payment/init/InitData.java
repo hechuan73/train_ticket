@@ -1,6 +1,6 @@
 package inside_payment.init;
 
-import inside_payment.domain.*;
+import inside_payment.entity.*;
 import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 import inside_payment.service.InsidePaymentService;
@@ -22,7 +22,7 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception{
-        CreateAccountInfo info1 = new CreateAccountInfo();
+        AccountInfo info1 = new AccountInfo();
         info1.setUserId("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f");
         info1.setMoney("10000");
         service.createAccount(info1,null);

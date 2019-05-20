@@ -5,3 +5,7 @@ server:
 spring:
   application:
     name: ts-travel-plan-service
+
+
+swagger:
+  controllerPackage: travelplan.controller

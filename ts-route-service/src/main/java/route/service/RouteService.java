@@ -1,18 +1,21 @@
 package route.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
-import route.domain.*;
+import route.entity.*;
+
+import java.util.List;
 
 public interface RouteService {
 
-    GetRoutesListlResult getRouteByStartAndTerminal(GetRouteByStartAndTerminalInfo info,HttpHeaders headers);
+    Response getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers);
 
-    GetRoutesListlResult getAllRoutes(HttpHeaders headers);
+    Response getAllRoutes(HttpHeaders headers);
 
-    GetRouteByIdResult getRouteById(String routeId,HttpHeaders headers);
+    Response getRouteById(String routeId, HttpHeaders headers);
 
-    DeleteRouteResult deleteRoute(DeleteRouteInfo info,HttpHeaders headers);
+    Response deleteRoute(String routeId, HttpHeaders headers);
 
-    CreateAndModifyRouteResult createAndModify(CreateAndModifyRouteInfo info,HttpHeaders headers);
+    Response createAndModify(RouteInfo info, HttpHeaders headers);
 
 }

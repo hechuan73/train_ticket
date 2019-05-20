@@ -6212,7 +6212,7 @@ function Browser(window, document, $log, $sniffer) {
    *
    * @description
    * Returns current <base href>
-   * (always relative - without domain)
+   * (always relative - without entity)
    *
    * @returns {string} The current base href
    */
@@ -18296,7 +18296,7 @@ function adjustMatchers(matchers) {
  *    $sceDelegateProvider.resourceUrlWhitelist([
  *      // Allow same origin resource loads.
  *      'self',
- *      // Allow loading from our assets domain.  Notice the difference between * and **.
+ *      // Allow loading from our assets entity.  Notice the difference between * and **.
  *      'http://srv*.assets.example.com/**'
  *    ]);
  *
@@ -18359,8 +18359,8 @@ function $SceDelegateProvider() {
    *    allowed in this array.
    *
    *    The typical usage for the blacklist is to **block
-   *    [open redirects](http://cwe.mitre.org/data/definitions/601.html)** served by your domain as
-   *    these would otherwise be trusted but actually return content from the redirected domain.
+   *    [open redirects](http://cwe.mitre.org/data/definitions/601.html)** served by your entity as
+   *    these would otherwise be trusted but actually return content from the redirected entity.
    *
    *    Finally, **the blacklist overrides the whitelist** and has the final say.
    *

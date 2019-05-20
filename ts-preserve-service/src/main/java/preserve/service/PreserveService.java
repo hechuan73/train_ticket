@@ -1,11 +1,11 @@
 package preserve.service;
 
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
-import preserve.domain.OrderTicketsInfo;
-import preserve.domain.OrderTicketsResult;
+import preserve.entity.OrderTicketsInfo;
+import preserve.entity.OrderTicketsResult;
 
 public interface PreserveService {
 
-    OrderTicketsResult preserve(OrderTicketsInfo oti,String accountId,String loginToken,HttpHeaders headers);
-
+    Response preserve(OrderTicketsInfo oti, HttpHeaders headers);
 }

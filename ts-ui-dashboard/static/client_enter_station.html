@@ -48,7 +48,7 @@
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
 
             <li id="goto_admin">
-                <a href="admin.html" class="tpl-header-list-link">
+                <a href="adminlogin.html" class="tpl-header-list-link">
                     <span>admin-panel</span>
                 </a>
             </li>
@@ -155,20 +155,50 @@
                                 <div class="panel-body">
                                     <div class="input-box">
                                         <form role="form" class="form-horizontal">
-                                            <div class="form-group">
-                                                <label class="col-sm-offset-1 col-sm-1 control-label ticket_enterstation">Order
-                                                    Id:</label>
-                                                <div class="col-sm-5">
-                                                    <input id="advanced_reserve_execute_order_id" class="form-control"
-                                                           v-model="enter_order_id">
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <button id="enter_reserve_execute_order_button" type="button"
-                                                            class="btn btn-primary" v-on:click="enterStation()">
-                                                        Enter Station
-                                                    </button>
-                                                </div>
-                                            </div>
+
+
+
+                                            <table class="am-table am-table-striped am-table-hover table-main">
+                                                <thead>
+                                                <tr>
+                                                    <th class="table-title">No.</th>
+                                                    <th class="table-set">Order Id</th>
+                                                    <th class="table-title">From</th>
+                                                    <th class="table-title">To</th>
+                                                    <th class="table-date">Bought Date</th>
+                                                    <th class="table-date">Trip Id</th>
+                                                    <th class="table-title">Seat Number</th>
+                                                    <th class="table-title">Price</th>
+                                                    <th class="table-title">ContactsName</th>
+                                                    <th class="table-title">Operation</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat=" record in records" v-for="(item, index) in myOrderList">
+                                                    <td>{{index}}</td>
+                                                    <td>{{item.id}}</td>
+                                                    <td>{{item.from}}</td>
+                                                    <td>{{item.to}}</td>
+                                                    <td>{{item.boughtDate}}</td>
+                                                    <td>{{item.trainNumber}}</td>
+                                                    <td>{{item.seatNumber}}</td>
+                                                    <td>{{item.price}}</td>
+                                                    <td>{{item.contactsName}}</td>
+                                                    <td>
+                                                        <button  id = "enter_reserve_execute_order_button" v-on:click="enterStation(item.id)"
+                                                                  data-am-modal="{target: '#doc-modal-vancher', closeViaDimmer: 0, width: 560, height: 450}"
+                                                                 class="am-btn am-btn-default am-btn-xs am-text-secondary am-btn">
+                                                            <span class="am-icon-pencil-square-o"></span>  Enter Station
+                                                        </button>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+
+
+
                                         </form>
                                     </div>
                                 </div>

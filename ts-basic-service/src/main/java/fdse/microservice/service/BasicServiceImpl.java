@@ -1,6 +1,8 @@
 package fdse.microservice.service;
 
-import fdse.microservice.domain.*;
+import edu.fudan.common.util.JsonUtils;
+import edu.fudan.common.util.Response;
+import fdse.microservice.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,148 +11,138 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 @Service
-public class BasicServiceImpl implements BasicService{
+public class BasicServiceImpl implements BasicService {
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public ResultForTravel queryForTravel(QueryForTravel info, HttpHeaders headers){
+    public Response queryForTravel(Travel info, HttpHeaders headers) {
 
-        ResultForTravel result = new ResultForTravel();
+        Response response = new Response<>();
+        TravelResult result = new TravelResult();
         result.setStatus(true);
+        response.setStatus(1);
+        response.setMsg("Success");
         boolean startingPlaceExist = checkStationExists(info.getStartingPlace(), headers);
         boolean endPlaceExist = checkStationExists(info.getEndPlace(), headers);
-        if(!startingPlaceExist || !endPlaceExist){
+        if (!startingPlaceExist || !endPlaceExist) {
             result.setStatus(false);
+            response.setStatus(0);
+            response.setMsg("Start place or end place not exist!");
         }
 
         TrainType trainType = queryTrainType(info.getTrip().getTrainTypeId(), headers);
-        if(trainType == null){
+        if (trainType == null) {
             System.out.println("traintype doesn't exist");
             result.setStatus(false);
-        }else{
+            response.setStatus(0);
+            response.setMsg("Train type doesn't exist");
+        } else {
             result.setTrainType(trainType);
         }
 
         String routeId = info.getTrip().getRouteId();
         String trainTypeString = trainType.getId();
         Route route = getRouteByRouteId(routeId, headers);
-        PriceConfig priceConfig = queryPriceConfigByRouteIdAndTrainType(routeId,trainTypeString, headers);
+        PriceConfig priceConfig = queryPriceConfigByRouteIdAndTrainType(routeId, trainTypeString, headers);
 
-        String startingPlaceId = queryForStationId(new QueryStation(info.getStartingPlace()), headers);
-        String endPlaceId = queryForStationId(new QueryStation(info.getEndPlace()), headers);
+        String startingPlaceId = (String) queryForStationId(info.getStartingPlace(), headers).getData();
+        String endPlaceId = (String) queryForStationId(info.getEndPlace(), headers).getData();
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
 
         int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
 
         double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();//需要price Rate和距离（起始站）
-        double priceForConfortClass= distance * priceConfig.getFirstClassPriceRate();
+        double priceForConfortClass = distance * priceConfig.getFirstClassPriceRate();
 
-        HashMap<String,String> prices = new HashMap<String,String>();
-        prices.put("economyClass","" + priceForEconomyClass);
-        prices.put("confortClass","" + priceForConfortClass);
+        HashMap<String, String> prices = new HashMap<String, String>();
+        prices.put("economyClass", "" + priceForEconomyClass);
+        prices.put("confortClass", "" + priceForConfortClass);
         result.setPrices(prices);
 
         result.setPercent(1.0);
-
-        return result;
+        response.setData(result);
+        return response;
     }
-
-
 
 
     @Override
-    public String queryForStationId(QueryStation info, HttpHeaders headers){
-        System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + info.getName());
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<String> re = restTemplate.exchange(
-                "http://ts-station-service:12345/station/queryForId",
-                HttpMethod.POST,
-                requestEntity,
-                String.class);
-        String id = re.getBody();
-//        String id = restTemplate.postForObject(
-//                "http://ts-station-service:12345/station/queryForId", info, String.class);
-        return id;
-    }
-
-    public boolean checkStationExists(String stationName, HttpHeaders headers){
-        System.out.println("[Basic Information Service][Check Station Exists] Station Name:" + stationName);
-        HttpEntity requestEntity = new HttpEntity(new QueryStation(stationName), headers);
-        ResponseEntity<Boolean> re = restTemplate.exchange(
-                "http://ts-station-service:12345/station/exist",
-                HttpMethod.POST,
-                requestEntity,
-                Boolean.class);
-        Boolean exist = re.getBody();
-//        Boolean exist = restTemplate.postForObject(
-//                "http://ts-station-service:12345/station/exist", new QueryStation(stationName), Boolean.class);
-        return exist.booleanValue();
-    }
-
-    public TrainType queryTrainType(String trainTypeId, HttpHeaders headers){
-        System.out.println("[Basic Information Service][Query Train Type] Train Type:" + trainTypeId);
-        HttpEntity requestEntity = new HttpEntity(new QueryTrainType(trainTypeId), headers);
-        ResponseEntity<TrainType> re = restTemplate.exchange(
-                "http://ts-train-service:14567/train/retrieve",
-                HttpMethod.POST,
-                requestEntity,
-                TrainType.class);
-        TrainType trainType = re.getBody();
-//        TrainType trainType = restTemplate.postForObject(
-//                "http://ts-train-service:14567/train/retrieve", new QueryTrainType(trainTypeId), TrainType.class
-//        );
-        return trainType;
-    }
-
-    private Route getRouteByRouteId(String routeId, HttpHeaders headers){
-        System.out.println("[Basic Information Service][Get Route By Id] Route ID：" + routeId);
-        HttpEntity requestEntity = new HttpEntity(headers);
-        ResponseEntity<GetRouteByIdResult> re = restTemplate.exchange(
-                "http://ts-route-service:11178/route/queryById/"+ routeId,
+    public Response queryForStationId(String stationName, HttpHeaders headers) {
+        System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + stationName);
+        HttpEntity requestEntity = new HttpEntity( headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
-                GetRouteByIdResult.class);
-        GetRouteByIdResult result = re.getBody();
-//        GetRouteByIdResult result = restTemplate.getForObject(
-//                "http://ts-route-service:11178/route/queryById/" + routeId,
-//                GetRouteByIdResult.class);
-        if(result.isStatus() == false){
-            System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMessage());
+                Response.class);
+        Response id = re.getBody();
+        return  id;
+    }
+
+    public boolean checkStationExists(String stationName, HttpHeaders headers) {
+        System.out.println("[Basic Information Service][Check Station Exists] Station Name:" + stationName);
+        HttpEntity requestEntity = new HttpEntity( headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
+                HttpMethod.GET,
+                requestEntity,
+                Response.class);
+        Response exist = re.getBody();
+       if (exist.getStatus() ==1)
+            return true;
+        return false;
+    }
+
+    public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {
+        System.out.println("[Basic Information Service][Query Train Type] Train Type:" + trainTypeId);
+        HttpEntity requestEntity = new HttpEntity( headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
+                HttpMethod.GET,
+                requestEntity,
+                Response.class);
+        Response  response = re.getBody();
+
+        return JsonUtils.conveterObject(response.getData(), TrainType.class);
+    }
+
+    private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
+        System.out.println("[Basic Information Service][Get Route By Id] Route ID：" + routeId);
+        HttpEntity requestEntity = new HttpEntity(headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
+                HttpMethod.GET,
+                requestEntity,
+                Response.class);
+        Response result = re.getBody();
+        if ( result.getStatus() == 0) {
+            System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
             return null;
-        }else{
+        } else {
             System.out.println("[Basic Information Service][Get Route By Id] Success.");
-            return result.getRoute();
+            return JsonUtils.conveterObject(result.getData(), Route.class);
         }
     }
 
-    private PriceConfig queryPriceConfigByRouteIdAndTrainType(String routeId,String trainType, HttpHeaders headers){
+    private PriceConfig queryPriceConfigByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Query For Price Config] RouteId:"
                 + routeId + "TrainType:" + trainType);
-        QueryPriceConfigByTrainAndRoute info = new QueryPriceConfigByTrainAndRoute();
-        info.setRouteId(routeId);
-        info.setTrainType(trainType);
-        HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<ReturnSinglePriceConfigResult> re = restTemplate.exchange(
-                "http://ts-price-service:16579/price/query",
-                HttpMethod.POST,
+
+        HttpEntity requestEntity = new HttpEntity(null, headers);
+        ResponseEntity<Response> re = restTemplate.exchange(
+                "http://ts-price-service:16579/api/v1/priceservice/prices/" + routeId + "/" + trainType,
+                HttpMethod.GET,
                 requestEntity,
-                ReturnSinglePriceConfigResult.class);
-        ReturnSinglePriceConfigResult result = re.getBody();
-//        ReturnSinglePriceConfigResult result = restTemplate.postForObject(
-//                "http://ts-price-service:16579/price/query",
-//                info,
-//                ReturnSinglePriceConfigResult.class
-//        );
-        return result.getPriceConfig();
+                Response.class);
+        Response result = re.getBody();
+
+        System.out.println("Response Resutl to String " + result.toString());
+        return  JsonUtils.conveterObject(result.getData(), PriceConfig.class);
     }
 
 }

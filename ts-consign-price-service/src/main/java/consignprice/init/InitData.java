@@ -1,6 +1,6 @@
 package consignprice.init;
 
-import consignprice.domain.PriceConfig;
+import consignprice.entity.ConsignPrice;
 import consignprice.service.ConsignPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +16,7 @@ public class InitData implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         System.out.println("[Consign price service] [Init data operation]");
-        PriceConfig config = new PriceConfig();
+        ConsignPrice config = new ConsignPrice();
         config.setId(UUID.randomUUID());
         config.setIndex(0);
         config.setInitialPrice(8);

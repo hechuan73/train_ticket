@@ -1,5 +1,7 @@
 package fdse.microservice.service;
-import fdse.microservice.domain.*;
+
+import edu.fudan.common.util.Response;
+import fdse.microservice.entity.*;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
@@ -7,17 +9,22 @@ import java.util.List;
 
 public interface StationService {
     //CRUD
-    boolean create(Information info,HttpHeaders headers);
-    boolean exist(QueryStation info,HttpHeaders headers);
-    boolean update(Information info,HttpHeaders headers);
-    boolean delete(Information info,HttpHeaders headers);
-    List<Station> query(HttpHeaders headers);
+    Response create(Station info, HttpHeaders headers);
 
+    boolean exist(String stationName, HttpHeaders headers);
 
-    String queryForId(QueryForId info,HttpHeaders headers);
-    ArrayList<String> queryForIdBatch(QueryForIdBatch queryForIdBatch, HttpHeaders headers);
+    Response update(Station info, HttpHeaders headers);
 
-    QueryStation queryById(String stationId,HttpHeaders headers);
-    ArrayList<String> queryByIdBatch(QueryByIdBatch queryByIdBatch, HttpHeaders headers);
+    Response delete(Station info, HttpHeaders headers);
+
+    Response query(HttpHeaders headers);
+
+    Response queryForId(String stationName, HttpHeaders headers);
+
+    Response queryForIdBatch(List<String> nameList, HttpHeaders headers);
+
+    Response queryById(String stationId, HttpHeaders headers);
+
+    Response queryByIdBatch(List<String> stationIdList, HttpHeaders headers);
 
 }

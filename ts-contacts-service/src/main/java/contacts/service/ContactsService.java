@@ -1,25 +1,26 @@
 package contacts.service;
 
-import contacts.domain.*;
+import contacts.entity.*;
+import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public interface ContactsService {
 
-    Contacts createContacts(Contacts contacts, HttpHeaders headers);
+    Response createContacts(Contacts contacts, HttpHeaders headers);
 
-    Contacts findContactsById(UUID id, HttpHeaders headers);
+    Response create(Contacts addContacts, HttpHeaders headers);
 
-    ArrayList<Contacts> findContactsByAccountId(UUID accountId, HttpHeaders headers);
+    Response delete(UUID contactsId, HttpHeaders headers);
 
-    AddContactsResult create(AddContactsInfo aci,String accountId, HttpHeaders headers);
+    Response modify(Contacts contacts, HttpHeaders headers);
 
-    DeleteContactsResult delete(UUID contactsId, HttpHeaders headers);
+    Response getAllContacts(HttpHeaders headers);
 
-    ModifyContactsResult modify(ModifyContactsInfo info, HttpHeaders headers);
+    Response findContactsById(UUID id, HttpHeaders headers);
 
-    GetAllContactsResult getAllContacts(HttpHeaders headers);
+    Response findContactsByAccountId(UUID accountId, HttpHeaders headers);
 
 }

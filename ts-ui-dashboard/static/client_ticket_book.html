@@ -29,7 +29,9 @@
 
 </head>
 
-<body data-type="generalComponents" onload="parseURL();bookingPage();">
+<!--<body data-type="generalComponents" onload="parseURL();bookingPage();">-->
+<body data-type="generalComponents" onload="parseURL(); ">
+
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
         <a href="javascript:;" class="tpl-logo">
@@ -48,7 +50,7 @@
 
         <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
             <li id="goto_admin">
-                <a href="admin.html" class="tpl-header-list-link">
+                <a href="adminlogin.html" class="tpl-header-list-link">
                     <span>admin-panel</span>
                 </a>
             </li>
@@ -393,6 +395,17 @@
                                                                     <p id="sub_consNum">DocumentNumber_One</p>
                                                                 </div>
                                                             </div>
+
+
+                                                            <div class="am-g ticket-from-confirm" id="sub_assurance_h" style="display:none">
+                                                                <div class="am-form-group am-u-sm-5">
+                                                                    <label>Assurance:</label>
+                                                                </div>
+                                                                <div class="am-form-group am-u-sm-7">
+                                                                    <p id="sub_assurance">Traffic Accident Assurance $3</p>
+                                                                </div>
+                                                            </div>
+
 
                                                             <div class="am-g ticket-from-confirm" id="sub_foodType_h" style="display:none">
                                                                 <div class="am-form-group am-u-sm-5">

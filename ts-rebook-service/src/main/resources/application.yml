@@ -5,7 +5,8 @@ server:
 spring:
   application:
     name: ts-rebook-service
-
+swagger:
+  controllerPackage: rebook.controller
 #  rabbitmq:
 #    host: rabbitmq
 #    listener:

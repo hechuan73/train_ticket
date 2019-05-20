@@ -12,3 +12,5 @@ spring:
 #      password: ${MONGODB_PASSWORD}
       database: ts
       port: 27017
+swagger:
+  controllerPackage: travel2.controller

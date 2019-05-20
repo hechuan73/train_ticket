@@ -5,3 +5,5 @@ spring:
   application:
     name: ts-admin-travel-service
 
+swagger:
+  controllerPackage: admintravel.controller

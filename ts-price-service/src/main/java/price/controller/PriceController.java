@@ -1,51 +1,51 @@
 package price.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import price.domain.CreateAndModifyPriceConfig;
-import price.domain.QueryPriceConfigByTrainAndRoute;
-import price.domain.ReturnManyPriceConfigResult;
-import price.domain.ReturnSinglePriceConfigResult;
+import price.entity.PriceConfig;
 import price.service.PriceService;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
+@RequestMapping("/api/v1/priceservice")
 public class PriceController {
 
     @Autowired
     PriceService service;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/prices/welcome")
     public String home() {
         return "Welcome to [ Price Service ] !";
     }
 
-    @RequestMapping(value="/price/query", method= RequestMethod.POST)
-    public ReturnSinglePriceConfigResult query(@RequestBody QueryPriceConfigByTrainAndRoute info,
-                                               @RequestHeader HttpHeaders headers){
-        return service.findByRouteIdAndTrainType(info.getRouteId(),info.getTrainType(), headers);
+    @GetMapping(value = "/prices/{routeId}/{trainType}")
+    public HttpEntity query(@PathVariable String routeId, @PathVariable String trainType,
+                            @RequestHeader HttpHeaders headers) {
+        return ok(service.findByRouteIdAndTrainType(routeId, trainType, headers));
     }
 
-    @RequestMapping(value="/price/queryAll", method= RequestMethod.GET)
-    public ReturnManyPriceConfigResult queryAll(@RequestHeader HttpHeaders headers){
-        return service.findAllPriceConfig(headers);
+    @GetMapping(value = "/prices")
+    public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
+        return ok(service.findAllPriceConfig(headers));
     }
 
-    @RequestMapping(value="/price/create", method= RequestMethod.POST)
-    public ReturnSinglePriceConfigResult create(@RequestBody CreateAndModifyPriceConfig info,
-                                                @RequestHeader HttpHeaders headers){
-        return service.createNewPriceConfig(info, headers);
+    @PostMapping(value = "/prices")
+    public HttpEntity<?> create(@RequestBody PriceConfig info,
+                                @RequestHeader HttpHeaders headers) {
+        return new ResponseEntity<>(service.createNewPriceConfig(info, headers), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/price/delete", method= RequestMethod.POST)
-    public boolean delete(@RequestBody CreateAndModifyPriceConfig info, @RequestHeader HttpHeaders headers){
-        return service.deletePriceConfig(info, headers);
+    @DeleteMapping(value = "/prices")
+    public HttpEntity delete(@RequestBody PriceConfig info, @RequestHeader HttpHeaders headers) {
+        return ok(service.deletePriceConfig(info, headers));
     }
 
-    @RequestMapping(value="/price/update", method= RequestMethod.POST)
-    public boolean update(@RequestBody CreateAndModifyPriceConfig info, @RequestHeader HttpHeaders headers){
-        return service.updatePriceConfig(info, headers);
+    @PutMapping(value = "/prices")
+    public HttpEntity update(@RequestBody PriceConfig info, @RequestHeader HttpHeaders headers) {
+        return ok(service.updatePriceConfig(info, headers));
     }
-
-
 }

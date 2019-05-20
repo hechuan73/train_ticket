@@ -1,42 +1,43 @@
 package admintravel.controller;
 
-import admintravel.domain.request.AddAndModifyTravelRequest;
-import admintravel.domain.request.DeleteTravelRequest;
-import admintravel.domain.response.AdminFindAllResult;
-import admintravel.domain.response.ResponseBean;
+import admintravel.entity.TravelInfo;
 import admintravel.service.AdminTravelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
+@RequestMapping("/api/v1/admintravelservice")
 public class AdminTravelController {
     @Autowired
     AdminTravelService adminTravelService;
 
-    @RequestMapping(path = "/welcome", method = RequestMethod.GET)
+    @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
         return "Welcome to [ AdminTravel Service ] !";
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(path = "/admintravel/findAll/{id}", method = RequestMethod.GET)
-    public AdminFindAllResult getAllTravels(@PathVariable String id, @RequestHeader HttpHeaders headers){
-        return adminTravelService.getAllTravels(id, headers);
+    @GetMapping(path = "/admintravel")
+    public HttpEntity getAllTravels(@RequestHeader HttpHeaders headers) {
+        return ok(adminTravelService.getAllTravels(headers));
     }
 
-    @RequestMapping(value = "/admintravel/addTravel", method= RequestMethod.POST)
-    public ResponseBean addTravel(@RequestBody AddAndModifyTravelRequest request, @RequestHeader HttpHeaders headers){
-        return adminTravelService.addTravel(request, headers);
+    @PostMapping(value = "/admintravel")
+    public HttpEntity addTravel(@RequestBody TravelInfo request, @RequestHeader HttpHeaders headers) {
+        return ok(adminTravelService.addTravel(request, headers));
     }
 
-    @RequestMapping(value = "/admintravel/updateTravel", method= RequestMethod.POST)
-    public ResponseBean updateTravel(@RequestBody AddAndModifyTravelRequest request, @RequestHeader HttpHeaders headers){
-        return adminTravelService.updateTravel(request, headers);
+    @PutMapping(value = "/admintravel")
+    public HttpEntity updateTravel(@RequestBody TravelInfo request, @RequestHeader HttpHeaders headers) {
+        return ok(adminTravelService.updateTravel(request, headers));
     }
 
-    @RequestMapping(value = "/admintravel/deleteTravel", method= RequestMethod.POST)
-    public ResponseBean deleteTravel(@RequestBody DeleteTravelRequest request, @RequestHeader HttpHeaders headers){
-        return adminTravelService.deleteTravel(request, headers);
+    @DeleteMapping(value = "/admintravel/{tripId}")
+    public HttpEntity deleteTravel(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
+        return ok(adminTravelService.deleteTravel(tripId, headers));
     }
 }

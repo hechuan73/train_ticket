@@ -1,6 +1,6 @@
 package config.init;
 
-import config.domain.Information;
+import config.entity.Config;
 import config.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,12 +15,12 @@ public class InitData implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        Information info = new Information();
+        Config config = new Config();
 
-        info.setName("DirectTicketAllocationProportion");
-        info.setValue("0.5");
-        info.setDescription("Allocation Proportion Of The Direct Ticket - From Start To End");
-        service.create(info,null);
+        config.setName("DirectTicketAllocationProportion");
+        config.setValue("0.5");
+        config.setDescription("Allocation Proportion Of The Direct Ticket - From Start To End");
+        service.create(config,null);
 
 //        info.setName("GaoTieOne_economyClass_priceRate");
 //        info.setValue("7");
