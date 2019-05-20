@@ -47,7 +47,7 @@ var appConsign = new Vue({
             myOrdersQueryInfo.travelDateEnd = null;
             myOrdersQueryInfo.boughtDateStart = null;
             myOrdersQueryInfo.boughtDateEnd = null;
-            this.tempOrderList = [];
+
             this.myOrderList = [];
             var myOrdersQueryData = JSON.stringify(myOrdersQueryInfo);
             this.queryForMyOrderThree("/api/v1/orderservice/order/refresh", myOrdersQueryData);
@@ -67,7 +67,7 @@ var appConsign = new Vue({
                 },
                 success: function (result) {
                     console.log(result);
-
+                    that.tempOrderList = [];
                     var size = result.data.length;
                     for (var i = 0; i < size; i++) {
                         that.tempOrderList[i] = result.data[i];
