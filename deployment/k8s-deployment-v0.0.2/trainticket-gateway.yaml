@@ -105,10 +105,10 @@ spec:
           number: 12345
   - match:
     - uri:
-        prefix: /train/
+        prefix:  /api/v1/trainservice
     route:
     - destination:
-        host: /api/v1/trainservice
+        host: ts-train-service
         port:
           number: 14567
   - match:
