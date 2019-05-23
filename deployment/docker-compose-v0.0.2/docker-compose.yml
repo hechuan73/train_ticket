@@ -415,7 +415,7 @@ services:
          networks:
            - my-network
 
-  ts-voucher-service:userName
+  ts-voucher-service:
           build: ts-voucher-service
           image: ts/ts-voucher-service
           restart: always

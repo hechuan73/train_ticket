@@ -71,7 +71,16 @@
 
 	<dependencies>
 
-	
+		<dependency>
+            <groupId>myproject.microservices</groupId>
+            <artifactId>micro-service-monitoring-core</artifactId>
+            <version>1.2.2.BUILD-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>myproject.microservices</groupId>
+            <artifactId>micro-service-monitoring-zipkin</artifactId>
+            <version>1.2.2.BUILD-SNAPSHOT</version>
+        </dependency>
 
 		<!--分界线-->
 		<dependency>

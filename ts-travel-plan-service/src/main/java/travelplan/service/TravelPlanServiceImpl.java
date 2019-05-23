@@ -210,11 +210,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
-//        int restNumber = restTemplate.postForObject(
-//                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
-//                seatRequest,Integer.class
-//                );
-
         return re.getBody().getData();
     }
 
@@ -226,11 +221,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/cheapestRoute",
-//                        info,RoutePlanResults.class
-//                );
         return re.getBody().getData();
     }
 
@@ -243,11 +233,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
 
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/quickestRoute",
-//                        info,RoutePlanResults.class
-//                );
+
         return re.getBody().getData();
     }
 
@@ -259,11 +245,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 Response.class);
         Response routePlanResults = re.getBody();
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/minStopStations",
-//                        info,RoutePlanResults.class
-//                );
+
         return routePlanResults;
     }
 

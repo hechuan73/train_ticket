@@ -25,10 +25,7 @@ public class AuthController {
      * to create a default role use
      * @return
      */
-    @GetMapping("/hello")
-    public String getHello(){
-        return "hello";
-    }
+
     @PostMapping("/auth")
     public ResponseEntity<Void> createDefaultUser(@RequestBody AuthDto dto, HttpHeaders headers) {
         log.info(dto.getUserName() +" USER NAME");
