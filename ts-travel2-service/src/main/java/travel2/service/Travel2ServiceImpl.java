@@ -183,7 +183,9 @@ public class Travel2ServiceImpl implements Travel2Service {
                 gtdr.setTrip(repository.findByTripId(new TripId(gtdi.getTripId())));
             }
         }
-        return new Response<>(1, "Success", gtdi);
+
+
+        return new Response<>(1, "Success", gtdr);
     }
 
 
@@ -370,6 +372,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         seatRequest.setTrainNumber(trainNumber);
         seatRequest.setSeatType(seatType);
         seatRequest.setTravelDate(travelDate);
+        System.out.println("Seat request To String: " + seatRequest.toString());
 
         HttpEntity requestEntity = new HttpEntity(seatRequest, headers);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(

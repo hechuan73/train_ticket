@@ -315,7 +315,7 @@ var appConsign = new Vue({
                 this.selectedSeats[i] = 2;
         },
         consignOrder(orderId, from, to, buyghtDate) {
-            // 根据order Id 查询出consign
+
             this.queryConsignByOrderId(orderId);
 
             var that = this;
@@ -566,7 +566,7 @@ var appConsign = new Vue({
             }
             var data = JSON.stringify(requestInfo);
             var that = this;
-            //发送请求
+            //send request
             $.ajax({
                 type: "post",
                 url: "/getVoucher",

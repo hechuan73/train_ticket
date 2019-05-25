@@ -38,7 +38,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 ticket.setDestStation(tempOrder.getTo());
                 ticketSet.add(ticket);
             }
-            return new Response<>(1, "Success", ticketSet);
+
+            LeftTicketInfo leftTicketInfo = new LeftTicketInfo();
+            leftTicketInfo.setSoldTickets(ticketSet);
+            System.out.println("Left ticket info is: " + leftTicketInfo.toString());
+
+            return new Response<>(1, "Success", leftTicketInfo);
         } else {
             return new Response<>(0, "Seat is Null.", null);
         }

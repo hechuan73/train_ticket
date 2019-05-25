@@ -91,9 +91,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
 
         //2.按照时间排序
         ArrayList<TripResponse> finalResult = new ArrayList<>();
-//        finalResult.addAll(highSpeed);
-//        finalResult.addAll(normalTrain);
-//        return finalResult;
+
         for (TripResponse tr : highSpeed) {
             finalResult.add(tr);
         }
@@ -157,9 +155,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 new ParameterizedTypeReference<Response<ArrayList<Route>>>() {
                 });
 
-//        GetRoutesListlResult routeResult = restTemplate.postForObject(
-//                "http://ts-route-service:11178/route/queryByStartAndTerminal",
-//                searchRouteInfo, GetRoutesListlResult.class);
+
         ArrayList<Route> routeList = re.getBody().getData();
         System.out.println("[Route Plan Service] Candidate Route Number:" + routeList.size());
         //2.计算这两个车站之间有多少停靠站
@@ -193,10 +189,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 });
 
         ArrayList<ArrayList<Trip>> travelTrips = re2.getBody().getData();
-//        GetTripsByRouteIdResult resultTravel = restTemplate.postForObject(
-//                "http://ts-travel-service:12346/travel/getTripsByRouteId",
-//                getTripInfo,GetTripsByRouteIdResult.class
-//        );
+
 
         re2 = restTemplate.exchange(
                 "http://ts-travel2-service:16346/api/v1/travel2service/trips/routes",
@@ -206,9 +199,6 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 });
         ArrayList<ArrayList<Trip>> travel2Trips = re2.getBody().getData();
 
-//        GetTripsByRouteIdResult resultTravel2 = restTemplate.postForObject(
-//                "http://ts-travel2-service:16346/travel2/getTripsByRouteId",
-//                getTripInfo,GetTripsByRouteIdResult.class);
         //合并查询结果
         ArrayList<ArrayList<Trip>> finalTripResult = new ArrayList<>();
         for (int i = 0; i < travel2Trips.size(); i++) {
@@ -280,8 +270,6 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<String>>() {
                 });
-
-//        String stationId = restTemplate.postForObject("http://ts-station-service:12345/station/queryForId",queryForId,String.class);
         return re.getBody().getData();
     }
 
@@ -296,9 +284,6 @@ public class RoutePlanServiceImpl implements RoutePlanService {
                 });
         Response<Route> result = re.getBody();
 
-//        GetRouteResult result = restTemplate.getForObject(
-//                "http://ts-route-service:11178/route/queryById/" + routeId,
-//                GetRouteResult.class);
         if (result.getStatus() == 0) {
             System.out.println("[Travel Service][Get Route By Id] Fail." + result.getMsg());
             return null;
@@ -338,7 +323,6 @@ public class RoutePlanServiceImpl implements RoutePlanService {
     }
 
     private List<String> getStationList(String tripId, HttpHeaders headers) {
-        //首先获取
 
         String path;
         if (tripId.charAt(0) == 'G' || tripId.charAt(0) == 'D') {

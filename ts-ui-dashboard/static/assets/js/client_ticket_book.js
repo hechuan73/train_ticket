@@ -327,17 +327,14 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
     var from = showVal[1].split("=")[1].replace("%20", " ");
     var to = showVal[2].split("=")[1].replace("%20", " ");
     var seatType = showVal[3].split("=")[1];
-    var seatPrice = "0.0";
+
+    var seatPrice = showVal[4].split("=")[1];
     if (seatType == "2" || seatType == 2) {
-        seatPrice = "50";
         seatType = "confort seat";
     } else {
-        seatPrice = "22.5";
         seatType = "economy seat";
     }
     var date = showVal[5].split("=")[1];
-
-
     if (sessionStorage.getItem("client_id") == "-1" || sessionStorage.getItem("client_id") == null) {
         alert("Please Login!");
     }
@@ -446,7 +443,7 @@ $("#ticket_select_contacts_confirm_btn").click(function () {
                 orderTicketInfo.contactsId = $("#sub_consNum").text();
                 orderTicketInfo.tripId = $("#sub_tripId").text();
 
-                if ($("#sub_setType").text().indexOf("confort")) {
+                if ($("#sub_setType").text().indexOf("confort") >= 0) {
                     orderTicketInfo.seatType = "2";
                 } else {
                     orderTicketInfo.seatType = "3";

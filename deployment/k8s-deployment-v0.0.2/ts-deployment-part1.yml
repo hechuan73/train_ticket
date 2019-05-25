@@ -528,31 +528,6 @@ spec:
             memory: 100Mi
 
 ---
-
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: ts-verification-code-mongo
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: ts-verification-code-mongo
-    spec:
-      containers:
-      - name: ts-verification-code-mongo
-        image: mongo
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 27017
-        resources:
-          requests:
-            cpu: 50m
-            memory: 100Mi
-
----
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -812,17 +787,3 @@ spec:
     - port: 27017
   selector:
    app: ts-food-mongo
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: ts-verification-code-mongo
-spec:
-  ports:
-    - port: 27017
-  selector:
-   app: ts-verification-code-mongo
-
----

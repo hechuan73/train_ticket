@@ -61,11 +61,13 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         System.out.println("[Preserve Other Service] [Step 3] TripId:" + oti.getTripId());
         Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, httpHeaders);
         TripAllDetail gtdr = response.getData();
+        log.info("TripAllDetail : " + gtdr.toString());
         if (response.getStatus() == 0) {
             System.out.println("[Preserve Service][Search For Trip Detail Information] " + response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
             TripResponse tripResponse = gtdr.getTripResponse();
+            log.info("TripResponse : " + tripResponse.toString());
             if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() == 0) {
                     System.out.println("[Preserve Service][Check seat is enough] ");
@@ -202,7 +204,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
-            log.info("CONSIGN INFO : " +consignRequest.toString());
+            log.info("CONSIGN INFO : " + consignRequest.toString());
             Response icresult = createConsign(consignRequest, httpHeaders);
             if (icresult.getStatus() == 1) {
                 System.out.println("[Preserve Service][Step 7] Consign Success");
@@ -258,11 +260,11 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
     }
 
     public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Service][Send Email]");
 
+        System.out.println("[Preserve Service][Send Email]");
         HttpEntity requestEntitySendEmail = new HttpEntity(notifyInfo, httpHeaders);
         ResponseEntity<Boolean> reSendEmail = restTemplate.exchange(
-                "http://ts-notification-service:17853/notification/order_cancel_success",
+                "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
                 HttpMethod.POST,
                 requestEntitySendEmail,
                 Boolean.class);
@@ -325,7 +327,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         HttpEntity requestCheckResult = new HttpEntity(httpHeaders);
         ResponseEntity<Response> reCheckResult = restTemplate.exchange(
                 "http://ts-security-service:11188/api/v1/securityservice/securityConfigs/" + accountId,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestCheckResult,
                 Response.class);
         Response response = reCheckResult.getBody();

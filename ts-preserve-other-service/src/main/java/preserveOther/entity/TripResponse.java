@@ -1,10 +1,12 @@
 package preserveOther.entity;
 
+import lombok.ToString;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
+@ToString
 public class TripResponse {
     @Valid
     private TripId tripId;

@@ -1,9 +1,12 @@
 package travel.entity;
 
+import lombok.ToString;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@ToString
 public class Seat {
     @Valid
     @NotNull

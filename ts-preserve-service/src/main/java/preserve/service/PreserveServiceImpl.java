@@ -54,11 +54,13 @@ public class PreserveServiceImpl implements PreserveService {
         System.out.println("[Preserve Service] [Step 3] TripId:" + oti.getTripId());
         Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, headers);
         TripAllDetail gtdr = response.getData();
+        log.info("TripAllDetail:" + gtdr.toString());
         if (response.getStatus() == 0) {
             System.out.println("[Preserve Service][Search For Trip Detail Information] " + response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
             TripResponse tripResponse = gtdr.getTripResponse();
+            log.info("TripResponse:" + tripResponse.toString());
             if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() == 0) {
                     System.out.println("[Preserve Service][Check seat is enough] ");

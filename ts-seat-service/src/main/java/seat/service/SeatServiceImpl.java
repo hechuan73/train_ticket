@@ -1,6 +1,7 @@
 package seat.service;
 
 import edu.fudan.common.util.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,6 +17,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class SeatServiceImpl implements SeatService {
     @Autowired
     RestTemplate restTemplate;
@@ -45,8 +47,7 @@ public class SeatServiceImpl implements SeatService {
                     new ParameterizedTypeReference<Response<Route>>() {
                     });
             routeResult = re.getBody();
-//            routeResult = restTemplate.getForObject(
-//                    "http://ts-travel-service:12346/travel/getRouteByTripId/"+ seatRequest.getTrainNumber() ,GetRouteResult.class);
+
             System.out.println("[SeatService distributeSeat] The result of getRouteResult is " + routeResult.getMsg());
 
             //调用微服务，查询获得余票信息：该车次指定座型已售Ticket的set集合
@@ -59,8 +60,7 @@ public class SeatServiceImpl implements SeatService {
                     });
             System.out.println("Left ticket info is :" + re3.getBody().toString());
             leftTicketInfo = re3.getBody().getData();
-//            leftTicketInfo = restTemplate.postForObject(
-//                    "http://ts-order-service:12031/order/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
+
 
             //调用微服务，查询该车次指定座型总数量
             requestEntity = new HttpEntity(headers);
@@ -73,8 +73,6 @@ public class SeatServiceImpl implements SeatService {
             Response<TrainType> trainTypeResponse = re2.getBody();
             trainTypeResult = trainTypeResponse.getData();
 
-//            trainTypeResult = restTemplate.getForObject(
-//                    "http://ts-travel-service:12346/travel/getTrainTypeByTripId/" + seatRequest.getTrainNumber() ,GetTrainTypeResult.class);
             System.out.println("[SeatService distributeSeat 1] The result of getTrainTypeResult is " + trainTypeResponse.toString());
         } else {
             System.out.println("[SeatService] TrainNumber start with other capital");
@@ -87,8 +85,7 @@ public class SeatServiceImpl implements SeatService {
                     new ParameterizedTypeReference<Response<Route>>() {
                     });
             routeResult = re.getBody();
-//            routeResult = restTemplate.getForObject(
-//                    "http://ts-travel2-service:16346/travel2/getRouteByTripId/" + seatRequest.getTrainNumber() ,GetRouteResult.class);
+
             System.out.println("[SeatService distributeSeat] The result of getRouteResult is " + routeResult.toString());
 
             //调用微服务，查询获得余票信息：该车次指定座型已售Ticket的set集合
@@ -101,8 +98,6 @@ public class SeatServiceImpl implements SeatService {
                     });
             System.out.println("Left ticket info is :" + re3.getBody().toString());
             leftTicketInfo = re3.getBody().getData();
-//            leftTicketInfo = restTemplate.postForObject(
-//                    "http://ts-order-other-service:12032/orderOther/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
 
             //调用微服务，查询该车次指定座型总数量
             requestEntity = new HttpEntity(headers);
@@ -114,8 +109,6 @@ public class SeatServiceImpl implements SeatService {
                     });
             Response<TrainType> trainTypeResponse = re2.getBody();
             trainTypeResult = trainTypeResponse.getData();
-//            trainTypeResult = restTemplate.getForObject(
-//                    "http://ts-travel2-service:16346/travel2/getTrainTypeByTripId/" + seatRequest.getTrainNumber(), GetTrainTypeResult.class);
             System.out.println("[SeatService distributeSeat 2] The result of getTrainTypeResult is " + trainTypeResponse.toString());
         }
 
@@ -198,8 +191,7 @@ public class SeatServiceImpl implements SeatService {
                     new ParameterizedTypeReference<Response<Route>>() {
                     });
             routeResult = re.getBody();
-//            routeResult = restTemplate.getForObject(
-//                    "http://ts-travel-service:12346/travel/getRouteByTripId/"+ seatRequest.getTrainNumber() ,GetRouteResult.class);
+
             System.out.println("[SeatService getLeftTicketOfInterval] The result of getRouteResult is " + routeResult.getMsg());
 
             //调用微服务，查询获得余票信息：该车次指定座型已售Ticket的set集合
@@ -213,9 +205,7 @@ public class SeatServiceImpl implements SeatService {
 
             System.out.println("Get Order tickets result is : " + re3.toString());
             leftTicketInfo = re3.getBody().getData();
-            //System.out.println("Left Ticket info is :  " + leftTicketInfo.toString());
-//            leftTicketInfo = restTemplate.postForObject(
-//                    "http://ts-order-service:12031/order/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
+            System.out.println("Left Ticket info is :  " + leftTicketInfo.toString());
 
             //调用微服务，查询该车次指定座型总数量
             requestEntity = new HttpEntity(headers);
@@ -229,8 +219,7 @@ public class SeatServiceImpl implements SeatService {
 
 
             trainTypeResult = trainTypeResponse.getData();
-//            trainTypeResult = restTemplate.getForObject(
-//                    "http://ts-travel-service:12346/travel/getTrainTypeByTripId/" + seatRequest.getTrainNumber() ,GetTrainTypeResult.class);
+
             System.out.println("[SeatService getLeftTicketOfInterval] The result of getTrainTypeResult is " + trainTypeResponse.toString());
         } else {
             System.out.println("[SeatService getLeftTicketOfInterval] TrainNumber start with other capital");
@@ -243,8 +232,7 @@ public class SeatServiceImpl implements SeatService {
                     new ParameterizedTypeReference<Response<Route>>() {
                     });
             routeResult = re.getBody();
-//            routeResult = restTemplate.getForObject(
-//                    "http://ts-travel2-service:16346/travel2/getRouteByTripId/" + seatRequest.getTrainNumber() ,GetRouteResult.class);
+
             System.out.println("[SeatService getLeftTicketOfInterval] The result of getRouteResult is " + routeResult.toString());
 
             //调用微服务，查询获得余票信息：该车次指定座型已售Ticket的set集合
@@ -258,8 +246,6 @@ public class SeatServiceImpl implements SeatService {
             System.out.println("Get Order tickets result is : " + re3.toString());
             leftTicketInfo = re3.getBody().getData();
 
-//            leftTicketInfo = restTemplate.postForObject(
-//                    "http://ts-order-other-service:12032/orderOther/getTicketListByDateAndTripId", seatRequest ,LeftTicketInfo.class);
 
             //调用微服务，查询该车次指定座型总数量
             requestEntity = new HttpEntity(headers);
@@ -271,8 +257,7 @@ public class SeatServiceImpl implements SeatService {
                     });
             Response<TrainType> trainTypeResponse = re2.getBody();
             trainTypeResult = trainTypeResponse.getData();
-//            trainTypeResult = restTemplate.getForObject(
-//                    "http://ts-travel2-service:16346/travel2/getTrainTypeByTripId/" + seatRequest.getTrainNumber(), GetTrainTypeResult.class);
+
             System.out.println("[SeatService getLeftTicketOfInterval] The result of getTrainTypeResult is " + trainTypeResponse.toString());
         }
 
@@ -330,9 +315,6 @@ public class SeatServiceImpl implements SeatService {
                 new ParameterizedTypeReference<Response<Config>>() {
                 });
         Response<Config> configValue = re.getBody();
-//        String configValue = restTemplate.postForObject(
-//                "http://ts-config-service:15679//config/query",
-//                queryConfig,String.class);
         System.out.println("Configs is :" + configValue.getData().toString());
         return Double.parseDouble(configValue.getData().getValue());
     }

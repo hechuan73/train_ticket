@@ -1,5 +1,8 @@
 package preserveOther.entity;
 
+import lombok.ToString;
+
+@ToString
 public class TripAllDetail {
 
     private boolean status;
