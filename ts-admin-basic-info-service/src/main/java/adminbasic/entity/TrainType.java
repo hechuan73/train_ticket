@@ -1,7 +1,9 @@
 package adminbasic.entity;
 
 
+import lombok.ToString;
 
+@ToString
 public class TrainType {
 
     private String id;

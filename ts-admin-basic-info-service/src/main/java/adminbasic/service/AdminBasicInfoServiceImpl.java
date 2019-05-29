@@ -38,8 +38,9 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Override
     public Response deleteContact(String contactsId, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("CONTACTS ID IS: " + contactsId);
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-contacts-service:12347/api/v1/contactservice/contacts/" + contactsId,
@@ -53,6 +54,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Override
     public Response modifyContact(Contacts mci, HttpHeaders headers) {
+
         Response result;
         log.info("MODIFY CONTACTS: " + mci.toString());
         HttpEntity requestEntity = new HttpEntity(mci, headers);
@@ -69,8 +71,9 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Override
     public Response addContact(Contacts c, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("CONTACTS  IS: " + c.toString());
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-contacts-service:12347/api/v1/contactservice/contacts/admin",
@@ -86,7 +89,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response getAllStations(HttpHeaders headers) {
 
-        List<Station> l;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
@@ -95,14 +97,13 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 Response.class);
 
         return re.getBody();
-
-
     }
 
     @Override
     public Response addStation(Station s, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("ADD STATION: " + s);
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
@@ -110,14 +111,15 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/create",s, Boolean.class);
+
         return result;
     }
 
     @Override
     public Response deleteStation(Station s, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("DELETE STATION: " + s);
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
@@ -125,15 +127,16 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/delete",s, Boolean.class);
+
         return result;
 
     }
 
     @Override
     public Response modifyStation(Station s, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("MODIFY STATION: " + s);
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
@@ -142,7 +145,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 Response.class);
         result = re.getBody();
 
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/update",s, Boolean.class);
         return result;
 
     }
@@ -151,7 +153,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response getAllTrains(HttpHeaders headers) {
 
-        List<TrainType> l;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains",
@@ -165,8 +166,9 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Override
     public Response addTrain(TrainType t, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("TRAINTYPE: " + t);
         HttpEntity requestEntity = new HttpEntity(t, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains",
@@ -174,15 +176,16 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/create",t, Boolean.class);
+
         return result;
 
     }
 
     @Override
     public Response deleteTrain(String id, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("DELETE TRAIN ID: " + id);
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains/" + id,
@@ -190,14 +193,15 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/delete",t, Boolean.class);
+
         return result;
     }
 
     @Override
     public Response modifyTrain(TrainType t, HttpHeaders headers) {
-        Response result;
 
+        Response result;
+        log.info("MODIFY TRAIN : " + t.toString());
         HttpEntity requestEntity = new HttpEntity(t, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains",
@@ -205,14 +209,13 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/update",t, Boolean.class);
+
         return result;
     }
 
     //////////////config////////////////////////////////////////////////
     @Override
     public Response getAllConfigs(HttpHeaders headers) {
-
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -227,20 +230,21 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response addConfig(Config c, HttpHeaders headers) {
 
-
+        log.info("ADD CONFIG : " + c.toString());
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-config-service:15679/api/v1/configservice/configs",
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/create",c, String.class);
+
         return re.getBody();
     }
 
     @Override
     public Response deleteConfig(String name, HttpHeaders headers) {
 
+        log.info("DELETE CONFIG : " + name);
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-config-service:15679/api/v1/configservice/configs/" + name,
@@ -248,28 +252,25 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/delete",ci, String.class);
         return re.getBody();
     }
 
     @Override
     public Response modifyConfig(Config c, HttpHeaders headers) {
 
-
+        log.info("MODIFY CONFIG : " + c);
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-config-service:15679/api/v1/configservice/configs",
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/update",c, String.class);
         return re.getBody();
     }
 
     //////////////price////////////////////////////////////////////////
     @Override
     public Response getAllPrices(HttpHeaders headers) {
-
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -278,21 +279,20 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-//            result = restTemplate.getForObject("http://ts-price-service:16579/price/queryAll", GetAllPriceResult.class);
-        System.out.println("[!!!!GetAllPriceResult] ");
+        log.info("[!!!!GetAllPriceResult]");
         return re.getBody();
     }
 
     @Override
     public Response addPrice(PriceInfo pi, HttpHeaders headers) {
-
+        log.info("ADD PRICE : " + pi.toString());
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-price-service:16579/api/v1/priceservice/prices",
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/create",pi, ReturnSinglePriceConfigResult.class);
+
         return re.getBody();
 
     }
@@ -300,7 +300,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response deletePrice(PriceInfo pi, HttpHeaders headers) {
 
-
+        log.info("DELETE PRICE : " + pi.toString());
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-price-service:16579/api/v1/priceservice/prices",
@@ -308,20 +308,20 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/delete",pi, Boolean.class);
         return re.getBody();
 
     }
 
     @Override
     public Response modifyPrice(PriceInfo pi, HttpHeaders headers) {
+
+        log.info("MODIFY PRICE : " + pi.toString());
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-price-service:16579/api/v1/priceservice/prices",
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/update",pi, Boolean.class);
         return re.getBody();
     }
 }

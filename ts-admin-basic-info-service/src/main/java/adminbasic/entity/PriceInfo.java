@@ -1,5 +1,8 @@
 package adminbasic.entity;
 
+import lombok.ToString;
+
+@ToString
 public class PriceInfo {
 
     private String id;

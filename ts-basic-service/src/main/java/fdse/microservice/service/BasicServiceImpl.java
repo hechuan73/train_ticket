@@ -3,6 +3,7 @@ package fdse.microservice.service;
 import edu.fudan.common.util.JsonUtils;
 import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 
 @Service
+@Slf4j
 public class BasicServiceImpl implements BasicService {
 
     @Autowired
@@ -52,19 +54,25 @@ public class BasicServiceImpl implements BasicService {
 
         String startingPlaceId = (String) queryForStationId(info.getStartingPlace(), headers).getData();
         String endPlaceId = (String) queryForStationId(info.getEndPlace(), headers).getData();
+
+        log.info("startingPlaceId : " + startingPlaceId + "endPlaceId : " + endPlaceId);
+
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
 
+        log.info("indexStart : " + indexStart + " __ " + "indexEnd : " + indexEnd);
+        log.info("route.getDistances().size : " + route.getDistances().size());
+        HashMap<String, String> prices = new HashMap<String, String>();
+
+        // exception
         int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
 
         double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();//需要price Rate和距离（起始站）
         double priceForConfortClass = distance * priceConfig.getFirstClassPriceRate();
-
-        HashMap<String, String> prices = new HashMap<String, String>();
         prices.put("economyClass", "" + priceForEconomyClass);
         prices.put("confortClass", "" + priceForConfortClass);
-        result.setPrices(prices);
 
+        result.setPrices(prices);
         result.setPercent(1.0);
         response.setData(result);
         return response;
@@ -74,39 +82,39 @@ public class BasicServiceImpl implements BasicService {
     @Override
     public Response queryForStationId(String stationName, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + stationName);
-        HttpEntity requestEntity = new HttpEntity( headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
         Response id = re.getBody();
-        return  id;
+        return id;
     }
 
     public boolean checkStationExists(String stationName, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Check Station Exists] Station Name:" + stationName);
-        HttpEntity requestEntity = new HttpEntity( headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
         Response exist = re.getBody();
-       if (exist.getStatus() ==1)
+        if (exist.getStatus() == 1)
             return true;
         return false;
     }
 
     public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {
         System.out.println("[Basic Information Service][Query Train Type] Train Type:" + trainTypeId);
-        HttpEntity requestEntity = new HttpEntity( headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response  response = re.getBody();
+        Response response = re.getBody();
 
         return JsonUtils.conveterObject(response.getData(), TrainType.class);
     }
@@ -120,7 +128,7 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response result = re.getBody();
-        if ( result.getStatus() == 0) {
+        if (result.getStatus() == 0) {
             System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
             return null;
         } else {
@@ -142,7 +150,7 @@ public class BasicServiceImpl implements BasicService {
         Response result = re.getBody();
 
         System.out.println("Response Resutl to String " + result.toString());
-        return  JsonUtils.conveterObject(result.getData(), PriceConfig.class);
+        return JsonUtils.conveterObject(result.getData(), PriceConfig.class);
     }
 
 }

@@ -150,7 +150,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<Route>>> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + fromStationId + "/" + toStationId,
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<Route>>>() {
                 });
@@ -167,7 +167,8 @@ public class RoutePlanServiceImpl implements RoutePlanService {
         }
         //3.挑选出最少停靠站的几条路线
         ArrayList<String> resultRoutes = new ArrayList<>();
-        for (int i = 0; i < Math.min(info.getNum(), routeList.size()); i++) {
+        int size = Math.min(5, routeList.size());
+        for (int i = 0; i < size; i++) {
             int minIndex = 0;
             int tempMinGap = Integer.MAX_VALUE;
             for (int j = 0; j < gapList.size(); j++) {
@@ -178,6 +179,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
             }
             resultRoutes.add(routeList.get(minIndex).getId());
             routeList.remove(minIndex);
+            gapList.remove(minIndex);
         }
         //4.根据路线，去travel或者travel2获取这些车次信息
         requestEntity = new HttpEntity(resultRoutes, headers);
@@ -295,7 +297,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
 
     private ArrayList<TripResponse> getTripFromHighSpeedTravelServive(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        //s-travel-service:12346/travel/queryWithPackage
+
         ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/trips/left",
                 HttpMethod.POST,
@@ -310,7 +312,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
 
     private ArrayList<TripResponse> getTripFromNormalTrainTravelService(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        // ts-travel2-service:16346/travel2/queryWithPackage
+
         ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
                 "http://ts-travel2-service:16346/api/v1/travel2service/trips/left",
                 HttpMethod.POST,
