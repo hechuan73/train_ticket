@@ -254,22 +254,19 @@ public class Travel2ServiceImpl implements Travel2Service {
         //计算车从起始站开出的距离
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
-
-
+        int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);
+        int distanceEnd = route.getDistances().get(indexEnd) - route.getDistances().get(0);
         TrainType trainType = getTrainType(trip.getTrainTypeId(), headers);
         //根据列车平均运行速度计算列车运行时间
-
-
-        int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);
         int minutesStart = 60 * distanceStart / trainType.getAverageSpeed();
+        int minutesEnd = 60 * distanceEnd / trainType.getAverageSpeed();
+
         Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTime(trip.getStartingTime());
         calendarStart.add(Calendar.MINUTE, minutesStart);
         response.setStartingTime(calendarStart.getTime());
         System.out.println("[Train Service]计算时间：" + minutesStart + " 时间:" + calendarStart.getTime().toString());
-        // exception
-        int distanceEnd = route.getDistances().get(indexEnd) - route.getDistances().get(0);
-        int minutesEnd = 60 * distanceEnd / trainType.getAverageSpeed();
+
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
         calendarEnd.add(Calendar.MINUTE, minutesEnd);

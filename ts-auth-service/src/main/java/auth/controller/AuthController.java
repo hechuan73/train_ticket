@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 public class AuthController {
 
     @Autowired
@@ -25,7 +25,10 @@ public class AuthController {
      * to create a default role use
      * @return
      */
-
+    @GetMapping("/hello")
+    public String getHello(){
+        return "hello";
+    }
     @PostMapping("/auth")
     public ResponseEntity<Void> createDefaultUser(@RequestBody AuthDto dto, HttpHeaders headers) {
         log.info(dto.getUserName() +" USER NAME");

@@ -210,6 +210,11 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
+//        int restNumber = restTemplate.postForObject(
+//                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
+//                seatRequest,Integer.class
+//                );
+
         return re.getBody().getData();
     }
 
@@ -221,6 +226,11 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
+//        RoutePlanResults routePlanResults =
+//                restTemplate.postForObject(
+//                        "http://ts-route-plan-service:14578/routePlan/cheapestRoute",
+//                        info,RoutePlanResults.class
+//                );
         return re.getBody().getData();
     }
 
@@ -233,7 +243,11 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
 
-
+//        RoutePlanResults routePlanResults =
+//                restTemplate.postForObject(
+//                        "http://ts-route-plan-service:14578/routePlan/quickestRoute",
+//                        info,RoutePlanResults.class
+//                );
         return re.getBody().getData();
     }
 
@@ -245,7 +259,11 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 Response.class);
         Response routePlanResults = re.getBody();
-
+//        RoutePlanResults routePlanResults =
+//                restTemplate.postForObject(
+//                        "http://ts-route-plan-service:14578/routePlan/minStopStations",
+//                        info,RoutePlanResults.class
+//                );
         return routePlanResults;
     }
 
@@ -257,7 +275,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<TripResponse>>>() {
                 });
-
+//        result = restTemplate.postForObject("http://ts-travel-service:12346/travel/query",info,result.getClass());
         return re.getBody().getData();
     }
 
@@ -271,7 +289,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
                 });
 
-
+//        result = restTemplate.postForObject("http://ts-travel2-service:16346/travel2/query",info,result.getClass());
         return re.getBody().getData();
     }
 
@@ -285,6 +303,8 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<String>>() {
                 });
 
+//        String id = restTemplate.postForObject(
+//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId", query ,String.class);
         return re.getBody().getData();
     }
 

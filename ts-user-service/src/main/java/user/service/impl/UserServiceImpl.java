@@ -24,11 +24,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String AUHT_SERVICE_URI = "http://ts-auth-service:12340/api/v1/users";
+    private static final String AUHT_SERVICE_URI = "http://ts-auth-service:12340/api/v1";
 
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
-        log.info("Save User Name ：" + userDto.getUserName());
+        log.info("Save User Name id：" + userDto.getUserName());
         UUID userId = userDto.getUserId();
         if (userDto.getUserId() == null)
             userId = UUID.randomUUID();

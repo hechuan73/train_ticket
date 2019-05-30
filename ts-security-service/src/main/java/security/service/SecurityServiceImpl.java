@@ -108,7 +108,9 @@ public class SecurityServiceImpl implements SecurityService {
                 });
         Response<OrderSecurity> response = re.getBody();
         OrderSecurity result =  response.getData();
-
+//        OrderSecurity result = restTemplate.postForObject(
+//                "http://ts-order-service:12031/getOrderInfoForSecurity",info,
+//                OrderSecurity.class);
         System.out.println("[Security Service][Get Order Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
                 + " Total Valid Order:" + result.getOrderNumOfValidOrder());
         return result;
@@ -125,7 +127,9 @@ public class SecurityServiceImpl implements SecurityService {
                 });
         Response<OrderSecurity> response = re.getBody();
         OrderSecurity result =  response.getData();
-
+//        OrderSecurity result = restTemplate.postForObject(
+//                "http://ts-order-other-service:12032/getOrderOtherInfoForSecurity",info,
+//                OrderSecurity.class);
         System.out.println("[Security Service][Get Order Other Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
                 + " Total Valid Order:" + result.getOrderNumOfValidOrder());
         return result;
