@@ -14,7 +14,7 @@ public interface UserService {
 
     List<User> getAllUser(HttpHeaders headers);
 
-    User createDefaultAuthUser(AuthDto dto, HttpHeaders headers);
+    User createDefaultAuthUser(AuthDto dto);
 
     Response deleteByUserId(UUID userId, HttpHeaders headers);
 

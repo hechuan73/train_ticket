@@ -3,7 +3,6 @@ package user.service.impl;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -46,10 +45,9 @@ public class UserServiceImpl implements UserService {
         // avoid same user name
         User user1 = userRepository.findByUserName(userDto.getUserName());
         if (user1 == null) {
-
-            createDefaultAuthUser(AuthDto.builder().userId(userId + "")
+            createDefaultAuthUser(AuthDto.builder().userId(userId)
                     .userName(user.getUserName())
-                    .password(user.getPassword()).build());
+                    .password(user.getPassword()).build(), headers);
 
             User userSaveResult = userRepository.save(user);
             log.info("Send authorization message to ts-auth-service....");
@@ -60,18 +58,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private Response createDefaultAuthUser(AuthDto dto) {
+    private void createDefaultAuthUser(AuthDto dto, HttpHeaders headers) {
         log.info("CALL TO AUTH");
         log.info("AuthDto : " + dto.toString());
         RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<AuthDto> entity = new HttpEntity<AuthDto>(dto, headers);
-        ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange("http://ts-auth-service:12340/api/v1/auth",
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AuthDto>  httpEntity = new HttpEntity(dto, headers);
+        restTemplate.exchange(AUHT_SERVICE_URI + "/auth",
                 HttpMethod.POST,
-                entity,
-                new ParameterizedTypeReference<Response<AuthDto>>() {
-                });
-        return res.getBody();
+                httpEntity,
+                Void.class);
     }
 
     @Override
@@ -85,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response findByUserName(String userName, HttpHeaders headers) {
         User user = userRepository.findByUserName(userName);
-        if (user != null)
+        if(user != null)
             return new Response<>(1, "Find User Success", user);
         return new Response<>(0, "No User", null);
     }
@@ -93,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response findByUserId(String userId, HttpHeaders headers) {
         User user = userRepository.findByUserId(UUID.fromString(userId));
-        if (user != null)
+        if(user != null)
             return new Response<>(1, "Find User Success", user);
         return new Response<>(0, "No User", null);
     }
@@ -121,12 +117,10 @@ public class UserServiceImpl implements UserService {
         if (oldUser != null) {
             User newUser = oldUser.builder().email(userDto.getEmail())
                     .password(userDto.getPassword())
-                    .userId(oldUser.getUserId())
                     .userName(userDto.getUserName())
                     .gender(userDto.getGender())
                     .documentNum(userDto.getDocumentNum())
                     .documentType(userDto.getDocumentType()).build();
-            userRepository.deleteByUserId(oldUser.getUserId());
             userRepository.save(newUser);
             return new Response<>(1, "SAVE USER SUCCESS", newUser);
         } else {

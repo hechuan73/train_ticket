@@ -1,6 +1,7 @@
 package auth.controller;
 
 
+import auth.dto.AuthDto;
 import auth.dto.BasicAuthDto;
 import auth.dto.TokenDto;
 import auth.entity.User;
@@ -10,6 +11,7 @@ import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

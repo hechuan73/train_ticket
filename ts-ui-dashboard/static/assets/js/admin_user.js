@@ -147,11 +147,11 @@ app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
                     data: {
                         accountId: $scope.update_user_id,
                         userName: $scope.update_user_name,
-                        newPassword: $scope.update_user_password,
-                        newGender: $scope.update_user_gender,
-                        newEmail: $scope.update_user_email,
-                        newDocumentType: $scope.update_user_document_type,
-                        newDocumentNumber: $scope.update_user_document_number
+                        password: $scope.update_user_password,
+                        gender: $scope.update_user_gender,
+                        email: $scope.update_user_email,
+                        documentType: $scope.update_user_document_type,
+                        documentNum: $scope.update_user_document_number
                     }
                 }).success(function (data, status, headers, config) {
                     if (data.status ==  1) {
