@@ -2,7 +2,6 @@ package adminorder.entity;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 import java.util.UUID;
@@ -11,7 +10,7 @@ import java.util.UUID;
 @Data
 public class Order {
 
-    @Id
+
     private UUID id;
 
     private Date boughtDate;

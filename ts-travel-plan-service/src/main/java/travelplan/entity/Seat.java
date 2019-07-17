@@ -1,29 +1,23 @@
 package travelplan.entity;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+
 import java.util.Date;
 
 public class Seat {
-    @Valid
-    @NotNull
+
     private Date travelDate;
 
-    @Valid
-    @NotNull
+
     private String trainNumber;
 
 
-    @Valid
-    @NotNull
+
     private String startStation;
 
-    @Valid
-    @NotNull
+
     private String destStation;
 
-    @Valid
-    @NotNull
+
     private int seatType;
 
     public Seat(){
