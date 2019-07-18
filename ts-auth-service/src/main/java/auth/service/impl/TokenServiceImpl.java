@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -55,13 +56,17 @@ public class TokenServiceImpl implements TokenService {
                     Boolean.class);
             boolean id = re.getBody();
             if (!id) { // failed code
-                return new Response<>(0, "verify code failed", null);
+                return new Response<>(0, "Verification failed.", null);
             }
         }
 
         // verify username and password
         UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(username, password);
-        authenticationManager.authenticate(upat);
+        try {
+            authenticationManager.authenticate(upat);
+        } catch (AuthenticationException e) {
+            return new Response<>(0, "Incorrect username or password.", null);
+        }
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserOperationException(MessageFormat.format(
