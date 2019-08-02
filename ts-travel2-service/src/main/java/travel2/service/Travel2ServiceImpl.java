@@ -163,7 +163,7 @@ public class Travel2ServiceImpl implements Travel2Service {
     @Override
     public Response getTripAllDetailInfo(TripAllDetailInfo gtdi, HttpHeaders headers) {
         TripAllDetail gtdr = new TripAllDetail();
-        System.out.println("[TravelService] [TripAllDetailInfo] TripId is:" + gtdi.getTripId());
+        System.out.println("[TravelService] [getTripAllDetailInfo] gtdi info:" + gtdi.toString());
         Trip trip = repository.findByTripId(new TripId(gtdi.getTripId()));
         if (trip == null) {
             gtdr.setTripResponse(null);
@@ -173,6 +173,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             String startingPlaceName = gtdi.getFrom();
             String startingPlaceId = queryForStationId(startingPlaceName, headers);
             String endPlaceId = queryForStationId(endPlaceName, headers);
+            System.out.println("[TravelService] [getTripAllDetailInfo] endPlaceID: " + endPlaceId);
             Route tempRoute = getRouteByRouteId(trip.getRouteId(), headers);
             TripResponse tripResponse = getTickets(trip, tempRoute, startingPlaceId, endPlaceId, gtdi.getFrom(), gtdi.getTo(), gtdi.getTravelDate(), headers);
             if (tripResponse == null) {
@@ -252,6 +253,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         response.setTerminalStation(endPlaceName);
 
         //计算车从起始站开出的距离
+        System.out.println("[TravelService][getTickets] route: " + route.getId() + " " + "stations: " + route.getStations());
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
         int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);

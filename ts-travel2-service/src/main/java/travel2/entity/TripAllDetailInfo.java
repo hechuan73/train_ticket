@@ -1,7 +1,10 @@
 package travel2.entity;
 
+import lombok.ToString;
+
 import java.util.Date;
 
+@ToString
 public class TripAllDetailInfo {
 
     private String tripId;
