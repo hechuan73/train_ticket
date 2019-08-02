@@ -102,7 +102,7 @@ public class RouteServiceImpl implements RouteService {
             }
         }
         if (resultList.size() > 0) {
-            return new Response<>(1, "Success", routes);
+            return new Response<>(1, "Success", resultList);
         } else {
             return new Response<>(0, "No routes with the startId and terminalId", startId + " -- " + terminalId);
         }
