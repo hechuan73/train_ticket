@@ -1,6 +1,5 @@
 package admintravel.entity;
 
-import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
@@ -8,7 +7,7 @@ import java.util.Date;
 public class TravelInfo {
     private String loginId;
 
-    @Id
+
     private String tripId;
 
     private String trainTypeId;
