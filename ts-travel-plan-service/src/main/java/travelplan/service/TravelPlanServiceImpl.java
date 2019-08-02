@@ -152,11 +152,10 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         routePlanInfo.setFormStationName(info.getStartingPlace());
         routePlanInfo.setToStationName(info.getEndPlace());
         routePlanInfo.setTravelDate(info.getDepartureTime());
-        Response routePlanResults = getRoutePlanResultMinStation(routePlanInfo, headers);
+        ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultMinStation(routePlanInfo, headers);
         /// TravelAdvanceResult travelAdvanceResult = new TravelAdvanceResult();
 
-        if (routePlanResults.getStatus() == 1) {
-            ArrayList<RoutePlanResultUnit> routePlanResultUnits = (ArrayList<RoutePlanResultUnit>) routePlanResults.getData();
+        if (routePlanResultUnits.size() > 0) {
 
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
@@ -251,20 +250,20 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         return re.getBody().getData();
     }
 
-    private Response getRoutePlanResultMinStation(RoutePlanInfo info, HttpHeaders headers) {
+    private ArrayList<RoutePlanResultUnit> getRoutePlanResultMinStation(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, headers);
-        ResponseEntity<Response> re = restTemplate.exchange(
+        ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
                 "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/minStopStations",
                 HttpMethod.POST,
                 requestEntity,
-                Response.class);
-        Response routePlanResults = re.getBody();
+                new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
+                });
 //        RoutePlanResults routePlanResults =
 //                restTemplate.postForObject(
 //                        "http://ts-route-plan-service:14578/routePlan/minStopStations",
 //                        info,RoutePlanResults.class
 //                );
-        return routePlanResults;
+        return re.getBody().getData();
     }
 
     private List<TripResponse> tripsFromHighSpeed(TripInfo info, HttpHeaders headers) {
