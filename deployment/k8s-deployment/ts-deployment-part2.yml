@@ -39,7 +39,7 @@
 #         hostPath:
 #           path: /home/parquet
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-admin-basic-info-service
@@ -72,7 +72,7 @@ spec:
 ---
 
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-admin-order-service
@@ -104,7 +104,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-admin-route-service
@@ -136,7 +136,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-admin-travel-service
@@ -168,7 +168,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-admin-user-service
@@ -200,7 +200,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-assurance-service
@@ -232,7 +232,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-basic-service
@@ -264,7 +264,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-cancel-service
@@ -296,7 +296,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-config-service
@@ -328,7 +328,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-consign-price-service
@@ -360,7 +360,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-consign-service
@@ -392,7 +392,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-contacts-service
@@ -424,7 +424,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-execute-service
@@ -456,7 +456,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-food-map-service
@@ -488,7 +488,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-food-service
@@ -520,7 +520,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-inside-payment-service
@@ -552,7 +552,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-auth-service
@@ -584,7 +584,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-news-service
@@ -616,7 +616,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-notification-service
@@ -648,7 +648,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-order-other-service
@@ -680,7 +680,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-order-service
@@ -712,7 +712,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-payment-service
@@ -744,7 +744,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-preserve-other-service
@@ -776,7 +776,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-preserve-service
@@ -808,7 +808,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-price-service
@@ -840,7 +840,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-rebook-service
@@ -872,7 +872,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-route-plan-service
@@ -904,7 +904,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-route-service
@@ -936,7 +936,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-seat-service
@@ -968,7 +968,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-security-service
@@ -1000,7 +1000,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-user-service
@@ -1032,7 +1032,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-station-service
@@ -1064,7 +1064,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-ticket-office-service
@@ -1096,7 +1096,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-ticketinfo-service
@@ -1128,7 +1128,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-train-service
@@ -1160,7 +1160,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-travel2-service
@@ -1192,7 +1192,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-travel-plan-service
@@ -1224,7 +1224,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-travel-service
@@ -1256,7 +1256,7 @@ spec:
           timeoutSeconds: 5 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-verification-code-service
@@ -1288,7 +1288,7 @@ spec:
           timeoutSeconds: 5
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-voucher-service
