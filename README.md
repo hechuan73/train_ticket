@@ -5,4 +5,4 @@
 
 * About details, see [Wiki Pages](https://github.com/FudanSELab/train-ticket/wiki) 
 
-![](./image/2.0.png)
+![architecture](./image/2.png)
