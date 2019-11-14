@@ -53,7 +53,7 @@ Download: [[PDF](https://cspengxin.github.io/publications/fse19-zhou-microservic
 
 Xiang Zhou, Xin Peng, Tao Xie, Jun Sun, Chao Ji, Wenhai Li, and Dan Ding. <br/>
 **Fault Analysis and Debugging of Microservice Systems: Industrial Survey, Benchmark System, and Empirical Study.** <br/>
-[IEEE Transactions on Software Engineering](https://www.computer.org/web/tse) , To appear. <img src="image/cup.png" height="20px"/> <img src="image/tse-best-paper-award.png" height="25px"> <br/> 
+[IEEE Transactions on Software Engineering](https://www.computer.org/web/tse) , To appear. <img src="image/cup.png" height="20px"/> <img src="image/tse-best-paper-award.png" height="28px"> <br/> 
 Download: [[PDF](https://cspengxin.github.io/publications/tse19-msdebugging.pdf)] 
 
 <br/>
