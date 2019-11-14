@@ -10,26 +10,61 @@ The project is a train ticket booking system based on microservice architecture 
 
 You can get more details at [Wiki Pages](https://github.com/FudanSELab/train-ticket/wiki).
 
+## Service Architecture Graph
+![architecture](./image/2.png)
+
 ## Quick Start
+
+### Using Docker Compose
 The easiest way to get start with the Train Ticket application is by using [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
 
 > If you don't have Docker and Docker Compose installed, you can refer to [the Docker website](https://www.docker.com/) to install them.
 
-### Presequisite
+#### Presequisite
 * Docker
 * Docker Compose
 
-### 1. Clone the Repository
-```
+#### 1. Clone the Repository
+```bash
 git clone https://github.com/FudanSELab/train-ticket.git
 cd train-ticket/
 ```
 
-### 2. Start the Application
-```
+#### 2. Start the Application
+```bash
 docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-compose.yml up
 ```
 Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
+
+### Using Kubernetes
+Here is the way to deploy the Train Ticket onto any existing Kubernetes cluster.
+
+#### Presequisite
+* An existing Kubernetes cluster
+
+#### 1. Clone the Repository
+```bash
+git clone https://github.com/FudanSELab/train-ticket.git
+cd train-ticket/
+```
+
+#### 2. Deploy the application
+```bash
+cd deployment/quickstart-k8s-deployment-v0.0.2/
+
+# Deploy the database
+kubectl apply -f quickstart-ts-deployment-part1.yml
+# Deploy the services
+kubectl apply -f quickstart-ts-deployment-part2.yml
+# Deploy the UI Dashboard
+kubectl apply -f quickstart-ts-deployment-part3.yml
+```
+Run `kubectl get pods` to see pods are in a Ready state, then you can visit the Train Ticket web page at [http://[Node-IP]:32677](http://[Node-IP]:32677).
+
+## Build From Source
+In the above, We use pre-built images to quickly deploy the application.
+
+If you want to build the application from source, you can refer to [the Installation Guide](https://github.com/FudanSELab/train-ticket/wiki/Installation-Guide).
 
 ## Screenshot
 ![screenshot](./image/main_interface.png)
@@ -76,5 +111,4 @@ In Proceedings of the 40th International Conference on Software Engineering ([IC
 Download: [[PDF](https://cspengxin.github.io/publications/icse18poster-microservices.pdf)] [[BibTeX](https://dblp.uni-trier.de/rec/bibtex/conf/icse/ZhouPX0XJZ18)] 
 
 
-## Architecture Graph
-![architecture](./image/2.png)
+
