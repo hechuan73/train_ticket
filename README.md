@@ -27,9 +27,13 @@ cd train-ticket/
 
 ### 2. Start the Application
 ```
-docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-compose.yml up -d
+docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-compose.yml up
 ```
-Once the command finishes, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
+Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
+
+## Screenshot
+![screenshot](./image/main_interface.png)
+In order to know how to use the application, you can refer to [the User Guide](https://github.com/FudanSELab/train-ticket/wiki/User-Guide).
 
 ## Communication
 
