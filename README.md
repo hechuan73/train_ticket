@@ -37,7 +37,7 @@ docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-
 Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
 
 ### Using Kubernetes
-Here is the way to deploy the Train Ticket onto any existing Kubernetes cluster.
+Here is the steps to deploy the Train Ticket onto any existing Kubernetes cluster.
 
 #### Presequisite
 * An existing Kubernetes cluster
@@ -59,7 +59,11 @@ kubectl apply -f quickstart-ts-deployment-part2.yml
 # Deploy the UI Dashboard
 kubectl apply -f quickstart-ts-deployment-part3.yml
 ```
-Run `kubectl get pods` to see pods are in a Ready state, then you can visit the Train Ticket web page at [http://[Node-IP]:32677](http://[Node-IP]:32677).
+
+#### 3. Run `kubectl get pods` to see pods are in a ready state
+
+#### 4. Visit the Train Ticket web page at [http://[Node-IP]:32677](http://[Node-IP]:32677).
+
 
 ## Build From Source
 In the above, We use pre-built images to quickly deploy the application.
