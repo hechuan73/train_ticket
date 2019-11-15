@@ -14,6 +14,7 @@ You can get more details at [Wiki Pages](https://github.com/FudanSELab/train-tic
 ![architecture](./image/2.png)
 
 ## Quick Start
+We provide two options to quickly deploy our application: [Using Docker Compose](#Using-Docker-Compose) and [Using Kubernetes](#Using-Kubernetes).
 
 ### Using Docker Compose
 The easiest way to get start with the Train Ticket application is by using [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/).
