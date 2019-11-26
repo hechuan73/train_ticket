@@ -30,7 +30,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("springboot利用swagger构建api文档")
                 .description("简单优雅的restful风格")
-                .termsOfServiceUrl("http://blog.csdn.net/saytime")
+                .termsOfServiceUrl("https://github.com/FudanSELab/train-ticket")
                 .version("1.0")
                 .build();
     }
