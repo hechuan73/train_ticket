@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import route.entity.RouteInfo;
 import route.service.RouteService;
 
+/**
+ * @author fdse
+ */
 @Component
 public class InitData implements CommandLineRunner {
 
