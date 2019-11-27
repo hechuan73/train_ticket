@@ -19,7 +19,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/routeservice")
 public class RouteController {
-    private static final Logger logger = LoggerFactory.getLogger(RouteController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteController.class);
     @Autowired
     private RouteService routeService;
 
@@ -30,19 +30,19 @@ public class RouteController {
 
     @PostMapping(path = "/routes")
     public ResponseEntity<Response> createAndModifyRoute(@RequestBody RouteInfo createAndModifyRouteInfo, @RequestHeader HttpHeaders headers) {
-        logger.info("Create Route id: {}", createAndModifyRouteInfo.getId());
+        RouteController.LOGGER.info("Create Route id: {}", createAndModifyRouteInfo.getId());
         return ok(routeService.createAndModify(createAndModifyRouteInfo, headers));
     }
 
     @DeleteMapping(path = "/routes/{routeId}")
     public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        logger.info("Route id: {}", routeId);
+        RouteController.LOGGER.info("Route id: {}", routeId);
         return ok(routeService.deleteRoute(routeId, headers));
     }
 
     @GetMapping(path = "/routes/{routeId}")
     public HttpEntity queryById(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        logger.info("Route id: {}", routeId);
+        RouteController.LOGGER.info("Route id: {}", routeId);
         return ok(routeService.getRouteById(routeId, headers));
     }
 
@@ -55,7 +55,7 @@ public class RouteController {
     public HttpEntity queryByStartAndTerminal(@PathVariable String startId,
                                               @PathVariable String terminalId,
                                               @RequestHeader HttpHeaders headers) {
-        logger.info("startId : {}, terminalId: {}", startId, terminalId);
+        RouteController.LOGGER.info("startId : {}, terminalId: {}", startId, terminalId);
         return ok(routeService.getRouteByStartAndTerminal(startId, terminalId, headers));
     }
 
