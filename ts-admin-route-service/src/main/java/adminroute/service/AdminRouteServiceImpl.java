@@ -31,7 +31,8 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        return re.getBody();
+        Response result = re.getBody();
+        return result;
 
     }
 
@@ -57,7 +58,8 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
-        return re.getBody();
+        Response result = re.getBody();
+        return result;
 
     }
 }
