@@ -1,5 +1,8 @@
 package plan.entity;
 
+/**
+ * @author fdse
+ */
 public class TripAllDetail {
 
     private boolean status;

@@ -2,7 +2,9 @@ package plan.entity;
 
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 public class TripResponse {
 
     private TripId tripId;

@@ -2,6 +2,9 @@ package plan.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class TripInfo {
 
     private String startingPlace;
