@@ -3,6 +3,9 @@ package fdse.microservice.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 
+/**
+ * @author fdse
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 

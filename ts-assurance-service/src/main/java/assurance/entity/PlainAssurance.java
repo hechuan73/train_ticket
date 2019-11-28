@@ -4,6 +4,9 @@ package assurance.entity;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public class PlainAssurance implements Serializable {
 
     private UUID id;

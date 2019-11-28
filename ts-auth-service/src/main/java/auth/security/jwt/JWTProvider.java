@@ -11,12 +11,15 @@ import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 @Component
 public class JWTProvider {
 
     private String secretKey = "secret";
 
-    private long validityInMilliseconds = 3600000;  // 1 h
+    private long validityInMilliseconds = 3600000;
 
     @PostConstruct
     protected void init() {

@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Component
 public class InitUser implements CommandLineRunner {
 

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 
+/**
+ * @author fdse
+ */
 @Component("userDetailServiceImpl")
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {

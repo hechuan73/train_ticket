@@ -2,6 +2,9 @@ package fdse.microservice.entity;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public class PriceConfig {
 
     private UUID id;

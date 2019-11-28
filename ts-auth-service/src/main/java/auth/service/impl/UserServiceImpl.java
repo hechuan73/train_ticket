@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -77,9 +80,10 @@ public class UserServiceImpl implements UserService {
             infos.add(MessageFormat.format(InfoConstant.PROPERTIES_CANNOT_BE_EMPTY_1, InfoConstant.USERNAME));
         }
 
+        int passwordMaxLength = 6;
         if (null == user.getPassword()) {
             infos.add(MessageFormat.format(InfoConstant.PROPERTIES_CANNOT_BE_EMPTY_1, InfoConstant.PASSWORD));
-        } else if (user.getPassword().length() < 6) {
+        } else if (user.getPassword().length() < passwordMaxLength) {
             infos.add(MessageFormat.format(InfoConstant.PASSWORD_LEAST_CHAR_1, 6));
         }
 

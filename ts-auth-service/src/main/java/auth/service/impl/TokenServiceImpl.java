@@ -24,6 +24,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class TokenServiceImpl implements TokenService {
@@ -55,7 +58,9 @@ public class TokenServiceImpl implements TokenService {
                     requestEntity,
                     Boolean.class);
             boolean id = re.getBody();
-            if (!id) { // failed code
+
+            // failed code
+            if (!id) {
                 return new Response<>(0, "Verification failed.", null);
             }
         }

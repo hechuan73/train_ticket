@@ -1,6 +1,8 @@
 package fdse.microservice.entity;
 
-
+/**
+ * @author fdse
+ */
 public class TrainType {
 
     private String id;

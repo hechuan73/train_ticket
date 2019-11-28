@@ -4,6 +4,8 @@ import edu.fudan.common.util.JsonUtils;
 import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +16,17 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class BasicServiceImpl implements BasicService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicServiceImpl.class);
 
     @Override
     public Response queryForTravel(Travel info, HttpHeaders headers) {
@@ -39,7 +46,7 @@ public class BasicServiceImpl implements BasicService {
 
         TrainType trainType = queryTrainType(info.getTrip().getTrainTypeId(), headers);
         if (trainType == null) {
-            System.out.println("traintype doesn't exist");
+            BasicServiceImpl.LOGGER.info("traintype doesn't exist");
             result.setStatus(false);
             response.setStatus(0);
             response.setMsg("Train type doesn't exist");
@@ -83,7 +90,7 @@ public class BasicServiceImpl implements BasicService {
 
     @Override
     public Response queryForStationId(String stationName, HttpHeaders headers) {
-        System.out.println("[Basic Information Service][Query For Station Id] Station Id:" + stationName);
+        BasicServiceImpl.LOGGER.info("[Basic Information Service][Query For Station Id] Station Id: {}", stationName);
         HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
@@ -95,7 +102,7 @@ public class BasicServiceImpl implements BasicService {
     }
 
     public boolean checkStationExists(String stationName, HttpHeaders headers) {
-        System.out.println("[Basic Information Service][Check Station Exists] Station Name:" + stationName);
+        BasicServiceImpl.LOGGER.info("[Basic Information Service][Check Station Exists] Station Name: {}", stationName);
         HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
@@ -103,13 +110,14 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response exist = re.getBody();
-       if (exist.getStatus() ==1)
-            return true;
+       if (exist.getStatus() ==1) {
+           return true;
+       }
         return false;
     }
 
     public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {
-        System.out.println("[Basic Information Service][Query Train Type] Train Type:" + trainTypeId);
+        BasicServiceImpl.LOGGER.info("[Basic Information Service][Query Train Type] Train Type: {}", trainTypeId);
         HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
@@ -122,7 +130,7 @@ public class BasicServiceImpl implements BasicService {
     }
 
     private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
-        System.out.println("[Basic Information Service][Get Route By Id] Route ID：" + routeId);
+        BasicServiceImpl.LOGGER.info("[Basic Information Service][Get Route By Id] Route ID：{}", routeId);
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
@@ -131,18 +139,16 @@ public class BasicServiceImpl implements BasicService {
                 Response.class);
         Response result = re.getBody();
         if ( result.getStatus() == 0) {
-            System.out.println("[Basic Information Service][Get Route By Id] Fail." + result.getMsg());
+            BasicServiceImpl.LOGGER.info("[Basic Information Service][Get Route By Id] Fail. {}", result.getMsg());
             return null;
         } else {
-            System.out.println("[Basic Information Service][Get Route By Id] Success.");
+            BasicServiceImpl.LOGGER.info("[Basic Information Service][Get Route By Id] Success.");
             return JsonUtils.conveterObject(result.getData(), Route.class);
         }
     }
 
     private PriceConfig queryPriceConfigByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
-        System.out.println("[Basic Information Service][Query For Price Config] RouteId:"
-                + routeId + "TrainType:" + trainType);
-
+        BasicServiceImpl.LOGGER.info("[Basic Information Service][Query For Price Config] RouteId: {} ,TrainType: {}", routeId, trainType);
         HttpEntity requestEntity = new HttpEntity(null, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-price-service:16579/api/v1/priceservice/prices/" + routeId + "/" + trainType,
@@ -151,7 +157,7 @@ public class BasicServiceImpl implements BasicService {
                 Response.class);
         Response result = re.getBody();
 
-        System.out.println("Response Resutl to String " + result.toString());
+        BasicServiceImpl.LOGGER.info("Response Resutl to String {}", result.toString());
         return  JsonUtils.conveterObject(result.getData(), PriceConfig.class);
     }
 

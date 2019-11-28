@@ -5,13 +5,13 @@ import fdse.microservice.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
- * Created by Chenjie Xu on 2017/6/6.
+ * @author Chenjie
+ * @date 2017/6/6.
  */
 @RestController
 @RequestMapping("/api/v1/basicservice")

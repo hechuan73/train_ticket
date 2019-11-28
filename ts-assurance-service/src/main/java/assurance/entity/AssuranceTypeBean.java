@@ -2,13 +2,24 @@ package assurance.entity;
 
 import java.io.Serializable;
 
+/**
+ * @author fdse
+ */
 public class AssuranceTypeBean implements Serializable{
 
-    //index of assurance type
+    /**
+     * index of assurance type
+     */
     private  int index;
-    //the assurance type name
+
+    /**
+     * the assurance type name
+     */
     private String name;
-    //the price of this type of assurence
+
+    /**
+     * the price of this type of assurence
+     */
     private double price;
 
     public int getIndex() {

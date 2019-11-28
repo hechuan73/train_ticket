@@ -1,9 +1,7 @@
 package auth.controller;
 
 
-import auth.dto.AuthDto;
 import auth.dto.BasicAuthDto;
-import auth.dto.TokenDto;
 import auth.entity.User;
 import auth.service.TokenService;
 import auth.service.UserService;
@@ -11,13 +9,15 @@ import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {

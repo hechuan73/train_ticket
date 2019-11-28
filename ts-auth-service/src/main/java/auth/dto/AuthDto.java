@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 /***
  *  user-service register user , then send to auth-service
+ *
+ *  @author fdse
  */
 @Data
 @NoArgsConstructor

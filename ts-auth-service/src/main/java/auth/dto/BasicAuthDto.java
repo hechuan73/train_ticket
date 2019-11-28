@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 /**
  * user login dto
+ *
+ * @author fdse
  */
 @Data
 @Builder

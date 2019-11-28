@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Repository
 public interface AssuranceRepository  extends MongoRepository<Assurance, String> {
 
@@ -19,5 +22,6 @@ public interface AssuranceRepository  extends MongoRepository<Assurance, String>
 
     void removeAssuranceByOrderId(UUID orderId);
 
+    @Override
     ArrayList<Assurance> findAll();
 }

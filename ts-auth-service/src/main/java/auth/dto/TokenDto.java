@@ -10,6 +10,8 @@ import java.util.UUID;
 
 /**
  * create token and back to user
+ *
+ * @author fdse
  */
 @Data
 @Builder

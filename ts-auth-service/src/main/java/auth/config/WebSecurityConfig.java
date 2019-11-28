@@ -24,6 +24,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import static org.springframework.web.cors.CorsConfiguration.ALL;
 
+/**
+ * @author fdse
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -62,7 +65,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-    // load password encoder
+    /**
+     * load password encoder
+     *
+     * @return PasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

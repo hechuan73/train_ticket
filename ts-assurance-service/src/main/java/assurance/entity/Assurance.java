@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Document(collection = "assurance")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Assurance {
@@ -14,12 +17,16 @@ public class Assurance {
     @Id
     private UUID id;
 
+    /**
+     * which order the assurance is related to
+     */
     @NotNull
-    //which order the assurance is related to
     private UUID orderId;
 
+    /**
+     * the type of assurance
+     */
     @NotNull
-    //the type of assurance
     private AssuranceType type;
 
     public Assurance(){

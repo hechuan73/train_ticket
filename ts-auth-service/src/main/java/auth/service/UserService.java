@@ -8,6 +8,9 @@ import org.springframework.http.HttpHeaders;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public interface UserService {
 
     User saveUser(User user);

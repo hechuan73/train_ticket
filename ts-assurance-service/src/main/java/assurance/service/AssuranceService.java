@@ -1,12 +1,13 @@
 package assurance.service;
 
-import assurance.entity.*;
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
-import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public interface AssuranceService {
 
     Response findAssuranceById(UUID id, HttpHeaders headers);

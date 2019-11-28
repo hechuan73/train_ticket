@@ -3,6 +3,9 @@ package assurance.init;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author fdse
+ */
 @Component
 public class InitData implements CommandLineRunner {
     @Override
