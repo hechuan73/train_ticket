@@ -9,11 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
@@ -82,7 +84,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
         return result;
     }
 
-    //////////////station////////////////////////////////////////////////
     @Override
     public Response getAllStations(HttpHeaders headers) {
 
@@ -110,7 +111,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/create",s, Boolean.class);
         return result;
     }
 
@@ -125,7 +125,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/delete",s, Boolean.class);
         return result;
 
     }
@@ -142,12 +141,10 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 Response.class);
         result = re.getBody();
 
-//            result = restTemplate.postForObject("http://ts-station-service:12345/station/update",s, Boolean.class);
         return result;
 
     }
 
-    //////////////train////////////////////////////////////////////////
     @Override
     public Response getAllTrains(HttpHeaders headers) {
 
@@ -174,7 +171,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/create",t, Boolean.class);
         return result;
 
     }
@@ -190,7 +186,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/delete",t, Boolean.class);
         return result;
     }
 
@@ -205,11 +200,9 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-//            result = restTemplate.postForObject("http://ts-train-service:14567/train/update",t, Boolean.class);
         return result;
     }
 
-    //////////////config////////////////////////////////////////////////
     @Override
     public Response getAllConfigs(HttpHeaders headers) {
 
@@ -234,7 +227,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/create",c, String.class);
         return re.getBody();
     }
 
@@ -247,8 +239,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
-
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/delete",ci, String.class);
         return re.getBody();
     }
 
@@ -262,11 +252,9 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-config-service:15679/config/update",c, String.class);
         return re.getBody();
     }
 
-    //////////////price////////////////////////////////////////////////
     @Override
     public Response getAllPrices(HttpHeaders headers) {
 
@@ -278,7 +266,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-//            result = restTemplate.getForObject("http://ts-price-service:16579/price/queryAll", GetAllPriceResult.class);
         System.out.println("[!!!!GetAllPriceResult] ");
         return re.getBody();
     }
@@ -292,7 +279,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/create",pi, ReturnSinglePriceConfigResult.class);
         return re.getBody();
 
     }
@@ -308,7 +294,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/delete",pi, Boolean.class);
         return re.getBody();
 
     }
@@ -321,7 +306,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-//            result = restTemplate.postForObject("http://ts-price-service:16579/price/update",pi, Boolean.class);
         return re.getBody();
     }
 }

@@ -6,6 +6,9 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @ToString
 @Data
 public class Contacts implements Serializable {

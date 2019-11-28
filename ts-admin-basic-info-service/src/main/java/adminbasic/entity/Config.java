@@ -1,5 +1,8 @@
 package adminbasic.entity;
 
+/**
+ * @author fdse
+ */
 public class Config {
 
     private String name;
@@ -11,7 +14,7 @@ public class Config {
 
 
     public Config() {
-
+        //Default Constructor
     }
     public void setName(String name) {
         this.name = name;

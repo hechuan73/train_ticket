@@ -1,7 +1,9 @@
 package adminbasic.entity;
 
 
-
+/**
+ * @author fdse
+ */
 public class TrainType {
 
     private String id;

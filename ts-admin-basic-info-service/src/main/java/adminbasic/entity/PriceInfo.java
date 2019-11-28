@@ -1,5 +1,8 @@
 package adminbasic.entity;
 
+/**
+ * @author fdse
+ */
 public class PriceInfo {
 
     private String id;
@@ -14,7 +17,7 @@ public class PriceInfo {
 
 
     public PriceInfo() {
-
+        //Default Constructor
     }
 
     public String getId() {

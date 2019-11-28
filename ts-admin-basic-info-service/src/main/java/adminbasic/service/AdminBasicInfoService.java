@@ -4,11 +4,12 @@ import adminbasic.entity.*;
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
-import javax.annotation.Resource;
 
+/**
+ * @author fdse
+ */
 public interface AdminBasicInfoService {
 
-    ////////////contact/////////////////////////////////////////
     Response getAllContacts(  HttpHeaders headers);
 
     Response addContact(  Contacts c, HttpHeaders headers);
@@ -17,7 +18,7 @@ public interface AdminBasicInfoService {
 
     Response modifyContact(Contacts mci, HttpHeaders headers);
 
-    ////////////////////////////station///////////////////////////////
+
     Response getAllStations(  HttpHeaders headers);
 
     Response addStation(Station s, HttpHeaders headers);
@@ -26,7 +27,7 @@ public interface AdminBasicInfoService {
 
     Response modifyStation(Station s, HttpHeaders headers);
 
-    ////////////////////////////train///////////////////////////////
+
     Response getAllTrains(  HttpHeaders headers);
 
     Response addTrain(TrainType t, HttpHeaders headers);
@@ -35,7 +36,7 @@ public interface AdminBasicInfoService {
 
     Response modifyTrain(TrainType t, HttpHeaders headers);
 
-    ////////////////////////////config///////////////////////////////
+
     Response getAllConfigs(  HttpHeaders headers);
 
     Response addConfig(Config c, HttpHeaders headers);
@@ -45,7 +46,7 @@ public interface AdminBasicInfoService {
 
     Response modifyConfig(Config c, HttpHeaders headers);
 
-    ////////////////////////////price///////////////////////////////
+
     Response getAllPrices(  HttpHeaders headers);
 
     Response addPrice(PriceInfo pi, HttpHeaders headers);
@@ -54,6 +55,5 @@ public interface AdminBasicInfoService {
 
     Response modifyPrice(PriceInfo pi, HttpHeaders headers);
 
-//    Contacts login(String name, String password);
 
 }

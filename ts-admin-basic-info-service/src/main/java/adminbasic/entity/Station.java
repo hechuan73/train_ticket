@@ -3,7 +3,9 @@ package adminbasic.entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * @author fdse
+ */
 public class Station {
 
     private String id;
