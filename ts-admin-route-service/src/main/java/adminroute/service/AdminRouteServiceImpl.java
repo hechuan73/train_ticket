@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class AdminRouteServiceImpl implements AdminRouteService {
@@ -28,8 +31,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response result = re.getBody();
-        return result;
+        return re.getBody();
 
     }
 
@@ -55,8 +57,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
-        Response result = re.getBody();
-        return result;
+        return re.getBody();
 
     }
 }

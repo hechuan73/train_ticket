@@ -1,5 +1,8 @@
 package adminroute.entity;
 
+/**
+ * @author fdse
+ */
 public class RouteInfo {
     private String loginId;
 

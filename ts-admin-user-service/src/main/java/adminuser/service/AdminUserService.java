@@ -4,6 +4,9 @@ import adminuser.dto.UserDto;
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
+/**
+ * @author fdse
+ */
 public interface AdminUserService {
     Response getAllUsers(HttpHeaders headers);
 

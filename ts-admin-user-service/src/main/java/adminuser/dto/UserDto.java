@@ -2,6 +2,9 @@ package adminuser.dto;
 
 import lombok.*;
 
+/**
+ * @author fdse
+ */
 @Data
 @Builder
 @AllArgsConstructor

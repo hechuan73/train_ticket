@@ -2,6 +2,9 @@ package admintravel.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class Trip {
 
     private TripId tripId;

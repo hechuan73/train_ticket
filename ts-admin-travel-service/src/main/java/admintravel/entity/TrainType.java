@@ -1,5 +1,8 @@
 package admintravel.entity;
 
+/**
+ * @author fdse
+ */
 public class TrainType {
 
     private String id;

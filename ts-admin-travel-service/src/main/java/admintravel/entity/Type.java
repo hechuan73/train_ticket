@@ -2,7 +2,9 @@ package admintravel.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public enum Type implements Serializable{
 
 

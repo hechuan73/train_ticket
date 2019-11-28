@@ -2,7 +2,9 @@ package adminroute.entity;
 
 import java.util.List;
 
-
+/**
+ * @author fdse
+ */
 public class Route {
 
 

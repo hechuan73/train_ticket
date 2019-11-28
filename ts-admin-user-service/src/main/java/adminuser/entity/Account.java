@@ -2,6 +2,9 @@ package adminuser.entity;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public class Account {
 
     private UUID id;

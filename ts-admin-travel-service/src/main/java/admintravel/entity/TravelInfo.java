@@ -3,7 +3,9 @@ package admintravel.entity;
 
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 public class TravelInfo {
     private String loginId;
 

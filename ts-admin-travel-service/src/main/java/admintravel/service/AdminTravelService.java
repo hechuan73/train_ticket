@@ -4,6 +4,9 @@ import admintravel.entity.TravelInfo;
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
+/**
+ * @author fdse
+ */
 public interface AdminTravelService {
     Response getAllTravels(  HttpHeaders headers);
 

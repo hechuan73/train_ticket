@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/adminuserservice/users")
 public class AdminUserController {

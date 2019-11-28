@@ -3,6 +3,8 @@ package admintravel.service;
 import admintravel.entity.AdminTrip;
 import admintravel.entity.TravelInfo;
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,18 +16,22 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 
+/**
+ * @author fdse
+ */
 @Service
 public class AdminTravelServiceImpl implements AdminTravelService {
 
     @Autowired
     private RestTemplate restTemplate;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminTravelServiceImpl.class);
 
     @Override
     public Response getAllTravels(HttpHeaders headers) {
         Response<ArrayList<AdminTrip>> result = new Response<ArrayList<AdminTrip>>();
         ArrayList<AdminTrip> trips = new ArrayList<AdminTrip>();
 
-        System.out.println("[Admin Travel Service][Get All Travels]");
+        AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/admin_trip",
@@ -37,10 +43,11 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         if (result.getStatus() == 1) {
             ArrayList<AdminTrip> adminTrips = result.getData();
-            System.out.println("[Admin Travel Service][Get Travel From ts-travel-service successfully!]");
+            AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get Travel From ts-travel-service successfully!]");
             trips.addAll(adminTrips);
-        } else
-            System.out.println("[Admin Travel Service][Get Travel From ts-travel-service fail!]");
+        } else {
+            AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get Travel From ts-travel-service fail!]");
+        }
 
         HttpEntity requestEntity2 = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re2 = restTemplate.exchange(
@@ -52,11 +59,12 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         result = re2.getBody();
 
         if (result.getStatus() == 1) {
-            System.out.println("[Admin Travel Service][Get Travel From ts-travel2-service successfully!]");
+            AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get Travel From ts-travel2-service successfully!]");
             ArrayList<AdminTrip> adminTrips = result.getData();
             trips.addAll(adminTrips);
-        } else
-            System.out.println("[Admin Travel Service][Get Travel From ts-travel2-service fail!]");
+        } else {
+            AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get Travel From ts-travel2-service fail!]");
+        }
         result.setData(trips);
 
         return result;
@@ -80,7 +88,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         resultResponse = re.getBody();
 
         if (resultResponse.getStatus() == 1) {
-            System.out.println("[Admin Travel Service][Admin add new travel]");
+            AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Admin add new travel]");
             return new Response<>(1, "[Admin Travel Service][Admin add new travel]", null);
         } else {
             return new Response<>(0, "Admin add new travel failed", null);
@@ -104,7 +112,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
                 requestEntity,
                 Response.class);
         result = re.getBody();
-        System.out.println("[Admin Travel Service][Admin update travel]");
+        AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Admin update travel]");
         return result;
     }
 

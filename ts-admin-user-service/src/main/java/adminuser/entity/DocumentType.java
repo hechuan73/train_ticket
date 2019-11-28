@@ -1,5 +1,8 @@
 package adminuser.entity;
 
+/**
+ * @author fdse
+ */
 public enum DocumentType {
 
     NONE      (0,"Null"),

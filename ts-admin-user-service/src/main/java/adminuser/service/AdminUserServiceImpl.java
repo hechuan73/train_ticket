@@ -4,6 +4,8 @@ import adminuser.dto.UserDto;
 import adminuser.entity.*;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,18 +18,22 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminUserServiceImpl.class);
     private static final String USER_SERVICE_IP_URI = "http://ts-user-service:12342/api/v1/userservice/users";
 
 
     @Override
     public Response getAllUsers(HttpHeaders headers) {
-        System.out.println("[Admin User Service][Get All Users]");
+        AdminUserServiceImpl.LOGGER.info("[Admin User Service][Get All Users]");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<List<User>>> re = restTemplate.exchange(
                 USER_SERVICE_IP_URI,
