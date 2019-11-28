@@ -1,5 +1,8 @@
 package adminorder.entity;
 
+/**
+ * @author fdse
+ */
 public enum SeatClass {
 
     NONE        (0,"NoSeat"),

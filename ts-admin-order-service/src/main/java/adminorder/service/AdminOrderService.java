@@ -4,8 +4,10 @@ import adminorder.entity.*;
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
-import java.awt.image.RescaleOp;
 
+/**
+ * @author fdse
+ */
 public interface AdminOrderService {
     Response getAllOrders(HttpHeaders headers);
 
