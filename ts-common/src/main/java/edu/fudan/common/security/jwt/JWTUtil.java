@@ -1,6 +1,5 @@
 package edu.fudan.common.security.jwt;
 
-
 import edu.fudan.common.exception.TokenException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author fdse
+ */
 @Slf4j
 public class JWTUtil {
 
@@ -95,20 +97,20 @@ public class JWTUtil {
             }
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("Token已过期: {} " + e);
-            throw new TokenException("Token已过期");
+            log.error("Token expired: {} " + e);
+            throw new TokenException("Token expired");
         } catch (UnsupportedJwtException e) {
-            log.error("Token格式错误: {} " + e);
-            throw new TokenException("Token格式错误");
+            log.error("Token format error: {} " + e);
+            throw new TokenException("Token format error");
         } catch (MalformedJwtException e) {
-            log.error("Token没有被正确构造: {} " + e);
-            throw new TokenException("Token没有被正确构造");
+            log.error("Token is not properly constructed: {} " + e);
+            throw new TokenException("Token is not properly constructed");
         } catch (SignatureException e) {
-            log.error("签名失败: {} " + e);
-            throw new TokenException("签名失败");
+            log.error("Signature failure: {} " + e);
+            throw new TokenException("Signature failure");
         } catch (IllegalArgumentException e) {
-            log.error("非法参数异常: {} " + e);
-            throw new TokenException("非法参数异常");
+            log.error("Illegal parameter exception: {} " + e);
+            throw new TokenException("Illegal parameter exception");
         }
     }
 

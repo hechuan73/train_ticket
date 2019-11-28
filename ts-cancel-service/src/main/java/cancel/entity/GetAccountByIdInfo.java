@@ -1,5 +1,8 @@
 package cancel.entity;
 
+/**
+ * @author fdse
+ */
 public class GetAccountByIdInfo {
 
     private String accountId;

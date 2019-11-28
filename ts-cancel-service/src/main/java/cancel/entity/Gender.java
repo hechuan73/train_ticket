@@ -1,5 +1,8 @@
 package cancel.entity;
 
+/**
+ * @author fdse
+ */
 public enum Gender {
 
     NONE   (0, "Null"),

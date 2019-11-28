@@ -5,12 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * @author fdse
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class Response<T> {
-    Integer status; // 1 true, 0 false
+
+    /**
+     * 1 true, 0 false
+     */
+    Integer status;
+
     String msg;
     T data;
 }

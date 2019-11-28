@@ -1,11 +1,13 @@
 package edu.fudan.common.util;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author fdse
+ */
 public class JsonUtils {
 
     /**

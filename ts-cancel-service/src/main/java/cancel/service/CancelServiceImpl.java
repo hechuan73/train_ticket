@@ -2,6 +2,8 @@ package cancel.service;
 
 import cancel.entity.*;
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,18 +17,23 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 @Service
 public class CancelServiceImpl implements CancelService {
 
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
+
     @Override
     public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) throws Exception {
 
         Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
         if (orderResult.getStatus() == 1) {
-            System.out.println("[Cancel Order Service][Cancel Order] Order found G|H");
+            CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order found G|H");
             Order order =  orderResult.getData();
             if (order.getStatus() == OrderStatus.NOTPAID.getCode()
                     || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
@@ -37,12 +44,12 @@ public class CancelServiceImpl implements CancelService {
                 // 0 -- not find order   1 - cancel success
                 if (changeOrderResult.getStatus() == 1) {
 
-                    System.out.println("[Cancel Order Service][Cancel Order] Success.");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Success.");
                     //Draw back money
                     String money = calculateRefund(order);
                     boolean status = drawbackMoney(money, loginId, headers);
                     if (status) {
-                        System.out.println("[Cancel Order Service][Draw Back Money] Success.");
+                        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Success.");
 
 
                         // todo
@@ -65,61 +72,61 @@ public class CancelServiceImpl implements CancelService {
                         sendEmail(notifyInfo, headers);
 
                     } else {
-                        System.out.println("[Cancel Order Service][Draw Back Money] Fail.");
+                        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Fail.");
                     }
                     return new Response<>(1, "Success.", null);
                 } else {
-                    System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMsg());
+                    CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Fail.Reason: {}", changeOrderResult.getMsg());
                     return new Response<>(0, changeOrderResult.getMsg(), null);
                 }
 
             } else {
-                System.out.println("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
+                CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
                 return new Response<>(0, "Order Status Cancel Not Permitted", null);
             }
         } else {
 
             Response<Order> orderOtherResult = getOrderByIdFromOrderOther(orderId, headers);
             if (orderOtherResult.getStatus() == 1) {
-                System.out.println("[Cancel Order Service][Cancel Order] Order found Z|K|Other");
+                CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order found Z|K|Other");
 
                 Order order =   orderOtherResult.getData();
                 if (order.getStatus() == OrderStatus.NOTPAID.getCode()
                         || order.getStatus() == OrderStatus.PAID.getCode() || order.getStatus() == OrderStatus.CHANGE.getCode()) {
 
-                    System.out.println("[Cancel Order Service][Cancel Order] Order status ok");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order status ok");
 
                     order.setStatus(OrderStatus.CANCEL.getCode());
                     Response changeOrderResult = cancelFromOtherOrder(order, headers);
 
                     if (changeOrderResult.getStatus() == 1) {
-                        System.out.println("[Cancel Order Service][Cancel Order] Success.");
+                        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Success.");
                         //Draw back money
                         String money = calculateRefund(order);
                         boolean status = drawbackMoney(money, loginId, headers);
                         if (status) {
-                            System.out.println("[Cancel Order Service][Draw Back Money] Success.");
+                            CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Success.");
                         } else {
-                            System.out.println("[Cancel Order Service][Draw Back Money] Fail.");
+                            CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Fail.");
                         }
                         return new Response<>(1, "Success.", null);
                     } else {
-                        System.out.println("[Cancel Order Service][Cancel Order] Fail.Reason:" + changeOrderResult.getMsg());
+                        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Fail.Reason: {}", changeOrderResult.getMsg());
                         return new Response<>(0, "Fail.Reason:" + changeOrderResult.getMsg(), null);
                     }
                 } else {
-                    System.out.println("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
                     return new Response<>(0, "Order Status Cancel Not Permitted", null);
                 }
             } else {
-                System.out.println("[Cancel Order Service][Cancel Order] Order Not Found.");
+                CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Not Found.");
                 return new Response<>(0, "Order Not Found.", null);
             }
         }
     }
 
     public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Send Email]");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Send Email]");
         HttpEntity requestEntity = new HttpEntity(notifyInfo, headers);
         ResponseEntity<Boolean> re = restTemplate.exchange(
                 "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
@@ -139,14 +146,14 @@ public class CancelServiceImpl implements CancelService {
             if (order.getStatus() == OrderStatus.NOTPAID.getCode()
                     || order.getStatus() == OrderStatus.PAID.getCode()) {
                 if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
-                    System.out.println("[Cancel Order][Refund Price] From Order Service.Not Paid.");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Service.Not Paid.");
                     return new Response<>(1, "Success. Refoud 0", 0);
                 } else {
-                    System.out.println("[Cancel Order][Refund Price] From Order Service.Paid.");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Service.Paid.");
                     return new Response<>(1, "Success. ", calculateRefund(order));
                 }
             } else {
-                System.out.println("[Cancel Order][Refund Price] Order. Cancel Not Permitted.");
+                CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] Order. Cancel Not Permitted.");
                 return new Response<>(0, "Order Status Cancel Not Permitted, Refound error", null);
             }
         } else {
@@ -157,18 +164,18 @@ public class CancelServiceImpl implements CancelService {
                 if (order.getStatus() == OrderStatus.NOTPAID.getCode()
                         || order.getStatus() == OrderStatus.PAID.getCode()) {
                     if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
-                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Not Paid.");
+                        CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Other Service.Not Paid.");
                         return new Response<>(1, "Success, Refound 0", 0);
                     } else {
-                        System.out.println("[Cancel Order][Refund Price] From Order Other Service.Paid.");
+                        CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Other Service.Paid.");
                         return new Response<>(1, "Success", calculateRefund(order));
                     }
                 } else {
-                    System.out.println("[Cancel Order][Refund Price] Order Other. Cancel Not Permitted.");
+                    CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] Order Other. Cancel Not Permitted.");
                     return new Response<>(0, "Order Status Cancel Not Permitted", null);
                 }
             } else {
-                System.out.println("[Cancel Order][Refund Price] Order not found.");
+                CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] Order not found.");
                 return new Response<>(0, "Order Not Found", null);
             }
         }
@@ -178,7 +185,7 @@ public class CancelServiceImpl implements CancelService {
         if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
             return "0.00";
         }
-        System.out.println("[Cancel Order] Order Travel Date:" + order.getTravelDate().toString());
+        CancelServiceImpl.LOGGER.info("[Cancel Order] Order Travel Date: {}", order.getTravelDate().toString());
         Date nowDate = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.getTravelDate());
@@ -196,24 +203,24 @@ public class CancelServiceImpl implements CancelService {
                 hour,
                 minute,
                 second);
-        System.out.println("[Cancel Order] nowDate  :" + nowDate.toString());
-        System.out.println("[Cancel Order] startTime:" + startTime.toString());
+        CancelServiceImpl.LOGGER.info("[Cancel Order] nowDate  : {}", nowDate.toString());
+        CancelServiceImpl.LOGGER.info("[Cancel Order] startTime: {}", startTime.toString());
         if (nowDate.after(startTime)) {
-            System.out.println("[Cancel Order] Ticket expire refund 0");
+            CancelServiceImpl.LOGGER.info("[Cancel Order] Ticket expire refund 0");
             return "0";
         } else {
             double totalPrice = Double.parseDouble(order.getPrice());
             double price = totalPrice * 0.8;
             DecimalFormat priceFormat = new java.text.DecimalFormat("0.00");
             String str = priceFormat.format(price);
-            System.out.println("[Cancel Order]calculate refund - " + str);
+            CancelServiceImpl.LOGGER.info("[Cancel Order]calculate refund - {}", str);
             return str;
         }
     }
 
 
     private Response cancelFromOrder(Order order, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Change Order Status] Changing....");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Change Order Status] Changing....");
 
         HttpEntity requestEntity = new HttpEntity(order, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -227,7 +234,7 @@ public class CancelServiceImpl implements CancelService {
     }
 
     private Response cancelFromOtherOrder(Order info, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Change Order Status] Changing....");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Change Order Status] Changing....");
         HttpEntity requestEntity = new HttpEntity(info, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
@@ -240,7 +247,7 @@ public class CancelServiceImpl implements CancelService {
     }
 
     public boolean drawbackMoney(String money, String userId, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Draw Back Money] Draw back money...");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Draw back money...");
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -258,7 +265,7 @@ public class CancelServiceImpl implements CancelService {
     }
 
     public Response<User> getAccount(String orderId, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Get By Id]");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Get By Id]");
         HttpEntity requestEntity = new HttpEntity( headers);
         ResponseEntity<Response<User>> re = restTemplate.exchange(
                 "http://ts-user-service:12342/api/v1/userservice/users/id/" + orderId,
@@ -271,7 +278,7 @@ public class CancelServiceImpl implements CancelService {
     }
 
     private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Get Order] Getting....");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
@@ -284,7 +291,7 @@ public class CancelServiceImpl implements CancelService {
     }
 
     private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
-        System.out.println("[Cancel Order Service][Get Order] Getting....");
+        CancelServiceImpl.LOGGER.info("[Cancel Order Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(  headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,

@@ -1,5 +1,8 @@
 package cancel.entity;
 
+/**
+ * @author fdse
+ */
 public enum OrderStatus {
 
     NOTPAID   (0,"Not Paid"),
