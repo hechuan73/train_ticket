@@ -73,7 +73,10 @@ public class BasicServiceImpl implements BasicService {
         try {
             int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
 
-            double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();//需要price Rate和距离（起始站）
+            /**
+             * We need the price Rate and distance (starting station).
+             */
+            double priceForEconomyClass = distance * priceConfig.getBasicPriceRate();
             double priceForConfortClass = distance * priceConfig.getFirstClassPriceRate();
             prices.put("economyClass", "" + priceForEconomyClass);
             prices.put("confortClass", "" + priceForConfortClass);

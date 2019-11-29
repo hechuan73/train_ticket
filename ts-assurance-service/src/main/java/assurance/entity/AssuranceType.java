@@ -7,6 +7,9 @@ import java.io.Serializable;
  */
 public enum AssuranceType implements Serializable {
 
+    /**
+     * Traffic Accident Assurance
+     */
     TRAFFIC_ACCIDENT(1, "Traffic Accident Assurance", 3.0);
 
     /**

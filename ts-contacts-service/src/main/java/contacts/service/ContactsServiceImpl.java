@@ -3,25 +3,28 @@ package contacts.service;
 import contacts.entity.*;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import contacts.repository.ContactsRepository;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class ContactsServiceImpl implements ContactsService {
 
     @Autowired
     private ContactsRepository contactsRepository;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactsServiceImpl.class);
 
     @Override
     public Response findContactsById(UUID id, HttpHeaders headers) {
@@ -37,8 +40,8 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     public Response findContactsByAccountId(UUID accountId, HttpHeaders headers) {
         ArrayList<Contacts> arr = contactsRepository.findByAccountId(accountId);
-        System.out.println("[Contacts-Query-Service][Query-Contacts] Result Size:" + arr.size());
-        if (arr != null && arr.size() > 0) {
+        ContactsServiceImpl.LOGGER.info("[Contacts-Query-Service][Query-Contacts] Result Size: {}", arr.size());
+        if (arr != null && !arr.isEmpty()) {
             return new Response<>(1, "Success", arr);
         } else {
             return new Response<>(0, "No contacts according to accountId", accountId);
@@ -49,7 +52,7 @@ public class ContactsServiceImpl implements ContactsService {
     public Response createContacts(Contacts contacts, HttpHeaders headers) {
         Contacts contactsTemp = contactsRepository.findById(contacts.getId());
         if (contactsTemp != null) {
-            System.out.println("[Contacts Service][Init Contacts] Already Exists Id:" + contacts.getId());
+            ContactsServiceImpl.LOGGER.info("[Contacts Service][Init Contacts] Already Exists Id: {}", contacts.getId());
             return new Response<>(0, "Already Exists", contactsTemp);
         } else {
             contactsRepository.save(contacts);
@@ -70,11 +73,11 @@ public class ContactsServiceImpl implements ContactsService {
         ArrayList<Contacts> accountContacts = contactsRepository.findByAccountId(addContacts.getAccountId());
 
         if (accountContacts.contains(contacts)) {
-            System.out.println("[Contacts-Add&Delete-Service][AddContacts] Fail.Contacts already exists");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Add&Delete-Service][AddContacts] Fail.Contacts already exists");
             return new Response<>(0, "Contacts already exists", null);
         } else {
             contactsRepository.save(contacts);
-            System.out.println("[Contacts-Add&Delete-Service][AddContacts] Success.");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Add&Delete-Service][AddContacts] Success.");
             return new Response<>(1, "Create contacts success", contacts);
         }
     }
@@ -84,10 +87,10 @@ public class ContactsServiceImpl implements ContactsService {
         contactsRepository.deleteById(contactsId);
         Contacts contacts = contactsRepository.findById(contactsId);
         if (contacts == null) {
-            System.out.println("[Contacts-Add&Delete-Service][DeleteContacts] Success.");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Add&Delete-Service][DeleteContacts] Success.");
             return new Response<>(1, "Delete success", contactsId);
         } else {
-            System.out.println("[Contacts-Add&Delete-Service][DeleteContacts] Fail.Reason not clear.");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Add&Delete-Service][DeleteContacts] Fail.Reason not clear.");
             return new Response<>(0, "Delete failed", contactsId);
         }
     }
@@ -98,7 +101,7 @@ public class ContactsServiceImpl implements ContactsService {
         log.info(oldContactResponse.toString());
         Contacts oldContacts = (Contacts) oldContactResponse.getData();
         if (oldContacts == null) {
-            System.out.println("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");
             return new Response<>(0, "Contacts not found", oldContacts);
         } else {
             oldContacts.setName(contacts.getName());
@@ -106,7 +109,7 @@ public class ContactsServiceImpl implements ContactsService {
             oldContacts.setDocumentNumber(contacts.getDocumentNumber());
             oldContacts.setPhoneNumber(contacts.getPhoneNumber());
             contactsRepository.save(oldContacts);
-            System.out.println("[Contacts-Modify-Service][ModifyContacts] Success.");
+            ContactsServiceImpl.LOGGER.info("[Contacts-Modify-Service][ModifyContacts] Success.");
             return new Response<>(1, "Modify success", oldContacts);
         }
     }
@@ -114,7 +117,7 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     public Response getAllContacts(HttpHeaders headers) {
         ArrayList<Contacts> contacts = contactsRepository.findAll();
-        if (contacts != null && contacts.size() > 0) {
+        if (contacts != null && !contacts.isEmpty()) {
             return new Response<>(1, "Success", contacts);
         } else {
             return new Response<>(0, "No content", null);

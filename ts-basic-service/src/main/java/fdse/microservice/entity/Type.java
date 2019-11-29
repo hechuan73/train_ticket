@@ -6,7 +6,27 @@ import java.io.Serializable;
  * @author fdse
  */
 public enum Type implements Serializable{
-    G("G", 1), D("D", 2),Z("Z",3), T("T", 4), K("K", 5);
+
+    /**
+     * 1
+     */
+    G("G", 1),
+    /**
+     * 2
+     */
+    D("D", 2),
+    /**
+     * 3
+     */
+    Z("Z",3),
+    /**
+     * 4
+     */
+    T("T", 4),
+    /**
+     * 5
+     */
+    K("K", 5);
 
     private String name;
     private int index;

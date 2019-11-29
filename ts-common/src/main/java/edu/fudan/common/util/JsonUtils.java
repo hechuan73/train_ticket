@@ -12,7 +12,7 @@ public class JsonUtils {
 
     /**
      * <p>
-     * 对象转JSON字符串
+     * Object to JSON string
      * </p>
      */
     public static String object2Json(Object obj) {
@@ -35,7 +35,7 @@ public class JsonUtils {
 
     /**
      * <p>
-     * JSON字符串转Map对象
+     * JSON string to Map object
      * </p>
      */
     public static Map<?, ?> jsonToMap(String json) {
@@ -44,7 +44,7 @@ public class JsonUtils {
 
     /**
      * <p>
-     * JSON转Object对象
+     * JSON to Object
      * </p>
      */
     public static <T> T json2Object(String json, Class<T> cls) {

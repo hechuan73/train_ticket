@@ -19,7 +19,7 @@ public class ConsignPrice {
     private double beyondPrice;
 
     public ConsignPrice(){
-
+        //Default Constructor
     }
 
     public UUID getId() {
