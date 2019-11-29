@@ -2,6 +2,8 @@ package inside_payment.controller;
 
 import inside_payment.entity.*;
 import inside_payment.service.InsidePaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,12 +11,17 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/inside_pay_service")
 public class InsidePaymentController {
 
     @Autowired
     public InsidePaymentService service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InsidePaymentController.class);
 
     @GetMapping(path = "/welcome")
     public String home() {
@@ -23,7 +30,7 @@ public class InsidePaymentController {
 
     @PostMapping(value = "/inside_payment")
     public HttpEntity pay(@RequestBody PaymentInfo info, @RequestHeader HttpHeaders headers) {
-        System.out.println("[Inside Payment Service][Pay] Pay for:" + info.getOrderId());
+        InsidePaymentController.LOGGER.info("[Inside Payment Service][Pay] Pay for: {}", info.getOrderId());
         return ok(service.pay(info, headers));
     }
 
@@ -63,12 +70,4 @@ public class InsidePaymentController {
         return ok(service.queryAddMoney(headers));
     }
 
-//    @RequestMapping("/hello1_callback")
-//    public String hello1_callback(@RequestParam(value = "result", defaultValue = "satan") String cal_back, @RequestHeader HttpHeaders headers) {
-//
-//        System.out.println("Call Back Result:" + cal_back);
-//        System.out.println("-------------external call back-------------");
-//        return "-------call back end-------";
-//
-//    }
 }

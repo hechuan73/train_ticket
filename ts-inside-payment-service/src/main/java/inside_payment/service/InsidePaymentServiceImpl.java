@@ -4,7 +4,8 @@ import edu.fudan.common.util.Response;
 import inside_payment.entity.*;
 import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.*;
 
+/**
+ * @author fdse
+ */
 @Service
 public class InsidePaymentServiceImpl implements InsidePaymentService {
 
@@ -28,6 +32,8 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     @Autowired
     public RestTemplate restTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InsidePaymentServiceImpl.class);
 
     @Override
     public Response pay(PaymentInfo info, HttpHeaders headers) {
@@ -54,7 +60,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         if (result.getStatus() == 1) {
             Order order = result.getData();
             if (order.getStatus() != OrderStatus.NOTPAID.getCode()) {
-                System.out.println("[Inside Payment Service][Pay] Error. Order status Not allowed to Pay.");
+                InsidePaymentServiceImpl.LOGGER.info("[Inside Payment Service][Pay] Error. Order status Not allowed to Pay.");
                 return new Response<>(0, "Error. Order status Not allowed to Pay.", null);
             }
 
@@ -99,20 +105,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
                         Response.class);
                 Response outsidePaySuccess = reOutsidePaySuccess.getBody();
 
-//                boolean outsidePaySuccess = restTemplate.postForObject(
-//                        "http://ts-payment-service:19001/payment/pay", outsidePaymentInfo,Boolean.class);
-//                boolean outsidePaySuccess = false;
-//                try{
-//                    System.out.println("[Payment Service][Turn To Outside Patment] Async Task Begin");
-//                    Future<Boolean> task = asyncTask.sendAsyncCallToPaymentService(outsidePaymentInfo);
-//                    outsidePaySuccess = task.get(2000,TimeUnit.MILLISECONDS).booleanValue();
-//
-//                }catch (Exception e){
-//                    System.out.println("[Inside Payment][Turn to Outside Payment] Time Out.");
-//                    //e.printStackTrace();
-//                    return false;
-//                }
-                System.out.println("Out pay result: " +outsidePaySuccess.toString());
+                InsidePaymentServiceImpl.LOGGER.info("Out pay result: {}", outsidePaySuccess.toString());
                 if (outsidePaySuccess.getStatus() == 1) {
                     payment.setType(PaymentType.O);
                     paymentRepository.save(payment);
@@ -136,7 +129,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     @Override
     public Response createAccount(AccountInfo info, HttpHeaders headers) {
         List<Money> list = addMoneyRepository.findByUserId(info.getUserId());
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             Money addMoney = new Money();
             addMoney.setMoney(info.getMoney());
             addMoney.setUserId(info.getUserId());
@@ -227,10 +220,11 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     @Override
     public Response queryPayment(HttpHeaders headers) {
         List<Payment> payments = paymentRepository.findAll();
-        if (payments != null && payments.size() > 0)
+        if (payments != null && !payments.isEmpty()) {
             return new Response<>(1, "Query Payment Success", payments);
-        else
+        }else {
             return new Response<>(0, "Query Payment Failed", null);
+        }
     }
 
     @Override
@@ -308,7 +302,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
     @Override
     public Response queryAddMoney(HttpHeaders headers) {
         List<Money> monies = addMoneyRepository.findAll();
-        if (monies != null && monies.size() > 0) {
+        if (monies != null && !monies.isEmpty()) {
             return new Response<>(1, "Query Money Success", null);
         } else {
             return new Response<>(0, "", null);
@@ -317,7 +311,8 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     private Response setOrderStatus(String tripId, String orderId, HttpHeaders headers) {
 
-        int orderStatus = 1;//order paid and not collected
+        //order paid and not collected
+        int orderStatus = 1;
         Response result;
         if (tripId.startsWith("G") || tripId.startsWith("D")) {
 
@@ -348,13 +343,8 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         if (paymentTemp == null) {
             paymentRepository.save(payment);
         } else {
-            System.out.println("[Inside Payment Service][Init Payment] Already Exists:" + payment.getId());
+            InsidePaymentServiceImpl.LOGGER.info("[Inside Payment Service][Init Payment] Already Exists: {}", payment.getId());
         }
     }
 
-//    private boolean sendOrderCreateEmail(){
-//        result = restTemplate.postForObject(
-//                "http://ts-notification-service:12031/order/modifyOrderStatus", info, ModifyOrderStatusResult.class);
-//        return true;
-//    }
 }

@@ -1,7 +1,12 @@
 package inside_payment.entity;
 
+/**
+ * @author fdse
+ */
 public class OutsidePaymentInfo {
-    public OutsidePaymentInfo(){}
+    public OutsidePaymentInfo(){
+        //Default Constructor
+    }
 
     private String orderId;
     private String price;

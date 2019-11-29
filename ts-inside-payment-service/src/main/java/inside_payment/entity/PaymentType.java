@@ -2,9 +2,27 @@ package inside_payment.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public enum  PaymentType implements Serializable {
-    P("Payment",1), D("Difference",2),O("Outside Payment",3),E("Difference & Outside Payment",4);
+
+    /**
+     * payment
+     */
+    P("Payment",1),
+    /**
+     * difference
+     */
+    D("Difference",2),
+    /**
+     * outside payment
+     */
+    O("Outside Payment",3),
+    /**
+     * difference and outside payment
+     */
+    E("Difference & Outside Payment",4);
 
     private String name;
     private int index;

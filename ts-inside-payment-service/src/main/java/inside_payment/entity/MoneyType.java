@@ -2,9 +2,19 @@ package inside_payment.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public enum MoneyType implements Serializable {
-    A("Add Money",1),D("Draw Back Money",2);
+
+    /**
+     * add money
+     */
+    A("Add Money",1),
+    /**
+     * draw back money
+     */
+    D("Draw Back Money",2);
 
     private String name;
     private int index;

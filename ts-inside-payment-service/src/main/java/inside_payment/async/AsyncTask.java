@@ -10,7 +10,9 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-
+/**
+ * @author fdse
+ */
 @Component  
 public class AsyncTask {  
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());  
@@ -18,11 +20,13 @@ public class AsyncTask {
     @Autowired
 	private RestTemplate restTemplate;
 
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncTask.class);
+
     @Async("mySimpleAsync")
     public Future<Boolean> sendAsyncCallToPaymentService(OutsidePaymentInfo outsidePaymentInfo) throws InterruptedException{
-        System.out.println("[Inside Payment Service][Async Task] Begin.");
+        AsyncTask.LOG.info("[Inside Payment Service][Async Task] Begin.");
         Boolean value = restTemplate.getForObject("http://rest-service-external:16100/greet", Boolean.class);
-        System.out.println("[Inside Payment Service][Async Task] 收到直接返回调用Value:" + value);
+        AsyncTask.LOG.info("[Inside Payment Service][Async Task] Receive call Value directly back: {}", value);
         return new AsyncResult<>(value);
     }
     

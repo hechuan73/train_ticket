@@ -6,13 +6,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * @author fdse
+ */
 public class CookieUtil {
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
         Cookie cookie = new Cookie(name,value);
         cookie.setPath("/");
-        if(maxAge>0)  cookie.setMaxAge(maxAge);
+        if(maxAge>0) {
+            cookie.setMaxAge(maxAge);
+        }
         response.addCookie(cookie);
     }
 

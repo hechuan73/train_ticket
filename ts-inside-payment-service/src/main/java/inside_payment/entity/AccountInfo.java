@@ -1,13 +1,17 @@
 package inside_payment.entity;
 
-
+/**
+ * @author fdse
+ */
 public class AccountInfo {
 
     private String userId;
 
     private String money;
 
-    public AccountInfo(){}
+    public AccountInfo(){
+        //Default Constructor
+    }
 
     public String getUserId() {
         return userId;

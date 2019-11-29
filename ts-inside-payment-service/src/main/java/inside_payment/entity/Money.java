@@ -7,7 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-
+/**
+ * @author fdse
+ */
 @Document(collection="addMoney")
 public class Money {
 

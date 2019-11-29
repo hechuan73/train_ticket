@@ -3,7 +3,9 @@ package inside_payment.entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * @author fdse
+ */
 public class Balance {
     @Valid
     @NotNull
@@ -13,7 +15,9 @@ public class Balance {
     @NotNull
     private String balance;
 
-    public Balance(){}
+    public Balance(){
+        //Default Constructor
+    }
 
     public String getUserId() {
         return userId;

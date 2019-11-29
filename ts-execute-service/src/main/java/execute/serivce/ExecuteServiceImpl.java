@@ -2,6 +2,8 @@ package execute.serivce;
 
 import edu.fudan.common.util.Response;
 import execute.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -11,26 +13,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * @author fdse
+ */
 @Service
 public class ExecuteServiceImpl implements ExecuteService {
 
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteServiceImpl.class);
+
     @Override
     public Response ticketExecute(String orderId, HttpHeaders headers) {
-        //1.获取订单信息
+        //1.Get order information
 
         Response<Order> resultFromOrder = getOrderByIdFromOrder(orderId, headers);
-        //  TicketExecuteResult result = new TicketExecuteResult();
         Order order;
         if (resultFromOrder.getStatus() == 1) {
             order =   resultFromOrder.getData();
-            //2.检查订单是否可以进站
+            //2.Check if the order can come in
             if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
                 return new Response<>(0, "Order Status Wrong", null);
             }
-            //3.确认进站 请求修改订单信息
+            //3.Confirm inbound, request change order information
 
             Response resultExecute = executeOrder(orderId, OrderStatus.USED.getCode(), headers);
             if (resultExecute.getStatus() == 1) {
@@ -42,11 +48,11 @@ public class ExecuteServiceImpl implements ExecuteService {
             resultFromOrder = getOrderByIdFromOrderOther(orderId, headers);
             if (resultFromOrder.getStatus() == 1) {
                 order =   resultFromOrder.getData();
-                //2.检查订单是否可以进站
+                //2.Check if the order can come in
                 if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
                     return new Response<>(0, "Order Status Wrong", null);
                 }
-                //3.确认进站 请求修改订单信息
+                //3.Confirm inbound, request change order information
 
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.USED.getCode(), headers);
                 if (resultExecute.getStatus() == 1) {
@@ -62,18 +68,17 @@ public class ExecuteServiceImpl implements ExecuteService {
 
     @Override
     public Response ticketCollect(String orderId, HttpHeaders headers) {
-        //1.获取订单信息
+        //1.Get order information
 
         Response<Order> resultFromOrder = getOrderByIdFromOrder(orderId, headers);
-        // TicketExecuteResult result = new TicketExecuteResult();
         Order order;
         if (resultFromOrder.getStatus() == 1) {
             order =  resultFromOrder.getData();
-            //2.检查订单是否可以进站
+            //2.Check if the order can come in
             if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
                 return new Response<>(0, "Order Status Wrong", null);
             }
-            //3.确认进站 请求修改订单信息
+            //3.Confirm inbound, request change order information
 
             Response resultExecute = executeOrder(orderId, OrderStatus.COLLECTED.getCode(), headers);
             if (resultExecute.getStatus() == 1) {
@@ -85,11 +90,11 @@ public class ExecuteServiceImpl implements ExecuteService {
             resultFromOrder = getOrderByIdFromOrderOther(orderId, headers);
             if (resultFromOrder.getStatus() == 1) {
                 order = (Order) resultFromOrder.getData();
-                //2.检查订单是否可以进站
+                //2.Check if the order can come in
                 if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
                     return new Response<>(0, "Order Status Wrong", null);
                 }
-                //3.确认进站 请求修改订单信息
+                //3.Confirm inbound, request change order information
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.COLLECTED.getCode(), headers);
                 if (resultExecute.getStatus() == 1) {
                     return new Response<>(1, "Success.", null);
@@ -104,7 +109,7 @@ public class ExecuteServiceImpl implements ExecuteService {
 
 
     private Response executeOrder(String orderId, int status, HttpHeaders headers) {
-        System.out.println("[Execute Service][Execute Order] Executing....");
+        ExecuteServiceImpl.LOGGER.info("[Execute Service][Execute Order] Executing....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/status/" + orderId + "/" + status,
@@ -117,7 +122,7 @@ public class ExecuteServiceImpl implements ExecuteService {
 
 
     private Response executeOrderOther(String orderId, int status, HttpHeaders headers) {
-        System.out.println("[Execute Service][Execute Order] Executing....");
+        ExecuteServiceImpl.LOGGER.info("[Execute Service][Execute Order] Executing....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + status,
@@ -129,7 +134,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
-        System.out.println("[Execute Service][Get Order] Getting....");
+        ExecuteServiceImpl.LOGGER.info("[Execute Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
@@ -142,7 +147,7 @@ public class ExecuteServiceImpl implements ExecuteService {
     }
 
     private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
-        System.out.println("[Execute Service][Get Order] Getting....");
+        ExecuteServiceImpl.LOGGER.info("[Execute Service][Get Order] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,

@@ -1,8 +1,12 @@
 package inside_payment.entity;
 
-
+/**
+ * @author fdse
+ */
 public class PaymentInfo {
-    public PaymentInfo(){}
+    public PaymentInfo(){
+        //Default Constructor
+    }
 
     private String userId;
     private String orderId;
