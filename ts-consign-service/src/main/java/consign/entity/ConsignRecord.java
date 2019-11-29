@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

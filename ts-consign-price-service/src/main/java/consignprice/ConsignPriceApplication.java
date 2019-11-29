@@ -1,5 +1,7 @@
 package consignprice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,14 +14,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableAsync
 @IntegrationComponentScan
 @EnableSwagger2
 public class ConsignPriceApplication {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsignPriceApplication.class);
+
     public static void main(String[] args) {
-        System.out.println(new Date());
+        ConsignPriceApplication.LOGGER.info("{}", new Date());
         SpringApplication.run(ConsignPriceApplication.class, args);
     }
 

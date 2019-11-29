@@ -5,6 +5,8 @@ import consign.entity.Consign;
 import consign.repository.ConsignRepository;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -17,6 +19,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class ConsignServiceImpl implements ConsignService {
@@ -26,9 +31,11 @@ public class ConsignServiceImpl implements ConsignService {
     @Autowired
     RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsignServiceImpl.class);
+
     @Override
     public Response insertConsignRecord(Consign consignRequest, HttpHeaders headers) {
-        System.out.println("[Consign servie] [ Insert new consign record]" + consignRequest.getOrderId());
+        ConsignServiceImpl.LOGGER.info("[Consign servie] [ Insert new consign record] {}", consignRequest.getOrderId());
 
         ConsignRecord consignRecord = new ConsignRecord();
         //设置record属性
@@ -36,8 +43,8 @@ public class ConsignServiceImpl implements ConsignService {
         log.info("Order ID is :" + consignRequest.getOrderId());
         consignRecord.setOrderId(consignRequest.getOrderId());
         consignRecord.setAccountId(consignRequest.getAccountId());
-        System.out.printf("The handle date is %s", consignRequest.getHandleDate());
-        System.out.printf("The target date is %s", consignRequest.getTargetDate());
+        ConsignServiceImpl.LOGGER.info("The handle date is {}", consignRequest.getHandleDate());
+        ConsignServiceImpl.LOGGER.info("The target date is {}", consignRequest.getTargetDate());
         consignRecord.setHandleDate(consignRequest.getHandleDate());
         consignRecord.setTargetDate(consignRequest.getTargetDate());
         consignRecord.setFrom(consignRequest.getFrom());
@@ -68,12 +75,11 @@ public class ConsignServiceImpl implements ConsignService {
 
     @Override
     public Response updateConsignRecord(Consign consignRequest, HttpHeaders headers) {
-        System.out.println("[Consign servie] [ Update consign record]");
+        ConsignServiceImpl.LOGGER.info("[Consign servie] [ Update consign record]");
 
         ConsignRecord originalRecord = repository.findById(consignRequest.getId());
         if (originalRecord == null) {
             return this.insertConsignRecord(consignRequest, headers);
-           // return new Response<>(0, "Update failed, There is no Consign Record", consignRequest);
         }
         originalRecord.setAccountId(consignRequest.getAccountId());
         originalRecord.setHandleDate(consignRequest.getHandleDate());
@@ -106,27 +112,30 @@ public class ConsignServiceImpl implements ConsignService {
     @Override
     public Response queryByAccountId(UUID accountId, HttpHeaders headers) {
         List<ConsignRecord> consignRecords = repository.findByAccountId(accountId);
-        if (consignRecords != null && consignRecords.size() > 0)
+        if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by account id success", consignRecords);
-        else
+        }else {
             return new Response<>(0, "No Content according to accountId", accountId);
+        }
     }
 
     @Override
     public Response queryByOrderId(UUID orderId, HttpHeaders headers) {
         ConsignRecord consignRecords = repository.findByOrderId(orderId);
-        if (consignRecords != null )
+        if (consignRecords != null ) {
             return new Response<>(1, "Find consign by order id success", consignRecords);
-        else
+        }else {
             return new Response<>(0, "No Content according to order id", orderId);
+        }
     }
 
     @Override
     public Response queryByConsignee(String consignee, HttpHeaders headers) {
         List<ConsignRecord> consignRecords = repository.findByConsignee(consignee);
-        if (consignRecords != null && consignRecords.size() > 0)
+        if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by consignee success", consignRecords);
-        else
+        }else {
             return new Response<>(0, "No Content according to consignee", consignee);
+        }
     }
 }

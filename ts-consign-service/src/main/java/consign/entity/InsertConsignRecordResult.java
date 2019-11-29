@@ -1,12 +1,15 @@
 package consign.entity;
 
+/**
+ * @author fdse
+ */
 public class InsertConsignRecordResult {
     private boolean status;
 
     private String message;
 
     public InsertConsignRecordResult(){
-
+        //Default Constructor
     }
 
     public boolean isStatus() {

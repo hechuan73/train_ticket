@@ -7,6 +7,9 @@ import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

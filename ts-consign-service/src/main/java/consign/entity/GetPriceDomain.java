@@ -1,11 +1,14 @@
 package consign.entity;
 
+/**
+ * @author fdse
+ */
 public class GetPriceDomain {
     private double weight;
     private boolean isWithinRegion;
 
     public GetPriceDomain(){
-
+        //Default Constructor
     }
 
     public double getWeight() {

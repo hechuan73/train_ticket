@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Document(collection = "consign_price")
 public class ConsignPrice {
     @Id

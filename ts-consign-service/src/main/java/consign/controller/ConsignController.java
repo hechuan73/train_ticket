@@ -11,6 +11,9 @@ import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/consignservice")
 public class ConsignController {

@@ -5,20 +5,22 @@ import config.repository.ConfigRepository;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @Service
 public class ConfigServiceImpl implements ConfigService {
 
     @Autowired
     ConfigRepository repository;
 
+    @Override
     public Response create(Config info, HttpHeaders headers) {
         if (repository.findByName(info.getName()) != null) {
             String result = "Config " + info.getName() + " already exists.";
@@ -30,6 +32,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
+    @Override
     public Response update(Config info, HttpHeaders headers) {
         if (repository.findByName(info.getName()) == null) {
             String result = "Config " + info.getName() + " doesn't exist.";
@@ -41,15 +44,8 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
-//    public Config retrieve(String name, HttpHeaders headers){
-//        Config config = repository.findByName(name);
-//        if( config == null){
-//            return null;
-//        }else{
-//            return config;
-//        }
-//    }
 
+    @Override
     public Response query(String name, HttpHeaders headers) {
         Config config = repository.findByName(name);
         if (config == null) {
@@ -59,6 +55,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
+    @Override
     public Response delete(String name, HttpHeaders headers) {
         Config config = repository.findByName(name);
         if (config == null) {
@@ -74,7 +71,7 @@ public class ConfigServiceImpl implements ConfigService {
     public Response queryAll(HttpHeaders headers) {
         List<Config> configList = repository.findAll();
 
-        if (configList != null && configList.size() > 0) {
+        if (configList != null && !configList.isEmpty()) {
             return new Response<>(1, "Find all  config success", configList);
         } else {
             return new Response<>(0, "No content", null);
