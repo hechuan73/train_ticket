@@ -2,9 +2,15 @@ package order.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class OrderInfo {
 
-    private String loginId; //account id
+    /**
+     * account id
+     */
+    private String loginId;
 
     private Date travelDateStart;
 

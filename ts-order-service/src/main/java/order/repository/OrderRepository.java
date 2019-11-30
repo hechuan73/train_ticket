@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
 
     @Query("{ 'id': ?0 }")
     Order findById(UUID id);
 
+    @Override
     ArrayList<Order> findAll();
 
     @Query("{ 'accountId' : ?0 }")

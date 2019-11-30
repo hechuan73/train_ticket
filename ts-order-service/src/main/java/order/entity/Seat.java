@@ -4,6 +4,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class Seat {
     @Valid
     @NotNull
@@ -26,7 +29,7 @@ public class Seat {
     private int seatType;
 
     public Seat(){
-
+        //Default Constructor
     }
 
     public Date getTravelDate() {

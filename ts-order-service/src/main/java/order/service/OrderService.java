@@ -7,6 +7,9 @@ import org.springframework.http.HttpHeaders;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public interface OrderService {
 
     Response findOrderById(UUID id, HttpHeaders headers);

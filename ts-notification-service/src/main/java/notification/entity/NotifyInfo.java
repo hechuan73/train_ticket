@@ -1,6 +1,8 @@
 package notification.entity;
 
-
+/**
+ * @author fdse
+ */
 public class NotifyInfo {
 
     public NotifyInfo(){}

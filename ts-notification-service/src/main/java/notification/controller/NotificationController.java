@@ -7,7 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by Wenyi on 2017/6/15.
+ * @author Wenvi
+ * @date 2017/6/15
  */
 @RestController
 @RequestMapping("/api/v1/notifyservice")

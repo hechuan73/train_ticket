@@ -9,11 +9,15 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Component
 public class InitData implements CommandLineRunner {
     @Autowired
     OrderOtherService service;
 
+    @Override
     public void run(String... args)throws Exception{
 
         Order order1 = new Order();

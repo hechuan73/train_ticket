@@ -1,10 +1,12 @@
 package notification.entity;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author fdse
+ */
 public class Mail {
 
     private String mailFrom;

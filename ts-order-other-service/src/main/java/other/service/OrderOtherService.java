@@ -7,6 +7,9 @@ import other.entity.*;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public interface OrderOtherService {
 
     Response findOrderById(UUID id, HttpHeaders headers);

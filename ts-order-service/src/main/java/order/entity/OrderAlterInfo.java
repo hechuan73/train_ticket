@@ -2,6 +2,9 @@ package order.entity;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 public class OrderAlterInfo {
 
     private UUID accountId;

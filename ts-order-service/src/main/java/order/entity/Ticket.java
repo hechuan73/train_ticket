@@ -1,5 +1,8 @@
 package order.entity;
 
+/**
+ * @author fdse
+ */
 public class Ticket {
 
     private int seatNo;

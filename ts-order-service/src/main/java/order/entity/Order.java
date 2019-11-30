@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Document(collection = "orders")
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -23,10 +26,14 @@ public class Order {
 
     private Date travelTime;
 
-    //Which Account Bought it
+    /**
+     * Which Account Bought it
+     */
     private UUID accountId;
 
-    //Tickets bought for whom....
+    /**
+     * Tickets bought for whom....
+     */
     private String contactsName;
 
     private int documentType;

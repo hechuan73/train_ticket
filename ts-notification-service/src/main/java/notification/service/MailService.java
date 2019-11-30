@@ -1,6 +1,5 @@
 package notification.service;
 
-
 import javax.mail.internet.MimeMessage;
 
 import notification.entity.Mail;
@@ -14,6 +13,9 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
+/**
+ * @author fdse
+ */
 @Service
 public class MailService {
 

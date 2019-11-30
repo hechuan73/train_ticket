@@ -2,9 +2,15 @@ package other.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class QueryInfo {
 
-    private String loginId; //account id
+    /**
+     * account id
+     */
+    private String loginId;
 
     private Date travelDateStart;
 
