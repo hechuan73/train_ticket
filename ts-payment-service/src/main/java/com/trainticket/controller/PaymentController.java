@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
- * Created by Chenjie Xu on 2017/4/7.
+ * @author Chenjie
+ * @date 2017/4/7
  */
 @RestController
 @RequestMapping("/api/v1/paymentservice")

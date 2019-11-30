@@ -1,10 +1,25 @@
 package preserveOther.entity;
 
+/**
+ * @author fdse
+ */
 public enum Gender {
 
+    /**
+     * null
+     */
     NONE   (0, "Null"),
+    /**
+     * male
+     */
     MALE   (1, "Male"),
+    /**
+     * female
+     */
     FEMALE (2, "Female"),
+    /**
+     * other
+     */
     OTHER  (3, "Other");
 
     private int code;

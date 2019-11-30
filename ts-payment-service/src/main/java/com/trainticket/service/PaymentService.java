@@ -5,7 +5,8 @@ import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 
 /**
- * Created by Chenjie Xu on 2017/4/5.
+ * @author Chenjie
+ * @date 2017/4/3
  */
 public interface PaymentService {
 

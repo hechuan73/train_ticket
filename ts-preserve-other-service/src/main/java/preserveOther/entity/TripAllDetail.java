@@ -2,6 +2,9 @@ package preserveOther.entity;
 
 import lombok.ToString;
 
+/**
+ * @author fdse
+ */
 @ToString
 public class TripAllDetail {
 

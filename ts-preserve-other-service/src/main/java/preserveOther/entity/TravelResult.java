@@ -2,7 +2,9 @@ package preserveOther.entity;
 
 import java.util.HashMap;
 
-
+/**
+ * @author fdse
+ */
 public class TravelResult {
 
     private boolean status;

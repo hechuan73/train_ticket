@@ -1,5 +1,7 @@
 package preserve.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,12 +11,17 @@ import preserve.service.PreserveService;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/preserveservice")
 public class PreserveController {
 
     @Autowired
     private PreserveService preserveService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreserveController.class);
 
     @GetMapping(path = "/welcome")
     public String home() {
@@ -25,8 +32,7 @@ public class PreserveController {
     @PostMapping(value = "/preserve")
     public HttpEntity preserve(@RequestBody OrderTicketsInfo oti,
                                @RequestHeader HttpHeaders headers) {
-        System.out.println("[Preserve Service][Preserve] Account " + " order from " +
-                oti.getFrom() + " -----> " + oti.getTo() + " at " + oti.getDate());
+        PreserveController.LOGGER.info("[Preserve Service][Preserve] Account  order from {} -----> {} at {}", oti.getFrom(), oti.getTo(), oti.getDate());
         return ok(preserveService.preserve(oti, headers));
     }
 

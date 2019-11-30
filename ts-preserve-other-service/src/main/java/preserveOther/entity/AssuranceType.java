@@ -2,15 +2,27 @@ package preserveOther.entity;
 
 import java.io.Serializable;
 
+/**
+ * @author fdse
+ */
 public enum AssuranceType implements Serializable{
 
+    /**
+     * traffic accident assurance
+     */
     TRAFFIC_ACCIDENT (1, "Traffic Accident Assurance", 3.0);
 
-    //index of assurance type
+    /**
+     * index of assurance type
+     */
     private  int index;
-    //the assurance type name
+    /**
+     * the assurance type name
+     */
     private String name;
-    //the price of this type of assurence
+    /**
+     * the price of this type of assurence
+     */
     private double price;
 
      AssuranceType(int index, String name, double price){

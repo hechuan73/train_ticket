@@ -1,10 +1,25 @@
 package preserveOther.entity;
 
+/**
+ * @author fdse
+ */
 public enum DocumentType {
 
+    /**
+     * null
+     */
     NONE      (0,"Null"),
+    /**
+     * id card
+     */
     ID_CARD   (1,"ID Card"),
+    /**
+     * passport
+     */
     PASSPORT  (2,"Passport"),
+    /**
+     * other
+     */
     OTHER     (3,"Other");
 
     private int code;

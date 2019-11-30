@@ -2,14 +2,18 @@ package preserveOther.entity;
 
 import java.util.UUID;
 
-
+/**
+ * @author fdse
+ */
 public class FoodOrder {
 
        private UUID id;
 
     private UUID orderId;
 
-    //1:train food;2:food store
+    /**
+     * 1:train food;2:food store
+     */
     private int foodType;
 
     private String stationName;
@@ -21,7 +25,7 @@ public class FoodOrder {
     private double price;
 
     public FoodOrder(){
-
+        //Default Constructor
     }
 
     public UUID getId() {

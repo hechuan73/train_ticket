@@ -1,5 +1,8 @@
 package preserve.entity;
 
+/**
+ * @author fdse
+ */
 public class OrderTicketsResult {
 
     private boolean status;

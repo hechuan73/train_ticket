@@ -2,14 +2,18 @@ package com.trainticket.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
+/**
+ * @author fdse
+ */
 @Document(collection="addMoney")
 public class Money {
     private String userId;
     private String money;
 
 
-    public Money(){}
+    public Money(){
+        //Default Constructor
+    }
 
     public String getUserId() {
         return userId;

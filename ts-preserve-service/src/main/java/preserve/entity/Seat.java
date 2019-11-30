@@ -2,6 +2,9 @@ package preserve.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class Seat {
 
     private Date travelDate;

@@ -1,9 +1,13 @@
 package preserveOther.entity;
 
-
+/**
+ * @author fdse
+ */
 public class NotifyInfo {
 
-    public NotifyInfo(){}
+    public NotifyInfo(){
+        //Default Constructor
+    }
 
     private String email;
     private String orderNumber;

@@ -2,6 +2,9 @@ package preserveOther.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class TripAllDetailInfo {
 
     private String tripId;

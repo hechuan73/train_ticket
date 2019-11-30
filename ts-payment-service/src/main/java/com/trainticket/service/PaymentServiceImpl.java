@@ -5,6 +5,8 @@ import com.trainticket.entity.Payment;
 import com.trainticket.repository.AddMoneyRepository;
 import com.trainticket.repository.PaymentRepository;
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/6/23.
+ * @author  Administrator
+ * @date 2017/6/23.
  */
 @Service
 public class PaymentServiceImpl implements PaymentService{
@@ -22,6 +25,8 @@ public class PaymentServiceImpl implements PaymentService{
 
     @Autowired
     AddMoneyRepository addMoneyRepository;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Override
     public Response pay(Payment info, HttpHeaders headers){
@@ -50,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService{
     @Override
     public Response query(HttpHeaders headers){
         List<Payment> payments = paymentRepository.findAll();
-        if(payments!= null && payments.size() >0){
+        if(payments!= null && !payments.isEmpty()){
             return new Response<>(1,"Query Success",  payments);
         }else {
             return new Response<>(0, "No Content", null);
@@ -63,7 +68,7 @@ public class PaymentServiceImpl implements PaymentService{
         if(paymentTemp == null){
             paymentRepository.save(payment);
         }else{
-            System.out.println("[Payment Service][Init Payment] Already Exists:" + payment.getId());
+            PaymentServiceImpl.LOGGER.info("[Payment Service][Init Payment] Already Exists: {}", payment.getId());
         }
     }
 }

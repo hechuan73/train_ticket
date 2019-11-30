@@ -2,6 +2,8 @@ package preserve.service;
 
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,6 +17,9 @@ import preserve.entity.*;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class PreserveServiceImpl implements PreserveService {
@@ -22,28 +27,30 @@ public class PreserveServiceImpl implements PreserveService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreserveServiceImpl.class);
+
     @Override
     public Response preserve(OrderTicketsInfo oti, HttpHeaders headers) {
-        //1.黄牛检测
-        System.out.println("[Preserve Service] [Step 1] Check Security");
+        //1.detect ticket scalper
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 1] Check Security");
 
         Response result = checkSecurity(oti.getAccountId(), headers);
         if (result.getStatus() == 0) {
             return new Response<>(0, result.getMsg(), null);
         }
-        System.out.println("[Preserve Service] [Step 1] Check Security Complete");
-        //2.查询联系人信息 -- 修改，通过基础信息微服务作为中介
-        System.out.println("[Preserve Service] [Step 2] Find contacts");
-        System.out.println("[Preserve Service] [Step 2] Contacts Id:" + oti.getContactsId());
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 1] Check Security Complete");
+        //2.Querying contact information -- modification, mediated by the underlying information micro service
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 2] Find contacts");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 2] Contacts Id: {}", oti.getContactsId());
 
         Response<Contacts> gcr = getContactsById(oti.getContactsId(), headers);
         if (gcr.getStatus() == 0) {
-            System.out.println("[Preserve Service][Get Contacts] Fail." + gcr.getMsg());
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Get Contacts] Fail. {}", gcr.getMsg());
             return new Response<>(0, gcr.getMsg(), null);
         }
-        System.out.println("[Preserve Service][Step 2] Complete");
-        //3.查询座位余票信息和车次的详情
-        System.out.println("[Preserve Service] [Step 3] Check tickets num");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 2] Complete");
+        //3.Check the info of train and the number of remaining tickets
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 3] Check tickets num");
         TripAllDetailInfo gtdi = new TripAllDetailInfo();
 
         gtdi.setFrom(oti.getFrom());
@@ -51,34 +58,34 @@ public class PreserveServiceImpl implements PreserveService {
 
         gtdi.setTravelDate(oti.getDate());
         gtdi.setTripId(oti.getTripId());
-        System.out.println("[Preserve Service] [Step 3] TripId:" + oti.getTripId());
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 3] TripId: {}", oti.getTripId());
         Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, headers);
         TripAllDetail gtdr = response.getData();
         log.info("TripAllDetail:" + gtdr.toString());
         if (response.getStatus() == 0) {
-            System.out.println("[Preserve Service][Search For Trip Detail Information] " + response.getMsg());
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Search For Trip Detail Information] {}", response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
             TripResponse tripResponse = gtdr.getTripResponse();
             log.info("TripResponse:" + tripResponse.toString());
             if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() == 0) {
-                    System.out.println("[Preserve Service][Check seat is enough] ");
+                    PreserveServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
                     return new Response<>(0, "Seat Not Enough", null);
                 }
             } else {
                 if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode()) {
                     if (tripResponse.getConfortClass() == 0) {
-                        System.out.println("[Preserve Service][Check seat is enough] ");
+                        PreserveServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
                         return new Response<>(0, "Seat Not Enough", null);
                     }
                 }
             }
         }
         Trip trip = gtdr.getTrip();
-        System.out.println("[Preserve Service] [Step 3] Tickets Enough");
-        //4.下达订单请求 设置order的各个信息
-        System.out.println("[Preserve Service] [Step 4] Do Order");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 3] Tickets Enough");
+        //4.send the order request and set the order information
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 4] Do Order");
         Contacts contacts = gcr.getData();
         Order order = new Order();
         UUID orderId = UUID.randomUUID();
@@ -113,11 +120,12 @@ public class PreserveServiceImpl implements PreserveService {
         TravelResult resultForTravel = re.getBody().getData();
 
         order.setSeatClass(oti.getSeatType());
-        System.out.println("[Preserve Service][Order] Order Travel Date:" + oti.getDate().toString());
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Order] Order Travel Date: {}", oti.getDate().toString());
         order.setTravelDate(oti.getDate());
         order.setTravelTime(gtdr.getTripResponse().getStartingTime());
 
-        if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {//Dispatch the seat
+        //Dispatch the seat
+        if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
             Ticket ticket =
                     dipatchSeat(oti.getDate(),
                             order.getTrainNumber(), fromStationId, toStationId,
@@ -135,33 +143,31 @@ public class PreserveServiceImpl implements PreserveService {
             order.setPrice(resultForTravel.getPrices().get("economyClass"));
         }
 
-        System.out.println("[Preserve Service][Order Price] Price is: " + order.getPrice());
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Order Price] Price is: {}", order.getPrice());
 
         Response<Order> cor = createOrder(order, headers);
         if (cor.getStatus() == 0) {
-            System.out.println("[Preserve Service][Create Order Fail] Create Order Fail." +
-                    "Reason:" + cor.getMsg());
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Create Order Fail] Create Order Fail.  Reason: {}", cor.getMsg());
             return new Response<>(0, cor.getMsg(), null);
         }
-        System.out.println("[Preserve Service] [Step 4] Do Order Complete");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 4] Do Order Complete");
 
         Response returnResponse = new Response<>(1, "Success.", cor.getMsg());
-        //5.检查保险的选择
+        //5.Check insurance options
         if (oti.getAssurance() == 0) {
-            System.out.println("[Preserve Service][Step 5] Do not need to buy assurance");
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 5] Do not need to buy assurance");
         } else {
             Response addAssuranceResult = addAssuranceForOrder(
                     oti.getAssurance(), cor.getData().getId().toString(), headers);
             if (addAssuranceResult.getStatus() == 1) {
-                System.out.println("[Preserve Service][Step 5] Buy Assurance Success");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 5] Buy Assurance Success");
             } else {
-                System.out.println("[Preserve Service][Step 5] Buy Assurance Fail.");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 5] Buy Assurance Fail.");
                 returnResponse.setMsg("Success.But Buy Assurance Fail.");
             }
         }
 
-        //6.增加订餐
-//            System.out.println("[Food Service]!!!!!!!!!!!!!!!foodstorename=" + oti.getStationName()+"   "+oti.getStoreName());
+        //6.Increase the food order
         if (oti.getFoodType() != 0) {
 
             FoodOrder foodOrder = new FoodOrder();
@@ -173,20 +179,20 @@ public class PreserveServiceImpl implements PreserveService {
             if (oti.getFoodType() == 2) {
                 foodOrder.setStationName(oti.getStationName());
                 foodOrder.setStoreName(oti.getStoreName());
-                System.out.println("[Food Service]!!!!!!!!!!!!!!!foodstore=" + foodOrder.getFoodType() + "   " + foodOrder.getStationName() + "   " + foodOrder.getStoreName());
+                PreserveServiceImpl.LOGGER.info("[Food Service]!!!!!!!!!!!!!!!foodstore= {}   {}   {}", foodOrder.getFoodType(), foodOrder.getStationName(), foodOrder.getStoreName());
             }
             Response afor = createFoodOrder(foodOrder, headers);
             if (afor.getStatus() == 1) {
-                System.out.println("[Preserve Service][Step 6] Buy Food Success");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 6] Buy Food Success");
             } else {
-                System.out.println("[Preserve Service][Step 6] Buy Food Fail.");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 6] Buy Food Fail.");
                 returnResponse.setMsg("Success.But Buy Food Fail.");
             }
         } else {
-            System.out.println("[Preserve Service][Step 6] Do not need to buy food");
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 6] Do not need to buy food");
         }
 
-        //7.增加托运
+        //7.add consign
         if (null != oti.getConsigneeName() && !"".equals(oti.getConsigneeName())) {
 
             Consign consignRequest = new Consign();
@@ -203,17 +209,17 @@ public class PreserveServiceImpl implements PreserveService {
             log.info("CONSIGN INFO : " +consignRequest.toString());
             Response icresult = createConsign(consignRequest, headers);
             if (icresult.getStatus() == 1) {
-                System.out.println("[Preserve Service][Step 7] Consign Success");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 7] Consign Success");
             } else {
-                System.out.println("[Preserve Service][Step 7] Consign Fail.");
+                PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 7] Consign Fail.");
                 returnResponse.setMsg("Consign Fail.");
             }
         } else {
-            System.out.println("[Preserve Service][Step 7] Do not need to consign");
+            PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 7] Do not need to consign");
         }
 
-        //8.发送notification
-        System.out.println("[Preserve Service]");
+        //8.send notification
+        PreserveServiceImpl.LOGGER.info("[Preserve Service]");
 
         User getUser = getAccount(order.getAccountId().toString(), headers);
 
@@ -256,7 +262,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Service][Send Email]");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Send Email]");
         HttpEntity requestEntitySendEmail = new HttpEntity(notifyInfo, httpHeaders);
         ResponseEntity<Boolean> reSendEmail = restTemplate.exchange(
                 "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
@@ -269,7 +275,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     public User getAccount(String accountId, HttpHeaders httpHeaders) {
-        System.out.println("[Cancel Order Service][Get Order By Id]");
+        PreserveServiceImpl.LOGGER.info("[Cancel Order Service][Get Order By Id]");
 
         HttpEntity requestEntitySendEmail = new HttpEntity(httpHeaders);
         ResponseEntity<Response<User>> getAccount = restTemplate.exchange(
@@ -283,7 +289,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private Response addAssuranceForOrder(int assuranceType, String orderId, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Service][Add Assurance For Order]");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Add Assurance For Order]");
         HttpEntity requestAddAssuranceResult = new HttpEntity(httpHeaders);
         ResponseEntity<Response> reAddAssuranceResult = restTemplate.exchange(
                 "http://ts-assurance-service:18888/api/v1/assuranceservice/assurances/" + assuranceType + "/" + orderId,
@@ -296,7 +302,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private String queryForStationId(String stationName, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Other Service][Get Station Name]");
+        PreserveServiceImpl.LOGGER.info("[Preserve Other Service][Get Station Name]");
 
 
         HttpEntity requestQueryForStationId = new HttpEntity(httpHeaders);
@@ -312,7 +318,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private Response checkSecurity(String accountId, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Other Service][Check Security] Checking....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Other Service][Check Security] Checking....");
 
         HttpEntity requestCheckResult = new HttpEntity(httpHeaders);
         ResponseEntity<Response> reCheckResult = restTemplate.exchange(
@@ -327,7 +333,7 @@ public class PreserveServiceImpl implements PreserveService {
 
 
     private Response<TripAllDetail> getTripAllDetailInformation(TripAllDetailInfo gtdi, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Other Service][Get Trip All Detail Information] Getting....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Other Service][Get Trip All Detail Information] Getting....");
 
         HttpEntity requestGetTripAllDetailResult = new HttpEntity(gtdi, httpHeaders);
         ResponseEntity<Response<TripAllDetail>> reGetTripAllDetailResult = restTemplate.exchange(
@@ -343,7 +349,7 @@ public class PreserveServiceImpl implements PreserveService {
 
 
     private Response<Contacts> getContactsById(String contactsId, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Other Service][Get Contacts By Id] Getting....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Other Service][Get Contacts By Id] Getting....");
 
         HttpEntity requestGetContactsResult = new HttpEntity(httpHeaders);
         ResponseEntity<Response<Contacts>> reGetContactsResult = restTemplate.exchange(
@@ -358,7 +364,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private Response createOrder(Order coi, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Other Service][Get Contacts By Id] Creating....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Other Service][Get Contacts By Id] Creating....");
 
         HttpEntity requestEntityCreateOrderResult = new HttpEntity(coi, httpHeaders);
         ResponseEntity<Response<Order>> reCreateOrderResult = restTemplate.exchange(
@@ -374,7 +380,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private Response createFoodOrder(FoodOrder afi, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Service][Add food Order] Creating....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Add food Order] Creating....");
 
         HttpEntity requestEntityAddFoodOrderResult = new HttpEntity(afi, httpHeaders);
         ResponseEntity<Response> reAddFoodOrderResult = restTemplate.exchange(
@@ -388,7 +394,7 @@ public class PreserveServiceImpl implements PreserveService {
     }
 
     private Response createConsign(Consign cr, HttpHeaders httpHeaders) {
-        System.out.println("[Preserve Service][Add Condign] Creating....");
+        PreserveServiceImpl.LOGGER.info("[Preserve Service][Add Condign] Creating....");
 
         HttpEntity requestEntityResultForTravel = new HttpEntity(cr, httpHeaders);
         ResponseEntity<Response> reResultForTravel = restTemplate.exchange(

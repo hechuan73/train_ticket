@@ -1,13 +1,37 @@
 package preserve.entity;
 
+/**
+ * @author fdse
+ */
 public enum OrderStatus {
 
+    /**
+     * not paid
+     */
     NOTPAID   (0,"Not Paid"),
+    /**
+     * paid and not collected
+     */
     PAID      (1,"Paid & Not Collected"),
+    /**
+     * collected
+     */
     COLLECTED (2,"Collected"),
+    /**
+     * rebook
+     */
     CHANGE    (3,"Rebook"),
+    /**
+     * cancel
+     */
     CANCEL    (4,"Cancel"),
+    /**
+     * refunded
+     */
     REFUNDS   (5,"Refunded"),
+    /**
+     * used
+     */
     USED      (6,"Used");
 
     private int code;

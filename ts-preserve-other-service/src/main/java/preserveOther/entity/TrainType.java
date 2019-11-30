@@ -2,7 +2,9 @@ package preserveOther.entity;
 
 import javax.validation.Valid;
 
-
+/**
+ * @author fdse
+ */
 public class TrainType {
     @Valid
     private String id;

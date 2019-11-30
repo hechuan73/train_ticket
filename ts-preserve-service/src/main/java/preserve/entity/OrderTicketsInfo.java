@@ -2,6 +2,9 @@ package preserve.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class OrderTicketsInfo {
     private String accountId;
 
@@ -19,7 +22,7 @@ public class OrderTicketsInfo {
 
     private int assurance;
 
-    //food
+
     private int foodType = 0;
 
     private String stationName;
@@ -30,7 +33,7 @@ public class OrderTicketsInfo {
 
     private double foodPrice;
 
-    //consign
+
     private String handleDate;
 
     private String consigneeName = "";

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

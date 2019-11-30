@@ -4,8 +4,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
-
+/**
+ * @author fdse
+ */
 public class Trip {
     @Valid
     private TripId tripId;
