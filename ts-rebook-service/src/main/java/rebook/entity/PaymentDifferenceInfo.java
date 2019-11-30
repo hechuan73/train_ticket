@@ -1,6 +1,8 @@
 package rebook.entity;
 
-
+/**
+ * @author fdse
+ */
 public class PaymentDifferenceInfo {
 
     private String orderId;

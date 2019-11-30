@@ -1,5 +1,8 @@
 package rebook.entity;
 
+/**
+ * @author fdse
+ */
 public class VerifyResult {
 
     private boolean status;

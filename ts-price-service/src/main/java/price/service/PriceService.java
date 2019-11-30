@@ -5,8 +5,10 @@ import org.springframework.http.HttpHeaders;
 
 import price.entity.PriceConfig;
 
-import java.util.List;
 
+/**
+ * @author fdse
+ */
 public interface PriceService {
 
     Response createNewPriceConfig(PriceConfig priceConfig, HttpHeaders headers);

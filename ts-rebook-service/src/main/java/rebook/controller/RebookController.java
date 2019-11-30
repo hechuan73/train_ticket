@@ -1,5 +1,7 @@
 package rebook.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,12 +11,17 @@ import rebook.service.RebookService;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/rebookservice")
 public class RebookController {
 
     @Autowired
     RebookService service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RebookController.class);
 
     @GetMapping(path = "/welcome")
     public String home() {
@@ -29,7 +36,7 @@ public class RebookController {
 
     @PostMapping(value = "/rebook")
     public HttpEntity rebook(@RequestBody RebookInfo info, @RequestHeader HttpHeaders headers) {
-        System.out.println("[Rebook Service] OrderId:" + info.getOrderId() + "Old Trip Id:" + info.getOldTripId() + " New Trip Id:" + info.getTripId() + " Date:" + info.getDate() + " Seat Type:" + info.getSeatType());
+        RebookController.LOGGER.info("[Rebook Service] OrderId: {}  Old Trip Id: {}  New Trip Id: {}  Date: {}  Seat Type: {}", info.getOrderId(), info.getOldTripId(), info.getTripId(), info.getDate(), info.getSeatType());
         return ok(service.rebook(info, headers));
     }
 }

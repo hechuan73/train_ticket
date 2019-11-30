@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 @Service
 public class RebookServiceImpl implements RebookService {
 
@@ -28,8 +31,9 @@ public class RebookServiceImpl implements RebookService {
         Response<Order> queryOrderResult = getOrderByRebookInfo(info, httpHeaders);
 
         if (queryOrderResult.getStatus() == 1) {
-            if (queryOrderResult.getData().getStatus() != 1)
+            if (queryOrderResult.getData().getStatus() != 1) {
                 return new Response<>(0, "you order not suitable to rebook!", null);
+            }
         } else {
             return new Response(0, "order not found", null);
         }
@@ -48,13 +52,13 @@ public class RebookServiceImpl implements RebookService {
             return new Response<>(0, "You can't change your ticket.", null);
         }
 
-        //查询当前时间和旧订单乘车时间，根据时间来判断能否改签，发车两小时后不能改签
+        //Check the current time and the bus time of the old order, and judge whether the ticket can be changed according to the time. The ticket cannot be changed after two hours.
         if (!checkTime(order.getTravelDate(), order.getTravelTime())) {
             return new Response<>(0, "You can only change the ticket before the train start or within 2 hours after the train start.", null);
         }
 
-        //改签不能更换出发地和目的地，只能更改车次、席位、时间
-        //查询座位余票信息和车次的详情
+        //The departure and destination cannot be changed, only the train number, seat and time can be changed
+        //Check the info of seat availability and trains
         TripAllDetailInfo gtdi = new TripAllDetailInfo();
         gtdi.setFrom(queryForStationName(order.getFrom(), httpHeaders));
         gtdi.setTo(queryForStationName(order.getTo(), httpHeaders));
@@ -77,10 +81,9 @@ public class RebookServiceImpl implements RebookService {
                 }
             }
         }
-        // Trip trip = ((TripAllDetail) gtdr.getData()).getTrip();
 
-        //处理差价，多退少补
-        //退掉原有的票，让其他人可以订到对应的位置
+        //Deal with the difference, more refund less compensation
+        //Return the original ticket so that someone else can book the corresponding seat
 
         String ticketPrice = "0";
         if (info.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
@@ -92,7 +95,7 @@ public class RebookServiceImpl implements RebookService {
         BigDecimal priceOld = new BigDecimal(oldPrice);
         BigDecimal priceNew = new BigDecimal(ticketPrice);
         if (priceOld.compareTo(priceNew) > 0) {
-            //退差价
+            //Refund the difference
             String difference = priceOld.subtract(priceNew).toString();
             if (!drawBackMoney(info.getLoginId(), difference, httpHeaders)) {
                 return new Response<>(0, "Can't draw back the difference money, please try again!", null);
@@ -103,7 +106,7 @@ public class RebookServiceImpl implements RebookService {
             //do nothing
             return updateOrder(order, info, (TripAllDetail) gtdr.getData(), ticketPrice, httpHeaders);
         } else {
-            //补差价
+            //make up the difference
             String difference = priceNew.subtract(priceOld).toString();
             Order orderMoneyDifference = new Order();
             orderMoneyDifference.setDifferenceMoney(difference);
@@ -149,7 +152,7 @@ public class RebookServiceImpl implements RebookService {
 
     private Response updateOrder(Order order, RebookInfo info, TripAllDetail gtdr, String ticketPrice, HttpHeaders httpHeaders) {
 
-        //4.修改原有订单 设置order的各个信息
+        //4.Modify the original order and set the information of the order
         Trip trip = gtdr.getTrip();
         String oldTripId = order.getTrainNumber();
         order.setTrainNumber(info.getTripId());
@@ -176,8 +179,8 @@ public class RebookServiceImpl implements RebookService {
             order.setSeatNumber("" + ticket.getSeatNo());
         }
 
-        //更新订单信息
-        //原订单和新订单如果分别位于高铁动车和其他订单，应该删掉原订单，在另一边新建，用新的id
+        //Update order information
+        //If the original order and the new order are located in the high-speed train and other orders respectively, the original order should be deleted and created on the other side with a new id.
         if ((tripGD(oldTripId) && tripGD(info.getTripId())) || (!tripGD(oldTripId) && !tripGD(info.getTripId()))) {
 
             Response changeOrderResult = updateOrder(order, info.getTripId(), httpHeaders);
@@ -187,9 +190,9 @@ public class RebookServiceImpl implements RebookService {
                 return new Response<>(0, "Can't update Order!", null);
             }
         } else {
-            //删掉原有订单
+            //Delete the original order
             deleteOrder(order.getId().toString(), oldTripId, httpHeaders);
-            //在另一边创建新订单
+            //Create a new order on the other side
             createOrder(order, order.getTrainNumber(), httpHeaders);
             return new Response<>(1, "Success", order);
         }
@@ -298,12 +301,8 @@ public class RebookServiceImpl implements RebookService {
         String requestOrderUtl = "";
         if (tripGD(tripId)) {
             requestOrderUtl = "http://ts-order-service:12031/api/v1/orderservice/order";
-//            result = restTemplate.postForObject("http://ts-order-service:12031/order/update",
-//                    info,ChangeOrderResult.class);
         } else {
             requestOrderUtl = "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther";
-//            result = restTemplate.postForObject("http://ts-order-other-service:12032/orderOther/update",
-//                    info,ChangeOrderResult.class);
         }
         HttpEntity requestUpdateOrder = new HttpEntity(info, httpHeaders);
         ResponseEntity<Response> reUpdateOrder = restTemplate.exchange(
@@ -318,10 +317,8 @@ public class RebookServiceImpl implements RebookService {
 
         String requestUrl = "";
         if (tripGD(tripId)) {
-            // http://ts-order-service:12031/order/delete
             requestUrl = "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId;
         } else {
-            //ts-order-other-service:12032/orderOther/delete
             requestUrl = "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId;
         }
         HttpEntity requestDeleteOrder = new HttpEntity(httpHeaders);
@@ -336,14 +333,12 @@ public class RebookServiceImpl implements RebookService {
 
     private Response<Order> getOrderByRebookInfo(RebookInfo info, HttpHeaders httpHeaders) {
         Response<Order> queryOrderResult;
-        //改签只能改签一次，查询订单状态来判断是否已经改签过
+        //Change can only be changed once, check the status of the order to determine whether it has been changed
         String requestUrl = "";
         if (info.getOldTripId().startsWith("G") || info.getOldTripId().startsWith("D")) {
             requestUrl = "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId();
-            //ts-order-service:12031/order/getById
         } else {
             requestUrl = "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + info.getOrderId();
-            //ts-order-other-service:12032/orderOther/getById
         }
         HttpEntity requestEntityGetOrderByRebookInfo = new HttpEntity(httpHeaders);
         ResponseEntity<Response<Order>> reGetOrderByRebookInfo = restTemplate.exchange(
@@ -364,9 +359,6 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityQueryForStationName,
                 Response.class);
         Response station = reQueryForStationName.getBody();
-//        QueryStation station = restTemplate.postForObject(
-//                "http://ts-station-service:12345/station/queryById"
-//                ,query,QueryStation.class);
         return (String) station.getData();
     }
 
@@ -384,11 +376,9 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityPayDifferentMoney,
                 Response.class);
         Response result = rePayDifferentMoney.getBody();
-//        boolean result = restTemplate.postForObject(
-//                "http://ts-inside-payment-service:18673/inside_payment/payDifference"
-//                ,info,Boolean.class);
-        if (result.getStatus() == 1)
+        if (result.getStatus() == 1) {
             return true;
+        }
         return false;
     }
 
@@ -401,11 +391,9 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityDrawBackMoney,
                 Response.class);
         Response result = reDrawBackMoney.getBody();
-//        boolean result = restTemplate.postForObject(
-//                "http://ts-inside-payment-service:18673/inside_payment/drawBack"
-//                ,info,Boolean.class);
-        if (result.getStatus() == 1)
+        if (result.getStatus() == 1) {
             return true;
+        }
         return false;
     }
 

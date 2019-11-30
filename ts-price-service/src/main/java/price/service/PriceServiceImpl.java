@@ -1,6 +1,8 @@
 package price.service;
 
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -11,17 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @Service
 public class PriceServiceImpl implements PriceService {
 
     @Autowired
     private PriceConfigRepository priceConfigRepository;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PriceServiceImpl.class);
+
     @Override
     public Response createNewPriceConfig(PriceConfig createAndModifyPriceConfig, HttpHeaders headers) {
-        System.out.println("[Price Service][Create New Price Config]");
+        PriceServiceImpl.LOGGER.info("[Price Service][Create New Price Config]");
         PriceConfig priceConfig = null;
         // create
         if (createAndModifyPriceConfig.getId() == null || createAndModifyPriceConfig.getId().toString().length() < 10) {
@@ -50,16 +56,16 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public PriceConfig findById(String id, HttpHeaders headers) {
-        System.out.println("[Price Service][Find By Id] ID:" + id);
+        PriceServiceImpl.LOGGER.info("[Price Service][Find By Id] ID: {}", id);
         PriceConfig priceConfig = priceConfigRepository.findById(UUID.fromString(id));
         return priceConfig;
     }
 
     @Override
     public Response findByRouteIdAndTrainType(String routeId, String trainType, HttpHeaders headers) {
-        System.out.println("[Price Service][Find By Route And Train Type] Rote:" + routeId + "Train Type:" + trainType);
+        PriceServiceImpl.LOGGER.info("[Price Service][Find By Route And Train Type] Rote: {}   Train Type: {}", routeId, trainType);
         PriceConfig priceConfig = priceConfigRepository.findByRouteIdAndTrainType(routeId, trainType);
-        System.out.println("[Price Service][Find By Route Id And Train Type]");
+        PriceServiceImpl.LOGGER.info("[Price Service][Find By Route Id And Train Type]");
 
         if (priceConfig == null) {
             return new Response<>(0, "No that config", routeId + trainType);
@@ -76,7 +82,7 @@ public class PriceServiceImpl implements PriceService {
             list = new ArrayList<>();
         }
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             return new Response<>(1, "Success", list);
         } else {
             return new Response<>(0, "No price config", null);

@@ -4,7 +4,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 public class RebookInfo {
 
     @Valid
@@ -29,7 +31,7 @@ public class RebookInfo {
 
     @Valid
     @NotNull
-    private Date date;//具体到哪一天
+    private Date date;
 
     public RebookInfo(){
         //Default Constructor

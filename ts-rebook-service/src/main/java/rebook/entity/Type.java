@@ -2,9 +2,31 @@ package rebook.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public enum Type implements Serializable{
-    G("G", 1), D("D", 2),Z("Z",3), T("T", 4), K("K", 5);
+
+    /**
+     * G
+     */
+    G("G", 1),
+    /**
+     * D
+     */
+    D("D", 2),
+    /**
+     * Z
+     */
+    Z("Z",3),
+    /**
+     * T
+     */
+    T("T", 4),
+    /**
+     * K
+     */
+    K("K", 5);
 
     private String name;
     private int index;

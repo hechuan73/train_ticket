@@ -3,6 +3,9 @@ package price.entity;
 import org.springframework.data.annotation.Id;
 import javax.validation.Valid;
 
+/**
+ * @author fdse
+ */
 public class TrainType {
     @Valid
     @Id

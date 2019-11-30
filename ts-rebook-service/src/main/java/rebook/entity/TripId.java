@@ -2,15 +2,13 @@ package rebook.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public class TripId implements Serializable{
     private Type type;
     private String number;
 
-//    public TripId(Type type, String number){
-//        this.type = type;
-//        this.number = number;
-//    }
 
     public TripId(){
         //Default Constructor

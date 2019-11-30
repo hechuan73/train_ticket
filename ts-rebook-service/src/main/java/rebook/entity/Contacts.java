@@ -3,6 +3,9 @@ package rebook.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Contacts {
 

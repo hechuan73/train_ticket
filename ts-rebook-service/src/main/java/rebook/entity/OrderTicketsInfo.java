@@ -2,6 +2,9 @@ package rebook.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class OrderTicketsInfo {
 
     private String contactsId;

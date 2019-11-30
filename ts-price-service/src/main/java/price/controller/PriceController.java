@@ -10,6 +10,9 @@ import price.entity.PriceConfig;
 import price.service.PriceService;
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/priceservice")
 public class PriceController {

@@ -8,17 +8,17 @@ import price.service.PriceService;
 
 import java.util.UUID;
 
-
 /**
- * Created by Chenjie Xu on 2017/6/12.
+ * @author  Chenjie Xu
+ * @date 2017/6/12.
  */
-
 @Component
 public class InitData implements CommandLineRunner {
 
     @Autowired
     PriceService service;
 
+    @Override
     public void run(String... args)throws Exception{
         PriceConfig priceConfig = new PriceConfig();
         priceConfig.setId(UUID.fromString("6d20b8cb-039c-474c-ae25-b6177ea41152"));

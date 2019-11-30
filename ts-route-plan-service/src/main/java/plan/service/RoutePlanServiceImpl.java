@@ -257,7 +257,7 @@ public class RoutePlanServiceImpl implements RoutePlanService {
             unit.setEndTime(tripResponse.getEndTime());
             unit.setPriceForFirstClassSeat(tripResponse.getPriceForConfortClass());
             unit.setPriceForSecondClassSeat(tripResponse.getPriceForEconomyClass());
-            //根据routeid去拿路线图
+            //Go get the roadmap according to routeid
             String routeId = trip.getRouteId();
             Route tripRoute = getRouteByRouteId(routeId, headers);
             unit.setStopStations(tripRoute.getStations());
