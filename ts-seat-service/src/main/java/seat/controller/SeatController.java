@@ -5,11 +5,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import seat.entity.Seat;
-import seat.entity.Ticket;
 import seat.service.SeatService;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/seatservice")
 public class SeatController {
@@ -22,14 +24,27 @@ public class SeatController {
         return "Welcome to [ Seat Service ] !";
     }
 
-    //分配座位
+    /**
+     * Assign seats by seat request
+     *
+     * @param seatRequest seat request
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/seats")
     public HttpEntity create(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
         return ok(seatService.distributeSeat(seatRequest, headers));
     }
 
-    //查询特定区间余票
+    /**
+     * get left ticket of interval
+     * query specific interval residual
+     *
+     * @param seatRequest seat request
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/seats/left_tickets")
     public HttpEntity getLeftTicketOfInterval(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {

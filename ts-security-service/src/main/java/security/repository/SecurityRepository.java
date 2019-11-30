@@ -7,6 +7,9 @@ import security.entity.SecurityConfig;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Repository
 public interface SecurityRepository extends MongoRepository<SecurityConfig,String>{
 
@@ -16,6 +19,7 @@ public interface SecurityRepository extends MongoRepository<SecurityConfig,Strin
     @Query("{ 'id': ?0 }")
     SecurityConfig findById(UUID id);
 
+    @Override
     ArrayList<SecurityConfig> findAll();
 
     void deleteById(UUID id);

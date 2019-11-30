@@ -1,6 +1,8 @@
 package security.service;
 
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -17,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
@@ -26,11 +31,14 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
+
     @Override
     public Response findAllSecurityConfig(HttpHeaders headers) {
         ArrayList<SecurityConfig> securityConfigs = securityRepository.findAll();
-        if (securityConfigs != null && securityConfigs.size() > 0)
+        if (securityConfigs != null && !securityConfigs.isEmpty()) {
             return new Response<>(1, "Success", securityConfigs);
+        }
         return new Response<>(0, "No Content", null);
     }
 
@@ -78,16 +86,16 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public Response check(String accountId, HttpHeaders headers) {
         //1.获取自己过去一小时的订单数和总有效票数
-        System.out.println("[Security Service][Get Order Num Info]");
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Num Info]");
         OrderSecurity orderResult = getSecurityOrderInfoFromOrder(new Date(), accountId, headers);
         OrderSecurity orderOtherResult = getSecurityOrderOtherInfoFromOrder(new Date(), accountId, headers);
         int orderInOneHour = orderOtherResult.getOrderNumInLastOneHour() + orderResult.getOrderNumInLastOneHour();
         int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderOtherResult.getOrderNumOfValidOrder();
         //2.获取关键配置信息
-        System.out.println("[Security Service][Get Security Config Info]");
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Security Config Info]");
         SecurityConfig configMaxInHour = securityRepository.findByName("max_order_1_hour");
         SecurityConfig configMaxNotUse = securityRepository.findByName("max_order_not_use");
-        System.out.println("[Security Service] Max In One Hour:" + configMaxInHour.getValue() + " Max Not Use:" + configMaxNotUse.getValue());
+        SecurityServiceImpl.LOGGER.info("[Security Service] Max In One Hour: {}  Max Not Use: {}", configMaxInHour.getValue(), configMaxNotUse.getValue());
         int oneHourLine = Integer.parseInt(configMaxInHour.getValue());
         int totalValidLine = Integer.parseInt(configMaxNotUse.getValue());
         if (orderInOneHour > oneHourLine || totalValidOrder > totalValidLine) {
@@ -98,7 +106,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     private OrderSecurity getSecurityOrderInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
-        System.out.println("[Security Service][Get Order Info For Security] Getting....");
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Info For Security] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
                 "http://ts-order-service:12031/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
@@ -108,16 +116,12 @@ public class SecurityServiceImpl implements SecurityService {
                 });
         Response<OrderSecurity> response = re.getBody();
         OrderSecurity result =  response.getData();
-//        OrderSecurity result = restTemplate.postForObject(
-//                "http://ts-order-service:12031/getOrderInfoForSecurity",info,
-//                OrderSecurity.class);
-        System.out.println("[Security Service][Get Order Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
-                + " Total Valid Order:" + result.getOrderNumOfValidOrder());
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Info For Security] Last One Hour: {}  Total Valid Order: {}", result.getOrderNumInLastOneHour(), result.getOrderNumOfValidOrder());
         return result;
     }
 
     private OrderSecurity getSecurityOrderOtherInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
-        System.out.println("[Security Service][Get Order Other Info For Security] Getting....");
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Other Info For Security] Getting....");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
                 "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
@@ -127,11 +131,7 @@ public class SecurityServiceImpl implements SecurityService {
                 });
         Response<OrderSecurity> response = re.getBody();
         OrderSecurity result =  response.getData();
-//        OrderSecurity result = restTemplate.postForObject(
-//                "http://ts-order-other-service:12032/getOrderOtherInfoForSecurity",info,
-//                OrderSecurity.class);
-        System.out.println("[Security Service][Get Order Other Info For Security] Last One Hour:" + result.getOrderNumInLastOneHour()
-                + " Total Valid Order:" + result.getOrderNumOfValidOrder());
+        SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Other Info For Security] Last One Hour: {}  Total Valid Order: {}", result.getOrderNumInLastOneHour(), result.getOrderNumOfValidOrder());
         return result;
     }
 

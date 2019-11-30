@@ -1,5 +1,8 @@
 package seat.entity;
 
+/**
+ * @author fdse
+ */
 public class Ticket {
 
     private int seatNo;
@@ -9,7 +12,7 @@ public class Ticket {
     private String destStation;
 
     public Ticket(){
-
+        //Default Constructor
     }
 
     public int getSeatNo() {

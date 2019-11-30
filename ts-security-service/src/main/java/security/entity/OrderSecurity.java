@@ -1,6 +1,8 @@
 package security.entity;
 
-
+/**
+ * @author fdse
+ */
 public class OrderSecurity {
 
     private int orderNumInLastOneHour;

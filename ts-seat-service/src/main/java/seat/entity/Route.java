@@ -1,9 +1,11 @@
 package seat.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Document(collection = "security_config")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SecurityConfig {

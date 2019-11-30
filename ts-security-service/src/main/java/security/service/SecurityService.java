@@ -4,7 +4,9 @@ import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import security.entity.*;
 
-
+/**
+ * @author fdse
+ */
 public interface SecurityService {
 
     Response findAllSecurityConfig(HttpHeaders headers);

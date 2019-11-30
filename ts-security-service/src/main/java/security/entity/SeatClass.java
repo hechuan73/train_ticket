@@ -1,15 +1,45 @@
 package security.entity;
 
+/**
+ * @author fdse
+ */
 public enum SeatClass {
 
+    /**
+     * no seat
+     */
     NONE        (0,"NoSeat"),
+    /**
+     * green seat
+     */
     BUSINESS    (1,"GreenSeat"),
+    /**
+     * first class seat
+     */
     FIRSTCLASS  (2,"FirstClassSeat"),
+    /**
+     * second class seat
+     */
     SECONDCLASS (3,"SecondClassSeat"),
+    /**
+     * hard seat
+     */
     HARDSEAT    (4,"HardSeat"),
+    /**
+     * soft seat
+     */
     SOFTSEAT    (5,"SoftSeat"),
+    /**
+     * hard bed
+     */
     HARDBED     (6,"HardBed"),
+    /**
+     * soft bed
+     */
     SOFTBED     (7,"SoftBed"),
+    /**
+     * high soft seat
+     */
     HIGHSOFTBED (8,"HighSoftSeat");
 
     private int code;

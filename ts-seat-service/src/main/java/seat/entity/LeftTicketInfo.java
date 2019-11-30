@@ -4,13 +4,16 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+/**
+ * @author fdse
+ */
 public class LeftTicketInfo {
     @Valid
     @NotNull
     private Set<Ticket> soldTickets;
 
     public LeftTicketInfo(){
-
+        //Default Constructor
     }
 
     public Set<Ticket> getSoldTickets() {

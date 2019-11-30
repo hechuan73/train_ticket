@@ -1,5 +1,8 @@
 package seat.entity;
 
+/**
+ * @author fdse
+ */
 public class Config {
 
     private String name;

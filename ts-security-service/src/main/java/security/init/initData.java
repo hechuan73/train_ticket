@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import security.entity.SecurityConfig;
 import security.service.SecurityService;
 
+/**
+ * @author fdse
+ */
 @Component
 public class initData implements CommandLineRunner {
 
