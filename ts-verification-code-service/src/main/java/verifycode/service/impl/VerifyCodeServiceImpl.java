@@ -3,6 +3,8 @@ package verifycode.service.impl;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import verifycode.service.VerifyCodeService;
@@ -20,15 +22,23 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     public static final int CAPTCHA_EXPIRED = 1000;
 
-    // build local cache
+    private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeServiceImpl.class);
+
+    /**
+     * build local cache
+     */
     public Cache<String, String> cacheCode = CacheBuilder.newBuilder()
-            .maximumSize(CAPTCHA_EXPIRED) // max  size
+            // max  size
+            .maximumSize(CAPTCHA_EXPIRED)
             .expireAfterAccess(CAPTCHA_EXPIRED, TimeUnit.SECONDS)
             .build();
 
@@ -40,8 +50,12 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
     @Override
     public Map<String, Object> getImageCode(int width, int height, OutputStream os, HttpServletRequest request, HttpServletResponse response, HttpHeaders headers) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
-        if (width <= 0) width = 60;
-        if (height <= 0) height = 20;
+        if (width <= 0) {
+            width = 60;
+        }
+        if (height <= 0) {
+            height = 20;
+        }
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         Graphics g = image.getGraphics();
@@ -90,11 +104,8 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
                 cookieId = cookie.getValue();
             }
         }
-        System.out.println(strEnsure + " ___ st");
+        VerifyCodeServiceImpl.LOGGER.info(" {}  ___ st", strEnsure);
         cacheCode.put(cookieId, strEnsure);
-        //  verificationCodeRepository.save(new VerificationCodeValue(cookieId,strEnsure));
-        //map.put(cookieId,strEnsure);
-
         return returnMap;
     }
 
@@ -124,8 +135,12 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     static Color getRandColor(int fc, int bc) {
         Random random = new Random();
-        if (fc > 255) fc = 255;
-        if (bc > 255) bc = 255;
+        if (fc > 255) {
+            fc = 255;
+        }
+        if (bc > 255) {
+            bc = 255;
+        }
         int r = fc + random.nextInt(bc - fc);
         int g = fc + random.nextInt(bc - fc);
         int b = fc + random.nextInt(bc - fc);

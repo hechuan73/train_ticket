@@ -9,22 +9,22 @@ import urllib.request
 class GetVoucherHandler(tornado.web.RequestHandler):
 
     def post(self, *args, **kwargs):
-        #解析传过来的数据：订单id和车型指示（0代表普通，1代表动车高铁）
+        #Analyze the data transferred: order id and model indicator (0 stands for ordinary, 1 stands for bullet trains and high-speed trains)
         data = json.loads(self.request.body)
         orderId = data["orderId"]
         type = data["type"]
-        #根据订单id查询是否存在对应的凭证
+        #Query for the existence of a corresponding credential based on the order id
         queryVoucher = self.fetchVoucherByOrderId(orderId)
 
         if(queryVoucher == None):
-            #根据订单id请求订单的详细信息
+            #Request the order details based on the order id
             orderResult = self.queryOrderByIdAndType(orderId,type)
             order = orderResult['data']
 
             # jsonStr = json.dumps(orderResult)
             # self.write(jsonStr)
 
-            #往voucher表中插入报销凭证
+            #Insert vouchers table into a voucher
             config = {
                 'host':'ts-voucher-mysql',
                 'port':3306,
@@ -34,32 +34,32 @@ class GetVoucherHandler(tornado.web.RequestHandler):
             }
             conn = pymysql.connect(**config)
             cur = conn.cursor()
-            #插入语句
+            #Insert statement
             sql = 'INSERT INTO voucher (order_id,travelDate,travelTime,contactName,trainNumber,seatClass,seatNumber,startStation,destStation,price)VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
             try:
                 cur.execute(sql,(order['id'],order['travelDate'],order['travelTime'],order['contactsName'],order['trainNumber'],order['seatClass'],order['seatNumber'],order['from'],order['to'],order['price']))
                 conn.commit()
             finally:
                 conn.close()
-            #再次查询，可以获得刚刚插入的凭证信息
+            #Query again to get the credential information just inserted
             self.write(self.fetchVoucherByOrderId(orderId))
         else:
             self.write(queryVoucher)
 
     def queryOrderByIdAndType(self,orderId,type):
         type = int(type)
-        #普通列车
+        #ordinary train
         if(type == 0):
             url='http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/' + orderId
         else:
             url='http://ts-order-service:12031/api/v1/orderservice/order/'+orderId
         header_dict = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',"Content-Type": "application/json"}
-        req = urllib.request.Request(url=url,headers=header_dict)# 生成页面请求的完整数据
-        response = urllib.request.urlopen(req)# 发送页面请求
-        return json.loads(response.read())# 获取服务器返回的页面信息
+        req = urllib.request.Request(url=url,headers=header_dict)# Generate the full data for the page request
+        response = urllib.request.urlopen(req)# Send page request
+        return json.loads(response.read())# Gets the page information returned by the server
 
     def fetchVoucherByOrderId(self,orderId):
-        #从voucher表中查询orderId对应的报销凭证
+        #Check the voucher for reimbursement for orderId from the voucher table
         config = {
             'host':'ts-voucher-mysql',
             'port':3306,
@@ -69,13 +69,13 @@ class GetVoucherHandler(tornado.web.RequestHandler):
         }
         conn = pymysql.connect(**config)
         cur = conn.cursor()
-        #查询语句
+        #query statement
         sql = 'SELECT * FROM voucher where order_id = %s'
         try:
             cur.execute(sql,(orderId))
             voucher = cur.fetchone()
             conn.commit()
-            #构建返回数据
+            #Build return data
             if(cur.rowcount < 1):
                 return None
             else:
@@ -107,10 +107,10 @@ def initDatabase():
         'user':'root',
         'password':'root'
     }
-    # 创建连接
+    # Create a connection
     connect = pymysql.connect(**config)
     cur = connect.cursor()
-    #创建db
+    #create db
     sql = "CREATE SCHEMA IF NOT EXISTS voucherservice;"
     try:
         cur.execute(sql)
@@ -148,7 +148,7 @@ def initDatabase():
         connect.close()
 
 if __name__ == "__main__":
-    #创建数据库和表格
+    #Create database and tables
     initDatabase()
     app = make_app()
     app.listen(16101)

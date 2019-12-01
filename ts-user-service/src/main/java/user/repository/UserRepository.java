@@ -6,6 +6,9 @@ import user.entity.User;
 
 import java.util.UUID;
 
+/**
+ * @author fdse
+ */
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 

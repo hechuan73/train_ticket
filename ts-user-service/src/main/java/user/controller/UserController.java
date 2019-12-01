@@ -13,7 +13,9 @@ import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/userservice/users")
 public class UserController {
@@ -45,10 +47,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto, headers));
     }
 
-    // only admin token can delete
+
     @DeleteMapping("/{userId}")
     public ResponseEntity<Response> deleteUserById(@PathVariable String userId,
                                                    @RequestHeader HttpHeaders headers) {
+        // only admin token can delete
         return ok(userService.deleteUser(UUID.fromString(userId), headers));
     }
 

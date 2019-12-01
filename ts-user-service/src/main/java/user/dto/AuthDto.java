@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
-/***
- *  user-service register user , then send to auth-service
+/**
+ * user-service register user , then send to auth-service
+ *
+ * @author fdse
  */
 @Data
 @Builder

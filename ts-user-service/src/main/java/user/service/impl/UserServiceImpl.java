@@ -17,7 +17,9 @@ import user.service.UserService;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * @author fdse
+ */
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -31,8 +33,9 @@ public class UserServiceImpl implements UserService {
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
         log.info("Save User Name id：" + userDto.getUserName());
         UUID userId = userDto.getUserId();
-        if (userDto.getUserId() == null)
+        if (userDto.getUserId() == null) {
             userId = UUID.randomUUID();
+        }
 
         User user = User.builder()
                 .userId(userId)
@@ -77,24 +80,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response getAllUsers(HttpHeaders headers) {
         List<User> users = userRepository.findAll();
-        if (users != null && users.size() > 0)
+        if (users != null && !users.isEmpty()) {
             return new Response<>(1, "Success", users);
+        }
         return new Response<>(0, "NO User", null);
     }
 
     @Override
     public Response findByUserName(String userName, HttpHeaders headers) {
         User user = userRepository.findByUserName(userName);
-        if (user != null)
+        if (user != null) {
             return new Response<>(1, "Find User Success", user);
+        }
         return new Response<>(0, "No User", null);
     }
 
     @Override
     public Response findByUserId(String userId, HttpHeaders headers) {
         User user = userRepository.findByUserId(UUID.fromString(userId));
-        if (user != null)
+        if (user != null) {
             return new Response<>(1, "Find User Success", user);
+        }
         return new Response<>(0, "No User", null);
     }
 
