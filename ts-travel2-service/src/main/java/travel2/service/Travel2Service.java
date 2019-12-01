@@ -5,10 +5,10 @@ import org.springframework.http.HttpHeaders;
 import travel2.entity.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Chenjie Xu on 2017/6/7.
+ * @author  Chenjie Xu
+ * @date  2017/6/7.
  */
 public interface Travel2Service {
     Response create(TravelInfo info, HttpHeaders headers);

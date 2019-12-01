@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 @Document(collection = "routes")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {

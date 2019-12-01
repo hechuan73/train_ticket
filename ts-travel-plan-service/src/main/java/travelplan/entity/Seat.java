@@ -1,8 +1,10 @@
 package travelplan.entity;
 
-
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class Seat {
 
     private Date travelDate;
@@ -21,7 +23,7 @@ public class Seat {
     private int seatType;
 
     public Seat(){
-
+        //Default Constructor
     }
 
     public Date getTravelDate() {

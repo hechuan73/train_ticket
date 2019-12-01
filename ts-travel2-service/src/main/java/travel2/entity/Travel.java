@@ -2,7 +2,9 @@ package travel2.entity;
 
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 public class Travel {
 
     private Trip trip;

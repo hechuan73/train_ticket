@@ -3,6 +3,9 @@ package travelplan.entity;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class RoutePlanResultUnit {
 
     private String tripId;

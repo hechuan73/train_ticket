@@ -4,6 +4,9 @@ import lombok.ToString;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 @ToString
 public class TripAllDetailInfo {
 

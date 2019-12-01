@@ -1,5 +1,7 @@
 package travel2.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,16 +12,20 @@ import travel2.entity.*;
 import travel2.service.Travel2Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/travel2service")
 public class Travel2Controller {
 
     @Autowired
     private Travel2Service service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Travel2Controller.class);
 
     @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
@@ -36,7 +42,7 @@ public class Travel2Controller {
     @GetMapping(value = "/routes/{tripId}")
     public HttpEntity getRouteByTripId(@PathVariable String tripId,
                                        @RequestHeader HttpHeaders headers) {
-        System.out.println("[Get Route By Trip ID] TripId:" + tripId);
+        Travel2Controller.LOGGER.info("[Get Route By Trip ID] TripId: {}", tripId);
         //Route
         return ok(service.getRouteByTripId(tripId, headers));
     }
@@ -55,7 +61,13 @@ public class Travel2Controller {
         return new ResponseEntity<>(service.create(routeIds, headers), HttpStatus.CREATED);
     }
 
-    //只返回Trip，不会返回票数信息
+    /**
+     *Return Trip only, no left ticket information
+     *
+     * @param tripId trip id
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/trips/{tripId}")
     public HttpEntity retrieve(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
@@ -77,44 +89,37 @@ public class Travel2Controller {
         return ok(service.delete(tripId, headers));
     }
 
-
-    //返回Trip以及剩余票数
+    /**
+     * Return Trip and the remaining tickets
+     *
+     * @param info trip info
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trips/left")
     public HttpEntity queryInfo(@RequestBody TripInfo info, @RequestHeader HttpHeaders headers) {
         if (info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
                 info.getEndPlace() == null || info.getEndPlace().length() == 0 ||
                 info.getDepartureTime() == null) {
-            System.out.println("[Travel Service][Travel Query] Fail.Something null.");
+            Travel2Controller.LOGGER.info("[Travel Service][Travel Query] Fail.Something null.");
             ArrayList<TripResponse> errorList = new ArrayList<>();
             return ok(errorList);
         }
-        System.out.println("[Travel Service] Query TripResponse");
-        //ArrayList<TripResponse>  ;
+        Travel2Controller.LOGGER.info("[Travel Service] Query TripResponse");
         return ok(service.query(info, headers));
     }
 
-//    @CrossOrigin(origins = "*")
-//    @RequestMapping(value = "/travel2/queryWithPackage", method = RequestMethod.POST)
-//    public QueryTripResponsePackage queryPackage(@RequestBody TripInfo info, @RequestHeader HttpHeaders headers) {
-//        if (info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
-//                info.getEndPlace() == null || info.getEndPlace().length() == 0 ||
-//                info.getDepartureTime() == null) {
-//            System.out.println("[Travel Other Service][Travel Query] Fail.Something null.");
-//            ArrayList<TripResponse> errorList = new ArrayList<>();
-//            return new QueryTripResponsePackage(false, "Fail.", errorList);
-//        }
-//        System.out.println("[Travel Other Servicee] Query TripResponse");
-//        ArrayList<TripResponse> responses = service.query(info, headers);
-//        return new QueryTripResponsePackage(true, "Success.", responses);
-//    }
-
-    //返回某一个Trip以及剩余票数
+    /**
+     * Return a Trip and the remaining tickets
+     *
+     * @param gtdi trip all datail info
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trip_detail")
     public HttpEntity getTripAllDetailInfo(@RequestBody TripAllDetailInfo gtdi, @RequestHeader HttpHeaders headers) {
-        // TripAllDetailInfo
-        // TripAllDetail tripAllDetail
         return ok(service.getTripAllDetailInfo(gtdi, headers));
     }
 

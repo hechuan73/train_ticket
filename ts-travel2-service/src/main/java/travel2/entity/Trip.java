@@ -7,7 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 @Document(collection="trip")
 public class Trip {
     @Valid

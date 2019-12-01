@@ -7,7 +7,8 @@ import travel.entity.*;
 import java.util.ArrayList;
 
 /**
- * Created by Chenjie Xu on 2017/5/9.
+ * @author  Chenjie Xu
+ * @date 2017/5/9.
  */
 public interface TravelService {
 

@@ -1,6 +1,8 @@
 package travelplan.service;
 
 import edu.fudan.common.util.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,12 +17,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 @Service
 public class TravelPlanServiceImpl implements TravelPlanService {
 
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TravelPlanServiceImpl.class);
 
     @Override
     public Response getTransferSearch(TransferTravelInfo info, HttpHeaders headers) {
@@ -69,7 +75,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         routePlanInfo.setTravelDate(info.getDepartureTime());
         ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultCheapest(routePlanInfo, headers);
 
-        if (routePlanResultUnits.size() > 0) {
+        if (!routePlanResultUnits.isEmpty()) {
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
                 RoutePlanResultUnit tempUnit = routePlanResultUnits.get(i);
@@ -111,8 +117,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultQuickest(routePlanInfo, headers);
 
 
-        if (routePlanResultUnits.size() > 0) {
-            // ArrayList<RoutePlanResultUnit> routePlanResultUnits =   routePlanResults.getData();
+        if (!routePlanResultUnits.isEmpty()) {
 
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
@@ -153,9 +158,8 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         routePlanInfo.setToStationName(info.getEndPlace());
         routePlanInfo.setTravelDate(info.getDepartureTime());
         ArrayList<RoutePlanResultUnit> routePlanResultUnits = getRoutePlanResultMinStation(routePlanInfo, headers);
-        /// TravelAdvanceResult travelAdvanceResult = new TravelAdvanceResult();
 
-        if (routePlanResultUnits.size() > 0) {
+        if (!routePlanResultUnits.isEmpty()) {
 
             ArrayList<TravelAdvanceResultUnit> lists = new ArrayList<>();
             for (int i = 0; i < routePlanResultUnits.size(); i++) {
@@ -201,7 +205,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         seatRequest.setTravelDate(travelDate);
         seatRequest.setSeatType(seatType);
 
-        System.out.println("Seat Request is: " + seatRequest.toString());
+        TravelPlanServiceImpl.LOGGER.info("Seat Request is: {}", seatRequest.toString());
         HttpEntity requestEntity = new HttpEntity(seatRequest, headers);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",
@@ -209,10 +213,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
-//        int restNumber = restTemplate.postForObject(
-//                "http://ts-seat-service:18898/seat/getLeftTicketOfInterval",
-//                seatRequest,Integer.class
-//                );
 
         return re.getBody().getData();
     }
@@ -225,11 +225,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/cheapestRoute",
-//                        info,RoutePlanResults.class
-//                );
         return re.getBody().getData();
     }
 
@@ -242,11 +237,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
 
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/quickestRoute",
-//                        info,RoutePlanResults.class
-//                );
         return re.getBody().getData();
     }
 
@@ -258,11 +248,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
                 });
-//        RoutePlanResults routePlanResults =
-//                restTemplate.postForObject(
-//                        "http://ts-route-plan-service:14578/routePlan/minStopStations",
-//                        info,RoutePlanResults.class
-//                );
         return re.getBody().getData();
     }
 
@@ -274,7 +259,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<TripResponse>>>() {
                 });
-//        result = restTemplate.postForObject("http://ts-travel-service:12346/travel/query",info,result.getClass());
         return re.getBody().getData();
     }
 
@@ -288,7 +272,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
                 });
 
-//        result = restTemplate.postForObject("http://ts-travel2-service:16346/travel2/query",info,result.getClass());
         return re.getBody().getData();
     }
 
@@ -302,8 +285,6 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 new ParameterizedTypeReference<Response<String>>() {
                 });
 
-//        String id = restTemplate.postForObject(
-//                "http://ts-ticketinfo-service:15681/ticketinfo/queryForStationId", query ,String.class);
         return re.getBody().getData();
     }
 

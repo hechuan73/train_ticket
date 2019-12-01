@@ -1,8 +1,10 @@
 package travel.entity;
 
-
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 public class Route {
 
     private String id;

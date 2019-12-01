@@ -8,13 +8,16 @@ import travel.service.TravelService;
 
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 @Component
 public class InitData implements CommandLineRunner{
 
     @Autowired
     TravelService service;
 
+    @Override
     public void run(String... args)throws Exception{
         TravelInfo info = new TravelInfo();
 

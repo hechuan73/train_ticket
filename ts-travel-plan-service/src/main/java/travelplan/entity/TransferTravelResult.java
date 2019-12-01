@@ -1,8 +1,10 @@
 package travelplan.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 public class TransferTravelResult {
 
     private List<TripResponse> firstSectionResult;

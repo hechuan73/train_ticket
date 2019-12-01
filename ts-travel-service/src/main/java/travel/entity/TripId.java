@@ -2,7 +2,9 @@ package travel.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public class TripId implements Serializable {
     private Type type;
     private String number;
@@ -25,12 +27,6 @@ public class TripId implements Serializable {
             case 'D':
                 this.type = Type.D;
                 break;
-//            case 'Z': this.type = Type.Z;
-//                break;
-//            case 'T': this.type = Type.T;
-//                break;
-//            case 'K': this.type = Type.K;
-//                break;
             default:
                 break;
         }

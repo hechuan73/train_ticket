@@ -1,9 +1,11 @@
 package travelplan.entity;
 
-
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author fdse
+ */
 public class TravelAdvanceResultUnit {
 
     private String tripId;

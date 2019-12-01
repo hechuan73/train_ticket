@@ -5,7 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
 
-
+/**
+ * @author fdse
+ */
 @Document(collection="trainType")
 public class TrainType {
     @Valid

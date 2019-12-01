@@ -1,5 +1,7 @@
 package travel.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,13 +15,17 @@ import java.util.ArrayList;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-
+/**
+ * @author fdse
+ */
 @RestController
 @RequestMapping("/api/v1/travelservice")
 public class TravelController {
 
     @Autowired
     private TravelService travelService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TravelController.class);
 
     @GetMapping(path = "/welcome")
     public String home(@RequestHeader HttpHeaders headers) {
@@ -36,7 +42,7 @@ public class TravelController {
     @GetMapping(value = "/routes/{tripId}")
     public HttpEntity getRouteByTripId(@PathVariable String tripId,
                                        @RequestHeader HttpHeaders headers) {
-        System.out.println("[Get Route By Trip ID] TripId:" + tripId);
+        TravelController.LOGGER.info("[Get Route By Trip ID] TripId: {}", tripId);
         //Route
         return ok(travelService.getRouteByTripId(tripId, headers));
     }
@@ -55,7 +61,13 @@ public class TravelController {
         return new ResponseEntity<>(travelService.create(routeIds, headers), HttpStatus.CREATED);
     }
 
-    //只返回Trip，不会返回票数信息
+    /**
+     * Return Trip only, no left ticket information
+     *
+     * @param tripId trip id
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/trips/{tripId}")
     public HttpEntity retrieve(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
@@ -77,37 +89,34 @@ public class TravelController {
         return ok(travelService.delete(tripId, headers));
     }
 
-    //返回Trip以及剩余票数
+    /**
+     * Return Trips and the remaining tickets
+     *
+     * @param info trip info
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trips/left")
     public HttpEntity queryInfo(@RequestBody TripInfo info, @RequestHeader HttpHeaders headers) {
         if (info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
                 info.getEndPlace() == null || info.getEndPlace().length() == 0 ||
                 info.getDepartureTime() == null) {
-            System.out.println("[Travel Service][Travel Query] Fail.Something null.");
+            TravelController.LOGGER.info("[Travel Service][Travel Query] Fail.Something null.");
             ArrayList<TripResponse> errorList = new ArrayList<>();
             return ok(errorList);
         }
-        System.out.println("[Travel Service] Query TripResponse");
-        //ArrayList<TripResponse>  ;
+        TravelController.LOGGER.info("[Travel Service] Query TripResponse");
         return ok(travelService.query(info, headers));
     }
 
-//    @CrossOrigin(origins = "*")
-//    @PostMapping(value = "/package")
-//    public HttpEntity queryPackage(@RequestBody TripInfo info, @RequestHeader HttpHeaders headers) {
-//        if (info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
-//                info.getEndPlace() == null || info.getEndPlace().length() == 0 ||
-//                info.getDepartureTime() == null) {
-//            System.out.println("[Travel Service][Travel Query] Fail.Something null.");
-//            return ok(new Response<>(0, "Fail.Something null.", null));
-//        }
-//        System.out.println("[Travel Service] Query TripResponse");
-//        //ArrayList<TripResponse>
-//        return ok(travelService.query(info, headers));
-//    }
-
-    //返回某一个Trip以及剩余票数
+    /**
+     * Return a Trip and the remaining
+     *
+     * @param gtdi trip all detail info
+     * @param headers headers
+     * @return HttpEntity
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trip_detail")
     public HttpEntity getTripAllDetailInfo(@RequestBody TripAllDetailInfo gtdi, @RequestHeader HttpHeaders headers) {

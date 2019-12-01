@@ -1,12 +1,15 @@
 package travel2.entity;
 
+/**
+ * @author fdse
+ */
 public class AdminTrip {
     private Trip trip;
     private TrainType trainType;
     private Route route;
 
     public AdminTrip(){
-
+        //Default Constructor
     }
 
     public Trip getTrip() {

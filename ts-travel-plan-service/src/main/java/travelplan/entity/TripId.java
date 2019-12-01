@@ -2,6 +2,9 @@ package travelplan.entity;
 
 import java.io.Serializable;
 
+/**
+ * @author fdse
+ */
 public class TripId implements Serializable{
 
     private TrainTypeEnum type;

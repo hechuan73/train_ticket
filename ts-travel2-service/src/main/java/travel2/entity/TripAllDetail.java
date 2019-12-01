@@ -1,5 +1,8 @@
 package travel2.entity;
 
+/**
+ * @author fdse
+ */
 public class TripAllDetail {
 
     private boolean status;

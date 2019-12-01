@@ -7,13 +7,16 @@ import travel2.entity.TravelInfo;
 import travel2.service.Travel2Service;
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 @Component
 public class InitData implements CommandLineRunner {
 
     @Autowired
     Travel2Service service;
 
+    @Override
     public void run(String... args)throws Exception{
         TravelInfo info = new TravelInfo();
 

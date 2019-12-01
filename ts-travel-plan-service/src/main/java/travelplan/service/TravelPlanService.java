@@ -4,7 +4,9 @@ import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import travelplan.entity.*;
 
-
+/**
+ * @author fdse
+ */
 public interface TravelPlanService {
 
     Response getTransferSearch(TransferTravelInfo info, HttpHeaders headers);

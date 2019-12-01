@@ -6,7 +6,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
+/**
+ * @author fdse
+ */
 public class TripResponse {
     @Valid
     @Id
@@ -32,13 +34,19 @@ public class TripResponse {
     @NotNull
     private Date endTime;
 
+    /**
+     * the number of economy seats
+     */
     @Valid
     @NotNull
-    private int economyClass;   //普通座的座位数量
+    private int economyClass;
 
+    /**
+     * the number of confort seats
+     */
     @Valid
     @NotNull
-    private int confortClass;   //商务座的座位数量
+    private int confortClass;
 
     @Valid
     @NotNull

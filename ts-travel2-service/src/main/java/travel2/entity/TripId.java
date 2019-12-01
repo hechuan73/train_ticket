@@ -2,15 +2,13 @@ package travel2.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * @author fdse
+ */
 public class TripId implements Serializable{
     private Type type;
     private String number;
 
-//    public TripId(Type type, String number){
-//        this.type = type;
-//        this.number = number;
-//    }
 
     public TripId(){
         //Default Constructor
@@ -19,10 +17,6 @@ public class TripId implements Serializable{
     public TripId(String trainNumber){
         char type = trainNumber.charAt(0);
         switch(type){
-//            case 'G': this.type = Type.G;
-//                break;
-//            case 'D': this.type = Type.D;
-//                break;
             case 'Z': this.type = Type.Z;
                 break;
             case 'T': this.type = Type.T;

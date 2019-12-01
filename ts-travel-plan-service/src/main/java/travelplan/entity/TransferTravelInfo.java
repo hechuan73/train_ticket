@@ -2,6 +2,9 @@ package travelplan.entity;
 
 import java.util.Date;
 
+/**
+ * @author fdse
+ */
 public class TransferTravelInfo {
 
     private String fromStationName;
