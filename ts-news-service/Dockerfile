@@ -1,4 +1,3 @@
-# FROM grayzone/beego
 FROM mrrm/web.go
 
 
