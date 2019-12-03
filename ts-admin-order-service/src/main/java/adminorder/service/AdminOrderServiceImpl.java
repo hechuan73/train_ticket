@@ -31,7 +31,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         AdminOrderServiceImpl.LOGGER.info("[Admin Order Service][Get All Orders]");
         //Get all of the orders
-        ArrayList<Order> orders = new ArrayList<Order>();
+        ArrayList<Order> orders = new ArrayList<>();
         //From ts-order-service
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<Order>>> re = restTemplate.exchange(

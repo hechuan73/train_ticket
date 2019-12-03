@@ -92,7 +92,7 @@ public class InitData implements CommandLineRunner{
     private List<Food> toFoodList(String s){
         System.out.println("s=" + s);
         String[] foodstring = s.split("_");
-        List<Food> foodList = new ArrayList<Food>();
+        List<Food> foodList = new ArrayList<>();
         for(int i = 0; i< foodstring.length; i++){
             String[] foodTemp = foodstring[i].split(",");
             Food food = new Food();

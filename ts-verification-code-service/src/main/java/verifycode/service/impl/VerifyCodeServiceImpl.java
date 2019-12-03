@@ -49,7 +49,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     @Override
     public Map<String, Object> getImageCode(int width, int height, OutputStream os, HttpServletRequest request, HttpServletResponse response, HttpHeaders headers) {
-        Map<String, Object> returnMap = new HashMap<String, Object>();
+        Map<String, Object> returnMap = new HashMap<>();
         if (width <= 0) {
             width = 60;
         }

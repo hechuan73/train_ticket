@@ -28,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService{
         mail.setMailTo(info.getEmail());
         mail.setMailSubject("Preserve Success");
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("username", info.getUsername());
         model.put("startingPlace",info.getStartingPlace());
         model.put("endPlace",info.getEndPlace());
@@ -55,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService{
         mail.setMailTo(info.getEmail());
         mail.setMailSubject("Order Create Success");
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("username", info.getUsername());
         model.put("startingPlace",info.getStartingPlace());
         model.put("endPlace",info.getEndPlace());
@@ -82,7 +82,7 @@ public class NotificationServiceImpl implements NotificationService{
         mail.setMailTo(info.getEmail());
         mail.setMailSubject("Order Changed Success");
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("username", info.getUsername());
         model.put("startingPlace",info.getStartingPlace());
         model.put("endPlace",info.getEndPlace());
@@ -109,7 +109,7 @@ public class NotificationServiceImpl implements NotificationService{
         mail.setMailTo(info.getEmail());
         mail.setMailSubject("Order Cancel Success");
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("username", info.getUsername());
         model.put("price",info.getPrice());
         mail.setModel(model);

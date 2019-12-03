@@ -120,7 +120,7 @@ public class FoodServiceImpl implements FoodService {
 
         // need return this tow element
         List<TrainFood> trainFoodList = null;
-        Map<String, List<FoodStore>> foodStoreListMap = new HashMap<String, List<FoodStore>>();
+        Map<String, List<FoodStore>> foodStoreListMap = new HashMap<>();
 
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(headers);

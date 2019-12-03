@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         log.info("AuthDto : " + dto.toString());
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        HttpEntity<AuthDto> entity = new HttpEntity<AuthDto>(dto, headers);
+        HttpEntity<AuthDto> entity = new HttpEntity<>(dto, headers);
         ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange("http://ts-auth-service:12340/api/v1/auth",
                 HttpMethod.POST,
                 entity,

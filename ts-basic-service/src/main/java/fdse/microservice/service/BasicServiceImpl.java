@@ -69,7 +69,7 @@ public class BasicServiceImpl implements BasicService {
 
         log.info("indexStart : " + indexStart + " __ " + "indexEnd : " + indexEnd);
         log.info("route.getDistances().size : " + route.getDistances().size());
-        HashMap<String, String> prices = new HashMap<String, String>();
+        HashMap<String, String> prices = new HashMap<>();
         try {
             int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
 

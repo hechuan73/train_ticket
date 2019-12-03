@@ -387,7 +387,7 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public Response adminQueryAll(HttpHeaders headers) {
         List<Trip> trips = repository.findAll();
-        ArrayList<AdminTrip> adminTrips = new ArrayList<AdminTrip>();
+        ArrayList<AdminTrip> adminTrips = new ArrayList<>();
         for (Trip trip : trips) {
             AdminTrip adminTrip = new AdminTrip();
             adminTrip.setTrip(trip);

@@ -113,7 +113,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     public Response getAllAssurances(HttpHeaders headers) {
         List<Assurance> as = assuranceRepository.findAll();
         if (as != null && !as.isEmpty()) {
-            ArrayList<PlainAssurance> result = new ArrayList<PlainAssurance>();
+            ArrayList<PlainAssurance> result = new ArrayList<>();
             for (Assurance a : as) {
                 PlainAssurance pa = new PlainAssurance();
                 pa.setId(a.getId());
@@ -132,7 +132,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     @Override
     public Response getAllAssuranceTypes(HttpHeaders headers) {
 
-        List<AssuranceTypeBean> atlist = new ArrayList<AssuranceTypeBean>();
+        List<AssuranceTypeBean> atlist = new ArrayList<>();
         for (AssuranceType at : AssuranceType.values()) {
             AssuranceTypeBean atb = new AssuranceTypeBean();
             atb.setIndex(at.getIndex());

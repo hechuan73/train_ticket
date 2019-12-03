@@ -28,8 +28,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
     @Override
     public Response getAllTravels(HttpHeaders headers) {
-        Response<ArrayList<AdminTrip>> result = new Response<ArrayList<AdminTrip>>();
-        ArrayList<AdminTrip> trips = new ArrayList<AdminTrip>();
+        Response<ArrayList<AdminTrip>> result;
+        ArrayList<AdminTrip> trips = new ArrayList<>();
 
         AdminTravelServiceImpl.LOGGER.info("[Admin Travel Service][Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);

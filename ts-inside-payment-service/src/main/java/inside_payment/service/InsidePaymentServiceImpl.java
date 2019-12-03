@@ -157,10 +157,10 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     @Override
     public Response queryAccount(HttpHeaders headers) {
-        List<Balance> result = new ArrayList<Balance>();
+        List<Balance> result = new ArrayList<>();
         List<Money> list = addMoneyRepository.findAll();
         Iterator<Money> ite = list.iterator();
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         while (ite.hasNext()) {
             Money addMoney = ite.next();
             if (map.containsKey(addMoney.getUserId())) {
