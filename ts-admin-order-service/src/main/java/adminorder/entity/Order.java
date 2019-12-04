@@ -84,6 +84,8 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return 0;
+        int result = 17;
+        result = 31 * result + (id == null ? 0 : id.hashCode());
+        return result;
     }
 }
