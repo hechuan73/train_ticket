@@ -44,7 +44,7 @@ public class CancelController {
             CancelController.LOGGER.info("[Cancel Order Service][Cancel Ticket] Verify Success");
             return ok(cancelService.cancelOrder(orderId, loginId, headers));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
             return null;
         }
     }

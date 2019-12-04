@@ -44,4 +44,9 @@ public class Contacts implements Serializable {
                 && phoneNumber.equals(other.getPhoneNumber())
                 && documentType == other.getDocumentType();
     }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

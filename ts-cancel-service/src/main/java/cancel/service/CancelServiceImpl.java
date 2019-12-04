@@ -133,8 +133,7 @@ public class CancelServiceImpl implements CancelService {
                 HttpMethod.POST,
                 requestEntity,
                 Boolean.class);
-        boolean result = re.getBody();
-        return result;
+        return re.getBody();
     }
 
     @Override
@@ -203,8 +202,8 @@ public class CancelServiceImpl implements CancelService {
                 hour,
                 minute,
                 second);
-        CancelServiceImpl.LOGGER.info("[Cancel Order] nowDate  : {}", nowDate.toString());
-        CancelServiceImpl.LOGGER.info("[Cancel Order] startTime: {}", startTime.toString());
+        CancelServiceImpl.LOGGER.info("[Cancel Order] nowDate  : {}", nowDate);
+        CancelServiceImpl.LOGGER.info("[Cancel Order] startTime: {}", startTime);
         if (nowDate.after(startTime)) {
             CancelServiceImpl.LOGGER.info("[Cancel Order] Ticket expire refund 0");
             return "0";
@@ -228,9 +227,8 @@ public class CancelServiceImpl implements CancelService {
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-        Response result = re.getBody();
 
-        return result;
+        return re.getBody();
     }
 
     private Response cancelFromOtherOrder(Order info, HttpHeaders headers) {
@@ -241,9 +239,8 @@ public class CancelServiceImpl implements CancelService {
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
-        Response result = re.getBody();
 
-        return result;
+        return re.getBody();
     }
 
     public boolean drawbackMoney(String money, String userId, HttpHeaders headers) {
@@ -257,11 +254,7 @@ public class CancelServiceImpl implements CancelService {
                 Response.class);
         Response result = re.getBody();
 
-        if (result.getStatus() == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.getStatus() == 1;
     }
 
     public Response<User> getAccount(String orderId, HttpHeaders headers) {
@@ -273,8 +266,7 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<User>>() {
                 });
-        Response<User> result = re.getBody();
-        return result;
+        return re.getBody();
     }
 
     private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
@@ -286,8 +278,7 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        Response<Order> cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
     private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
@@ -299,8 +290,7 @@ public class CancelServiceImpl implements CancelService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        Response<Order> cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
 }

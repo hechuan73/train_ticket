@@ -5,6 +5,10 @@ package auth.constant;
  */
 public class InfoConstant {
 
+    private InfoConstant() {
+        throw new IllegalStateException("Utility class");
+    }
+
     // User service information. If require params, the suffix number is the number of params
 
     public static final String DUPLICATE = "Duplicate";

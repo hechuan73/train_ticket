@@ -1,7 +1,8 @@
 package food.controller;
 
-
 import food.service.FoodMapService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,8 @@ public class FoodStoreController {
     @Autowired
     FoodMapService foodMapService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FoodStoreController.class);
+
     @GetMapping(path = "/foodstores/welcome")
     public String home() {
         return "Welcome to [ Food store Service ] !";
@@ -26,14 +29,14 @@ public class FoodStoreController {
     @CrossOrigin(origins = "*")
     @GetMapping("/foodstores")
     public HttpEntity getAllFoodStores(@RequestHeader HttpHeaders headers) {
-        System.out.println("[Food Map Service][Get All FoodStores]");
+        FoodStoreController.LOGGER.info("[Food Map Service][Get All FoodStores]");
         return ok(foodMapService.listFoodStores(headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/foodstores/{stationId}")
     public HttpEntity getFoodStoresOfStation(@PathVariable String stationId, @RequestHeader HttpHeaders headers) {
-        System.out.println("[Food Map Service][Get FoodStores By StationId]");
+        FoodStoreController.LOGGER.info("[Food Map Service][Get FoodStores By StationId]");
         return ok(foodMapService.listFoodStoresByStationId(stationId, headers));
     }
 

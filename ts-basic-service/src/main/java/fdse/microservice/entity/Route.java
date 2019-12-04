@@ -1,19 +1,21 @@
 package fdse.microservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.ArrayList;
+import java.util.List;
+import lombok.*;
 
 /**
  * @author fdse
  */
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 
     private String id;
 
-    private ArrayList<String> stations;
+    private List<String> stations;
 
-    private ArrayList<Integer> distances;
+    private List<Integer> distances;
 
     private String startStationId;
 
@@ -23,43 +25,4 @@ public class Route {
         //Default Constructor
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public ArrayList<String> getStations() {
-        return stations;
-    }
-
-    public void setStations(ArrayList<String> stations) {
-        this.stations = stations;
-    }
-
-    public ArrayList<Integer> getDistances() {
-        return distances;
-    }
-
-    public void setDistances(ArrayList<Integer> distances) {
-        this.distances = distances;
-    }
-
-    public String getStartStationId() {
-        return startStationId;
-    }
-
-    public void setStartStationId(String startStationId) {
-        this.startStationId = startStationId;
-    }
-
-    public String getTerminalStationId() {
-        return terminalStationId;
-    }
-
-    public void setTerminalStationId(String terminalStationId) {
-        this.terminalStationId = terminalStationId;
-    }
 }

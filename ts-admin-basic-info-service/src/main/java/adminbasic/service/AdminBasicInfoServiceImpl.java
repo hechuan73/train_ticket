@@ -3,6 +3,8 @@ package adminbasic.service;
 import adminbasic.entity.*;
 import edu.fudan.common.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 
 /**
  * @author fdse
@@ -22,6 +23,8 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminBasicInfoServiceImpl.class);
 
     @Override
     public Response getAllContacts(HttpHeaders headers) {
@@ -87,7 +90,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response getAllStations(HttpHeaders headers) {
 
-        List<Station> l;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-station-service:12345/api/v1/stationservice/stations",
@@ -148,7 +150,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response getAllTrains(HttpHeaders headers) {
 
-        List<TrainType> l;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-train-service:14567/api/v1/trainservice/trains",
@@ -266,7 +267,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 requestEntity,
                 Response.class);
 
-        System.out.println("[!!!!GetAllPriceResult] ");
+        AdminBasicInfoServiceImpl.LOGGER.info("[!!!!GetAllPriceResult] ");
         return re.getBody();
     }
 

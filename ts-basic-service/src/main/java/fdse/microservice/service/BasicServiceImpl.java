@@ -100,8 +100,7 @@ public class BasicServiceImpl implements BasicService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response id = re.getBody();
-        return  id;
+        return  re.getBody();
     }
 
     public boolean checkStationExists(String stationName, HttpHeaders headers) {
@@ -113,10 +112,8 @@ public class BasicServiceImpl implements BasicService {
                 requestEntity,
                 Response.class);
         Response exist = re.getBody();
-       if (exist.getStatus() ==1) {
-           return true;
-       }
-        return false;
+
+        return exist.getStatus() == 1;
     }
 
     public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {

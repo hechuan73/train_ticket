@@ -23,7 +23,7 @@ public class AsyncTask {
     private static final Logger LOG = LoggerFactory.getLogger(AsyncTask.class);
 
     @Async("mySimpleAsync")
-    public Future<Boolean> sendAsyncCallToPaymentService(OutsidePaymentInfo outsidePaymentInfo) throws InterruptedException{
+    public Future<Boolean> sendAsyncCallToPaymentService(OutsidePaymentInfo outsidePaymentInfo) {
         AsyncTask.LOG.info("[Inside Payment Service][Async Task] Begin.");
         Boolean value = restTemplate.getForObject("http://rest-service-external:16100/greet", Boolean.class);
         AsyncTask.LOG.info("[Inside Payment Service][Async Task] Receive call Value directly back: {}", value);

@@ -10,7 +10,7 @@ public class AllTripFood {
     private Map<String, List<FoodStore>>  foodStoreListMap;
 
     public AllTripFood(){
-
+        //Default Constructor
     }
     public List<TrainFood> getTrainFoodList() {
         return trainFoodList;

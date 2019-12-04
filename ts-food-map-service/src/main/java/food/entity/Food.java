@@ -8,7 +8,7 @@ public class Food implements Serializable{
     private String foodName;
     private double price;
     public Food(){
-
+        //Default Constructor
     }
     public String getFoodName() {
         return foodName;

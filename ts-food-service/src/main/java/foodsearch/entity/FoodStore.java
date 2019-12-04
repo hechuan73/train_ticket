@@ -22,7 +22,7 @@ public class FoodStore implements Serializable{
     private List<Food> foodList;
 
     public FoodStore(){
-
+        //Default Constructor
     }
 
     public UUID getId() {

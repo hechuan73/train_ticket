@@ -213,8 +213,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             money.add(new BigDecimal(addMoney.getMoney()));
         }
 
-        String result = money.subtract(totalExpand).toString();
-        return result;
+        return money.subtract(totalExpand).toString();
     }
 
     @Override

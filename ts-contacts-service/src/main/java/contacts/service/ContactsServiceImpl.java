@@ -24,6 +24,8 @@ public class ContactsServiceImpl implements ContactsService {
     @Autowired
     private ContactsRepository contactsRepository;
 
+    String success = "Success";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactsServiceImpl.class);
 
     @Override
@@ -31,7 +33,7 @@ public class ContactsServiceImpl implements ContactsService {
         log.info("FIND CONTACTS BY ID: " + id);
         Contacts contacts = contactsRepository.findById(id);
         if (contacts != null) {
-            return new Response<>(1, "Success", contacts);
+            return new Response<>(1, success, contacts);
         } else {
             return new Response<>(0, "No contacts accorrding to contacts id", id);
         }
@@ -42,7 +44,7 @@ public class ContactsServiceImpl implements ContactsService {
         ArrayList<Contacts> arr = contactsRepository.findByAccountId(accountId);
         ContactsServiceImpl.LOGGER.info("[Contacts-Query-Service][Query-Contacts] Result Size: {}", arr.size());
         if (arr != null && !arr.isEmpty()) {
-            return new Response<>(1, "Success", arr);
+            return new Response<>(1, success, arr);
         } else {
             return new Response<>(0, "No contacts according to accountId", accountId);
         }
@@ -118,7 +120,7 @@ public class ContactsServiceImpl implements ContactsService {
     public Response getAllContacts(HttpHeaders headers) {
         ArrayList<Contacts> contacts = contactsRepository.findAll();
         if (contacts != null && !contacts.isEmpty()) {
-            return new Response<>(1, "Success", contacts);
+            return new Response<>(1, success, contacts);
         } else {
             return new Response<>(0, "No content", null);
         }

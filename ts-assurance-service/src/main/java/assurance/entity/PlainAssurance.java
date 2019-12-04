@@ -20,7 +20,7 @@ public class PlainAssurance implements Serializable {
     private double typePrice;
 
     public PlainAssurance(){
-
+        //Default Constructor
     }
 
     public UUID getId() {

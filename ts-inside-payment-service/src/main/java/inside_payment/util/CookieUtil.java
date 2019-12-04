@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public class CookieUtil {
 
+    private CookieUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
         Cookie cookie = new Cookie(name,value);
         cookie.setPath("/");
@@ -23,8 +27,7 @@ public class CookieUtil {
     public static Cookie getCookieByName(HttpServletRequest request, String name){
         Map<String,Cookie> cookieMap = ReadCookieMap(request);
         if(cookieMap.containsKey(name)){
-            Cookie cookie = (Cookie)cookieMap.get(name);
-            return cookie;
+            return (Cookie)cookieMap.get(name);
         }else{
             return null;
         }

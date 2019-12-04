@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class InitData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
-
+        //do nothing
     }
 }

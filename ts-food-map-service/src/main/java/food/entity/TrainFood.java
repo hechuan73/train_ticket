@@ -21,7 +21,7 @@ public class TrainFood {
     private List<Food> foodList;
 
     public TrainFood(){
-
+        //Default Constructor
     }
 
     public UUID getId() {

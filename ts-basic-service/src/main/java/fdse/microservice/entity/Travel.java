@@ -12,7 +12,9 @@ public class Travel {
     private String endPlace;
     private Date departureTime;
 
-    public Travel(){}
+    public Travel(){
+        //Default Constructor
+    }
 
     public Trip getTrip() {
         return trip;

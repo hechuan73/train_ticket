@@ -10,6 +10,10 @@ import java.util.Map;
  */
 public class JsonUtils {
 
+    private JsonUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * <p>
      * Object to JSON string

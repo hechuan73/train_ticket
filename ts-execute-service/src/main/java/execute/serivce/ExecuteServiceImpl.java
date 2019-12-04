@@ -22,6 +22,8 @@ public class ExecuteServiceImpl implements ExecuteService {
     @Autowired
     private RestTemplate restTemplate;
 
+    String orderStatusWrong = "Order Status Wrong";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteServiceImpl.class);
 
     @Override
@@ -34,7 +36,7 @@ public class ExecuteServiceImpl implements ExecuteService {
             order =   resultFromOrder.getData();
             //2.Check if the order can come in
             if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
-                return new Response<>(0, "Order Status Wrong", null);
+                return new Response<>(0, orderStatusWrong, null);
             }
             //3.Confirm inbound, request change order information
 
@@ -50,7 +52,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 order =   resultFromOrder.getData();
                 //2.Check if the order can come in
                 if (order.getStatus() != OrderStatus.COLLECTED.getCode()) {
-                    return new Response<>(0, "Order Status Wrong", null);
+                    return new Response<>(0, orderStatusWrong, null);
                 }
                 //3.Confirm inbound, request change order information
 
@@ -76,7 +78,7 @@ public class ExecuteServiceImpl implements ExecuteService {
             order =  resultFromOrder.getData();
             //2.Check if the order can come in
             if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
-                return new Response<>(0, "Order Status Wrong", null);
+                return new Response<>(0, orderStatusWrong, null);
             }
             //3.Confirm inbound, request change order information
 
@@ -92,7 +94,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 order = (Order) resultFromOrder.getData();
                 //2.Check if the order can come in
                 if (order.getStatus() != OrderStatus.PAID.getCode() && order.getStatus() != OrderStatus.CHANGE.getCode()) {
-                    return new Response<>(0, "Order Status Wrong", null);
+                    return new Response<>(0, orderStatusWrong, null);
                 }
                 //3.Confirm inbound, request change order information
                 Response resultExecute = executeOrderOther(orderId, OrderStatus.COLLECTED.getCode(), headers);
@@ -116,8 +118,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
 
@@ -129,8 +130,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-        Response cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
     private Response<Order> getOrderByIdFromOrder(String orderId, HttpHeaders headers) {
@@ -142,8 +142,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        Response<Order> cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
     private Response<Order> getOrderByIdFromOrderOther(String orderId, HttpHeaders headers) {
@@ -155,8 +154,7 @@ public class ExecuteServiceImpl implements ExecuteService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        Response<Order> cor = re.getBody();
-        return cor;
+        return re.getBody();
     }
 
 }

@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JWTUtil {
 
+    private JWTUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static String secretKey = Base64.getEncoder().encodeToString("secret".getBytes());
 
 

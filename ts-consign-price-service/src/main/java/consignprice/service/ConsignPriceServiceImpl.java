@@ -18,6 +18,8 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
     @Autowired
     private ConsignPriceConfigRepository repository;
 
+    String success = "Success";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsignPriceServiceImpl.class);
 
     @Override
@@ -35,7 +37,7 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
                 price = initialPrice + extraWeight * priceConfig.getBeyondPrice();
             }
         }
-        return new Response<>(1, "Success", price);
+        return new Response<>(1, success, price);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         sb.append(" and beyond the region is ");
         sb.append(price.getBeyondPrice());
         sb.append("\n");
-        return new Response<>(1, "Success", sb.toString());
+        return new Response<>(1, success, sb.toString());
     }
 
     @Override
@@ -71,11 +73,11 @@ public class ConsignPriceServiceImpl implements ConsignPriceService {
         originalConfig.setWithinPrice(config.getWithinPrice());
         originalConfig.setBeyondPrice(config.getBeyondPrice());
         repository.save(originalConfig);
-        return new Response<>(1, "Success", originalConfig);
+        return new Response<>(1, success, originalConfig);
     }
 
     @Override
     public Response getPriceConfig(HttpHeaders headers) {
-        return new Response<>(1, "Success", repository.findByIndex(0));
+        return new Response<>(1, success, repository.findByIndex(0));
     }
 }

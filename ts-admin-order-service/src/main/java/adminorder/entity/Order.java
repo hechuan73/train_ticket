@@ -81,4 +81,9 @@ public class Order {
                 && status == other.getStatus()
                 && price.equals(other.price);
     }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

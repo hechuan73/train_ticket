@@ -8,7 +8,7 @@ import java.util.UUID;
 public class TrainFood implements Serializable{
 
     public TrainFood(){
-
+        //Default Constructor
     }
 
     private UUID id;
