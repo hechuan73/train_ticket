@@ -95,6 +95,11 @@ public class Order {
                 && price.equals(other.price);
     }
 
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
     public UUID getId() {
         return id;
     }

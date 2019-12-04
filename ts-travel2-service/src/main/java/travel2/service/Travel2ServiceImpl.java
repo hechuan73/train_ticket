@@ -31,6 +31,9 @@ public class Travel2ServiceImpl implements Travel2Service {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Travel2ServiceImpl.class);
 
+    String success = "Success";
+    String noCnontent = "No Content";
+
     @Override
     public Response getRouteByTripId(String tripId, HttpHeaders headers) {
         TripId tripId1 = new TripId(tripId);
@@ -63,7 +66,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (trainType != null) {
             return new Response<>(1, "Success query Train by trip id", trainType);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noCnontent, null);
         }
     }
 
@@ -78,9 +81,9 @@ public class Travel2ServiceImpl implements Travel2Service {
             tripList.add(tempTripList);
         }
         if (!tripList.isEmpty()) {
-            return new Response<>(1, "Success", tripList);
+            return new Response<>(1, success, tripList);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noCnontent, null);
         }
     }
 
@@ -158,7 +161,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                     tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
                 TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
                 if (response == null) {
-                    return new Response<>(0, "No content", null);
+                    return new Response<>(0, noCnontent, null);
                 }
                 list.add(response);
             }
@@ -192,7 +195,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         }
 
 
-        return new Response<>(1, "Success", gtdr);
+        return new Response<>(1, success, gtdr);
     }
 
 
@@ -273,13 +276,13 @@ public class Travel2ServiceImpl implements Travel2Service {
         calendarStart.setTime(trip.getStartingTime());
         calendarStart.add(Calendar.MINUTE, minutesStart);
         response.setStartingTime(calendarStart.getTime());
-        Travel2ServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesStart, calendarStart.getTime().toString());
+        Travel2ServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesStart, calendarStart.getTime());
 
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
         calendarEnd.add(Calendar.MINUTE, minutesEnd);
         response.setEndTime(calendarEnd.getTime());
-        Travel2ServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesEnd, calendarEnd.getTime().toString());
+        Travel2ServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesEnd, calendarEnd.getTime());
 
         response.setTripId(new TripId(result.getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());
@@ -293,9 +296,9 @@ public class Travel2ServiceImpl implements Travel2Service {
     public Response queryAll(HttpHeaders headers) {
         List<Trip> tripList = repository.findAll();
         if (tripList != null && !tripList.isEmpty()) {
-            return new Response<>(1, "Success", tripList);
+            return new Response<>(1, success, tripList);
         }
-        return new Response<>(0, "No Content", null);
+        return new Response<>(0, noCnontent, null);
     }
 
     private static boolean afterToday(Date date) {
@@ -410,7 +413,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (!adminTrips.isEmpty()) {
             return new Response<>(1, "Travel Service Admin Query All Travel Success", adminTrips);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noCnontent, null);
         }
     }
 

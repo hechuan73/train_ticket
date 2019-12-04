@@ -31,6 +31,9 @@ public class TravelServiceImpl implements TravelService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TravelServiceImpl.class);
 
+    String success = "Success";
+    String noContent = "No Content";
+
     @Override
     public Response create(TravelInfo info, HttpHeaders headers) {
         TripId ti = new TripId(info.getTripId());
@@ -56,9 +59,9 @@ public class TravelServiceImpl implements TravelService {
             }
         }
         if (route != null) {
-            return new Response<>(1, "Success", route);
+            return new Response<>(1, success, route);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noContent, null);
         }
     }
 
@@ -71,9 +74,9 @@ public class TravelServiceImpl implements TravelService {
             trainType = getTrainType(trip.getTrainTypeId(), headers);
         }
         if (trainType != null) {
-            return new Response<>(1, "Success", trainType);
+            return new Response<>(1, success, trainType);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noContent, null);
         }
     }
 
@@ -88,9 +91,9 @@ public class TravelServiceImpl implements TravelService {
             tripList.add(tempTripList);
         }
         if (!tripList.isEmpty()) {
-            return new Response<>(1, "Success", tripList);
+            return new Response<>(1, success, tripList);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noContent, null);
         }
     }
 
@@ -160,7 +163,7 @@ public class TravelServiceImpl implements TravelService {
                 list.add(response);
             }
         }
-        return new Response<>(1, "Success", list);
+        return new Response<>(1, success, list);
     }
 
     @Override
@@ -187,7 +190,7 @@ public class TravelServiceImpl implements TravelService {
                 gtdr.setTrip(repository.findByTripId(new TripId(gtdi.getTripId())));
             }
         }
-        return new Response<>(1, "Success", gtdr);
+        return new Response<>(1, success, gtdr);
     }
 
     private TripResponse getTickets(Trip trip, Route route, String startingPlaceId, String endPlaceId, String startingPlaceName, String endPlaceName, Date departureTime, HttpHeaders headers) {
@@ -261,13 +264,13 @@ public class TravelServiceImpl implements TravelService {
         calendarStart.setTime(trip.getStartingTime());
         calendarStart.add(Calendar.MINUTE, minutesStart);
         response.setStartingTime(calendarStart.getTime());
-        TravelServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesStart, calendarStart.getTime().toString());
+        TravelServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesStart, calendarStart.getTime());
 
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
         calendarEnd.add(Calendar.MINUTE, minutesEnd);
         response.setEndTime(calendarEnd.getTime());
-        TravelServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesEnd, calendarEnd.getTime().toString());
+        TravelServiceImpl.LOGGER.info("[Train Service] calculate time：{}  time: {}", minutesEnd, calendarEnd.getTime());
 
         response.setTripId(new TripId(result.getData().getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());
@@ -281,9 +284,9 @@ public class TravelServiceImpl implements TravelService {
     public Response queryAll(HttpHeaders headers) {
         List<Trip> tripList = repository.findAll();
         if (tripList != null && !tripList.isEmpty()) {
-            return new Response<>(1, "Success", tripList);
+            return new Response<>(1, success, tripList);
         }
-        return new Response<>(0, "No Content", null);
+        return new Response<>(0, noContent, null);
     }
 
     private static boolean afterToday(Date date) {
@@ -379,9 +382,8 @@ public class TravelServiceImpl implements TravelService {
                 new ParameterizedTypeReference<Response<Integer>>() {
                 });
         TravelServiceImpl.LOGGER.info("Get Rest tickets num is: {}", re.getBody().toString());
-        int restNumber = re.getBody().getData();
 
-        return restNumber;
+        return re.getBody().getData();
     }
 
     @Override
@@ -396,9 +398,9 @@ public class TravelServiceImpl implements TravelService {
             adminTrips.add(adminTrip);
         }
         if (!adminTrips.isEmpty()) {
-            return new Response<>(1, "Success", adminTrips);
+            return new Response<>(1, success, adminTrips);
         } else {
-            return new Response<>(0, "No Content", null);
+            return new Response<>(0, noContent, null);
         }
     }
 }

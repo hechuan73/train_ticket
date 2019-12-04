@@ -204,7 +204,7 @@ public class SeatServiceImpl implements SeatService {
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
                     });
 
-            SeatServiceImpl.LOGGER.info("Get Order tickets result is : {}", re3.toString());
+            SeatServiceImpl.LOGGER.info("Get Order tickets result is : {}", re3);
             leftTicketInfo = re3.getBody().getData();
 
             //Calls the microservice to query the total number of seats specified for that vehicle
@@ -241,7 +241,7 @@ public class SeatServiceImpl implements SeatService {
                     requestEntity,
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
                     });
-            SeatServiceImpl.LOGGER.info("Get Order tickets result is : {}", re3.toString());
+            SeatServiceImpl.LOGGER.info("Get Order tickets result is : {}", re3);
             leftTicketInfo = re3.getBody().getData();
 
 

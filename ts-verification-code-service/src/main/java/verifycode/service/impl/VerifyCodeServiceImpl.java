@@ -30,8 +30,9 @@ import java.util.concurrent.TimeUnit;
 public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     public static final int CAPTCHA_EXPIRED = 1000;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeServiceImpl.class);
+
+    String ysbCaptcha = "YsbCaptcha";
 
     /**
      * build local cache
@@ -91,15 +92,15 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
         returnMap.put("image", image);
         returnMap.put("strEnsure", strEnsure);
 
-        Cookie cookie = CookieUtil.getCookieByName(request, "YsbCaptcha");
+        Cookie cookie = CookieUtil.getCookieByName(request, ysbCaptcha);
         String cookieId;
         if (cookie == null) {
             cookieId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-            CookieUtil.addCookie(response, "YsbCaptcha", cookieId, CAPTCHA_EXPIRED);
+            CookieUtil.addCookie(response, ysbCaptcha, cookieId, CAPTCHA_EXPIRED);
         } else {
             if (cookie.getValue() != null) {
                 cookieId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-                CookieUtil.addCookie(response, "YsbCaptcha", cookieId, CAPTCHA_EXPIRED);
+                CookieUtil.addCookie(response, ysbCaptcha, cookieId, CAPTCHA_EXPIRED);
             } else {
                 cookieId = cookie.getValue();
             }
@@ -112,11 +113,11 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
     @Override
     public boolean verifyCode(HttpServletRequest request, HttpServletResponse response, String receivedCode, HttpHeaders headers) {
         boolean result = false;
-        Cookie cookie = CookieUtil.getCookieByName(request, "YsbCaptcha");
+        Cookie cookie = CookieUtil.getCookieByName(request, ysbCaptcha);
         String cookieId;
         if (cookie == null) {
             cookieId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-            CookieUtil.addCookie(response, "YsbCaptcha", cookieId, CAPTCHA_EXPIRED);
+            CookieUtil.addCookie(response, ysbCaptcha, cookieId, CAPTCHA_EXPIRED);
         } else {
             cookieId = cookie.getValue();
         }

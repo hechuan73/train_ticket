@@ -5,7 +5,9 @@ package notification.entity;
  */
 public class NotifyInfo {
 
-    public NotifyInfo(){}
+    public NotifyInfo(){
+        //Default Constructor
+    }
 
     private String email;
     private String orderNumber;

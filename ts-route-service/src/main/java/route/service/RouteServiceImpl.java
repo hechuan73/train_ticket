@@ -24,6 +24,8 @@ public class RouteServiceImpl implements RouteService {
     private RouteRepository routeRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(RouteServiceImpl.class);
 
+    String success = "Success";
+
     @Override
     public Response createAndModify(RouteInfo info, HttpHeaders headers) {
         RouteServiceImpl.LOGGER.info("Create And Modify Start: {} End: {}", info.getStartStation(), info.getEndStation());
@@ -87,7 +89,7 @@ public class RouteServiceImpl implements RouteService {
         if (route == null) {
             return new Response<>(0, "No content with the routeId", routeId);
         } else {
-            return new Response<>(1, "Success", route);
+            return new Response<>(1, success, route);
         }
 
     }
@@ -105,7 +107,7 @@ public class RouteServiceImpl implements RouteService {
             }
         }
         if (!resultList.isEmpty()) {
-            return new Response<>(1, "Success", resultList);
+            return new Response<>(1, success, resultList);
         } else {
             return new Response<>(0, "No routes with the startId and terminalId", startId + " -- " + terminalId);
         }
@@ -115,7 +117,7 @@ public class RouteServiceImpl implements RouteService {
     public Response getAllRoutes(HttpHeaders headers) {
         ArrayList<Route> routes = routeRepository.findAll();
         if (routes != null && !routes.isEmpty()) {
-            return new Response<>(1, "Success", routes);
+            return new Response<>(1, success, routes);
         } else {
             return new Response<>(0, "No Content", routes);
         }

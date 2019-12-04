@@ -1,10 +1,12 @@
 package travel.entity;
 
-import java.util.HashMap;
+import java.util.Map;
+import lombok.*;
 
 /**
  * @author fdse
  */
+@Data
 public class TravelResult {
 
     private boolean status;
@@ -13,7 +15,7 @@ public class TravelResult {
 
     private TrainType trainType;
 
-    private HashMap<String,String> prices;
+    private Map<String,String> prices;
 
     private String message;
 
@@ -21,43 +23,4 @@ public class TravelResult {
         //Default Constructor
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public double getPercent() {
-        return percent;
-    }
-
-    public void setPercent(double percent){
-        this.percent = percent;
-    }
-
-    public TrainType getTrainType() {
-        return trainType;
-    }
-
-    public void setTrainType(TrainType trainType) {
-        this.trainType = trainType;
-    }
-
-    public HashMap<String, String> getPrices() {
-        return prices;
-    }
-
-    public void setPrices(HashMap<String, String> prices) {
-        this.prices = prices;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

@@ -16,6 +16,7 @@ public interface FoodOrderRepository extends MongoRepository<FoodOrder, String> 
     @Query("{ 'orderId' : ?0 }")
     FoodOrder findByOrderId(UUID orderId);
 
+    @Override
     List<FoodOrder> findAll();
 
     void deleteById(UUID id);

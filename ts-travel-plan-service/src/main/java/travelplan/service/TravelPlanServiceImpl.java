@@ -28,6 +28,9 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TravelPlanServiceImpl.class);
 
+    String success = "Success";
+    String cannotFind = "Cannot Find";
+
     @Override
     public Response getTransferSearch(TransferTravelInfo info, HttpHeaders headers) {
 
@@ -101,9 +104,9 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 lists.add(newUnit);
             }
 
-            return new Response<>(1, "Success", lists);
+            return new Response<>(1, success, lists);
         } else {
-            return new Response<>(0, "Cannot Find", null);
+            return new Response<>(0, cannotFind, null);
         }
     }
 
@@ -144,9 +147,9 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 newUnit.setNumberOfRestTicketSecondClass(second);
                 lists.add(newUnit);
             }
-            return new Response<>(1, "Success", lists);
+            return new Response<>(1, success, lists);
         } else {
-            return new Response<>(0, "Cannot Find", null);
+            return new Response<>(0, cannotFind, null);
         }
     }
 
@@ -187,9 +190,9 @@ public class TravelPlanServiceImpl implements TravelPlanService {
                 newUnit.setNumberOfRestTicketSecondClass(second);
                 lists.add(newUnit);
             }
-            return new Response<>(1, "Success", lists);
+            return new Response<>(1, success, lists);
         } else {
-            return new Response<>(0, "Cannot Find", null);
+            return new Response<>(0, cannotFind, null);
         }
     }
 

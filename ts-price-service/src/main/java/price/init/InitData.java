@@ -18,26 +18,29 @@ public class InitData implements CommandLineRunner {
     @Autowired
     PriceService service;
 
+    String gaoTieOne = "GaoTieOne";
+    String zhiDa = "ZhiDa";
+
     @Override
     public void run(String... args)throws Exception{
         PriceConfig priceConfig = new PriceConfig();
         priceConfig.setId(UUID.fromString("6d20b8cb-039c-474c-ae25-b6177ea41152"));
         priceConfig.setRouteId("92708982-77af-4318-be25-57ccb0ff69ad");
-        priceConfig.setTrainType("GaoTieOne");
+        priceConfig.setTrainType(gaoTieOne);
         priceConfig.setBasicPriceRate(0.38);
         priceConfig.setFirstClassPriceRate(1.0);
         service.createNewPriceConfig(priceConfig, null);
 
         priceConfig.setId(UUID.fromString("c5679b7e-4a54-4f52-9939-1ae86ba16fa7"));
         priceConfig.setRouteId("aefcef3f-3f42-46e8-afd7-6cb2a928bd3d");
-        priceConfig.setTrainType("GaoTieOne");
+        priceConfig.setTrainType(gaoTieOne);
         priceConfig.setBasicPriceRate(0.5);
         priceConfig.setFirstClassPriceRate(1.0);
         service.createNewPriceConfig(priceConfig, null);
 
         priceConfig.setId(UUID.fromString("719287d6-d3e7-4b54-9a92-71d039748b22"));
         priceConfig.setRouteId("a3f256c1-0e43-4f7d-9c21-121bf258101f");
-        priceConfig.setTrainType("GaoTieOne");
+        priceConfig.setTrainType(gaoTieOne);
         priceConfig.setBasicPriceRate(0.7);
         priceConfig.setFirstClassPriceRate(1.0);
         service.createNewPriceConfig(priceConfig, null);
@@ -58,21 +61,21 @@ public class InitData implements CommandLineRunner {
 
         priceConfig.setId(UUID.fromString("b90a6ad7-ffad-4624-9655-48e9e185fa6c"));
         priceConfig.setRouteId("0b23bd3e-876a-4af3-b920-c50a90c90b04");
-        priceConfig.setTrainType("ZhiDa");
+        priceConfig.setTrainType(zhiDa);
         priceConfig.setBasicPriceRate(0.35);
         priceConfig.setFirstClassPriceRate(1.0);
         service.createNewPriceConfig(priceConfig, null);
 
         priceConfig.setId(UUID.fromString("8fb01829-393f-4af4-9e96-f72866f94d14"));
         priceConfig.setRouteId("9fc9c261-3263-4bfa-82f8-bb44e06b2f52");
-        priceConfig.setTrainType("ZhiDa");
+        priceConfig.setTrainType(zhiDa);
         priceConfig.setBasicPriceRate(0.35);
         priceConfig.setFirstClassPriceRate(1.0);
         service.createNewPriceConfig(priceConfig, null);
 
         priceConfig.setId(UUID.fromString("8b059dc5-01a2-4f8f-8f94-6c886b38bb34"));
         priceConfig.setRouteId("d693a2c5-ef87-4a3c-bef8-600b43f62c68");
-        priceConfig.setTrainType("ZhiDa");
+        priceConfig.setTrainType(zhiDa);
         priceConfig.setBasicPriceRate(0.32);
         service.createNewPriceConfig(priceConfig, null);
 

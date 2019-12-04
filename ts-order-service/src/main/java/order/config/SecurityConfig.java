@@ -26,12 +26,13 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    String admin = "ADMIN";
+
     /**
      * load password encoder
      *
      * @return PasswordEncoder
      */
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -70,11 +71,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.DELETE, "/api/v1/orderservice/order").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order/admin").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order/admin").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order/admin").hasAnyRole(admin)
+                .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order/admin").hasAnyRole(admin)
                 .antMatchers("/api/v1/orderservice/order/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/v2/**").permitAll()

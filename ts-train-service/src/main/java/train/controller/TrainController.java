@@ -4,8 +4,6 @@ import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import train.entity.TrainType;
 import train.service.TrainService;
@@ -19,7 +17,6 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/api/v1/trainservice")
 public class TrainController {
 
-    //private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @Autowired
     private TrainService trainService;
@@ -77,7 +74,7 @@ public class TrainController {
     @GetMapping(value = "/trains")
     public HttpEntity query(@RequestHeader HttpHeaders headers) {
         List<TrainType> trainTypes = trainService.query(headers);
-        if (trainTypes != null && trainTypes.size() > 0) {
+        if (trainTypes != null && !trainTypes.isEmpty()) {
             return ok(new Response(1, "success", trainTypes));
         } else {
             return ok(new Response(0, "no content", trainTypes));

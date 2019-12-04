@@ -25,6 +25,8 @@ public class PriceServiceImpl implements PriceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PriceServiceImpl.class);
 
+    String noThatConfig = "No that config";
+
     @Override
     public Response createNewPriceConfig(PriceConfig createAndModifyPriceConfig, HttpHeaders headers) {
         PriceServiceImpl.LOGGER.info("[Price Service][Create New Price Config]");
@@ -57,8 +59,7 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceConfig findById(String id, HttpHeaders headers) {
         PriceServiceImpl.LOGGER.info("[Price Service][Find By Id] ID: {}", id);
-        PriceConfig priceConfig = priceConfigRepository.findById(UUID.fromString(id));
-        return priceConfig;
+        return priceConfigRepository.findById(UUID.fromString(id));
     }
 
     @Override
@@ -68,7 +69,7 @@ public class PriceServiceImpl implements PriceService {
         PriceServiceImpl.LOGGER.info("[Price Service][Find By Route Id And Train Type]");
 
         if (priceConfig == null) {
-            return new Response<>(0, "No that config", routeId + trainType);
+            return new Response<>(0, noThatConfig, routeId + trainType);
         } else {
             return new Response<>(1, "Success", priceConfig);
         }
@@ -94,7 +95,7 @@ public class PriceServiceImpl implements PriceService {
     public Response deletePriceConfig(PriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
         if (priceConfig == null) {
-            return new Response<>(0, "No that config", null);
+            return new Response<>(0, noThatConfig, null);
         } else {
             PriceConfig pc = new PriceConfig();
             pc.setId(c.getId());
@@ -111,7 +112,7 @@ public class PriceServiceImpl implements PriceService {
     public Response updatePriceConfig(PriceConfig c, HttpHeaders headers) {
         PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
         if (priceConfig == null) {
-            return new Response<>(0, "No that config", null);
+            return new Response<>(0, noThatConfig, null);
         } else {
             priceConfig.setId(c.getId());
             priceConfig.setBasicPriceRate(c.getBasicPriceRate());

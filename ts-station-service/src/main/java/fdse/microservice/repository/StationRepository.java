@@ -12,5 +12,6 @@ public interface StationRepository extends CrudRepository<Station,String> {
 
     Station findById(String id);
 
+    @Override
     List<Station> findAll();
 }

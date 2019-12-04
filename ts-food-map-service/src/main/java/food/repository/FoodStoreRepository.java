@@ -18,6 +18,7 @@ public interface FoodStoreRepository extends MongoRepository<FoodStore, String> 
     List<FoodStore> findByStationIdIn(List<String> stationIds);
 
 
+    @Override
     List<FoodStore> findAll();
 
     void deleteById(UUID id);

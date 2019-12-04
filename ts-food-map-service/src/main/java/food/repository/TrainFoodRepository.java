@@ -14,6 +14,7 @@ public interface TrainFoodRepository extends MongoRepository<TrainFood, String> 
 
     TrainFood findById(UUID id);
 
+    @Override
     List<TrainFood> findAll();
 
     @Query("{ 'tripId' : ?0 }")

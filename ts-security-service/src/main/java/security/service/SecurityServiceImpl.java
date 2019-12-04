@@ -33,11 +33,13 @@ public class SecurityServiceImpl implements SecurityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
+    String success = "Success";
+
     @Override
     public Response findAllSecurityConfig(HttpHeaders headers) {
         ArrayList<SecurityConfig> securityConfigs = securityRepository.findAll();
         if (securityConfigs != null && !securityConfigs.isEmpty()) {
-            return new Response<>(1, "Success", securityConfigs);
+            return new Response<>(1, success, securityConfigs);
         }
         return new Response<>(0, "No Content", null);
     }
@@ -54,7 +56,7 @@ public class SecurityServiceImpl implements SecurityService {
             config.setValue(info.getValue());
             config.setDescription(info.getDescription());
             securityRepository.save(config);
-            return new Response<>(1, "Success", config);
+            return new Response<>(1, success, config);
         }
     }
 
@@ -68,7 +70,7 @@ public class SecurityServiceImpl implements SecurityService {
             sc.setValue(info.getValue());
             sc.setDescription(info.getDescription());
             securityRepository.save(sc);
-            return new Response<>(1, "Success", sc);
+            return new Response<>(1, success, sc);
         }
     }
 
@@ -77,7 +79,7 @@ public class SecurityServiceImpl implements SecurityService {
         securityRepository.deleteById(UUID.fromString(id));
         SecurityConfig sc = securityRepository.findById(UUID.fromString(id));
         if (sc == null) {
-            return new Response<>(1, "Success", id);
+            return new Response<>(1, success, id);
         } else {
             return new Response<>(0, "Reason Not clear", id);
         }

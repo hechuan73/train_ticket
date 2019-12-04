@@ -19,8 +19,8 @@ public class TripId implements Serializable {
     }
 
     public TripId(String trainNumber) {
-        char type = trainNumber.charAt(0);
-        switch (type) {
+        char type0 = trainNumber.charAt(0);
+        switch (type0) {
             case 'G':
                 this.type = Type.G;
                 break;

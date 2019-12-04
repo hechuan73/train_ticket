@@ -14,8 +14,8 @@ public class TrainServiceImpl implements TrainService {
     @Autowired
     private TrainTypeRepository repository;
 
-    //private static final Logger log = LoggerFactory.getLogger(Application.class);
 
+    @Override
     public boolean create(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
         if (repository.findById(trainType.getId()) == null) {
@@ -27,15 +27,16 @@ public class TrainServiceImpl implements TrainService {
         return result;
     }
 
+    @Override
     public TrainType retrieve(String id, HttpHeaders headers) {
         if (repository.findById(id) == null) {
-            //log.info("ts-train-service:retireve "+id+ " and there is no TrainType with the id:" +id);
             return null;
         } else {
             return repository.findById(id);
         }
     }
 
+    @Override
     public boolean update(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
         //
@@ -48,11 +49,10 @@ public class TrainServiceImpl implements TrainService {
         return result;
     }
 
+    @Override
     public boolean delete(String id, HttpHeaders headers) {
         boolean result = false;
-        if (repository.findById(id) == null) {
-            //log.info("ts-train-service:delete " + id +" and there doesn't exist TrainType with the id:" +id);
-        } else {
+        if (repository.findById(id) != null) {
             repository.deleteById(id);
             result = true;
         }

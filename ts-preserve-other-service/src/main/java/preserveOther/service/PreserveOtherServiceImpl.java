@@ -260,9 +260,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestEntityTicket,
                 new ParameterizedTypeReference<Response<Ticket>>() {
                 });
-        Ticket ticket = reTicket.getBody().getData();
 
-        return ticket;
+        return reTicket.getBody().getData();
     }
 
     public boolean sendEmail(NotifyInfo notifyInfo, HttpHeaders httpHeaders) {
@@ -274,9 +273,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 HttpMethod.POST,
                 requestEntitySendEmail,
                 Boolean.class);
-        boolean result = reSendEmail.getBody();
 
-        return result;
+        return reSendEmail.getBody();
     }
 
     public User getAccount(String accountId, HttpHeaders httpHeaders) {
@@ -304,9 +302,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestAddAssuranceResult,
                 new ParameterizedTypeReference<Response<Assurance>>() {
                 });
-        Response<Assurance> result = reAddAssuranceResult.getBody();
 
-        return result;
+        return reAddAssuranceResult.getBody();
     }
 
 
@@ -321,8 +318,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestQueryForStationId,
                 new ParameterizedTypeReference<Response<String>>() {
                 });
-        String stationId = reQueryForStationId.getBody().getData();
-        return stationId;
+        return reQueryForStationId.getBody().getData();
     }
 
     private Response checkSecurity(String accountId, HttpHeaders httpHeaders) {
@@ -334,9 +330,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 HttpMethod.GET,
                 requestCheckResult,
                 Response.class);
-        Response response = reCheckResult.getBody();
 
-        return response;
+        return reCheckResult.getBody();
     }
 
 
@@ -350,9 +345,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestGetTripAllDetailResult,
                 new ParameterizedTypeReference<Response<TripAllDetail>>() {
                 });
-        Response<TripAllDetail> gtdr = reGetTripAllDetailResult.getBody();
 
-        return gtdr;
+        return reGetTripAllDetailResult.getBody();
     }
 
     private Response<Contacts> getContactsById(String contactsId, HttpHeaders httpHeaders) {
@@ -365,9 +359,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestGetContactsResult,
                 new ParameterizedTypeReference<Response<Contacts>>() {
                 });
-        Response<Contacts> gcr = reGetContactsResult.getBody();
 
-        return gcr;
+        return reGetContactsResult.getBody();
     }
 
     private Response<Order> createOrder(Order coi, HttpHeaders httpHeaders) {
@@ -380,10 +373,9 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 requestEntityCreateOrderResult,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        Response<Order> cor = reCreateOrderResult.getBody();
 
 
-        return cor;
+        return reCreateOrderResult.getBody();
     }
 
     private Response createFoodOrder(FoodOrder afi, HttpHeaders httpHeaders) {
@@ -395,9 +387,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 HttpMethod.POST,
                 requestEntityAddFoodOrderResult,
                 Response.class);
-        Response afr = reAddFoodOrderResult.getBody();
 
-        return afr;
+        return reAddFoodOrderResult.getBody();
     }
 
     private Response createConsign(Consign cr, HttpHeaders httpHeaders) {
@@ -409,9 +400,8 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                 HttpMethod.POST,
                 requestEntityResultForTravel,
                 Response.class);
-        Response icr = reResultForTravel.getBody();
 
 
-        return icr;
+        return reResultForTravel.getBody();
     }
 }
