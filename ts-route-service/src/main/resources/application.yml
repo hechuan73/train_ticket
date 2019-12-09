@@ -15,3 +15,9 @@ server:
 
 swagger:
   controllerPackage: route.controller
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831

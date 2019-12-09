@@ -7,3 +7,9 @@ spring:
 
 swagger:
   controllerPackage: fdse.microservice.controller
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831

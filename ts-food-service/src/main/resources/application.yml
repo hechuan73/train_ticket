@@ -13,3 +13,9 @@ spring:
       port: 27017
 swagger:
   controllerPackage: foodsearch.controller
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: jaeger
+      port: 6831
