@@ -6,13 +6,15 @@
 
 You need to have set up a Kubernetes cluster and deployed the train ticket system in it.    
 Then, set the virtual machine size of all nodes in the cluster, just execute the command:     
-`sysctl -w vm.max_map_count = 655300`
+`sysctl -w vm.max_map_count=655300`
 
 ### Deploy:
 
 OK, let's officially start deploying EFK with one command.   
 After entering the directory where this file is located, we only need to execute the runEFK.sh script:   
-`bash runEFK.sh`
+`bash runEFK.sh`  
+
+Note: You may make sure that these pods are in running status. Otherwise you may need to deal with these problems (such as manually pulling the image), then [uninstall EFK](https://github.com/FudanSELab/train-ticket/tree/master/deployment/efk-deployment#uninstall), and then redeploy EFK.
 
 ### Access Kibana UI:
 
