@@ -1,4 +1,4 @@
-package config;
+package verifycode.config;
 
 import edu.fudan.common.security.jwt.JWTFilter;
 import org.springframework.context.annotation.Bean;
