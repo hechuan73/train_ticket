@@ -55,6 +55,11 @@ public class Trip {
 
     public Trip(){
         //Default Constructor
+        this.trainTypeId = "";
+        this.startingStationId = "";
+        this.terminalStationId = "";
+        this.startingTime = new Date();
+        this.endTime = new Date();
     }
 
     public TripId getTripId() {

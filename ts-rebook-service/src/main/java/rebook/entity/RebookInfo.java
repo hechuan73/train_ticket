@@ -35,6 +35,12 @@ public class RebookInfo {
 
     public RebookInfo(){
         //Default Constructor
+        this.loginId = "";
+        this.orderId = "";
+        this.oldTripId = "";
+        this.tripId = "";
+        this.seatType = 0;
+        this.date = new Date();
     }
 
     public String getLoginId() {

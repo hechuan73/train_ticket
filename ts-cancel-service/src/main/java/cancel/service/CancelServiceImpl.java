@@ -28,8 +28,10 @@ public class CancelServiceImpl implements CancelService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
 
+    String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
+
     @Override
-    public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) throws Exception {
+    public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) {
 
         Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
         if (orderResult.getStatus() == 1) {
@@ -52,7 +54,7 @@ public class CancelServiceImpl implements CancelService {
                         CancelServiceImpl.LOGGER.info("[Cancel Order Service][Draw Back Money] Success.");
 
 
-                        // todo
+
                         Response<User> result = getAccount(order.getAccountId().toString(), headers);
                         if (result.getStatus() == 0) {
                             return new Response<>(0, "Cann't find userinfo by user id.", null);
@@ -82,7 +84,7 @@ public class CancelServiceImpl implements CancelService {
 
             } else {
                 CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
-                return new Response<>(0, "Order Status Cancel Not Permitted", null);
+                return new Response<>(0, orderStatusCancelNotPermitted, null);
             }
         } else {
 
@@ -116,7 +118,7 @@ public class CancelServiceImpl implements CancelService {
                     }
                 } else {
                     CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Status Not Permitted.");
-                    return new Response<>(0, "Order Status Cancel Not Permitted", null);
+                    return new Response<>(0, orderStatusCancelNotPermitted, null);
                 }
             } else {
                 CancelServiceImpl.LOGGER.info("[Cancel Order Service][Cancel Order] Order Not Found.");
@@ -171,7 +173,7 @@ public class CancelServiceImpl implements CancelService {
                     }
                 } else {
                     CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] Order Other. Cancel Not Permitted.");
-                    return new Response<>(0, "Order Status Cancel Not Permitted", null);
+                    return new Response<>(0, orderStatusCancelNotPermitted, null);
                 }
             } else {
                 CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] Order not found.");

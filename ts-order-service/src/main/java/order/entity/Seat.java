@@ -30,6 +30,11 @@ public class Seat {
 
     public Seat(){
         //Default Constructor
+        this.travelDate = new Date();
+        this.trainNumber = "";
+        this.startStation = "";
+        this.destStation = "";
+        this.seatType = 0;
     }
 
     public Date getTravelDate() {

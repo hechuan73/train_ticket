@@ -30,6 +30,7 @@ public class FoodStore {
 
     public FoodStore(){
         //Default Constructor
+        this.stationId = "";
     }
 
     public UUID getId() {

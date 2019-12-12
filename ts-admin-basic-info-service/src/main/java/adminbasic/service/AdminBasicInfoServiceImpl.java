@@ -26,6 +26,11 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminBasicInfoServiceImpl.class);
 
+    String stations = "http://ts-station-service:12345/api/v1/stationservice/stations";
+    String trains = "http://ts-train-service:14567/api/v1/trainservice/trains";
+    String configs = "http://ts-config-service:15679/api/v1/configservice/configs";
+    String prices = "http://ts-price-service:16579/api/v1/priceservice/prices";
+
     @Override
     public Response getAllContacts(HttpHeaders headers) {
         Response result;
@@ -92,7 +97,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations",
+                stations,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -108,7 +113,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations",
+                stations,
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -122,7 +127,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations",
+                stations,
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
@@ -137,7 +142,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(s, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations",
+                stations,
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -152,7 +157,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains",
+                trains,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -167,7 +172,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(t, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains",
+                trains,
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -196,7 +201,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(t, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains",
+                trains,
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -210,7 +215,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-config-service:15679/api/v1/configservice/configs",
+                configs,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -224,7 +229,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-config-service:15679/api/v1/configservice/configs",
+                configs,
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -249,7 +254,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-config-service:15679/api/v1/configservice/configs",
+                configs,
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -262,7 +267,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-price-service:16579/api/v1/priceservice/prices",
+                prices,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -276,7 +281,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-price-service:16579/api/v1/priceservice/prices",
+                prices,
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -290,7 +295,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-price-service:16579/api/v1/priceservice/prices",
+                prices,
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
@@ -303,7 +308,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     public Response modifyPrice(PriceInfo pi, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(pi, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-price-service:16579/api/v1/priceservice/prices",
+                prices,
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);

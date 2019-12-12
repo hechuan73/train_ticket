@@ -40,6 +40,9 @@ public class Money {
 
     public Money(){
         this.id = UUID.randomUUID().toString();
+        this.userId = "";
+        this.money = "";
+
     }
 
     public String getUserId() {

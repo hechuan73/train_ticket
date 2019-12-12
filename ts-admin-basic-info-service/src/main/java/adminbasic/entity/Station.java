@@ -17,7 +17,7 @@ public class Station {
     private int stayTime;
 
     public Station(){
-
+        this.name = "";
     }
 
 
