@@ -24,7 +24,7 @@ public class Money {
 
     @Valid
     @NotNull
-    private String money;
+    private String money; //NOSONAR
 
     @Valid
     @NotNull

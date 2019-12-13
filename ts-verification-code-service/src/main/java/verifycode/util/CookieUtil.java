@@ -27,15 +27,15 @@ public class CookieUtil {
     }
 
     public static Cookie getCookieByName(HttpServletRequest request, String name){
-        Map<String,Cookie> cookieMap = ReadCookieMap(request);
+        Map<String,Cookie> cookieMap = readCookieMap(request);
         if(cookieMap.containsKey(name)){
-            return (Cookie)cookieMap.get(name);
+            return cookieMap.get(name);
         }else{
             return null;
         }
     }
 
-    private static Map<String,Cookie> ReadCookieMap(HttpServletRequest request){
+    private static Map<String,Cookie> readCookieMap(HttpServletRequest request){
         Map<String,Cookie> cookieMap = new HashMap<>();
         Cookie[] cookies = request.getCookies();
         if(null!=cookies){

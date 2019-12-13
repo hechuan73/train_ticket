@@ -140,7 +140,7 @@ public class Order {
     }
 
     public void setTravelDate(int year,int month,int day){
-        Date date = new Date(year,month,day,0,0,0);
+        Date date = new Date(year,month,day,0,0,0); //NOSONAR
         this.travelDate = date;
     }
 
@@ -152,9 +152,6 @@ public class Order {
         this.travelTime = travelTime;
     }
 
-    public void setTravelTime(int hour,int minute){
-        Date date = new Date(1970,1,1,hour,minute,0);
-    }
 
     public String getTrainNumber() {
         return trainNumber;

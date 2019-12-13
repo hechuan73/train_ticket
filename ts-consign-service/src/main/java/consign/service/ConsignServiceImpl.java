@@ -38,7 +38,7 @@ public class ConsignServiceImpl implements ConsignService {
         ConsignServiceImpl.LOGGER.info("[Consign servie] [ Insert new consign record] {}", consignRequest.getOrderId());
 
         ConsignRecord consignRecord = new ConsignRecord();
-        //设置record属性
+        //Set the record attribute
         consignRecord.setId(UUID.randomUUID());
         log.info("Order ID is :" + consignRequest.getOrderId());
         consignRecord.setOrderId(consignRequest.getOrderId());
@@ -53,7 +53,7 @@ public class ConsignServiceImpl implements ConsignService {
         consignRecord.setPhone(consignRequest.getPhone());
         consignRecord.setWeight(consignRequest.getWeight());
 
-        //获得价格
+        //get the price
         HttpEntity requestEntity = new HttpEntity(null, headers);
         ResponseEntity<Response<Double>> re = restTemplate.exchange(
                 "http://ts-consign-price-service:16110/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
@@ -66,11 +66,7 @@ public class ConsignServiceImpl implements ConsignService {
         log.info("SAVE consign info : " + consignRecord.toString());
         ConsignRecord result = repository.save(consignRecord);
         log.info("SAVE consign result : " + result.toString());
-        if (result != null) {
-            return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), +result.getPrice());
-        } else {
-            return new Response<>(0, "Consign failed! Please try again later!", consignRequest);
-        }
+        return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), +result.getPrice());
     }
 
     @Override
@@ -88,7 +84,7 @@ public class ConsignServiceImpl implements ConsignService {
         originalRecord.setTo(consignRequest.getTo());
         originalRecord.setConsignee(consignRequest.getConsignee());
         originalRecord.setPhone(consignRequest.getPhone());
-        //重新计算价格
+        //Recalculate price
         if (originalRecord.getWeight() != consignRequest.getWeight()) {
             HttpEntity requestEntity = new HttpEntity(null, headers);
             ResponseEntity<Response<Double>> re = restTemplate.exchange(

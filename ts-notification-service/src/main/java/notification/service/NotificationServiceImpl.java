@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService{
     String seatNumber = "seatNumber";
 
     @Override
-    public boolean preserve_success(NotifyInfo info, HttpHeaders headers){
+    public boolean preserveSuccess(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom(email);
         mail.setMailTo(info.getEmail());
@@ -61,7 +61,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_create_success(NotifyInfo info, HttpHeaders headers){
+    public boolean orderCreateSuccess(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom(email);
         mail.setMailTo(info.getEmail());
@@ -88,7 +88,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_changed_success(NotifyInfo info, HttpHeaders headers){
+    public boolean orderChangedSuccess(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom(email);
         mail.setMailTo(info.getEmail());
@@ -115,7 +115,7 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public boolean order_cancel_success(NotifyInfo info, HttpHeaders headers){
+    public boolean orderCancelSuccess(NotifyInfo info, HttpHeaders headers){
         Mail mail = new Mail();
         mail.setMailFrom(email);
         mail.setMailTo(info.getEmail());

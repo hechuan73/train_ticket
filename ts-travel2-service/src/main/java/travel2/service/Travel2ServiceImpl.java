@@ -45,7 +45,6 @@ public class Travel2ServiceImpl implements Travel2Service {
         } else {
             Route route = getRouteByRouteId(trip.getRouteId(), headers);
             if (route == null) {
-                System.out.println();
                 return new Response<>(0, "\"[Get Route By Trip ID] Route Not Found:\" + trip.getRouteId()", null);
             } else {
                 Travel2ServiceImpl.LOGGER.info("[Get Route By Trip ID] Success");
@@ -315,11 +314,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             if (calDateA.get(Calendar.MONTH) > calDateB.get(Calendar.MONTH)) {
                 return false;
             } else if (calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)) {
-                if (calDateA.get(Calendar.DAY_OF_MONTH) <= calDateB.get(Calendar.DAY_OF_MONTH)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return calDateA.get(Calendar.DAY_OF_MONTH) <= calDateB.get(Calendar.DAY_OF_MONTH);
             } else {
                 return true;
             }

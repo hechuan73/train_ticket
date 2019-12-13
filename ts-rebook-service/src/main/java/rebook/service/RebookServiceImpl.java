@@ -74,10 +74,8 @@ public class RebookServiceImpl implements RebookService {
                     return new Response<>(0, "Seat Not Enough", null);
                 }
             } else {
-                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode()) {
-                    if (tripResponse.getConfortClass() <= 0) {
-                        return new Response<>(0, "Seat Not Enough", null);
-                    }
+                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode() && tripResponse.getConfortClass() <= 0) {
+                    return new Response<>(0, "Seat Not Enough", null);
                 }
             }
         }
@@ -241,10 +239,8 @@ public class RebookServiceImpl implements RebookService {
                 } else if (calDateA.get(Calendar.DAY_OF_MONTH) == calDateB.get(Calendar.DAY_OF_MONTH)) {
                     if (calDateA.get(Calendar.HOUR_OF_DAY) > calDateC.get(Calendar.HOUR_OF_DAY) + 2) {
                         result = false;
-                    } else if (calDateA.get(Calendar.HOUR_OF_DAY) == calDateC.get(Calendar.HOUR_OF_DAY) + 2) {
-                        if (calDateA.get(Calendar.MINUTE) > calDateC.get(Calendar.MINUTE)) {
-                            result = false;
-                        }
+                    } else if (calDateA.get(Calendar.HOUR_OF_DAY) == (calDateC.get(Calendar.HOUR_OF_DAY) + 2) && calDateA.get(Calendar.MINUTE) > calDateC.get(Calendar.MINUTE)) {
+                        result = false;
                     }
                 }
             }

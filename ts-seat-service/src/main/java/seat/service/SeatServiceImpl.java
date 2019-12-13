@@ -32,7 +32,7 @@ public class SeatServiceImpl implements SeatService {
         Response<Route> routeResult;
 
         LeftTicketInfo leftTicketInfo;
-        TrainType trainTypeResult = new TrainType();
+        TrainType trainTypeResult = null;
         ResponseEntity<Response<Route>> re;
         ResponseEntity<Response<TrainType>> re2;
         ResponseEntity<Response<LeftTicketInfo>> re3;

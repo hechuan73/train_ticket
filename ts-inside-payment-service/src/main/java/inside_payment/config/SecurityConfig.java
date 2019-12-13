@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        HttpSecurity user = httpSecurity.httpBasic().disable()
+        httpSecurity.httpBasic().disable()
                 // close default csrf
                 .csrf().disable()
                 // close session

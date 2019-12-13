@@ -74,11 +74,9 @@ public class PreserveServiceImpl implements PreserveService {
                     return new Response<>(0, "Seat Not Enough", null);
                 }
             } else {
-                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode()) {
-                    if (tripResponse.getConfortClass() == 0) {
-                        PreserveServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
-                        return new Response<>(0, "Seat Not Enough", null);
-                    }
+                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode() && tripResponse.getConfortClass() == 0) {
+                    PreserveServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
+                    return new Response<>(0, "Seat Not Enough", null);
                 }
             }
         }

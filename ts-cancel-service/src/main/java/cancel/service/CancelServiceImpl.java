@@ -198,7 +198,7 @@ public class CancelServiceImpl implements CancelService {
         int hour = cal2.get(Calendar.HOUR);
         int minute = cal2.get(Calendar.MINUTE);
         int second = cal2.get(Calendar.SECOND);
-        Date startTime = new Date(year,
+        Date startTime = new Date(year,  //NOSONAR
                 month,
                 day,
                 hour,

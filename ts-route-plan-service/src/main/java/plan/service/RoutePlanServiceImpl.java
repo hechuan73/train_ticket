@@ -260,7 +260,9 @@ public class RoutePlanServiceImpl implements RoutePlanService {
             //Go get the roadmap according to routeid
             String routeId = trip.getRouteId();
             Route tripRoute = getRouteByRouteId(routeId, headers);
-            unit.setStopStations(tripRoute.getStations());
+            if (tripRoute != null) {
+                unit.setStopStations(tripRoute.getStations());
+            }
 
             tripResponses.add(unit);
         }

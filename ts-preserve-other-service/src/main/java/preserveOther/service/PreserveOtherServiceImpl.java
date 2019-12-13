@@ -80,11 +80,9 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
                     return new Response<>(0, "Seat Not Enough", null);
                 }
             } else {
-                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode()) {
-                    if (tripResponse.getConfortClass() == 0) {
-                        PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Check seat is Not enough] ");
-                        return new Response<>(0, "Check Seat Not Enough", null);
-                    }
+                if (tripResponse.getEconomyClass() == SeatClass.SECONDCLASS.getCode() && tripResponse.getConfortClass() == 0) {
+                    PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Check seat is Not enough] ");
+                    return new Response<>(0, "Check Seat Not Enough", null);
                 }
             }
         }

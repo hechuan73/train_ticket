@@ -55,7 +55,10 @@ public class BasicServiceImpl implements BasicService {
         }
 
         String routeId = info.getTrip().getRouteId();
-        String trainTypeString = trainType.getId();
+        String trainTypeString = null;
+        if (trainType != null){
+            trainTypeString = trainType.getId();
+        }
         Route route = getRouteByRouteId(routeId, headers);
         PriceConfig priceConfig = queryPriceConfigByRouteIdAndTrainType(routeId, trainTypeString, headers);
 
@@ -64,14 +67,23 @@ public class BasicServiceImpl implements BasicService {
 
         log.info("startingPlaceId : " + startingPlaceId + "endPlaceId : " + endPlaceId);
 
-        int indexStart = route.getStations().indexOf(startingPlaceId);
-        int indexEnd = route.getStations().indexOf(endPlaceId);
+        int indexStart = 0;
+        int indexEnd = 0;
+        if (route != null) {
+            indexStart = route.getStations().indexOf(startingPlaceId);
+            indexEnd = route.getStations().indexOf(endPlaceId);
+        }
 
         log.info("indexStart : " + indexStart + " __ " + "indexEnd : " + indexEnd);
-        log.info("route.getDistances().size : " + route.getDistances().size());
+        if (route != null){
+            log.info("route.getDistances().size : " + route.getDistances().size());
+        }
         HashMap<String, String> prices = new HashMap<>();
         try {
-            int distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
+            int distance = 0;
+            if (route != null){
+                distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
+            }
 
             /**
              * We need the price Rate and distance (starting station).

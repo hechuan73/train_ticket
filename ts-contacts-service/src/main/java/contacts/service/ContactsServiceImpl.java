@@ -43,11 +43,7 @@ public class ContactsServiceImpl implements ContactsService {
     public Response findContactsByAccountId(UUID accountId, HttpHeaders headers) {
         ArrayList<Contacts> arr = contactsRepository.findByAccountId(accountId);
         ContactsServiceImpl.LOGGER.info("[Contacts-Query-Service][Query-Contacts] Result Size: {}", arr.size());
-        if (arr != null && !arr.isEmpty()) {
-            return new Response<>(1, success, arr);
-        } else {
-            return new Response<>(0, "No contacts according to accountId", accountId);
-        }
+        return new Response<>(1, success, arr);
     }
 
     @Override

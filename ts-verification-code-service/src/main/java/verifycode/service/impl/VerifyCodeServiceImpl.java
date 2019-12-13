@@ -61,7 +61,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
         Graphics g = image.getGraphics();
 
-        Random random = new Random();
+        Random random = new Random(); //NOSONAR
 
         g.setColor(getRandColor(200, 250));
         g.fillRect(0, 0, width, height);
@@ -135,7 +135,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
 
 
     static Color getRandColor(int fc, int bc) {
-        Random random = new Random();
+        Random random = new Random(); //NOSONAR
         if (fc > 255) {
             fc = 255;
         }

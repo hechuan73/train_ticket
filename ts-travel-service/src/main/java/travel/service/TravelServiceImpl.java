@@ -230,14 +230,8 @@ public class TravelServiceImpl implements TravelService {
 
         //Set the returned ticket information
         TripResponse response = new TripResponse();
-        if (queryForStationId(startingPlaceName, headers).equals(trip.getStartingStationId()) &&
-                queryForStationId(endPlaceName, headers).equals(trip.getTerminalStationId())) {
-            response.setConfortClass(50);
-            response.setEconomyClass(50);
-        } else {
-            response.setConfortClass(50);
-            response.setEconomyClass(50);
-        }
+        response.setConfortClass(50);
+        response.setEconomyClass(50);
 
         int first = getRestTicketNumber(departureTime, trip.getTripId().toString(),
                 startingPlaceName, endPlaceName, SeatClass.FIRSTCLASS.getCode(), headers);
@@ -303,11 +297,7 @@ public class TravelServiceImpl implements TravelService {
             if (calDateA.get(Calendar.MONTH) > calDateB.get(Calendar.MONTH)) {
                 return false;
             } else if (calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)) {
-                if (calDateA.get(Calendar.DAY_OF_MONTH) > calDateB.get(Calendar.DAY_OF_MONTH)) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return calDateA.get(Calendar.DAY_OF_MONTH) <= calDateB.get(Calendar.DAY_OF_MONTH) ;
             } else {
                 return true;
             }

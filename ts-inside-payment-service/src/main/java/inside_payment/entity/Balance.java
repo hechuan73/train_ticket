@@ -13,7 +13,7 @@ public class Balance {
 
     @Valid
     @NotNull
-    private String balance;
+    private String balance; //NOSONAR
 
     public Balance(){
         //Default Constructor

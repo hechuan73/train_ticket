@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="addMoney")
 public class Money {
     private String userId;
-    private String money;
+    private String money; //NOSONAR
 
 
     public Money(){

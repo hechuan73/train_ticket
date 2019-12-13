@@ -10,7 +10,7 @@ import security.service.SecurityService;
  * @author fdse
  */
 @Component
-public class initData implements CommandLineRunner {
+public class InitData implements CommandLineRunner {
 
     @Autowired
     private SecurityService securityService;

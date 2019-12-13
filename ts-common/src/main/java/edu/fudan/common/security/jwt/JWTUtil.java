@@ -96,10 +96,7 @@ public class JWTUtil {
     private static boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = getClaims(token);
-            if (claimsJws.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-            return true;
+            return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             log.error("Token expired: {} " + e);
             throw new TokenException("Token expired");
