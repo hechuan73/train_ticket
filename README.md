@@ -37,7 +37,9 @@ docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-
 ```
 Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
 
-On the other hand, we provide a Tracing System based on [Jaeger](https://www.jaegertracing.io). You can visit the Jaeger Webpage at [http://localhost:16686](http://localhost:16686) to view traces in the system.
+**Jaeger**
+
+we provide a Tracing System based on [Jaeger](https://www.jaegertracing.io). You can visit the Jaeger Webpage at [http://localhost:16686](http://localhost:16686) to view traces in the system.
 
 ### Using Kubernetes
 Here is the steps to deploy the Train Ticket onto any existing Kubernetes cluster.
@@ -67,6 +69,9 @@ kubectl apply -f quickstart-ts-deployment-part3.yml
 
 #### 4. Visit the Train Ticket web page at [http://[Node-IP]:32677](http://[Node-IP]:32677).
 
+**Jaeger**
+
+we provide a Tracing System based on [Jaeger](https://www.jaegertracing.io). You can visit the Jaeger Webpage at [http://[Node-IP]:32688](http://[Node-IP]:32688) to view traces in the system.
 
 ## Build From Source
 In the above, We use pre-built images to quickly deploy the application.
