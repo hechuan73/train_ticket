@@ -402,7 +402,7 @@ public class Travel2ServiceImpl implements Travel2Service {
     @Override
     public Response adminQueryAll(HttpHeaders headers) {
         List<Trip> trips = repository.findAll();
-        ArrayList<AdminTrip> adminTrips = new ArrayList<AdminTrip>();
+        ArrayList<AdminTrip> adminTrips = new ArrayList<>();
         for (Trip trip : trips) {
             AdminTrip adminTrip = new AdminTrip();
             adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));

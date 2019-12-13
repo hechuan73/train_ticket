@@ -17,6 +17,8 @@ public class Balance {
 
     public Balance(){
         //Default Constructor
+        this.userId = "";
+        this.balance = "";
     }
 
     public String getUserId() {

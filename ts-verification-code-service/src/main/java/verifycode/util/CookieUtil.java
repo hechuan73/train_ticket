@@ -17,6 +17,8 @@ public class CookieUtil {
 
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
         Cookie cookie = new Cookie(name,value);
+        // against Cross-Site Scripting (XSS) attacks.
+        cookie.setHttpOnly(true);
         cookie.setPath("/");
         if(maxAge>0) {
             cookie.setMaxAge(maxAge);
@@ -27,8 +29,7 @@ public class CookieUtil {
     public static Cookie getCookieByName(HttpServletRequest request, String name){
         Map<String,Cookie> cookieMap = ReadCookieMap(request);
         if(cookieMap.containsKey(name)){
-            Cookie cookie = (Cookie)cookieMap.get(name);
-            return cookie;
+            return (Cookie)cookieMap.get(name);
         }else{
             return null;
         }

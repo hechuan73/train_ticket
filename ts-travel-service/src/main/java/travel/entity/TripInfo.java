@@ -23,6 +23,9 @@ public class TripInfo {
 
     public TripInfo(){
         //Default Constructor
+        this.startingPlace = "";
+        this.endPlace = "";
+        this.departureTime = new Date();
     }
 
     public String getStartingPlace() {

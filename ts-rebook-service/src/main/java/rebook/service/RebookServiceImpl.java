@@ -213,17 +213,12 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityTicket,
                 new ParameterizedTypeReference<Response<Ticket>>() {
                 });
-        Ticket ticket = reTicket.getBody().getData();
-        return ticket;
+        return reTicket.getBody().getData();
     }
 
 
     private boolean tripGD(String tripId) {
-        if (tripId.startsWith("G") || tripId.startsWith("D")) {
-            return true;
-        } else {
-            return false;
-        }
+        return tripId.startsWith("G") || tripId.startsWith("D");
     }
 
     private boolean checkTime(Date travelDate, Date travelTime) {
@@ -376,10 +371,7 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityPayDifferentMoney,
                 Response.class);
         Response result = rePayDifferentMoney.getBody();
-        if (result.getStatus() == 1) {
-            return true;
-        }
-        return false;
+        return result.getStatus() == 1;
     }
 
     private boolean drawBackMoney(String userId, String money, HttpHeaders httpHeaders) {
@@ -391,10 +383,7 @@ public class RebookServiceImpl implements RebookService {
                 requestEntityDrawBackMoney,
                 Response.class);
         Response result = reDrawBackMoney.getBody();
-        if (result.getStatus() == 1) {
-            return true;
-        }
-        return false;
+        return result.getStatus() == 1;
     }
 
 }

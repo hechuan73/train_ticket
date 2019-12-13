@@ -27,6 +27,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     String admin = "ADMIN";
+    String trips = "/api/v1/travel2service/trips";
 
     /**
      * load password encoder
@@ -72,9 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/travel2service/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1/travel2service/trips").hasAnyRole(admin)
-                .antMatchers(HttpMethod.POST, "/api/v1/travel2service/trips").hasAnyRole(admin)
-                .antMatchers(HttpMethod.DELETE, "/api/v1/travel2service/trips").hasAnyRole(admin)
+                .antMatchers(HttpMethod.PUT, trips).hasAnyRole(admin)
+                .antMatchers(HttpMethod.POST, trips).hasAnyRole(admin)
+                .antMatchers(HttpMethod.DELETE, trips).hasAnyRole(admin)
                 .antMatchers("/swagger-ui.html", "/webjars/**", "/images/**",
                         "/configuration/**", "/swagger-resources/**", "/v2/**").permitAll()
                 .anyRequest().authenticated()

@@ -17,7 +17,7 @@ public interface CancelService {
      * @throws  Exception
      * @return Response
      */
-    Response cancelOrder(String orderId, String loginId, HttpHeaders headers) throws Exception;
+    Response cancelOrder(String orderId, String loginId, HttpHeaders headers);
 
     /**
      * calculate refund by login id

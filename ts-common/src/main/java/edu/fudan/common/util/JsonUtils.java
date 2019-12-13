@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * @author fdse
  */
 public class JsonUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
     private JsonUtils() {
         throw new IllegalStateException("Utility class");
@@ -25,7 +29,7 @@ public class JsonUtils {
             ObjectMapper objectMapper = new ObjectMapper();
             result = objectMapper.writeValueAsString(obj);
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonUtils.LOGGER.error(e.getMessage());
         }
         return result;
     }
@@ -57,7 +61,7 @@ public class JsonUtils {
             ObjectMapper objectMapper = new ObjectMapper();
             result = objectMapper.readValue(json, cls);
         } catch (IOException e) {
-            e.printStackTrace();
+            JsonUtils.LOGGER.error(e.getMessage());
         }
 
         return result;

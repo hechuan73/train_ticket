@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 
 @Document(collection="station")
@@ -22,6 +23,8 @@ public class Station {
 
     public Station(){
         //Default Constructor
+        this.id = UUID.randomUUID().toString();
+        this.name = "";
     }
 
     public Station(String id, String name) {

@@ -40,7 +40,6 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
         String userId = info.getUserId();
 
-        Response<Order> result = new Response<>();
         String requestOrderURL = "";
         if (info.getTripId().startsWith("G") || info.getTripId().startsWith("D")) {
             requestOrderURL =  "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId();
@@ -54,7 +53,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
                 requestGetOrderResults,
                 new ParameterizedTypeReference<Response<Order>>() {
                 });
-        result = reGetOrderResults.getBody();
+        Response<Order> result = reGetOrderResults.getBody();
 
 
         if (result.getStatus() == 1) {

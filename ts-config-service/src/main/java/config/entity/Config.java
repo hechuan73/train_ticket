@@ -24,6 +24,8 @@ public class Config {
     private String description;
 
     public Config() {
+        this.name = "";
+        this.value = "";
     }
 
     public Config(String name, String value, String description) {

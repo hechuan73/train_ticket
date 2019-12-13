@@ -26,11 +26,10 @@ public class Assurance {
     /**
      * the type of assurance
      */
-    @NotNull
     private AssuranceType type;
 
     public Assurance(){
-
+        this.orderId = UUID.randomUUID();
     }
 
     public Assurance(UUID id, UUID orderId, AssuranceType type){

@@ -24,13 +24,11 @@ public class InitData implements CommandLineRunner{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InitData.class);
 
-    String foodStoresPath = "/foodstores.txt";
-    String trainFoodPath = "/trainfood.txt";
 
     @Override
     public void run(String... args) throws Exception {
 
-        BufferedReader br1 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(foodStoresPath)));
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/foodstores.txt")));
         try{
             String line = br1.readLine();
             while( line != null ){
@@ -66,7 +64,7 @@ public class InitData implements CommandLineRunner{
             System.exit(1);
         }
 
-        BufferedReader br2 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(trainFoodPath)));
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/trainfood.txt")));
         try{
             String line2 = br2.readLine();
             while( line2 != null ){

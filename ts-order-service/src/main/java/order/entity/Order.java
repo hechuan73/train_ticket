@@ -100,6 +100,13 @@ public class Order {
                 && price.equals(other.price);
     }
 
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (id == null ? 0 : id.hashCode());
+        return result;
+    }
+
     public UUID getId() {
         return id;
     }

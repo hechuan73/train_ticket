@@ -22,6 +22,7 @@ public class TrainFood {
 
     public TrainFood(){
         //Default Constructor
+        this.tripId = "";
     }
 
     public UUID getId() {

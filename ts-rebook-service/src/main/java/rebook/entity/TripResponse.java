@@ -55,6 +55,16 @@ public class TripResponse {
 
     public TripResponse(){
         //Default Constructor
+        this.trainTypeId = "";
+        this.startingStation = "";
+        this.terminalStation = "";
+        this.startingTime = new Date();
+        this.endTime = new Date();
+        this.economyClass = 0;
+        this.confortClass = 0;
+        this.priceForEconomyClass = "";
+        this.priceForConfortClass = "";
+
     }
 
     public TripId getTripId() {

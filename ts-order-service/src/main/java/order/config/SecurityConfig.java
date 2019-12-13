@@ -27,6 +27,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     String admin = "ADMIN";
+    String order = "/api/v1/orderservice/order";
 
     /**
      * load password encoder
@@ -71,9 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
-                .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
-                .antMatchers(HttpMethod.DELETE, "/api/v1/orderservice/order").hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.POST, order).hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.PUT, order).hasAnyRole(admin, "USER")
+                .antMatchers(HttpMethod.DELETE, order).hasAnyRole(admin, "USER")
                 .antMatchers(HttpMethod.POST, "/api/v1/orderservice/order/admin").hasAnyRole(admin)
                 .antMatchers(HttpMethod.PUT, "/api/v1/orderservice/order/admin").hasAnyRole(admin)
                 .antMatchers("/api/v1/orderservice/order/**").permitAll()
