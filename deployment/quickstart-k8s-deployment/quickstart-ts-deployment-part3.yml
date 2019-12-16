@@ -1,8 +1,11 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ts-ui-dashboard
 spec:
+  selector:
+    matchLabels:
+      app: ts-ui-dashboard
   replicas: 1
   template:
     metadata:
@@ -11,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ts-ui-dashboard
-        image: ts/ts-ui-dashboard
+        image: codewidsom/ts-ui-dashboard:0.0.3
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

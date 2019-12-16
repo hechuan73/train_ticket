@@ -33,7 +33,7 @@ cd train-ticket/
 
 #### 2. Start the Application
 ```bash
-docker-compose -f deployment/quickstart-docker-compose-v0.0.2/quickstart-docker-compose.yml up
+docker-compose -f deployment/quickstart-docker-compose/quickstart-docker-compose.yml up
 ```
 Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
 
@@ -55,9 +55,9 @@ cd train-ticket/
 
 #### 2. Deploy the application
 ```bash
-cd deployment/quickstart-k8s-deployment-v0.0.2/
+cd deployment/quickstart-k8s-deployment/
 
-# Deploy the database
+# Deploy the databases
 kubectl apply -f quickstart-ts-deployment-part1.yml
 # Deploy the services
 kubectl apply -f quickstart-ts-deployment-part2.yml

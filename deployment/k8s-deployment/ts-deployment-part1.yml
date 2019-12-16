@@ -1,43 +1,47 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: redis
+  name: ts-user-mongo
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: redis
-        version: v1
+        app: ts-user-mongo
     spec:
       containers:
-      - name: redis
-        image: redis
+      - name: ts-user-mongo
+        image: mongo
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 6379
-
+        - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ts-account-mongo
+  name: ts-auth-mongo
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-account-mongo
-        version: v1
+        app: ts-auth-mongo
     spec:
       containers:
-      - name: ts-account-mongo
+      - name: ts-auth-mongo
         image: mongo
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
-
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 ---
 
 apiVersion: extensions/v1beta1
@@ -50,7 +54,6 @@ spec:
     metadata:
       labels:
         app: ts-route-mongo
-        version: v1
     spec:
       containers:
       - name: ts-route-mongo
@@ -58,6 +61,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -71,7 +78,6 @@ spec:
     metadata:
       labels:
         app: ts-contacts-mongo
-        version: v1
     spec:
       containers:
       - name: ts-contacts-mongo
@@ -79,6 +85,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -92,7 +102,6 @@ spec:
     metadata:
       labels:
         app: ts-order-mongo
-        version: v1
     spec:
       containers:
       - name: ts-order-mongo
@@ -100,6 +109,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -113,7 +126,6 @@ spec:
     metadata:
       labels:
         app: ts-order-other-mongo
-        version: v1
     spec:
       containers:
       - name: ts-order-other-mongo
@@ -121,6 +133,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -134,7 +150,6 @@ spec:
     metadata:
       labels:
         app: ts-config-mongo
-        version: v1
     spec:
       containers:
       - name: ts-config-mongo
@@ -142,6 +157,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -155,7 +174,6 @@ spec:
     metadata:
       labels:
         app: ts-station-mongo
-        version: v1
     spec:
       containers:
       - name: ts-station-mongo
@@ -163,6 +181,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -176,7 +198,6 @@ spec:
     metadata:
       labels:
         app: ts-train-mongo
-        version: v1
     spec:
       containers:
       - name: ts-train-mongo
@@ -184,6 +205,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -197,7 +222,6 @@ spec:
     metadata:
       labels:
         app: ts-travel-mongo
-        version: v1
     spec:
       containers:
       - name: ts-travel-mongo
@@ -205,6 +229,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -218,7 +246,6 @@ spec:
     metadata:
       labels:
         app: ts-travel2-mongo
-        version: v1
     spec:
       containers:
       - name: ts-travel2-mongo
@@ -226,6 +253,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -239,7 +270,6 @@ spec:
     metadata:
       labels:
         app: ts-price-mongo
-        version: v1
     spec:
       containers:
       - name: ts-price-mongo
@@ -247,6 +277,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -260,7 +294,6 @@ spec:
     metadata:
       labels:
         app: ts-security-mongo
-        version: v1
     spec:
       containers:
       - name: ts-security-mongo
@@ -268,6 +301,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -281,7 +318,6 @@ spec:
     metadata:
       labels:
         app: ts-inside-payment-mongo
-        version: v1
     spec:
       containers:
       - name: ts-inside-payment-mongo
@@ -289,6 +325,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -302,7 +342,6 @@ spec:
     metadata:
       labels:
         app: ts-payment-mongo
-        version: v1
     spec:
       containers:
       - name: ts-payment-mongo
@@ -310,6 +349,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -323,7 +366,6 @@ spec:
     metadata:
       labels:
         app: ts-assurance-mongo
-        version: v1
     spec:
       containers:
       - name: ts-assurance-mongo
@@ -331,6 +373,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -344,7 +390,6 @@ spec:
     metadata:
       labels:
         app: ts-ticket-office-mongo
-        version: v1
     spec:
       containers:
       - name: ts-ticket-office-mongo
@@ -352,6 +397,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 
 ---
@@ -366,11 +415,10 @@ spec:
     metadata:
       labels:
         app: ts-voucher-mysql
-        version: v1
     spec:
       containers:
       - name: ts-voucher-mysql
-        image: mysql
+        image: mysql:5.6.35
         imagePullPolicy: IfNotPresent
         env:
         # Use secret in real usage
@@ -378,6 +426,10 @@ spec:
           value: root
         ports:
         - containerPort: 3306
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -391,7 +443,6 @@ spec:
     metadata:
       labels:
         app: ts-food-map-mongo
-        version: v1
     spec:
       containers:
       - name: ts-food-map-mongo
@@ -399,6 +450,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -412,7 +467,6 @@ spec:
     metadata:
       labels:
         app: ts-consign-mongo
-        version: v1
     spec:
       containers:
       - name: ts-consign-mongo
@@ -420,6 +474,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -433,7 +491,6 @@ spec:
     metadata:
       labels:
         app: ts-consign-price-mongo
-        version: v1
     spec:
       containers:
       - name: ts-consign-price-mongo
@@ -441,6 +498,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
 
 ---
 
@@ -454,7 +515,6 @@ spec:
     metadata:
       labels:
         app: ts-food-mongo
-        version: v1
     spec:
       containers:
       - name: ts-food-mongo
@@ -462,3 +522,425 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 27017
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-user-mongo 
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-user-mongo 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-auth-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-auth-mongo
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-route-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-route-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-contacts-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-contacts-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-order-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-order-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-order-other-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-order-other-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-config-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-config-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-station-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-station-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-train-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-train-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-travel-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-travel-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-travel2-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-travel2-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-price-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-price-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-security-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-security-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-inside-payment-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-inside-payment-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-payment-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-payment-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-assurance-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-assurance-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-ticket-office-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-ticket-office-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-voucher-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+   app: ts-voucher-mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-food-map-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-food-map-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-consign-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-consign-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-consign-price-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-consign-price-mongo
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-food-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+   app: ts-food-mongo
+
+---
+# Jaeger Deployment and Service.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+  labels:
+    app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: all-in-one
+spec:
+  selector:
+    matchLabels:
+      app: jaeger
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jaeger
+        app.kubernetes.io/name: jaeger
+        app.kubernetes.io/component: all-in-one
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "16686"
+    spec:
+      containers:
+        - env:
+            - name: COLLECTOR_ZIPKIN_HTTP_PORT
+              value: "9411"
+          image: jaegertracing/all-in-one
+          name: jaeger
+          ports:
+            - containerPort: 5775
+              protocol: UDP
+            - containerPort: 6831
+              protocol: UDP
+            - containerPort: 6832
+              protocol: UDP
+            - containerPort: 5778
+              protocol: TCP
+            - containerPort: 16686
+              protocol: TCP
+            - containerPort: 9411
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 14269
+            initialDelaySeconds: 5
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query
+  labels:
+    app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: query
+spec:
+  type: NodePort
+  ports:
+    - name: query-http
+      port: 16686
+      protocol: TCP
+      nodePort: 32688
+  selector:
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: all-in-one
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-collector
+  labels:
+    app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: collector
+spec:
+  ports:
+    - name: jaeger-collector-tchannel
+      port: 14267
+      protocol: TCP
+      targetPort: 14267
+    - name: jaeger-collector-http
+      port: 14268
+      protocol: TCP
+      targetPort: 14268
+    - name: jaeger-collector-zipkin
+      port: 9411
+      protocol: TCP
+      targetPort: 9411
+  selector:
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: all-in-one
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  labels:
+    app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: agent
+spec:
+  ports:
+    - name: agent-zipkin-thrift
+      port: 5775
+      protocol: UDP
+      targetPort: 5775
+    - name: agent-compact
+      port: 6831
+      protocol: UDP
+      targetPort: 6831
+    - name: agent-binary
+      port: 6832
+      protocol: UDP
+      targetPort: 6832
+    - name: agent-config
+      port: 5778
+      protocol: TCP
+      targetPort: 5778
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: all-in-one
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+  labels:
+    app: jaeger
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: zipkin
+spec:
+  ports:
+    - name: jaeger-collector-zipkin
+      port: 9411
+      protocol: TCP
+      targetPort: 9411
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/component: all-in-one
