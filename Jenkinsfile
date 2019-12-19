@@ -1,21 +1,14 @@
 pipeline {
     agent any
     tools {
-	    jdk 'jdk8'
+      jdk 'jdk8'
       maven 'maven-3.6.1'        
     }
     stages {
       stage('Checkout') {
         steps {
-	        checkout scm
-	      }
-      }
-      stage('Clone') {
-        steps {
-          echo "Clone..."
-          git url: "https://github.com/zhongyuanzhao000/jx-spring.git"
-          echo "Clone Successful"
-        }
+	  checkout scm
+	}
       }
       stage('Build') {
         steps {
@@ -29,6 +22,7 @@ pipeline {
           echo "Test..."
           sh 'mvn test'
           echo "Test Successful"
+          sh 'mvn clean'
         }
       }
     }
