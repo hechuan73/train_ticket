@@ -4,8 +4,9 @@ pipeline {
       jdk 'jdk8'
       maven 'maven-3.6.1'        
     }
-    // At this stage, the jar artifacts are first built using maven, and then the docker images are built.
     stages {
+
+      // At this stage, the jar artifacts are first built using maven, and then the docker images are built.
       stage('Build') {
         steps {
           echo "Build..."
@@ -16,6 +17,7 @@ pipeline {
           echo "Building images Successful!"
         }
       }
+
       // TODO: This stage will perform unit tests, etc.
       stage('Test') {
         steps {
@@ -26,6 +28,7 @@ pipeline {
           sh 'mvn clean'
         }
       }
+
       // This stage will push the images built to the docker hub.
       // After this stage is successful, you can directly pull the image from the docker hub to build the TrainTicket cluster application.
       // Note: The tag of the image you build at this time is latest. Please modify it when deploying the application.
@@ -41,5 +44,6 @@ pipeline {
           sh 'sudo /bin/bash ./jenkins-ci/clean.sh'
         }
       }
+
     }
 }
