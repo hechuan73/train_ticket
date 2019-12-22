@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    tools {
+      jdk 'jdk8'
+      maven 'maven-3.6.1'        
+    }
+    // At this stage, the jar artifacts are first built using maven, and then the docker images are built.
+    stages {
+      stage('Build') {
+        steps {
+          echo "Build..."
+          sh 'mvn clean package -DskipTests'
+          echo "Package Successful!"
+
+          sh 'sudo /usr/local/bin/docker-compose build'
+          echo "Building images Successful!"
+        }
+      }
+      // TODO: This stage will perform unit tests, etc.
+      stage('Test') {
+        steps {
+          echo "Test..."
+          sh 'mvn test'
+          echo "Test Successful"
+
+          sh 'mvn clean'
+        }
+      }
+      // This stage will push the images built to the docker hub.
+      // After this stage is successful, you can directly pull the image from the docker hub to build the TrainTicket cluster application.
+      // Note: The tag of the image you build at this time is latest. Please modify it when deploying the application.
+      stage('Push') {
+        steps {
+          echo "Push..."
+          withCredentials([usernamePassword(credentialsId: 'dockerHub-codewisdom', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+	          sh "sudo docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
+	          sh "sudo /bin/bash ./jenkins-ci/image-tag-push.sh"
+	        }
+          echo "Push Successful"
+
+          sh 'sudo /bin/bash ./jenkins-ci/clean.sh'
+        }
+      }
+    }
+}
