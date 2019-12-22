@@ -35,11 +35,19 @@ pipeline {
       stage('Push') {
         steps {
           echo "Push..."
-          withCredentials([usernamePassword(credentialsId: 'dockerHub-codewisdom', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-	          sh "sudo docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
-	          sh "sudo /bin/bash ./jenkins-ci/image-tag-push.sh"
-	        }
-          echo "Push Successful"
+
+          script {
+            def currentBranch =  env.BRANCH_NAME
+	          if (currentBranch == 'master') {
+	            echo "This is the master branch. Skip the push step!"
+	          } else {
+              withCredentials([usernamePassword(credentialsId: 'dockerHub-codewisdom', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+	              sh "sudo docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
+	              sh "sudo /bin/bash ./jenkins-ci/image-tag-push.sh"
+	            }
+              echo "Push Successful"
+            }
+          }
 
           sh 'sudo /bin/bash ./jenkins-ci/clean.sh'
         }
