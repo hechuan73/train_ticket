@@ -60,6 +60,8 @@ public class JsonUtils {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             result = objectMapper.readValue(json, cls);
+        } catch (NullPointerException e) {
+            JsonUtils.LOGGER.error(e.getMessage());
         } catch (IOException e) {
             JsonUtils.LOGGER.error(e.getMessage());
         }
