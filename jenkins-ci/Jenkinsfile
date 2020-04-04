@@ -29,12 +29,12 @@ pipeline {
           sh "mvn pmd:pmd"
 	
 	  jacoco(
-		execPattern: 'target/jacoco.exec',
-		classPattern: 'target/classes',
-		sourcePattern: 'src/main/java',
+		execPattern: '**/target/jacoco.exec',
+		classPattern: '**/target/classes',
+		sourcePattern: '**/src/main/java',
 		changeBuildStatus: true,
-		minimumMethodCoverage:'30',maximumMethodCoverage:'70',
-		minimumClassCoverage:'30',maximumClassCoverage:'70'
+		minimumMethodCoverage:'0',maximumMethodCoverage:'70',
+		minimumClassCoverage:'0',maximumClassCoverage:'70'
 		
 	  )
 
@@ -48,7 +48,7 @@ pipeline {
     post {
         always {
             pmd(canRunOnFailed: true, pattern: '**/target/pmd.xml')
-	        junit testResults: "**/target/surefire-reports/*.xml"
+	    junit testResults: "**/target/surefire-reports/*.xml"
         }
 	failure {
 	    mail from : 'jenkinsx@163.com', 
