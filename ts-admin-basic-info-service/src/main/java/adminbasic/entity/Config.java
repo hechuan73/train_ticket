@@ -1,8 +1,15 @@
 package adminbasic.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * @author fdse
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Config {
 
     private String name;
@@ -11,32 +18,4 @@ public class Config {
 
     private String description;
 
-
-
-    public Config() {
-        //Default Constructor
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -142,7 +142,7 @@ public class AdminBasicInfoController {
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/adminbasic/prices")
     public HttpEntity getAllPrices(@RequestHeader HttpHeaders headers) {
-        AdminBasicInfoController.LOGGER.info("[Admin Basic Info Service][Find All Price by admin: ");
+        AdminBasicInfoController.LOGGER.info("[Admin Basic Info Service][Find All Price by admin ");
         return ok(adminBasicInfoService.getAllPrices(headers));
     }
 
