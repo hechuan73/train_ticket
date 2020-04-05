@@ -24,7 +24,7 @@ public class AdminBasicInfoControllerTest {
     private AdminBasicInfoController adminBasicInfoController;
 
     @Mock
-    AdminBasicInfoService adminBasicInfoService;
+    private AdminBasicInfoService adminBasicInfoService;
 
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity httpEntity = new HttpEntity(headers);
