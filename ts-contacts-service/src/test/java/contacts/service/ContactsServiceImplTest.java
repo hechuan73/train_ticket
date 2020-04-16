@@ -47,7 +47,7 @@ public class ContactsServiceImplTest {
         UUID id = UUID.randomUUID();
         Mockito.when(contactsRepository.findById(Mockito.any(UUID.class))).thenReturn(null);
         Response result = contactsServiceImpl.findContactsById(id, headers);
-        Assert.assertEquals(new Response<>(0, "No contacts accorrding to contacts id", id), result);
+        Assert.assertEquals(new Response<>(0, "No contacts according to contacts id", null), result);
     }
 
     @Test
@@ -115,14 +115,13 @@ public class ContactsServiceImplTest {
         Assert.assertEquals(new Response<>(0, "Delete failed", contactsId), result);
     }
 
-    //TODO: The method modify() has a bug to fix.
-//    @Test
-//    public void testModify1() {
-//        Contacts contacts = new Contacts(UUID.randomUUID(), UUID.randomUUID(), "name", 1, "12", "10001");
-//        Mockito.when(contactsRepository.findById(Mockito.any(UUID.class))).thenReturn(null);
-//        Response result = contactsServiceImpl.modify(contacts, headers);
-//        Assert.assertEquals(new Response<>(0, "Contacts not found", null), result);
-//    }
+    @Test
+    public void testModify1() {
+        Contacts contacts = new Contacts(UUID.randomUUID(), UUID.randomUUID(), "name", 1, "12", "10001");
+        Mockito.when(contactsRepository.findById(Mockito.any(UUID.class))).thenReturn(null);
+        Response result = contactsServiceImpl.modify(contacts, headers);
+        Assert.assertEquals(new Response<>(0, "Contacts not found", null), result);
+    }
 
     @Test
     public void testModify2() {
