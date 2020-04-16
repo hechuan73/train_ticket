@@ -1,5 +1,6 @@
 package preserve.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,10 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import preserve.entity.OrderTicketsInfo;
 import preserve.service.PreserveService;
 
@@ -25,28 +27,31 @@ public class PreserveControllerTest {
 
     @Mock
     private PreserveService preserveService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(preserveController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = preserveController.home();
-        Assert.assertEquals("Welcome to [ Preserve Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/preserveservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Preserve Service ] !"));
     }
 
     @Test
-    public void testPreserve(){
+    public void testPreserve() throws Exception {
         OrderTicketsInfo oti = new OrderTicketsInfo();
-        Mockito.when(preserveService.preserve(oti, headers)).thenReturn(response);
-        httpEntity = preserveController.preserve(oti, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(preserveService.preserve(Mockito.any(OrderTicketsInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(oti);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/preserveservice/preserve").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

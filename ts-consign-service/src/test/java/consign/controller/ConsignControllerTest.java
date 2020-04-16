@@ -1,5 +1,6 @@
 package consign.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import consign.entity.Consign;
 import consign.service.ConsignService;
 import edu.fudan.common.util.Response;
@@ -12,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.UUID;
 
@@ -27,59 +29,71 @@ public class ConsignControllerTest {
 
     @Mock
     private ConsignService service;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(consignController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = consignController.home(headers);
-        Assert.assertEquals("Welcome to [ Consign Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Consign Service ] !"));
     }
 
     @Test
-    public void testInsertConsign(){
+    public void testInsertConsign() throws Exception {
         Consign request = new Consign();
-        Mockito.when(service.insertConsignRecord(request, headers)).thenReturn(response);
-        httpEntity = consignController.insertConsign(request, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.insertConsignRecord(Mockito.any(Consign.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(request);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/consignservice/consigns").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testUpdateConsign(){
+    public void testUpdateConsign() throws Exception {
         Consign request = new Consign();
-        Mockito.when(service.updateConsignRecord(request, headers)).thenReturn(response);
-        httpEntity = consignController.updateConsign(request, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.updateConsignRecord(Mockito.any(Consign.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(request);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/consignservice/consigns").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testFindByAccountId(){
+    public void testFindByAccountId() throws Exception {
         UUID id = UUID.randomUUID();
-        Mockito.when(service.queryByAccountId(id, headers)).thenReturn(response);
-        httpEntity = consignController.findByAccountId(id.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.queryByAccountId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignservice/consigns/account/" + id.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testFindByOrderId(){
+    public void testFindByOrderId() throws Exception {
         UUID id = UUID.randomUUID();
-        Mockito.when(service.queryByOrderId(id, headers)).thenReturn(response);
-        httpEntity = consignController.findByOrderId(id.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.queryByOrderId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignservice/consigns/order/" + id.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testFindByConsignee(){
-        Mockito.when(service.queryByConsignee("consignee", headers)).thenReturn(response);
-        httpEntity = consignController.findByConsignee("consignee", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testFindByConsignee() throws Exception {
+        Mockito.when(service.queryByConsignee(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignservice/consigns/consignee"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

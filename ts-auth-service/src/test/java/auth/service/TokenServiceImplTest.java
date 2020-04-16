@@ -45,7 +45,7 @@ public class TokenServiceImplTest {
     }
 
     @Test
-    public void testGetToken1(){
+    public void testGetToken1() {
         BasicAuthDto dto = new BasicAuthDto(null, null, "verifyCode");
         ResponseEntity<Boolean> re = new ResponseEntity<>(false, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -59,7 +59,7 @@ public class TokenServiceImplTest {
 
     //TODO This unit test method has an error.
 //    @Test
-//    public void testGetToken2(){
+//    public void testGetToken2() {
 //        BasicAuthDto dto = new BasicAuthDto("username", null, "");
 //        User user = new User();
 //        Mockito.when(userRepository.findByUsername("username")

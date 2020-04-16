@@ -35,12 +35,12 @@ public class CancelServiceImplTest {
     }
 
     @Test
-    public void testCancelOrder(){
+    public void testCancelOrder() {
 
     }
 
     @Test
-    public void testSendEmail(){
+    public void testSendEmail() {
         NotifyInfo notifyInfo = new NotifyInfo();
         HttpEntity requestEntity2 = new HttpEntity(notifyInfo, headers);
         ResponseEntity<Boolean> re = new ResponseEntity<>(true, HttpStatus.OK);
@@ -54,12 +54,12 @@ public class CancelServiceImplTest {
     }
 
     @Test
-    public void testCalculateRefund(){
+    public void testCalculateRefund() {
 
     }
 
     @Test
-    public void testDrawbackMoney(){
+    public void testDrawbackMoney() {
         Response response = new Response<>(1, null, null);
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -72,7 +72,7 @@ public class CancelServiceImplTest {
     }
 
     @Test
-    public void testGetAccount(){
+    public void testGetAccount() {
         Response<User> response = new Response<>();
         ResponseEntity<Response<User>> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(

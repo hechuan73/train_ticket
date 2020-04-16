@@ -1,5 +1,6 @@
 package order.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import order.entity.Order;
 import order.entity.OrderInfo;
@@ -14,10 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Date;
 
@@ -29,134 +31,171 @@ public class OrderControllerTest {
 
     @Mock
     private OrderService orderService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = orderController.home();
-        Assert.assertEquals("Welcome to [ Order Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Order Service ] !"));
     }
 
     @Test
-    public void testGetTicketListByDateAndTripId(){
+    public void testGetTicketListByDateAndTripId() throws Exception {
         Seat seatRequest = new Seat();
-        Mockito.when(orderService.getSoldTickets(seatRequest, headers)).thenReturn(response);
-        httpEntity = orderController.getTicketListByDateAndTripId(seatRequest, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.getSoldTickets(Mockito.any(Seat.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(seatRequest);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orderservice/order/tickets").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCreateNewOrder(){
+    public void testCreateNewOrder() throws Exception {
         Order createOrder = new Order();
-        Mockito.when(orderService.create(createOrder, headers)).thenReturn(response);
-        httpEntity = orderController.createNewOrder(createOrder, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.create(Mockito.any(Order.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(createOrder);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orderservice/order").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddCreateNewOrder(){
+    public void testAddCreateNewOrder() throws Exception {
         Order order = new Order();
-        Mockito.when(orderService.addNewOrder(order, headers)).thenReturn(response);
-        httpEntity = orderController.addcreateNewOrder(order, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.addNewOrder(Mockito.any(Order.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(order);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orderservice/order/admin").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQueryOrders(){
+    public void testQueryOrders() throws Exception {
         OrderInfo qi = new OrderInfo();
-        Mockito.when(orderService.queryOrders(qi, qi.getLoginId(), headers)).thenReturn(response);
-        httpEntity = orderController.queryOrders(qi, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.queryOrders(Mockito.any(OrderInfo.class), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(qi);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orderservice/order/query").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQueryOrdersForRefresh(){
+    public void testQueryOrdersForRefresh() throws Exception {
         OrderInfo qi = new OrderInfo();
-        Mockito.when(orderService.queryOrdersForRefresh(qi, qi.getLoginId(), headers)).thenReturn(response);
-        httpEntity = orderController.queryOrdersForRefresh(qi, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.queryOrdersForRefresh(Mockito.any(OrderInfo.class), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(qi);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/orderservice/order/refresh").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCalculateSoldTicket(){
+    public void testCalculateSoldTicket() throws Exception {
         Date travelDate = new Date();
-        Mockito.when(orderService.queryAlreadySoldOrders(travelDate, "trainNumber", headers)).thenReturn(response);
-        httpEntity = orderController.calculateSoldTicket(travelDate, "trainNumber", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.queryAlreadySoldOrders(Mockito.any(Date.class), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/" + travelDate.toString() + "/train_number"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetOrderPrice(){
-        Mockito.when(orderService.getOrderPrice("orderId", headers)).thenReturn(response);
-        httpEntity = orderController.getOrderPrice("orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetOrderPrice() throws Exception {
+        Mockito.when(orderService.getOrderPrice(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/price/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testPayOrder(){
-        Mockito.when(orderService.payOrder("orderId", headers)).thenReturn(response);
-        httpEntity = orderController.payOrder("orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testPayOrder() throws Exception {
+        Mockito.when(orderService.payOrder(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/orderPay/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetOrderById(){
-        Mockito.when(orderService.getOrderById("orderId", headers)).thenReturn(response);
-        httpEntity = orderController.getOrderById("orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetOrderById() throws Exception {
+        Mockito.when(orderService.getOrderById(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyOrder(){
-        Mockito.when(orderService.modifyOrder("orderId", 1, headers)).thenReturn(response);
-        httpEntity = orderController.modifyOrder("orderId", 1, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testModifyOrder() throws Exception {
+        Mockito.when(orderService.modifyOrder(Mockito.anyString(), Mockito.anyInt(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/status/order_id/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testSecurityInfoCheck(){
+    public void testSecurityInfoCheck() throws Exception {
         Date checkDate = new Date();
-        Mockito.when(orderService.checkSecurityAboutOrder(checkDate, "accountId", headers)).thenReturn(response);
-        httpEntity = orderController.securityInfoCheck(checkDate, "accountId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.checkSecurityAboutOrder(Mockito.any(Date.class), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order/security/" + checkDate.toString() + "/account_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testSaveOrderInfo(){
+    public void testSaveOrderInfo() throws Exception {
         Order orderInfo = new Order();
-        Mockito.when(orderService.saveChanges(orderInfo, headers)).thenReturn(response);
-        httpEntity = orderController.saveOrderInfo(orderInfo, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.saveChanges(Mockito.any(Order.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(orderInfo);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/orderservice/order").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testUpdateOrder(){
+    public void testUpdateOrder() throws Exception {
         Order order = new Order();
-        Mockito.when(orderService.updateOrder(order, headers)).thenReturn(response);
-        httpEntity = orderController.updateOrder(order, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(orderService.updateOrder(Mockito.any(Order.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(order);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/orderservice/order/admin").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteOrder(){
-        Mockito.when(orderService.deleteOrder("orderId", headers)).thenReturn(response);
-        httpEntity = orderController.deleteOrder("orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDeleteOrder() throws Exception {
+        Mockito.when(orderService.deleteOrder(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/orderservice/order/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testFindAllOrder(){
-        Mockito.when(orderService.getAllOrders(headers)).thenReturn(response);
-        httpEntity = orderController.findAllOrder(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testFindAllOrder() throws Exception {
+        Mockito.when(orderService.getAllOrders(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orderservice/order"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

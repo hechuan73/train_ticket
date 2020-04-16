@@ -96,7 +96,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             repository.save(trip);
             return new Response<>(1, "Create trip info:" + ti.toString() + ".", null);
         } else {
-            return new Response<>(1, "Trip " + info.getTripId().toString() + " already exists", null);
+            return new Response<>(1, "Trip " + info.getTripId() + " already exists", null);
         }
     }
 
@@ -121,7 +121,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             repository.save(trip);
             return new Response<>(1, "Update trip info:" + ti.toString(), trip);
         } else {
-            return new Response<>(1, "Trip" + info.getTripId().toString() + "doesn 't exists", null);
+            return new Response<>(1, "Trip" + info.getTripId() + "doesn 't exists", null);
         }
     }
 

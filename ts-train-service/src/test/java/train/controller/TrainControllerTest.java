@@ -1,5 +1,6 @@
 package train.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,10 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import train.entity.TrainType;
 import train.service.TrainService;
 
@@ -28,97 +30,121 @@ public class TrainControllerTest {
 
     @Mock
     private TrainService trainService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
-    private Response response = new Response();
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(trainController).build();
     }
 
     @Test
-    public void testHome(){
-        Assert.assertEquals("Welcome to [ Train Service ] !", trainController.home(headers));
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/trainservice/trains/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Train Service ] !"));
     }
 
     @Test
-    public void testCreate1(){
+    public void testCreate1() throws Exception {
         TrainType trainType = new TrainType();
-        Mockito.when(trainService.create(trainType, headers)).thenReturn(true);
-        httpEntity = trainController.create(trainType, headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(1, "create success", true), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.create(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(true);
+        String requestJson = JSONObject.toJSONString(trainType);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/trainservice/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(1, "create success", true), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCreate2(){
+    public void testCreate2() throws Exception {
         TrainType trainType = new TrainType();
-        Mockito.when(trainService.create(trainType, headers)).thenReturn(false);
-        httpEntity = trainController.create(trainType, headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(0, "train type already exist", trainType), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.create(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(false);
+        String requestJson = JSONObject.toJSONString(trainType);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/trainservice/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals("train type already exist", JSONObject.parseObject(result, Response.class).getMsg());
     }
 
     @Test
-    public void testRetrieve1(){
-        Mockito.when(trainService.retrieve("id", headers)).thenReturn(null);
-        httpEntity = trainController.retrieve("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(0, "here is no TrainType with the trainType id", "id"), HttpStatus.OK), httpEntity);
+    public void testRetrieve1() throws Exception {
+        Mockito.when(trainService.retrieve(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(null);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/trainservice/trains/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(0, "here is no TrainType with the trainType id", "id"), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testRetrieve2(){
+    public void testRetrieve2() throws Exception {
         TrainType trainType = new TrainType();
-        Mockito.when(trainService.retrieve("id", headers)).thenReturn(trainType);
-        httpEntity = trainController.retrieve("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(1, "success", trainType), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.retrieve(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(trainType);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/trainservice/trains/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals("success", JSONObject.parseObject(result, Response.class).getMsg());
     }
 
     @Test
-    public void testUpdate1(){
+    public void testUpdate1() throws Exception {
         TrainType trainType = new TrainType();
-        Mockito.when(trainService.update(trainType, headers)).thenReturn(true);
-        httpEntity = trainController.update(trainType, headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(1, "update success", true), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.update(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(true);
+        String requestJson = JSONObject.toJSONString(trainType);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/trainservice/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(1, "update success", true), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testUpdate2(){
+    public void testUpdate2() throws Exception {
         TrainType trainType = new TrainType();
-        Mockito.when(trainService.update(trainType, headers)).thenReturn(false);
-        httpEntity = trainController.update(trainType, headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(0, "there is no trainType with the trainType id", false), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.update(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(false);
+        String requestJson = JSONObject.toJSONString(trainType);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/trainservice/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(0, "there is no trainType with the trainType id", false), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDelete1(){
-        Mockito.when(trainService.delete("id", headers)).thenReturn(true);
-        httpEntity = trainController.delete("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(1, "delete success", true), HttpStatus.OK), httpEntity);
+    public void testDelete1() throws Exception {
+        Mockito.when(trainService.delete(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(true);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/trainservice/trains/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(1, "delete success", true), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDelete2(){
-        Mockito.when(trainService.delete("id", headers)).thenReturn(false);
-        httpEntity = trainController.delete("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(0, "there is no train according to id", "id"), HttpStatus.OK), httpEntity);
+    public void testDelete2() throws Exception {
+        Mockito.when(trainService.delete(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(false);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/trainservice/trains/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(new Response(0, "there is no train according to id", "id"), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQuery1(){
+    public void testQuery1() throws Exception {
         List<TrainType> trainTypes = new ArrayList<>();
         trainTypes.add(new TrainType());
-        Mockito.when(trainService.query(headers)).thenReturn(trainTypes);
-        httpEntity = trainController.query(headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(1, "success", trainTypes), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.query(Mockito.any(HttpHeaders.class))).thenReturn(trainTypes);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/trainservice/trains"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals("success", JSONObject.parseObject(result, Response.class).getMsg());
     }
 
     @Test
-    public void testQuery2(){
+    public void testQuery2() throws Exception {
         List<TrainType> trainTypes = new ArrayList<>();
-        Mockito.when(trainService.query(headers)).thenReturn(trainTypes);
-        httpEntity = trainController.query(headers);
-        Assert.assertEquals(new ResponseEntity<>(new Response(0, "no content", trainTypes), HttpStatus.OK), httpEntity);
+        Mockito.when(trainService.query(Mockito.any(HttpHeaders.class))).thenReturn(trainTypes);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/trainservice/trains"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals("no content", JSONObject.parseObject(result, Response.class).getMsg());
     }
 
 }

@@ -1,5 +1,6 @@
 package inside_payment.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import inside_payment.entity.AccountInfo;
 import inside_payment.entity.PaymentInfo;
@@ -13,10 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(JUnit4.class)
 public class InsidePaymentControllerTest {
@@ -26,79 +28,98 @@ public class InsidePaymentControllerTest {
 
     @Mock
     private InsidePaymentService service;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(insidePaymentController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = insidePaymentController.home();
-        Assert.assertEquals("Welcome to [ InsidePayment Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ InsidePayment Service ] !"));
     }
 
     @Test
-    public void testPay(){
+    public void testPay() throws Exception {
         PaymentInfo info = new PaymentInfo();
-        Mockito.when(service.pay(info, headers)).thenReturn(response);
-        httpEntity = insidePaymentController.pay(info, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.pay(Mockito.any(PaymentInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(info);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/inside_pay_service/inside_payment").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCreateAccount(){
+    public void testCreateAccount() throws Exception {
         AccountInfo info = new AccountInfo();
-        Mockito.when(service.createAccount(info, headers)).thenReturn(response);
-        httpEntity = insidePaymentController.createAccount(info, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.createAccount(Mockito.any(AccountInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(info);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/inside_pay_service/inside_payment/account").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddMoney(){
-        Mockito.when(service.addMoney("userId", "money", headers)).thenReturn(response);
-        httpEntity = insidePaymentController.addMoney("userId", "money", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testAddMoney() throws Exception {
+        Mockito.when(service.addMoney(Mockito.anyString(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/user_id/money"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQueryPayment(){
-        Mockito.when(service.queryPayment(headers)).thenReturn(response);
-        httpEntity = insidePaymentController.queryPayment(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testQueryPayment() throws Exception {
+        Mockito.when(service.queryPayment(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/payment"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQueryAccount(){
-        Mockito.when(service.queryAccount(headers)).thenReturn(response);
-        httpEntity = insidePaymentController.queryAccount(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testQueryAccount() throws Exception {
+        Mockito.when(service.queryAccount(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/account"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDrawBack(){
-        Mockito.when(service.drawBack("userId", "money", headers)).thenReturn(response);
-        httpEntity = insidePaymentController.drawBack("userId", "money", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDrawBack() throws Exception {
+        Mockito.when(service.drawBack(Mockito.anyString(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/drawback/user_id/money"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testPayDifference(){
+    public void testPayDifference() throws Exception {
         PaymentInfo info = new PaymentInfo();
-        Mockito.when(service.payDifference(info, headers)).thenReturn(response);
-        httpEntity = insidePaymentController.payDifference(info, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.payDifference(Mockito.any(PaymentInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(info);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/inside_pay_service/inside_payment/difference").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testQueryAddMoney(){
-        Mockito.when(service.queryAddMoney(headers)).thenReturn(response);
-        httpEntity = insidePaymentController.queryAddMoney(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testQueryAddMoney() throws Exception {
+        Mockito.when(service.queryAddMoney(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/inside_pay_service/inside_payment/money"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

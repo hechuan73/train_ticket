@@ -2,6 +2,7 @@ package admintravel.controller;
 
 import admintravel.entity.TravelInfo;
 import admintravel.service.AdminTravelService;
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(JUnit4.class)
 public class AdminTravelControllerTest {
@@ -25,50 +27,60 @@ public class AdminTravelControllerTest {
 
     @Mock
     private AdminTravelService adminTravelService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(adminTravelController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = adminTravelController.home(headers);
-        Assert.assertEquals("Welcome to [ AdminTravel Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admintravelservice/welcome"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string("Welcome to [ AdminTravel Service ] !"));
     }
 
     @Test
-    public void testGetAllTravels(){
-        Mockito.when(adminTravelService.getAllTravels(headers)).thenReturn(response);
-        httpEntity = adminTravelController.getAllTravels(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllTravels() throws Exception {
+        Mockito.when(adminTravelService.getAllTravels(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/admintravelservice/admintravel"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddTravel(){
+    public void testAddTravel() throws Exception {
         TravelInfo request = new TravelInfo();
-        Mockito.when(adminTravelService.addTravel(request, headers)).thenReturn(response);
-        httpEntity = adminTravelController.addTravel(request, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminTravelService.addTravel(Mockito.any(TravelInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(request);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admintravelservice/admintravel").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testUpdateTravel(){
+    public void testUpdateTravel() throws Exception {
         TravelInfo request = new TravelInfo();
-        Mockito.when(adminTravelService.updateTravel(request, headers)).thenReturn(response);
-        httpEntity = adminTravelController.updateTravel(request, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminTravelService.updateTravel(Mockito.any(TravelInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(request);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/admintravelservice/admintravel").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteTravel(){
-        Mockito.when(adminTravelService.deleteTravel("GaoTie", headers)).thenReturn(response);
-        httpEntity = adminTravelController.deleteTravel("GaoTie", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDeleteTravel() throws Exception {
+        Mockito.when(adminTravelService.deleteTravel(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/admintravelservice/admintravel/trip_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

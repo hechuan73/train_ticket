@@ -36,7 +36,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testGetAllTravels1(){
+    public void testGetAllTravels1() {
         Response<ArrayList<AdminTrip>> response = new Response<>(0, null, null);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -56,7 +56,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testGetAllTravels2(){
+    public void testGetAllTravels2() {
         ArrayList<AdminTrip> adminTrips = new ArrayList<>();
         adminTrips.add(new AdminTrip());
         Response<ArrayList<AdminTrip>> response = new Response<>(1, null, adminTrips);
@@ -78,7 +78,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testAddTravel1(){
+    public void testAddTravel1() {
         TravelInfo request = new TravelInfo(null, null, "G", null, null, null, null, null, null);
         HttpEntity requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response<>(0, null, null);
@@ -93,7 +93,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testAddTravel2(){
+    public void testAddTravel2() {
         TravelInfo request = new TravelInfo(null, null, "G", null, null, null, null, null, null);
         HttpEntity<TravelInfo> requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response<>(1, null, null);
@@ -108,7 +108,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testAddTravel3(){
+    public void testAddTravel3() {
         TravelInfo request = new TravelInfo(null, null, "K", null, null, null, null, null, null);
         HttpEntity<TravelInfo> requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response<>(0, null, null);
@@ -123,7 +123,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testAddTravel4(){
+    public void testAddTravel4() {
         TravelInfo request = new TravelInfo(null, null, "K", null, null, null, null, null, null);
         HttpEntity<TravelInfo> requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response<>(1, null, null);
@@ -139,7 +139,7 @@ public class AdminTravelServiceImplTest {
 
 
     @Test
-    public void testUpdateTravel1(){
+    public void testUpdateTravel1() {
         TravelInfo request = new TravelInfo(null, null, "G", null, null, null, null, null, null);
         HttpEntity<TravelInfo> requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response();
@@ -154,7 +154,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testUpdateTravel2(){
+    public void testUpdateTravel2() {
         TravelInfo request = new TravelInfo(null, null, "K", null, null, null, null, null, null);
         HttpEntity<TravelInfo> requestEntity2 = new HttpEntity<>(request, headers);
         Response response = new Response();
@@ -169,7 +169,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testDeleteTravel1(){
+    public void testDeleteTravel1() {
         Response response = new Response();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -182,7 +182,7 @@ public class AdminTravelServiceImplTest {
     }
 
     @Test
-    public void testDeleteTravel2(){
+    public void testDeleteTravel2() {
         Response response = new Response();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(

@@ -35,7 +35,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testGetAllOrders1(){
+    public void testGetAllOrders1() {
         Response<ArrayList<Order>> response = new Response<>(0, null, null);
         ResponseEntity<Response<ArrayList<Order>>> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -55,7 +55,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testGetAllOrders2(){
+    public void testGetAllOrders2() {
         ArrayList<Order> orders = new ArrayList<>();
         orders.add(new Order());
         Response<ArrayList<Order>> response = new Response<>(1, null, orders);
@@ -77,7 +77,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testDeleteOrder1(){
+    public void testDeleteOrder1() {
         Response response = new Response();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -90,7 +90,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testDeleteOrder2(){
+    public void testDeleteOrder2() {
         Response response = new Response();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -103,7 +103,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testUpdateOrder1(){
+    public void testUpdateOrder1() {
         Order order = new Order(null, null, null, null, null, null, 0, null, "G", 0, 0, null, null, null, 0, null);
         HttpEntity<Order> requestEntity2 = new HttpEntity<>(order, headers);
         Response response = new Response();
@@ -118,7 +118,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testUpdateOrder2(){
+    public void testUpdateOrder2() {
         Order order = new Order(null, null, null, null, null, null, 0, null, "K", 0, 0, null, null, null, 0, null);
         HttpEntity<Order> requestEntity2 = new HttpEntity<>(order, headers);
         Response response = new Response();
@@ -133,7 +133,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testAddOrder1(){
+    public void testAddOrder1() {
         Order order = new Order(null, null, null, null, null, null, 0, null, "G", 0, 0, null, null, null, 0, null);
         HttpEntity<Order> requestEntity2 = new HttpEntity<>(order, headers);
         Response response = new Response();
@@ -148,7 +148,7 @@ public class AdminOrderServiceImplTest {
     }
 
     @Test
-    public void testAddOrder2(){
+    public void testAddOrder2() {
         Order order = new Order(null, null, null, null, null, null, 0, null, "K", 0, 0, null, null, null, 0, null);
         HttpEntity<Order> requestEntity2 = new HttpEntity<>(order, headers);
         Response response = new Response();

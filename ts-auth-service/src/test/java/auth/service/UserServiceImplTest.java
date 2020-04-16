@@ -38,13 +38,13 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testSaveUser(){
+    public void testSaveUser() {
         User user = new User();
         Assert.assertEquals(null, userServiceImpl.saveUser(user));
     }
 
     @Test
-    public void testGetAllUser(){
+    public void testGetAllUser() {
         List<User> userList = new ArrayList<>();
         userList.add(new User());
         Mockito.when(userRepository.findAll()).thenReturn(userList);
@@ -52,7 +52,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testCreateDefaultAuthUser(){
+    public void testCreateDefaultAuthUser() {
         AuthDto dto = new AuthDto(UUID.randomUUID().toString(), "username", "password");
         User user = new User();
         Mockito.when(userRepository.save(user)).thenReturn(user);
@@ -61,7 +61,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testDeleteByUserId(){
+    public void testDeleteByUserId() {
         UUID userId = UUID.randomUUID();
         Mockito.doNothing().doThrow(new RuntimeException()).when(userRepository).deleteByUserId(userId);
         Assert.assertEquals(new Response(1, "DELETE USER SUCCESS", null), userServiceImpl.deleteByUserId(userId, headers));

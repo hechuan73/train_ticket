@@ -34,12 +34,12 @@ public class BasicServiceImplTest {
     }
 
     @Test
-    public void testQueryForTravel(){
+    public void testQueryForTravel() {
 
     }
 
     @Test
-    public void testQueryForStationId(){
+    public void testQueryForStationId() {
         Response response = new Response<>();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -52,7 +52,7 @@ public class BasicServiceImplTest {
     }
 
     @Test
-    public void testCheckStationExists(){
+    public void testCheckStationExists() {
         Response response = new Response<>(1, null, null);
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
@@ -65,7 +65,7 @@ public class BasicServiceImplTest {
     }
 
     @Test
-    public void testQueryTrainType(){
+    public void testQueryTrainType() {
         Response response = new Response<>();
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(

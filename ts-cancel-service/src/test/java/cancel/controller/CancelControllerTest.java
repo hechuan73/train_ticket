@@ -1,6 +1,7 @@
 package cancel.controller;
 
 import cancel.service.CancelService;
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +16,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(JUnit4.class)
 public class CancelControllerTest {
@@ -24,34 +29,38 @@ public class CancelControllerTest {
 
     @Mock
     private CancelService cancelService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(cancelController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = cancelController.home(headers);
-        Assert.assertEquals("Welcome to [ Cancel Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cancelservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Cancel Service ] !"));
     }
 
     @Test
-    public void testCalculate(){
-        Mockito.when(cancelService.calculateRefund("orderId", headers)).thenReturn(response);
-        httpEntity = cancelController.calculate("orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testCalculate() throws Exception {
+        Mockito.when(cancelService.calculateRefund(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cancelservice/cancel/refound/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCancelTicket(){
-        Mockito.when(cancelService.cancelOrder("orderId", "loginId", headers)).thenReturn(response);
-        httpEntity = cancelController.cancelTicket("orderId", "loginId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testCancelTicket() throws Exception {
+        Mockito.when(cancelService.cancelOrder(Mockito.anyString(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cancelservice/cancel/order_id/login_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

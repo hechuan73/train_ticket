@@ -34,7 +34,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testCreate1(){
+    public void testCreate1() {
         Config info = new Config();
         Mockito.when(repository.findByName(info.getName())).thenReturn(info);
         Response result = configServiceImpl.create(info, headers);
@@ -42,7 +42,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testCreate2(){
+    public void testCreate2() {
         Config info = new Config("", "", "");
         Mockito.when(repository.findByName(info.getName())).thenReturn(null);
         Mockito.when(repository.save(Mockito.any(Config.class))).thenReturn(null);
@@ -51,7 +51,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testUpdate1(){
+    public void testUpdate1() {
         Config info = new Config();
         Mockito.when(repository.findByName(info.getName())).thenReturn(null);
         Response result = configServiceImpl.update(info, headers);
@@ -59,7 +59,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testUpdate2(){
+    public void testUpdate2() {
         Config info = new Config("", "", "");
         Mockito.when(repository.findByName(info.getName())).thenReturn(info);
         Mockito.when(repository.save(Mockito.any(Config.class))).thenReturn(null);
@@ -68,14 +68,14 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testQuery1(){
+    public void testQuery1() {
         Mockito.when(repository.findByName("name")).thenReturn(null);
         Response result = configServiceImpl.query("name", headers);
         Assert.assertEquals(new Response<>(0, "No content", null), result);
     }
 
     @Test
-    public void testQuery2(){
+    public void testQuery2() {
         Config info = new Config();
         Mockito.when(repository.findByName("name")).thenReturn(info);
         Response result = configServiceImpl.query("name", headers);
@@ -83,14 +83,14 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testDelete1(){
+    public void testDelete1() {
         Mockito.when(repository.findByName("name")).thenReturn(null);
         Response result = configServiceImpl.delete("name", headers);
         Assert.assertEquals(new Response<>(0, "Doesn't exist.", "Config name doesn't exist."), result);
     }
 
     @Test
-    public void testDelete2(){
+    public void testDelete2() {
         Config info = new Config();
         Mockito.when(repository.findByName("name")).thenReturn(info);
         Mockito.doNothing().doThrow(new RuntimeException()).when(repository).deleteByName("name");
@@ -99,7 +99,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testQueryAll1(){
+    public void testQueryAll1() {
         List<Config> configList = new ArrayList<>();
         configList.add(new Config());
         Mockito.when(repository.findAll()).thenReturn(configList);
@@ -108,7 +108,7 @@ public class ConfigServiceImplTest {
     }
 
     @Test
-    public void testQueryAll2(){
+    public void testQueryAll2() {
         Mockito.when(repository.findAll()).thenReturn(null);
         Response result = configServiceImpl.queryAll(headers);
         Assert.assertEquals(new Response<>(0, "No content", null), result);

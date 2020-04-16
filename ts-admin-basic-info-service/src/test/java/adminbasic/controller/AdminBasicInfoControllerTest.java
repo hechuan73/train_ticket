@@ -2,6 +2,7 @@ package adminbasic.controller;
 
 import adminbasic.entity.*;
 import adminbasic.service.AdminBasicInfoService;
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(JUnit4.class)
 public class AdminBasicInfoControllerTest {
@@ -25,171 +27,223 @@ public class AdminBasicInfoControllerTest {
 
     @Mock
     private AdminBasicInfoService adminBasicInfoService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(adminBasicInfoController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = adminBasicInfoController.home(headers);
-        Assert.assertEquals("Welcome to [ AdminBasicInfo Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ AdminBasicInfo Service ] !"));
     }
 
     @Test
-    public void testGetAllContacts(){
-        Mockito.when(adminBasicInfoService.getAllContacts(headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.getAllContacts(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllContacts() throws Exception {
+        Mockito.when(adminBasicInfoService.getAllContacts(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/adminbasic/contacts"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteContacts(){
-        Mockito.when(adminBasicInfoService.deleteContact("contactsId", headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.deleteContacts("contactsId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDeleteContacts() throws Exception {
+        Mockito.when(adminBasicInfoService.deleteContact(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/adminbasicservice/adminbasic/contacts/contactsId"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyContacts(){
+    public void testModifyContacts() throws Exception {
         Contacts mci = new Contacts();
-        Mockito.when(adminBasicInfoService.modifyContact(mci, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.modifyContacts(mci, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.modifyContact(Mockito.any(Contacts.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(mci);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/adminbasicservice/adminbasic/contacts").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddContacts(){
+    public void testAddContacts() throws Exception {
         Contacts c = new Contacts();
-        Mockito.when(adminBasicInfoService.addContact(c, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.addContacts(c, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.addContact(Mockito.any(Contacts.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(c);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/adminbasicservice/adminbasic/contacts").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllStations(){
-        Mockito.when(adminBasicInfoService.getAllStations(headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.getAllStations(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllStations() throws Exception {
+        Mockito.when(adminBasicInfoService.getAllStations(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/adminbasic/stations"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteStation(){
+    public void testDeleteStation() throws Exception {
         Station s = new Station();
-        Mockito.when(adminBasicInfoService.deleteStation(s, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.deleteStation(s, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.deleteStation(Mockito.any(Station.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(s);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/adminbasicservice/adminbasic/stations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyStation(){
+    public void testModifyStation() throws Exception {
         Station s = new Station();
-        Mockito.when(adminBasicInfoService.modifyStation(s, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.modifyStation(s, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.modifyStation(Mockito.any(Station.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(s);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/adminbasicservice/adminbasic/stations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddStation(){
+    public void testAddStation() throws Exception {
         Station s = new Station();
-        Mockito.when(adminBasicInfoService.addStation(s, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.addStation(s, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.addStation(Mockito.any(Station.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(s);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/adminbasicservice/adminbasic/stations").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllTrains(){
-        Mockito.when(adminBasicInfoService.getAllTrains(headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.getAllTrains(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllTrains() throws Exception {
+        Mockito.when(adminBasicInfoService.getAllTrains(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/adminbasic/trains"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteTrain(){
-        Mockito.when(adminBasicInfoService.deleteTrain("id", headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.deleteTrain("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDeleteTrain() throws Exception {
+        Mockito.when(adminBasicInfoService.deleteTrain(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/adminbasicservice/adminbasic/trains/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyTrain(){
+    public void testModifyTrain() throws Exception {
         TrainType t = new TrainType();
-        Mockito.when(adminBasicInfoService.modifyTrain(t, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.modifyTrain(t, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.modifyTrain(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(t);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/adminbasicservice/adminbasic/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddTrain(){
+    public void testAddTrain() throws Exception {
         TrainType t = new TrainType();
-        Mockito.when(adminBasicInfoService.addTrain(t, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.addTrain(t, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.addTrain(Mockito.any(TrainType.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(t);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/adminbasicservice/adminbasic/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllConfigs(){
-        Mockito.when(adminBasicInfoService.getAllConfigs(headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.getAllConfigs(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllConfigs() throws Exception {
+        Mockito.when(adminBasicInfoService.getAllConfigs(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/adminbasic/configs"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteConfig(){
-        Mockito.when(adminBasicInfoService.deleteConfig("name", headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.deleteConfig("name", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDeleteConfig() throws Exception {
+        Mockito.when(adminBasicInfoService.deleteConfig(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/adminbasicservice/adminbasic/configs/name"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyConfig(){
+    public void testModifyConfig() throws Exception {
         Config c = new Config();
-        Mockito.when(adminBasicInfoService.modifyConfig(c, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.modifyConfig(c, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.modifyConfig(Mockito.any(Config.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(c);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/adminbasicservice/adminbasic/configs").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddConfig(){
+    public void testAddConfig() throws Exception {
         Config c = new Config();
-        Mockito.when(adminBasicInfoService.addConfig(c, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.addConfig(c, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.addConfig(Mockito.any(Config.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(c);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/adminbasicservice/adminbasic/configs").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllPrices(){
-        Mockito.when(adminBasicInfoService.getAllPrices(headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.getAllPrices(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllPrices() throws Exception {
+        Mockito.when(adminBasicInfoService.getAllPrices(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/adminbasicservice/adminbasic/prices"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeletePrice(){
+    public void testDeletePrice() throws Exception {
         PriceInfo pi = new PriceInfo();
-        Mockito.when(adminBasicInfoService.deletePrice(pi, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.deletePrice(pi, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.deletePrice(Mockito.any(PriceInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(pi);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/adminbasicservice/adminbasic/prices").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyPrice(){
+    public void testModifyPrice() throws Exception {
         PriceInfo pi = new PriceInfo();
-        Mockito.when(adminBasicInfoService.modifyPrice(pi, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.modifyPrice(pi, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.modifyPrice(Mockito.any(PriceInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(pi);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/adminbasicservice/adminbasic/prices").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testAddPrice(){
+    public void testAddPrice() throws Exception {
         PriceInfo pi = new PriceInfo();
-        Mockito.when(adminBasicInfoService.addPrice(pi, headers)).thenReturn(response);
-        httpEntity = adminBasicInfoController.addPrice(pi, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(adminBasicInfoService.addPrice(Mockito.any(PriceInfo.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(pi);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/adminbasicservice/adminbasic/prices").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 }

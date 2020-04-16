@@ -4,6 +4,7 @@ import auth.dto.BasicAuthDto;
 import auth.entity.User;
 import auth.service.TokenService;
 import auth.service.UserService;
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,10 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,44 +35,51 @@ public class UserControllerTest {
     private UserService userService;
     @Mock
     private TokenService tokenService;
-
-    private HttpHeaders headers = new HttpHeaders();
+    private MockMvc mockMvc;
     private Response response = new Response();
-    private ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
-    public void testGetHello(){
-        Assert.assertEquals("Hello", userController.getHello());
+    public void testGetHello() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/hello"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Hello"));
     }
 
     @Test
-    public void testGetToken(){
+    public void testGetToken() throws Exception {
         BasicAuthDto dao = new BasicAuthDto();
-        Mockito.when(tokenService.getToken(dao, headers)).thenReturn(response);
-        ResponseEntity<Response> result = userController.getToken(dao, headers);
-        Assert.assertEquals(responseEntity, result);
+        Mockito.when(tokenService.getToken(Mockito.any(BasicAuthDto.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(dao);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllUser(){
+    public void testGetAllUser() throws Exception {
         List<User> userList = new ArrayList<>();
-        Mockito.when(userService.getAllUser(headers)).thenReturn(userList);
-        ResponseEntity<List<User>> responseEntity2 = new ResponseEntity<>(userList,null, HttpStatus.OK);
-        ResponseEntity<List<User>> result = userController.getAllUser(headers);
-        Assert.assertEquals(responseEntity2, result);
+        Mockito.when(userService.getAllUser(Mockito.any(HttpHeaders.class))).thenReturn(userList);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(userList, JSONObject.parseObject(result, List.class));
     }
 
     @Test
-    public void testDeleteUserById(){
+    public void testDeleteUserById() throws Exception {
         UUID userId = UUID.randomUUID();
-        Mockito.when(userService.deleteByUserId(userId, headers)).thenReturn(response);
-        ResponseEntity<Response> result = userController.deleteUserById(userId.toString(), headers);
-        Assert.assertEquals(responseEntity, result);
+        Mockito.when(userService.deleteByUserId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users/" + userId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

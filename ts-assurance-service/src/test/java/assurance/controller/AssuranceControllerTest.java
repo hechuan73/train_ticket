@@ -1,6 +1,7 @@
 package assurance.controller;
 
 import assurance.service.AssuranceService;
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,6 +16,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.UUID;
 
@@ -26,80 +31,96 @@ public class AssuranceControllerTest {
 
     @Mock
     private AssuranceService assuranceService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(assuranceController).build();
     }
 
     @Test
-    public void testHome(){
-        String result = assuranceController.home(headers);
-        Assert.assertEquals("Welcome to [ Assurance Service ] !", result);
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Assurance Service ] !"));
     }
 
     @Test
-    public void testGetAllAssurances(){
-        Mockito.when(assuranceService.getAllAssurances(headers)).thenReturn(response);
-        httpEntity = assuranceController.getAllAssurances(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllAssurances() throws Exception {
+        Mockito.when(assuranceService.getAllAssurances(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/assurances"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAllAssuranceType(){
-        Mockito.when(assuranceService.getAllAssuranceTypes(headers)).thenReturn(response);
-        httpEntity = assuranceController.getAllAssuranceType(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetAllAssuranceType() throws Exception {
+        Mockito.when(assuranceService.getAllAssuranceTypes(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/assurances/types"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteAssurance(){
+    public void testDeleteAssurance() throws Exception {
         UUID assuranceId = UUID.randomUUID();
-        Mockito.when(assuranceService.deleteById(assuranceId, headers)).thenReturn(response);
-        httpEntity = assuranceController.deleteAssurance(assuranceId.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(assuranceService.deleteById(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/assuranceservice/assurances/assuranceid/" + assuranceId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDeleteAssuranceByOrderId(){
+    public void testDeleteAssuranceByOrderId() throws Exception {
         UUID orderId = UUID.randomUUID();
-        Mockito.when(assuranceService.deleteByOrderId(orderId, headers)).thenReturn(response);
-        httpEntity = assuranceController.deleteAssuranceByOrderId(orderId.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(assuranceService.deleteByOrderId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/assuranceservice/assurances/orderid/" + orderId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyAssurance(){
-        Mockito.when(assuranceService.modify("assuranceId", "orderId", 1, headers)).thenReturn(response);
-        httpEntity = assuranceController.modifyAssurance("assuranceId", "orderId", 1, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testModifyAssurance() throws Exception {
+        Mockito.when(assuranceService.modify(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/assuranceservice/assurances/assurance_id/order_id/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCreateNewAssurance(){
-        Mockito.when(assuranceService.create(1, "orderId", headers)).thenReturn(response);
-        httpEntity = assuranceController.createNewAssurance(1, "orderId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testCreateNewAssurance() throws Exception {
+        Mockito.when(assuranceService.create(Mockito.anyInt(), Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/assurances/1/order_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetAssuranceById(){
+    public void testGetAssuranceById() throws Exception {
         UUID assuranceId = UUID.randomUUID();
-        Mockito.when(assuranceService.findAssuranceById(assuranceId, headers)).thenReturn(response);
-        httpEntity = assuranceController.getAssuranceById(assuranceId.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(assuranceService.findAssuranceById(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/assurances/assuranceid/" + assuranceId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testFindAssuranceByOrderId(){
+    public void testFindAssuranceByOrderId() throws Exception {
         UUID orderId = UUID.randomUUID();
-        Mockito.when(assuranceService.findAssuranceByOrderId(orderId, headers)).thenReturn(response);
-        httpEntity = assuranceController.findAssuranceByOrderId(orderId.toString(), headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(assuranceService.findAssuranceByOrderId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/assuranceservice/assurance/orderid/" + orderId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

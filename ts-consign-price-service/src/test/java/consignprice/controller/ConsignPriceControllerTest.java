@@ -1,5 +1,6 @@
 package consignprice.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import consignprice.entity.ConsignPrice;
 import consignprice.service.ConsignPriceService;
 import edu.fudan.common.util.Response;
@@ -12,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @RunWith(JUnit4.class)
 public class ConsignPriceControllerTest {
@@ -25,49 +27,58 @@ public class ConsignPriceControllerTest {
 
     @Mock
     private ConsignPriceService service;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(consignPriceController).build();
     }
 
     @Test
-    public void testHome(){
-        Assert.assertEquals("Welcome to [ ConsignPrice Service ] !", consignPriceController.home(headers));
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignpriceservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ ConsignPrice Service ] !"));
     }
 
     @Test
-    public void testGetPriceByWeightAndRegion(){
-        Mockito.when(service.getPriceByWeightAndRegion(Double.parseDouble("1.0"),
-                Boolean.parseBoolean("true"), headers)).thenReturn(response);
-        httpEntity = consignPriceController.getPriceByWeightAndRegion("1.0", "true", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetPriceByWeightAndRegion() throws Exception {
+        Mockito.when(service.getPriceByWeightAndRegion(Mockito.anyDouble(), Mockito.anyBoolean(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignpriceservice/consignprice/1.0/true"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetPriceInfo(){
-        Mockito.when(service.queryPriceInformation(headers)).thenReturn(response);
-        httpEntity = consignPriceController.getPriceInfo(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetPriceInfo() throws Exception {
+        Mockito.when(service.queryPriceInformation(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignpriceservice/consignprice/price"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetPriceConfig(){
-        Mockito.when(service.getPriceConfig(headers)).thenReturn(response);
-        httpEntity = consignPriceController.getPriceConfig(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testGetPriceConfig() throws Exception {
+        Mockito.when(service.getPriceConfig(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/consignpriceservice/consignprice/config"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testModifyPriceConfig(){
+    public void testModifyPriceConfig() throws Exception {
         ConsignPrice priceConfig = new ConsignPrice();
-        Mockito.when(service.createAndModifyPrice(priceConfig, headers)).thenReturn(response);
-        httpEntity = consignPriceController.modifyPriceConfig(priceConfig, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(service.createAndModifyPrice(Mockito.any(ConsignPrice.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(priceConfig);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/consignpriceservice/consignprice").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

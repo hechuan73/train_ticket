@@ -36,7 +36,7 @@ public class AdminRouteServiceImplTest {
     }
 
     @Test
-    public void testGetAllRoutes(){
+    public void testGetAllRoutes() {
         Mockito.when(restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes",
                 HttpMethod.GET,
@@ -47,7 +47,7 @@ public class AdminRouteServiceImplTest {
     }
 
     @Test
-    public void testCreateAndModifyRoute(){
+    public void testCreateAndModifyRoute() {
         RouteInfo request = new RouteInfo();
         HttpEntity requestEntity2 = new HttpEntity(request, headers);
         ResponseEntity<Response<Route>> re2 = new ResponseEntity<>(response, HttpStatus.OK);
@@ -62,7 +62,7 @@ public class AdminRouteServiceImplTest {
     }
 
     @Test
-    public void testDeleteRoute(){
+    public void testDeleteRoute() {
         Mockito.when(restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + "routeId",
                 HttpMethod.DELETE,

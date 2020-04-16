@@ -1,6 +1,8 @@
 package contacts.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
@@ -8,6 +10,8 @@ import java.util.UUID;
 /**
  * @author fdse
  */
+@Data
+@AllArgsConstructor
 @Document(collection = "contacts")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Contacts {
@@ -27,54 +31,6 @@ public class Contacts {
 
     public Contacts() {
         //Default Constructor
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(int documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     @Override

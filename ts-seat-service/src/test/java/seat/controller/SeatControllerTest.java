@@ -1,5 +1,6 @@
 package seat.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,10 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import seat.entity.Seat;
 import seat.service.SeatService;
 
@@ -25,35 +27,42 @@ public class SeatControllerTest {
 
     @Mock
     private SeatService seatService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(seatController).build();
     }
 
     @Test
-    public void testHome(){
-        Assert.assertEquals("Welcome to [ Seat Service ] !", seatController.home());
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/seatservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Seat Service ] !"));
     }
 
     @Test
-    public void testCreate(){
+    public void testCreate() throws Exception {
         Seat seatRequest = new Seat();
-        Mockito.when(seatService.distributeSeat(seatRequest, headers)).thenReturn(response);
-        httpEntity = seatController.create(seatRequest, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(seatService.distributeSeat(Mockito.any(Seat.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(seatRequest);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/seatservice/seats").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testGetLeftTicketOfInterval(){
+    public void testGetLeftTicketOfInterval() throws Exception {
         Seat seatRequest = new Seat();
-        Mockito.when(seatService.getLeftTicketOfInterval(seatRequest, headers)).thenReturn(response);
-        httpEntity = seatController.getLeftTicketOfInterval(seatRequest, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(seatService.getLeftTicketOfInterval(Mockito.any(Seat.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(seatRequest);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/seatservice/seats/left_tickets").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }

@@ -86,7 +86,7 @@ public class ConsignServiceImpl implements ConsignService {
         originalRecord.setPhone(consignRequest.getPhone());
         //Recalculate price
         if (originalRecord.getWeight() != consignRequest.getWeight()) {
-            HttpEntity requestEntity = new HttpEntity(null, headers);
+            HttpEntity requestEntity = new HttpEntity<>(null, headers);
             ResponseEntity<Response<Double>> re = restTemplate.exchange(
                     "http://ts-consign-price-service:16110/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
                     HttpMethod.GET,

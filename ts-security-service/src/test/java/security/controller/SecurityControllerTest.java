@@ -1,5 +1,6 @@
 package security.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.fudan.common.util.Response;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,10 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import security.entity.SecurityConfig;
 import security.service.SecurityService;
 
@@ -25,56 +27,69 @@ public class SecurityControllerTest {
 
     @Mock
     private SecurityService securityService;
-
-    private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity httpEntity = new HttpEntity(headers);
+    private MockMvc mockMvc;
     private Response response = new Response();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(securityController).build();
     }
 
     @Test
-    public void testHome(){
-        Assert.assertEquals("welcome to [Security Service]", securityController.home(headers));
+    public void testHome() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/securityservice/welcome"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("welcome to [Security Service]"));
     }
 
     @Test
-    public void testFindAllSecurityConfig(){
-        Mockito.when(securityService.findAllSecurityConfig(headers)).thenReturn(response);
-        httpEntity = securityController.findAllSecurityConfig(headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testFindAllSecurityConfig() throws Exception {
+        Mockito.when(securityService.findAllSecurityConfig(Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/securityservice/securityConfigs"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCreate(){
+    public void testCreate() throws Exception {
         SecurityConfig info = new SecurityConfig();
-        Mockito.when(securityService.addNewSecurityConfig(info, headers)).thenReturn(response);
-        httpEntity = securityController.create(info, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(securityService.addNewSecurityConfig(Mockito.any(SecurityConfig.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(info);
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/securityservice/securityConfigs").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testUpdate(){
+    public void testUpdate() throws Exception {
         SecurityConfig info = new SecurityConfig();
-        Mockito.when(securityService.modifySecurityConfig(info, headers)).thenReturn(response);
-        httpEntity = securityController.update(info, headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+        Mockito.when(securityService.modifySecurityConfig(Mockito.any(SecurityConfig.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String requestJson = JSONObject.toJSONString(info);
+        String result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/securityservice/securityConfigs").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testDelete(){
-        Mockito.when(securityService.deleteSecurityConfig("id", headers)).thenReturn(response);
-        httpEntity = securityController.delete("id", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testDelete() throws Exception {
+        Mockito.when(securityService.deleteSecurityConfig(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/securityservice/securityConfigs/id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
     @Test
-    public void testCheck(){
-        Mockito.when(securityService.check("accountId", headers)).thenReturn(response);
-        httpEntity = securityController.check("accountId", headers);
-        Assert.assertEquals(new ResponseEntity<>(response, HttpStatus.OK), httpEntity);
+    public void testCheck() throws Exception {
+        Mockito.when(securityService.check(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/securityservice/securityConfigs/account_id"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
     }
 
 }
