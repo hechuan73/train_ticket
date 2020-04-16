@@ -45,17 +45,15 @@ public class OrderServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    //ToDo: There is a bug to fix.
-//    @Test
-//    public void testGetSoldTickets1() {
-//        Seat seatRequest = new Seat();
-//        ArrayList<Order> list = new ArrayList<>();
-//        list.add(new Order());
-//        Mockito.when(orderRepository.findByTravelDateAndTrainNumber(Mockito.any(Date.class), Mockito.anyString())).thenReturn(list);
-//        Response result = orderServiceImpl.getSoldTickets(seatRequest, headers);
-//        Assert.assertEquals("Success", result.getMsg());
-//
-//    }
+    @Test
+    public void testGetSoldTickets1() {
+        Seat seatRequest = new Seat();
+        ArrayList<Order> list = new ArrayList<>();
+        list.add(new Order());
+        Mockito.when(orderRepository.findByTravelDateAndTrainNumber(Mockito.any(Date.class), Mockito.anyString())).thenReturn(list);
+        Response result = orderServiceImpl.getSoldTickets(seatRequest, headers);
+        Assert.assertEquals("Success", result.getMsg());
+    }
 
     @Test
     public void testGetSoldTickets2() {

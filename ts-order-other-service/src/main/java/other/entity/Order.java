@@ -59,7 +59,7 @@ public class Order {
         trainNumber = "G1235";
         coachNumber = 5;
         seatClass = SeatClass.FIRSTCLASS.getCode();
-        seatNumber = "5A";
+        seatNumber = "1";
         from = "shanghai";
         to = "taiyuan";
         status = OrderStatus.PAID.getCode();
