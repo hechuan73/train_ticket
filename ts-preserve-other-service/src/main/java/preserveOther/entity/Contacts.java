@@ -1,11 +1,14 @@
 package preserveOther.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+
 import java.util.UUID;
 
 /**
  * @author fdse
  */
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Contacts {
 
@@ -23,54 +26,6 @@ public class Contacts {
 
     public Contacts() {
         //Default Constructor
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(int documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     @Override

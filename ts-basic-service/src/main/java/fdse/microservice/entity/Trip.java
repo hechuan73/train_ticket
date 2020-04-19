@@ -1,5 +1,6 @@
 package fdse.microservice.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import java.util.Date;
  * @author fdse
  */
 @Data
+@AllArgsConstructor
 public class Trip {
     @Valid
     private TripId tripId;

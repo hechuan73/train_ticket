@@ -1,10 +1,14 @@
 package preserveOther.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.ToString;
 
 /**
  * @author fdse
  */
+@Data
+@AllArgsConstructor
 @ToString
 public class TripAllDetail {
 
@@ -20,35 +24,4 @@ public class TripAllDetail {
         //Default Constructor
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public TripResponse getTripResponse() {
-        return tripResponse;
-    }
-
-    public void setTripResponse(TripResponse tripResponse) {
-        this.tripResponse = tripResponse;
-    }
-
-    public Trip getTrip() {
-        return trip;
-    }
-
-    public void setTrip(Trip trip) {
-        this.trip = trip;
-    }
 }

@@ -1,10 +1,13 @@
 package travelplan.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author fdse
  */
+@Data
 public class TransferTravelInfo {
 
     private String fromStationName;
@@ -29,43 +32,4 @@ public class TransferTravelInfo {
         this.trainType = trainType;
     }
 
-    public String getFromStationName() {
-        return fromStationName;
-    }
-
-    public void setFromStationName(String fromStationName) {
-        this.fromStationName = fromStationName;
-    }
-
-    public String getViaStationName() {
-        return viaStationName;
-    }
-
-    public void setViaStationName(String viaStationName) {
-        this.viaStationName = viaStationName;
-    }
-
-    public String getToStationName() {
-        return toStationName;
-    }
-
-    public void setToStationName(String toStationName) {
-        this.toStationName = toStationName;
-    }
-
-    public Date getTravelDate() {
-        return travelDate;
-    }
-
-    public void setTravelDate(Date travelDate) {
-        this.travelDate = travelDate;
-    }
-
-    public String getTrainType() {
-        return trainType;
-    }
-
-    public void setTrainType(String trainType) {
-        this.trainType = trainType;
-    }
 }

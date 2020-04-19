@@ -13,12 +13,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import preserve.entity.NotifyInfo;
-import preserve.entity.Seat;
-import preserve.entity.Ticket;
-import preserve.entity.User;
+import preserve.entity.*;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
 
 @RunWith(JUnit4.class)
 public class PreserveServiceImplTest {
@@ -39,7 +38,100 @@ public class PreserveServiceImplTest {
 
     @Test
     public void testPreserve() {
+        OrderTicketsInfo oti = OrderTicketsInfo.builder()
+                .accountId(UUID.randomUUID().toString())
+                .contactsId(UUID.randomUUID().toString())
+                .from("from_station")
+                .to("to_station")
+                .date(new Date())
+                .handleDate("handle_date")
+                .tripId("G1255")
+                .seatType(2)
+                .assurance(1)
+                .foodType(1)
+                .foodName("food_name")
+                .foodPrice(1.0)
+                .stationName("station_name")
+                .storeName("store_name")
+                .consigneeName("consignee_name")
+                .consigneePhone("123456789")
+                .consigneeWeight(1.0)
+                .isWithin(true)
+                .build();
 
+        //response for checkSecurity()、addAssuranceForOrder()、createFoodOrder()、createConsign()
+        Response response1 = new Response<>(1, null, null);
+        ResponseEntity<Response> re1 = new ResponseEntity<>(response1, HttpStatus.OK);
+
+        //response for sendEmail()
+        ResponseEntity<Boolean> re10 = new ResponseEntity<>(true, HttpStatus.OK);
+
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(Class.class)))
+                .thenReturn(re1).thenReturn(re1).thenReturn(re1).thenReturn(re1).thenReturn(re10);
+
+
+        //response for getContactsById()
+        Contacts contacts = new Contacts();
+        contacts.setDocumentNumber("document_number");
+        contacts.setName("name");
+        contacts.setDocumentType(1);
+        Response<Contacts> response2 = new Response<>(1, null, contacts);
+        ResponseEntity<Response<Contacts>> re2 = new ResponseEntity<>(response2, HttpStatus.OK);
+
+        //response for getTripAllDetailInformation()
+        TripResponse tripResponse = new TripResponse();
+        tripResponse.setConfortClass(1);
+        tripResponse.setStartingTime(new Date());
+        TripAllDetail tripAllDetail = new TripAllDetail(true, "message", tripResponse, new Trip());
+        Response<TripAllDetail> response3 = new Response<>(1, null, tripAllDetail);
+        ResponseEntity<Response<TripAllDetail>> re3 = new ResponseEntity<>(response3, HttpStatus.OK);
+
+        //response for queryForStationId()
+        Response<String> response4 = new Response<>(null, null, "");
+        ResponseEntity<Response<String>> re4 = new ResponseEntity<>(response4, HttpStatus.OK);
+
+        //response for travel result
+        TravelResult travelResult = new TravelResult();
+        travelResult.setPrices( new HashMap<String, String>(){{ put("confortClass", "1.0"); }} );
+        Response<TravelResult> response5 = new Response<>(null, null, travelResult);
+        ResponseEntity<Response<TravelResult>> re5 = new ResponseEntity<>(response5, HttpStatus.OK);
+
+        //response for dipatchSeat()
+        Ticket ticket = new Ticket();
+        ticket.setSeatNo(1);
+        Response<Ticket> response6 = new Response<>(null, null, ticket);
+        ResponseEntity<Response<Ticket>> re6 = new ResponseEntity<>(response6, HttpStatus.OK);
+
+        //response for createOrder()
+        Order order = new Order();
+        order.setId(UUID.randomUUID());
+        order.setAccountId(UUID.randomUUID());
+        order.setTravelDate(new Date());
+        order.setFrom("from_station");
+        order.setTo("to_station");
+        Response<Order> response7 = new Response<>(1, null, order);
+        ResponseEntity<Response<Order>> re7 = new ResponseEntity<>(response7, HttpStatus.OK);
+
+        //response for getAccount()
+        User user = new User();
+        user.setEmail("email");
+        user.setUserName("user_name");
+        Response<User> response9 = new Response<>(1, null, user);
+        ResponseEntity<Response<User>> re9 = new ResponseEntity<>(response9, HttpStatus.OK);
+
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re2).thenReturn(re3).thenReturn(re4).thenReturn(re4).thenReturn(re5).thenReturn(re6).thenReturn(re7).thenReturn(re9);
+
+        Response result = preserveServiceImpl.preserve(oti, headers);
+        Assert.assertEquals(new Response<>(1, "Success.", null), result);
     }
 
     @Test

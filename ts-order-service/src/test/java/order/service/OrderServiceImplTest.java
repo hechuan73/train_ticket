@@ -1,10 +1,7 @@
 package order.service;
 
 import edu.fudan.common.util.Response;
-import order.entity.Order;
-import order.entity.OrderAlterInfo;
-import order.entity.OrderSecurity;
-import order.entity.Seat;
+import order.entity.*;
 import order.repository.OrderRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -128,17 +125,52 @@ public class OrderServiceImplTest {
 
     @Test
     public void testAlterOrder2() {
-        //todo to be added
+        OrderAlterInfo oai = new OrderAlterInfo(UUID.randomUUID(), UUID.randomUUID(), "login_token", new Order());
+        Order order = new Order();
+        Mockito.when(orderRepository.findById(Mockito.any(UUID.class))).thenReturn(order);
+        Mockito.when(orderRepository.save(Mockito.any(Order.class))).thenReturn(null);
+        //mock create()
+        ArrayList<Order> accountOrders = new ArrayList<>();
+        Mockito.when(orderRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(accountOrders);
+        Response result = orderServiceImpl.alterOrder(oai, headers);
+        Assert.assertEquals("Success", result.getMsg());
     }
 
     @Test
     public void testQueryOrders() {
-
+        ArrayList<Order> list = new ArrayList<>();
+        Order order = new Order();
+        order.setStatus(1);
+        list.add(order);
+        Mockito.when(orderRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(list);
+        OrderInfo qi = new OrderInfo();
+        qi.setEnableStateQuery(true);
+        qi.setEnableBoughtDateQuery(false);
+        qi.setEnableTravelDateQuery(false);
+        qi.setState(1);
+        Response result = orderServiceImpl.queryOrders(qi, UUID.randomUUID().toString(), headers);
+        Assert.assertEquals(new Response<>(1, "Get order num", list), result);
     }
 
     @Test
     public void testQueryOrdersForRefresh() {
-
+        ArrayList<Order> list = new ArrayList<>();
+        Mockito.when(orderRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(list);
+        //mock queryForStationId()
+        Response<List<String>> response = new Response<>();
+        ResponseEntity<Response<List<String>>> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)
+        )).thenReturn(re);
+        OrderInfo qi = new OrderInfo();
+        qi.setEnableStateQuery(false);
+        qi.setEnableBoughtDateQuery(false);
+        qi.setEnableTravelDateQuery(false);
+        Response result = orderServiceImpl.queryOrdersForRefresh(qi, UUID.randomUUID().toString(), headers);
+        Assert.assertEquals("Query Orders For Refresh Success", result.getMsg());
     }
 
     @Test

@@ -10,10 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import user.dto.AuthDto;
 import user.dto.UserDto;
 import user.entity.User;
 import user.repository.UserRepository;
@@ -44,7 +44,23 @@ public class UserServiceImplTest {
 
     @Test
     public void testSaveUser() {
+        UserDto userDto = new UserDto(UUID.randomUUID(), "user_name", "xxx", 0, 1, "", "");
+        Mockito.when(userRepository.findByUserName(Mockito.anyString())).thenReturn(null);
 
+        //mock createDefaultAuthUser()
+        Response<ArrayList<AuthDto>> response1 = new Response<>();
+        ResponseEntity<Response<ArrayList<AuthDto>>> re1 = new ResponseEntity<>(response1, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re1);
+
+        User user = new User();
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        Response result = userServiceImpl.saveUser(userDto, headers);
+        Assert.assertEquals(new Response<>(1, "REGISTER USER SUCCESS", user), result);
     }
 
     @Test

@@ -1,10 +1,13 @@
 package plan.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author fdse
  */
+@Data
 public class TripAllDetailInfo {
 
     private String tripId;
@@ -19,35 +22,4 @@ public class TripAllDetailInfo {
         //Default Constructor
     }
 
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
-
-    public Date getTravelDate() {
-        return travelDate;
-    }
-
-    public void setTravelDate(Date travelDate) {
-        this.travelDate = travelDate;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
 }

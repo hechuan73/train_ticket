@@ -10,15 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import travel2.entity.TravelInfo;
-import travel2.entity.Trip;
-import travel2.entity.TripId;
+import travel2.entity.*;
 import travel2.repository.TripRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 @RunWith(JUnit4.class)
 public class Travel2ServiceImplTest {
@@ -33,7 +32,6 @@ public class Travel2ServiceImplTest {
     private RestTemplate restTemplate;
 
     private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity requestEntity = new HttpEntity(headers);
     String success = "Success";
     String noCnontent = "No Content";
 
@@ -43,13 +41,46 @@ public class Travel2ServiceImplTest {
     }
 
     @Test
-    public void testGetRouteByTripId() {
+    public void testGetRouteByTripId1() {
+        Mockito.when(repository.findByTripId(Mockito.any(TripId.class))).thenReturn(null);
+        Response result = travel2ServiceImpl.getRouteByTripId("K1255", headers);
+        Assert.assertEquals(new Response<>(0, "\"[Get Route By Trip ID] Trip Not Found:\" + tripId", null), result);
+    }
 
+    @Test
+    public void testGetRouteByTripId2() {
+        Trip trip = new Trip();
+        Mockito.when(repository.findByTripId(Mockito.any(TripId.class))).thenReturn(trip);
+        //mock getRouteByRouteId()
+        Route route = new Route();
+        Response response = new Response(1, null, route);
+        ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(Class.class)))
+                .thenReturn(re);
+        Response result = travel2ServiceImpl.getRouteByTripId("K1255", headers);
+        Assert.assertEquals("[Get Route By Trip ID] Success", result.getMsg());
     }
 
     @Test
     public void testGetTrainTypeByTripId() {
-
+        Trip trip = new Trip();
+        Mockito.when(repository.findByTripId(Mockito.any(TripId.class))).thenReturn(trip);
+        //mock getTrainType()
+        TrainType trainType = new TrainType();
+        Response<TrainType> response = new Response<>(null, null, trainType);
+        ResponseEntity<Response<TrainType>> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re);
+        Response result = travel2ServiceImpl.getTrainTypeByTripId("K1255", headers);
+        Assert.assertEquals(new Response<>(1, "Success query Train by trip id", trainType), result);
     }
 
     @Test
@@ -142,12 +173,73 @@ public class Travel2ServiceImplTest {
 
     @Test
     public void testQuery() {
+        TripInfo info = new TripInfo();
+        //mock queryForStationId()
+        Response<String> response1 = new Response<>(null, null, "");
+        ResponseEntity<Response<String>> re1 = new ResponseEntity<>(response1, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re1);
 
+        ArrayList<Trip> tripList = new ArrayList<>();
+        Trip trip = new Trip();
+        trip.setRouteId("route_id");
+        tripList.add(trip);
+        Mockito.when(repository.findAll()).thenReturn(tripList);
+
+        //mock getRouteByRouteId()
+        Route route = new Route();
+        route.setStations(new ArrayList<>());
+        Response response2 = new Response(1, null, route);
+        ResponseEntity<Response> re2 = new ResponseEntity<>(response2, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(Class.class)))
+                .thenReturn(re2);
+        Response result = travel2ServiceImpl.query(info, headers);
+        Assert.assertEquals(new Response<>(1, "Success Query", new ArrayList<>()), result);
     }
 
     @Test
     public void testGetTripAllDetailInfo() {
+        TripAllDetailInfo gtdi = new TripAllDetailInfo();
+        gtdi.setTripId("Z1255");
+        gtdi.setFrom("from_station");
+        gtdi.setTo("to_station");
+        gtdi.setTravelDate(new Date(System.currentTimeMillis() - 86400000));
 
+        Trip trip = new Trip();
+        trip.setRouteId("route_id");
+        Mockito.when(repository.findByTripId(Mockito.any(TripId.class))).thenReturn(trip);
+
+        //mock queryForStationId()
+        Response<String> response1 = new Response<>(null, null, "");
+        ResponseEntity<Response<String>> re1 = new ResponseEntity<>(response1, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re1);
+
+        //mock getRouteByRouteId()
+        Route route = new Route();
+        route.setStations(new ArrayList<>());
+        Response response2 = new Response(1, null, route);
+        ResponseEntity<Response> re2 = new ResponseEntity<>(response2, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(Class.class)))
+                .thenReturn(re2);
+        Response result = travel2ServiceImpl.getTripAllDetailInfo(gtdi, headers);
+        Assert.assertEquals("Success", result.getMsg());
     }
 
     @Test
@@ -168,7 +260,35 @@ public class Travel2ServiceImplTest {
 
     @Test
     public void testAdminQueryAll1() {
+        ArrayList<Trip> tripList = new ArrayList<>();
+        Trip trip = new Trip();
+        trip.setRouteId("route_id");
+        tripList.add(trip);
+        Mockito.when(repository.findAll()).thenReturn(tripList);
 
+        //mock getRouteByRouteId()
+        Route route = new Route();
+        Response response2 = new Response(1, null, route);
+        ResponseEntity<Response> re2 = new ResponseEntity<>(response2, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(Class.class)))
+                .thenReturn(re2);
+
+        //mock getTrainType()
+        TrainType trainType = new TrainType();
+        Response<TrainType> response = new Response<>(null, null, trainType);
+        ResponseEntity<Response<TrainType>> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re);
+        Response result = travel2ServiceImpl.adminQueryAll(headers);
+        Assert.assertEquals("Travel Service Admin Query All Travel Success", result.getMsg());
     }
     @Test
     public void testAdminQueryAll2() {

@@ -1,8 +1,13 @@
 package security.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
+@AllArgsConstructor
 public class OrderSecurity {
 
     private int orderNumInLastOneHour;
@@ -13,19 +18,4 @@ public class OrderSecurity {
         //Default Constructor
     }
 
-    public int getOrderNumInLastOneHour() {
-        return orderNumInLastOneHour;
-    }
-
-    public void setOrderNumInLastOneHour(int orderNumInLastOneHour) {
-        this.orderNumInLastOneHour = orderNumInLastOneHour;
-    }
-
-    public int getOrderNumOfValidOrder() {
-        return orderNumOfValidOrder;
-    }
-
-    public void setOrderNumOfValidOrder(int orderNumOfValidOrder) {
-        this.orderNumOfValidOrder = orderNumOfValidOrder;
-    }
 }

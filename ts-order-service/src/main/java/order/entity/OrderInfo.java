@@ -1,10 +1,13 @@
 package order.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author fdse
  */
+@Data
 public class OrderInfo {
 
     /**

@@ -1,11 +1,14 @@
 package inside_payment.entity;
 
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
  * @author fdse
  */
+@Data
 public class Balance {
     @Valid
     @NotNull
@@ -21,19 +24,4 @@ public class Balance {
         this.balance = "";
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
-    }
 }

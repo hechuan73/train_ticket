@@ -1,8 +1,11 @@
 package inside_payment.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class AccountInfo {
 
     private String userId;
@@ -11,22 +14,6 @@ public class AccountInfo {
 
     public AccountInfo(){
         //Default Constructor
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getMoney() {
-        return money;
-    }
-
-    public void setMoney(String money) {
-        this.money = money;
     }
 
 }

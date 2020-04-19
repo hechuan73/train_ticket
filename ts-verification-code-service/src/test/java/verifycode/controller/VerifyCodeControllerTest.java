@@ -20,15 +20,11 @@ import verifycode.service.VerifyCodeService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.rmi.MarshalledObject;
 import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(JUnit4.class)
 public class VerifyCodeControllerTest {
@@ -48,7 +44,13 @@ public class VerifyCodeControllerTest {
 
     @Test
     public void testImageCode() throws Exception {
-
+        Map<String, Object> map = new HashMap<>();
+        BufferedImage image = new BufferedImage(60, 20, BufferedImage.TYPE_INT_RGB);
+        map.put("strEnsure", "XYZ8");
+        map.put("image", image);
+        Mockito.when(verifyCodeService.getImageCode(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(OutputStream.class), Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class), Mockito.any(HttpHeaders.class))).thenReturn(map);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/verifycode/generate")).andReturn();
+        Mockito.verify(verifyCodeService, Mockito.times(1)).getImageCode(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(OutputStream.class), Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class), Mockito.any(HttpHeaders.class));
     }
 
     @Test

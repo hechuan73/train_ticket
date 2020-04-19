@@ -1,10 +1,13 @@
 package travelplan.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author fdse
  */
+@Data
 public class RoutePlanInfo {
 
     private String formStationName;
@@ -26,35 +29,4 @@ public class RoutePlanInfo {
         this.num = num;
     }
 
-    public String getFormStationName() {
-        return formStationName;
-    }
-
-    public void setFormStationName(String formStationName) {
-        this.formStationName = formStationName;
-    }
-
-    public String getToStationName() {
-        return toStationName;
-    }
-
-    public void setToStationName(String toStationName) {
-        this.toStationName = toStationName;
-    }
-
-    public Date getTravelDate() {
-        return travelDate;
-    }
-
-    public void setTravelDate(Date travelDate) {
-        this.travelDate = travelDate;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
 }

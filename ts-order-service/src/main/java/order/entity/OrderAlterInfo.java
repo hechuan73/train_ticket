@@ -1,10 +1,15 @@
 package order.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.UUID;
 
 /**
  * @author fdse
  */
+@Data
+@AllArgsConstructor
 public class OrderAlterInfo {
 
     private UUID accountId;
@@ -17,37 +22,5 @@ public class OrderAlterInfo {
 
     public OrderAlterInfo(){
         newOrderInfo = new Order();
-    }
-
-    public UUID getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
-    public UUID getPreviousOrderId() {
-        return previousOrderId;
-    }
-
-    public void setPreviousOrderId(UUID previousOrderId) {
-        this.previousOrderId = previousOrderId;
-    }
-
-    public String getLoginToken() {
-        return loginToken;
-    }
-
-    public void setLoginToken(String loginToken) {
-        this.loginToken = loginToken;
-    }
-
-    public Order getNewOrderInfo() {
-        return newOrderInfo;
-    }
-
-    public void setNewOrderInfo(Order newOrderInfo) {
-        this.newOrderInfo = newOrderInfo;
     }
 }

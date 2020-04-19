@@ -34,7 +34,7 @@ public class VerifyCodeController {
         Map<String, Object> map = verifyCodeService.getImageCode(60, 20, os, request, response, headers);
         String simpleCaptcha = "simpleCaptcha";
         request.getSession().setAttribute(simpleCaptcha, map.get("strEnsure").toString().toLowerCase());
-        request.getSession().setAttribute("codeTime", new Date().getTime());
+        request.getSession().setAttribute("codeTime", System.currentTimeMillis());
         try {
             ImageIO.write((BufferedImage) map.get("image"), "JPEG", os);
         } catch (IOException e) {

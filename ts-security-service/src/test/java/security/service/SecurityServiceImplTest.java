@@ -10,8 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import security.entity.OrderSecurity;
 import security.entity.SecurityConfig;
 import security.repository.SecurityRepository;
 
@@ -108,7 +110,22 @@ public class SecurityServiceImplTest {
 
     @Test
     public void testCheck() {
+        //mock getSecurityOrderInfoFromOrder() and getSecurityOrderOtherInfoFromOrder()
+        OrderSecurity orderSecurity = new OrderSecurity(1, 1);
+        Response<OrderSecurity> response1 = new Response<>(null, null, orderSecurity);
+        ResponseEntity<Response<OrderSecurity>> re1 = new ResponseEntity<>(response1, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)))
+                .thenReturn(re1);
 
+        SecurityConfig securityConfig = new SecurityConfig();
+        securityConfig.setValue("2");
+        Mockito.when(securityRepository.findByName(Mockito.anyString())).thenReturn(securityConfig);
+        Response result = securityServiceImpl.check("account_id", headers);
+        Assert.assertEquals(new Response<>(1, "Success.r", "account_id"), result);
     }
 
 }

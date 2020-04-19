@@ -1,5 +1,6 @@
 package inside_payment.entity;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 /**
  * @author fdse
  */
+@Data
 @Document(collection="addMoney")
 public class Money {
 
@@ -30,14 +32,6 @@ public class Money {
     @NotNull
     private MoneyType type;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Money(){
         this.id = UUID.randomUUID().toString();
         this.userId = "";
@@ -45,27 +39,4 @@ public class Money {
 
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getMoney() {
-        return money;
-    }
-
-    public void setMoney(String money) {
-        this.money = money;
-    }
-
-    public MoneyType getType() {
-        return type;
-    }
-
-    public void setType(MoneyType type) {
-        this.type = type;
-    }
 }

@@ -1,10 +1,13 @@
 package travelplan.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * @author fdse
  */
+@Data
 public class TripId implements Serializable{
 
     private TrainTypeEnum type;
@@ -32,23 +35,6 @@ public class TripId implements Serializable{
         }
 
         this.number = trainNumber.substring(1);
-    }
-
-
-    public TrainTypeEnum getType() {
-        return type;
-    }
-
-    public void setType(TrainTypeEnum type) {
-        this.type = type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     @Override

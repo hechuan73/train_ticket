@@ -13,10 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import other.entity.Order;
-import other.entity.OrderAlterInfo;
-import other.entity.OrderSecurity;
-import other.entity.Seat;
+import other.entity.*;
 import other.repository.OrderOtherRepository;
 
 import java.util.ArrayList;
@@ -128,17 +125,52 @@ public class OrderOtherServiceImplTest {
 
     @Test
     public void testAlterOrder2() {
-        //todo to be added
+        OrderAlterInfo oai = new OrderAlterInfo(UUID.randomUUID(), UUID.randomUUID(), "login_token", new Order());
+        Order order = new Order();
+        Mockito.when(orderOtherRepository.findById(Mockito.any(UUID.class))).thenReturn(order);
+        Mockito.when(orderOtherRepository.save(Mockito.any(Order.class))).thenReturn(null);
+        //mock create()
+        ArrayList<Order> accountOrders = new ArrayList<>();
+        Mockito.when(orderOtherRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(accountOrders);
+        Response result = orderOtherServiceImpl.alterOrder(oai, headers);
+        Assert.assertEquals("Alter Order Success", result.getMsg());
     }
 
     @Test
     public void testQueryOrders() {
-
+        ArrayList<Order> list = new ArrayList<>();
+        Order order = new Order();
+        order.setStatus(1);
+        list.add(order);
+        Mockito.when(orderOtherRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(list);
+        QueryInfo qi = new QueryInfo();
+        qi.setEnableStateQuery(true);
+        qi.setEnableBoughtDateQuery(false);
+        qi.setEnableTravelDateQuery(false);
+        qi.setState(1);
+        Response result = orderOtherServiceImpl.queryOrders(qi, UUID.randomUUID().toString(), headers);
+        Assert.assertEquals(new Response<>(1, "Get order num", list), result);
     }
 
     @Test
     public void testQueryOrdersForRefresh() {
-
+        ArrayList<Order> list = new ArrayList<>();
+        Mockito.when(orderOtherRepository.findByAccountId(Mockito.any(UUID.class))).thenReturn(list);
+        //mock queryForStationId()
+        Response<List<String>> response = new Response<>();
+        ResponseEntity<Response<List<String>>> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                Mockito.anyString(),
+                Mockito.any(HttpMethod.class),
+                Mockito.any(HttpEntity.class),
+                Mockito.any(ParameterizedTypeReference.class)
+                )).thenReturn(re);
+        QueryInfo qi = new QueryInfo();
+        qi.setEnableStateQuery(false);
+        qi.setEnableBoughtDateQuery(false);
+        qi.setEnableTravelDateQuery(false);
+        Response result = orderOtherServiceImpl.queryOrdersForRefresh(qi, UUID.randomUUID().toString(), headers);
+        Assert.assertEquals("Success", result.getMsg());
     }
 
     @Test

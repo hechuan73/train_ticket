@@ -1,9 +1,7 @@
 package inside_payment.service;
 
 import edu.fudan.common.util.Response;
-import inside_payment.entity.AccountInfo;
-import inside_payment.entity.Money;
-import inside_payment.entity.Payment;
+import inside_payment.entity.*;
 import inside_payment.repository.AddMoneyRepository;
 import inside_payment.repository.PaymentRepository;
 import org.junit.Assert;
@@ -15,7 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,11 @@ public class InsidePaymentServiceImplTest {
     @Mock
     private PaymentRepository paymentRepository;
 
+    @Mock
+    private RestTemplate restTemplate;
+
     private HttpHeaders headers = new HttpHeaders();
+    HttpEntity httpEntity = new HttpEntity(headers);
 
     @Before
     public void setUp() {
@@ -43,7 +47,37 @@ public class InsidePaymentServiceImplTest {
 
     @Test
     public void testPay() {
+        PaymentInfo info = new PaymentInfo("user_id", "order_id", "G", "1.0");
+        Order order = new Order();
+        order.setStatus(0);
+        order.setPrice("1.0");
+        Response<Order> response = new Response<>(1, null, order);
+        ResponseEntity<Response<Order>> re = new ResponseEntity<>(response, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order/order_id",
+                HttpMethod.GET,
+                httpEntity,
+                new ParameterizedTypeReference<Response<Order>>() {
+                })).thenReturn(re);
 
+        List<Payment> payments = new ArrayList<>();
+        List<Money> monies = new ArrayList<>();
+        Money money = new Money();
+        money.setMoney("2.0");
+        monies.add(money);
+        Mockito.when(paymentRepository.findByUserId(Mockito.anyString())).thenReturn(payments);
+        Mockito.when(addMoneyRepository.findByUserId(Mockito.anyString())).thenReturn(monies);
+        //mock setOrderStatus()
+        Response response2 = new Response(1, "", null);
+        ResponseEntity<Response> re2 = new ResponseEntity<>(response2, HttpStatus.OK);
+        Mockito.when(restTemplate.exchange(
+                "http://ts-order-service:12031/api/v1/orderservice/order/status/" + "order_id" + "/" + 1,
+                HttpMethod.GET,
+                httpEntity,
+                Response.class)).thenReturn(re2);
+        Mockito.when(paymentRepository.save(Mockito.any(Payment.class))).thenReturn(null);
+        Response result = insidePaymentServiceImpl.pay(info, headers);
+        Assert.assertEquals(new Response<>(1, "Payment Success", null), result);
     }
 
     @Test
@@ -84,7 +118,10 @@ public class InsidePaymentServiceImplTest {
 
     @Test
     public void testQueryAccount() {
-
+        List<Money> list = new ArrayList<>();
+        Mockito.when(addMoneyRepository.findAll()).thenReturn(list);
+        Response result = insidePaymentServiceImpl.queryAccount(headers);
+        Assert.assertEquals("Success", result.getMsg());
     }
 
     @Test
@@ -121,7 +158,17 @@ public class InsidePaymentServiceImplTest {
 
     @Test
     public void testPayDifference() {
-
+        PaymentInfo info = new PaymentInfo("user_id", "order_id", "G", "1.0");
+        List<Payment> payments = new ArrayList<>();
+        List<Money> monies = new ArrayList<>();
+        Money money = new Money();
+        money.setMoney("2.0");
+        monies.add(money);
+        Mockito.when(paymentRepository.findByUserId(Mockito.anyString())).thenReturn(payments);
+        Mockito.when(addMoneyRepository.findByUserId(Mockito.anyString())).thenReturn(monies);
+        Mockito.when(paymentRepository.save(Mockito.any(Payment.class))).thenReturn(null);
+        Response result = insidePaymentServiceImpl.payDifference(info, headers);
+        Assert.assertEquals(new Response<>(1, "Pay Difference Success", null), result);
     }
 
     @Test

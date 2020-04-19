@@ -1,8 +1,6 @@
 package auth.service;
 
-import auth.constant.InfoConstant;
 import auth.dto.BasicAuthDto;
-import auth.dto.TokenDto;
 import auth.entity.User;
 import auth.exception.UserOperationException;
 import auth.repository.UserRepository;
@@ -19,9 +17,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.MessageFormat;
+import java.util.Optional;
 
 @RunWith(JUnit4.class)
 public class TokenServiceImplTest {
@@ -31,10 +31,15 @@ public class TokenServiceImplTest {
 
     @Mock
     private RestTemplate restTemplate;
+
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private JWTProvider jwtProvider;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
 
     private HttpHeaders headers = new HttpHeaders();
     HttpEntity requestEntity = new HttpEntity(headers);
@@ -57,18 +62,16 @@ public class TokenServiceImplTest {
         Assert.assertEquals(new Response<>(0, "Verification failed.", null), result);
     }
 
-    //TODO This unit test method has an error.
-//    @Test
-//    public void testGetToken2() {
-//        BasicAuthDto dto = new BasicAuthDto("username", null, "");
-//        User user = new User();
-//        Mockito.when(userRepository.findByUsername("username")
-//                .orElseThrow(() -> new UserOperationException(MessageFormat.format(
-//                        InfoConstant.USER_NAME_NOT_FOUND_1, "username"
-//                )))).thenReturn(user);
-//        Mockito.when(jwtProvider.createToken(user)).thenReturn("token");
-//        Response result = tokenServiceImpl.getToken(dto, headers);
-//        Assert.assertEquals(new Response<>(1, "login success", new TokenDto(user.getUserId(), "username", "token")), result);
-//    }
+    @Test
+    public void testGetToken2() throws UserOperationException {
+        BasicAuthDto dto = new BasicAuthDto("username", null, "");
+        User user = new User();
+        Optional<User> optionalUser = Optional.of(user);
+        Mockito.when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
+        Mockito.when(userRepository.findByUsername("username")).thenReturn(optionalUser);
+        Mockito.when(jwtProvider.createToken(user)).thenReturn("token");
+        Response result = tokenServiceImpl.getToken(dto, headers);
+        Assert.assertEquals("login success", result.getMsg());
+    }
 
 }

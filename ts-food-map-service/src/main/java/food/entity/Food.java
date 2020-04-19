@@ -1,29 +1,17 @@
 package food.entity;
 
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class Food implements Serializable{
 
     private String foodName;
     private double price;
     public Food(){
         //Default Constructor
-    }
-    public String getFoodName() {
-        return foodName;
-    }
-
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
 }
