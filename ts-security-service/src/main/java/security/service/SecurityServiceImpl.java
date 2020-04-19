@@ -92,7 +92,7 @@ public class SecurityServiceImpl implements SecurityService {
         OrderSecurity orderResult = getSecurityOrderInfoFromOrder(new Date(), accountId, headers);
         OrderSecurity orderOtherResult = getSecurityOrderOtherInfoFromOrder(new Date(), accountId, headers);
         int orderInOneHour = orderOtherResult.getOrderNumInLastOneHour() + orderResult.getOrderNumInLastOneHour();
-        int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderOtherResult.getOrderNumOfValidOrder();
+        int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderResult.getOrderNumOfValidOrder();
         //2. get critical configuration information
         SecurityServiceImpl.LOGGER.info("[Security Service][Get Security Config Info]");
         SecurityConfig configMaxInHour = securityRepository.findByName("max_order_1_hour");
