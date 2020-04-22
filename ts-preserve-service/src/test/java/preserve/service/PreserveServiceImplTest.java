@@ -157,7 +157,7 @@ public class PreserveServiceImplTest {
         HttpEntity requestEntitySendEmail = new HttpEntity(notifyInfo, headers);
         ResponseEntity<Boolean> reSendEmail = new ResponseEntity<>(true, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
-                "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
+                "http://ts-notification-service:17853/api/v1/notifyservice/notification/preserve_success",
                 HttpMethod.POST,
                 requestEntitySendEmail,
                 Boolean.class)).thenReturn(reSendEmail);
