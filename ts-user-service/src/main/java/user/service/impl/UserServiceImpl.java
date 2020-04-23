@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private RestTemplate restTemplate = new RestTemplate();
     private static final String AUHT_SERVICE_URI = "http://ts-auth-service:12340/api/v1";
 
     @Override
@@ -66,7 +67,6 @@ public class UserServiceImpl implements UserService {
     private Response createDefaultAuthUser(AuthDto dto) {
         log.info("CALL TO AUTH");
         log.info("AuthDto : " + dto.toString());
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<AuthDto> entity = new HttpEntity<>(dto, headers);
         ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange("http://ts-auth-service:12340/api/v1/auth",
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         log.info("UPDATE USER :" + userDto.toString());
         User oldUser = userRepository.findByUserName(userDto.getUserName());
         if (oldUser != null) {
-            User newUser = oldUser.builder().email(userDto.getEmail())
+            User newUser = User.builder().email(userDto.getEmail())
                     .password(userDto.getPassword())
                     .userId(oldUser.getUserId())
                     .userName(userDto.getUserName())
@@ -142,7 +142,6 @@ public class UserServiceImpl implements UserService {
 
     public void deleteUserAuth(UUID userId, HttpHeaders headers) {
         log.info("DELETE USER BY ID :" + userId);
-        RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
         restTemplate.exchange(AUHT_SERVICE_URI + "/users/" + userId,

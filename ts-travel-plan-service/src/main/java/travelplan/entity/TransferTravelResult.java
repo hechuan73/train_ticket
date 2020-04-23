@@ -1,10 +1,13 @@
 package travelplan.entity;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * @author fdse
  */
+@Data
 public class TransferTravelResult {
 
     private List<TripResponse> firstSectionResult;
@@ -21,19 +24,4 @@ public class TransferTravelResult {
         this.secondSectionResult = secondSectionResult;
     }
 
-    public List<TripResponse> getFirstSectionResult() {
-        return firstSectionResult;
-    }
-
-    public void setFirstSectionResult(List<TripResponse> firstSectionResult) {
-        this.firstSectionResult = firstSectionResult;
-    }
-
-    public List<TripResponse> getSecondSectionResult() {
-        return secondSectionResult;
-    }
-
-    public void setSecondSectionResult(List<TripResponse> secondSectionResult) {
-        this.secondSectionResult = secondSectionResult;
-    }
 }

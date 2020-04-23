@@ -25,21 +25,18 @@ public class FoodController {
         return "Welcome to [ Food Service ] !";
     }
 
-    // get
     @GetMapping(path = "/orders")
     public HttpEntity findAllFoodOrder(@RequestHeader HttpHeaders headers) {
         FoodController.LOGGER.info("[Food Service]Try to Find all FoodOrder!");
         return ok(foodService.findAllFoodOrder(headers));
     }
 
-    // add
     @PostMapping(path = "/orders")
     public HttpEntity createFoodOrder(@RequestBody FoodOrder addFoodOrder, @RequestHeader HttpHeaders headers) {
         FoodController.LOGGER.info("[Food Service]Try to Create a FoodOrder!");
         return ok(foodService.createFoodOrder(addFoodOrder, headers));
     }
 
-    // update
     @PutMapping(path = "/orders")
     public HttpEntity updateFoodOrder(@RequestBody FoodOrder updateFoodOrder, @RequestHeader HttpHeaders headers) {
         FoodController.LOGGER.info("[Food Service]Try to Update a FoodOrder!");

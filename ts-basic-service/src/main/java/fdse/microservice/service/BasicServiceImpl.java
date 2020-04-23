@@ -55,7 +55,7 @@ public class BasicServiceImpl implements BasicService {
         }
 
         String routeId = info.getTrip().getRouteId();
-        String trainTypeString = null;
+        String trainTypeString = "";
         if (trainType != null){
             trainTypeString = trainType.getId();
         }

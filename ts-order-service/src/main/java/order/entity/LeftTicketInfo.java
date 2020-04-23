@@ -1,5 +1,7 @@
 package order.entity;
 
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.Set;
 /**
  * @author fdse
  */
+@Data
 public class LeftTicketInfo {
     @Valid
     @NotNull
@@ -14,14 +17,6 @@ public class LeftTicketInfo {
 
     public LeftTicketInfo(){
         //Default Constructor
-    }
-
-    public Set<Ticket> getSoldTickets() {
-        return soldTickets;
-    }
-
-    public void setSoldTickets(Set<Ticket> soldTickets) {
-        this.soldTickets = soldTickets;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package ticketinfo.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
-
+@Data
 public class TripId implements Serializable{
     private Type type;
     private String number;
@@ -29,23 +31,6 @@ public class TripId implements Serializable{
         }
 
         this.number = trainNumber.substring(1);
-    }
-
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     @Override

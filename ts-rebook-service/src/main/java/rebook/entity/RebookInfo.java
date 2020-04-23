@@ -1,5 +1,7 @@
 package rebook.entity;
 
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.Date;
 /**
  * @author fdse
  */
+@Data
 public class RebookInfo {
 
     @Valid
@@ -43,51 +46,4 @@ public class RebookInfo {
         this.date = new Date();
     }
 
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
-
-    public int getSeatType() {
-        return seatType;
-    }
-
-    public void setSeatType(int seatType) {
-        this.seatType = seatType;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getOldTripId() {
-        return oldTripId;
-    }
-
-    public void setOldTripId(String oldTripId) {
-        this.oldTripId = oldTripId;
-    }
 }

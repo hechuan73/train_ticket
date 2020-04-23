@@ -35,7 +35,7 @@ public class ContactsServiceImpl implements ContactsService {
         if (contacts != null) {
             return new Response<>(1, success, contacts);
         } else {
-            return new Response<>(0, "No contacts accorrding to contacts id", id);
+            return new Response<>(0, "No contacts according to contacts id", null);
         }
     }
 

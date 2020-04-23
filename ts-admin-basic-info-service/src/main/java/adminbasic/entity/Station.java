@@ -1,11 +1,14 @@
 package adminbasic.entity;
 
+import lombok.Data;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
  * @author fdse
  */
+@Data
 public class Station {
 
     private String id;
@@ -34,27 +37,4 @@ public class Station {
         this.stayTime = stayTime;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getStayTime() {
-        return stayTime;
-    }
-
-    public void setStayTime(int stayTime) {
-        this.stayTime = stayTime;
-    }
 }

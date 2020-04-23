@@ -1,8 +1,11 @@
 package consign.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class InsertConsignRecordResult {
     private boolean status;
 
@@ -12,19 +15,4 @@ public class InsertConsignRecordResult {
         //Default Constructor
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

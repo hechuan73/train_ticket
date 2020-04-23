@@ -233,7 +233,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
             addMoney.setMoney(money);
             addMoney.setType(MoneyType.D);
             addMoneyRepository.save(addMoney);
-            return new Response<>(1, "Draw Back Money Scuuess", null);
+            return new Response<>(1, "Draw Back Money Success", null);
         } else {
             return new Response<>(0, "Draw Back Money Failed", null);
         }

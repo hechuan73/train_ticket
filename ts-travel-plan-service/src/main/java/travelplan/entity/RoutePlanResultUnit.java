@@ -8,6 +8,7 @@ import lombok.*;
  * @author fdse
  */
 @Data
+@AllArgsConstructor
 public class RoutePlanResultUnit {
 
     private String tripId;

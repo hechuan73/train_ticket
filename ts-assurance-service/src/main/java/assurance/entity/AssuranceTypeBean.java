@@ -1,10 +1,17 @@
 package assurance.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
  * @author fdse
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssuranceTypeBean implements Serializable{
 
     /**
@@ -22,27 +29,4 @@ public class AssuranceTypeBean implements Serializable{
      */
     private double price;
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 }

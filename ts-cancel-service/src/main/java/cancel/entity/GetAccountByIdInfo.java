@@ -1,8 +1,11 @@
 package cancel.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class GetAccountByIdInfo {
 
     private String accountId;
@@ -11,11 +14,4 @@ public class GetAccountByIdInfo {
         //Default Constructor
     }
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
 }

@@ -267,7 +267,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Send Email]");
         HttpEntity requestEntitySendEmail = new HttpEntity(notifyInfo, httpHeaders);
         ResponseEntity<Boolean> reSendEmail = restTemplate.exchange(
-                "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
+                "http://ts-notification-service:17853/api/v1/notifyservice/notification/preserve_success",
                 HttpMethod.POST,
                 requestEntitySendEmail,
                 Boolean.class);

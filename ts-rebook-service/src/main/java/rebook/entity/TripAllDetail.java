@@ -1,8 +1,11 @@
 package rebook.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class TripAllDetail {
 
     private TripResponse tripResponse;
@@ -13,21 +16,4 @@ public class TripAllDetail {
         //Default Constructor
     }
 
-
-
-    public TripResponse getTripResponse() {
-        return tripResponse;
-    }
-
-    public void setTripResponse(TripResponse tripResponse) {
-        this.tripResponse = tripResponse;
-    }
-
-    public Trip getTrip() {
-        return trip;
-    }
-
-    public void setTrip(Trip trip) {
-        this.trip = trip;
-    }
 }

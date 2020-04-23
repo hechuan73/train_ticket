@@ -87,13 +87,13 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Response check(String accountId, HttpHeaders headers) {
-        //1.获取自己过去一小时的订单数和总有效票数
+        //1.Get the orders in the past one hour and the total effective votes
         SecurityServiceImpl.LOGGER.info("[Security Service][Get Order Num Info]");
         OrderSecurity orderResult = getSecurityOrderInfoFromOrder(new Date(), accountId, headers);
         OrderSecurity orderOtherResult = getSecurityOrderOtherInfoFromOrder(new Date(), accountId, headers);
         int orderInOneHour = orderOtherResult.getOrderNumInLastOneHour() + orderResult.getOrderNumInLastOneHour();
-        int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderOtherResult.getOrderNumOfValidOrder();
-        //2.获取关键配置信息
+        int totalValidOrder = orderOtherResult.getOrderNumOfValidOrder() + orderResult.getOrderNumOfValidOrder();
+        //2. get critical configuration information
         SecurityServiceImpl.LOGGER.info("[Security Service][Get Security Config Info]");
         SecurityConfig configMaxInHour = securityRepository.findByName("max_order_1_hour");
         SecurityConfig configMaxNotUse = securityRepository.findByName("max_order_not_use");

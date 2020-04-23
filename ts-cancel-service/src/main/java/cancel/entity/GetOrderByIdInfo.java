@@ -1,8 +1,11 @@
 package cancel.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class GetOrderByIdInfo {
 
     private String orderId;
@@ -11,11 +14,4 @@ public class GetOrderByIdInfo {
         //Default Constructor
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 }

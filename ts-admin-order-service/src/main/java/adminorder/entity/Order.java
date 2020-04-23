@@ -1,6 +1,8 @@
 package adminorder.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
@@ -11,6 +13,8 @@ import java.util.UUID;
  */
 @ToString
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
 

@@ -1,8 +1,11 @@
 package cancel.entity;
 
+import lombok.Data;
+
 /**
  * @author fdse
  */
+@Data
 public class GetAccountByIdResult {
 
     private boolean status;
@@ -15,27 +18,4 @@ public class GetAccountByIdResult {
         //Default Constructor
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
 }

@@ -1,10 +1,13 @@
 package other.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author fdse
  */
+@Data
 public class QueryInfo {
 
     /**
@@ -30,34 +33,6 @@ public class QueryInfo {
 
     public QueryInfo() {
         //Default Constructor
-    }
-
-    public String getLoginId() {
-        return loginId;
-    }
-
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
-
-    public Date getTravelDateStart() {
-        return travelDateStart;
-    }
-
-    public Date getTravelDateEnd() {
-        return travelDateEnd;
-    }
-
-    public Date getBoughtDateStart() {
-        return boughtDateStart;
-    }
-
-    public Date getBoughtDateEnd() {
-        return boughtDateEnd;
-    }
-
-    public int getState() {
-        return state;
     }
 
     public void enableTravelDateQuery(Date startTime, Date endTime) {

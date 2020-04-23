@@ -1,10 +1,13 @@
 package preserve.entity;
 
+import lombok.Data;
+
 import java.util.UUID;
 
 /**
  * @author fdse
  */
+@Data
 public class FoodOrder {
 
     private UUID id;
@@ -27,63 +30,5 @@ public class FoodOrder {
     public FoodOrder(){
         //Default Constructor
     }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(UUID orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getFoodType() {
-        return foodType;
-    }
-
-    public void setFoodType(int foodType) {
-        this.foodType = foodType;
-    }
-
-    public String getStationName() {
-        return stationName;
-    }
-
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public String getFoodName() {
-        return foodName;
-    }
-
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-
 
 }
