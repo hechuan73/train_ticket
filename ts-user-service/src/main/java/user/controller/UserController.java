@@ -1,7 +1,11 @@
 package user.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,9 @@ import static org.springframework.http.ResponseEntity.ok;
  */
 @RestController
 @RequestMapping("/api/v1/userservice/users")
+@DefaultProperties(defaultFallback = "fallback", commandProperties = {
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+})
 public class UserController {
 
     @Autowired
@@ -43,12 +50,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @HystrixCommand
     public ResponseEntity<Response> registerUser(@RequestBody UserDto userDto, @RequestHeader HttpHeaders headers) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto, headers));
     }
 
 
     @DeleteMapping("/{userId}")
+    @HystrixCommand
     public ResponseEntity<Response> deleteUserById(@PathVariable String userId,
                                                    @RequestHeader HttpHeaders headers) {
         // only admin token can delete
@@ -59,5 +68,10 @@ public class UserController {
     public ResponseEntity<Response> updateUser(@RequestBody UserDto user,
                                                @RequestHeader HttpHeaders headers) {
         return ok(userService.updateUser(user, headers));
+    }
+
+
+    private HttpEntity fallback() {
+        return ok(new Response<>(0, null, null));
     }
 }
