@@ -43,7 +43,7 @@ public class StationServiceImpl implements StationService {
     public Response update(Station info, HttpHeaders headers) {
 
         if (repository.findById(info.getId()) == null) {
-            return new Response<>(0, "Station not exist", info);
+            return new Response<>(0, "Station not exist", null);
         } else {
             Station station = new Station(info.getId(), info.getName());
             station.setStayTime(info.getStayTime());
@@ -60,7 +60,7 @@ public class StationServiceImpl implements StationService {
             repository.delete(station);
             return new Response<>(1, "Delete success", station);
         }
-        return new Response<>(0, "Station not exist", info);
+        return new Response<>(0, "Station not exist", null);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class StationServiceImpl implements StationService {
         if (!result.isEmpty()) {
             return new Response<>(1, success, result);
         } else {
-            return new Response<>(0, "No content according to name list", nameList);
+            return new Response<>(0, "No content according to name list", null);
         }
 
     }

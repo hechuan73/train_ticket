@@ -148,7 +148,7 @@ public class CancelServiceImpl implements CancelService {
                     || order.getStatus() == OrderStatus.PAID.getCode()) {
                 if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
                     CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Service.Not Paid.");
-                    return new Response<>(1, "Success. Refoud 0", 0);
+                    return new Response<>(1, "Success. Refoud 0", "0");
                 } else {
                     CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Service.Paid.");
                     return new Response<>(1, "Success. ", calculateRefund(order));
@@ -166,7 +166,7 @@ public class CancelServiceImpl implements CancelService {
                         || order.getStatus() == OrderStatus.PAID.getCode()) {
                     if (order.getStatus() == OrderStatus.NOTPAID.getCode()) {
                         CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Other Service.Not Paid.");
-                        return new Response<>(1, "Success, Refound 0", 0);
+                        return new Response<>(1, "Success, Refound 0", "0");
                     } else {
                         CancelServiceImpl.LOGGER.info("[Cancel Order][Refund Price] From Order Other Service.Paid.");
                         return new Response<>(1, "Success", calculateRefund(order));

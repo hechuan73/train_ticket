@@ -69,7 +69,7 @@ public class PriceServiceImpl implements PriceService {
         PriceServiceImpl.LOGGER.info("[Price Service][Find By Route Id And Train Type]");
 
         if (priceConfig == null) {
-            return new Response<>(0, noThatConfig, routeId + trainType);
+            return new Response<>(0, noThatConfig, null);
         } else {
             return new Response<>(1, "Success", priceConfig);
         }

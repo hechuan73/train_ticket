@@ -97,7 +97,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (foodStoreList != null) {
             return new Response<>(1, success, foodStoreList);
         } else {
-            return new Response<>(0, noContent, foodStoreList);
+            return new Response<>(0, noContent, null);
         }
     }
 }

@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     public Response findOrderById(UUID id, HttpHeaders headers) {
         Order order = orderRepository.findById(id);
         if (order == null) {
-            return new Response<>(0, "No Content by this id", id);
+            return new Response<>(0, "No Content by this id", null);
         } else {
             return new Response<>(1, success, order);
         }

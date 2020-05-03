@@ -42,7 +42,7 @@ public class AssuranceServiceImplTest {
         UUID id = UUID.randomUUID();
         Mockito.when(assuranceRepository.findById(id)).thenReturn(null);
         Response result = assuranceServiceImpl.findAssuranceById(id, headers);
-        Assert.assertEquals(new Response<>(0, "No Conotent by this id", id), result);
+        Assert.assertEquals(new Response<>(0, "No Conotent by this id", null), result);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class AssuranceServiceImplTest {
         UUID orderId = UUID.randomUUID();
         Mockito.when(assuranceRepository.findByOrderId(orderId)).thenReturn(null);
         Response result = assuranceServiceImpl.findAssuranceByOrderId(orderId, headers);
-        Assert.assertEquals(new Response<>(0, "No Content by this orderId", orderId), result);
+        Assert.assertEquals(new Response<>(0, "No Content by this orderId", null), result);
     }
 
     @Test

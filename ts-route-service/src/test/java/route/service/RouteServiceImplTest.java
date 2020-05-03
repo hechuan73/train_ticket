@@ -79,7 +79,7 @@ public class RouteServiceImplTest {
     public void testGetRouteById1() {
         Mockito.when(routeRepository.findById(Mockito.anyString())).thenReturn(null);
         Response result = routeServiceImpl.getRouteById("route_id", headers);
-        Assert.assertEquals(new Response<>(0, "No content with the routeId", "route_id"), result);
+        Assert.assertEquals(new Response<>(0, "No content with the routeId", null), result);
     }
 
     @Test

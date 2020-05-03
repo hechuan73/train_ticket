@@ -38,7 +38,7 @@ public class ConfigServiceImplTest {
         Config info = new Config();
         Mockito.when(repository.findByName(info.getName())).thenReturn(info);
         Response result = configServiceImpl.create(info, headers);
-        Assert.assertEquals(new Response<>(0, "Already exists.", "Config  already exists."), result);
+        Assert.assertEquals(new Response<>(0, "Config  already exists.", null), result);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ConfigServiceImplTest {
         Config info = new Config();
         Mockito.when(repository.findByName(info.getName())).thenReturn(null);
         Response result = configServiceImpl.update(info, headers);
-        Assert.assertEquals(new Response<>(0, "Doesn't exist.", "Config  doesn't exist."), result);
+        Assert.assertEquals(new Response<>(0, "Config  doesn't exist.", null), result);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class ConfigServiceImplTest {
     public void testDelete1() {
         Mockito.when(repository.findByName("name")).thenReturn(null);
         Response result = configServiceImpl.delete("name", headers);
-        Assert.assertEquals(new Response<>(0, "Doesn't exist.", "Config name doesn't exist."), result);
+        Assert.assertEquals(new Response<>(0, "Config name doesn't exist.", null), result);
     }
 
     @Test

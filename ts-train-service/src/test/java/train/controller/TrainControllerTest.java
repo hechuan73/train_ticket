@@ -53,7 +53,7 @@ public class TrainControllerTest {
         String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/trainservice/trains").contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(new Response(1, "create success", true), JSONObject.parseObject(result, Response.class));
+        Assert.assertEquals(new Response(1, "create success", null), JSONObject.parseObject(result, Response.class));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class TrainControllerTest {
         String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/trainservice/trains/id"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        Assert.assertEquals(new Response(0, "there is no train according to id", "id"), JSONObject.parseObject(result, Response.class));
+        Assert.assertEquals(new Response(0, "there is no train according to id", null), JSONObject.parseObject(result, Response.class));
     }
 
     @Test

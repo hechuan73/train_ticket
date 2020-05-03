@@ -87,7 +87,7 @@ public class RouteServiceImpl implements RouteService {
     public Response getRouteById(String routeId, HttpHeaders headers) {
         Route route = routeRepository.findById(routeId);
         if (route == null) {
-            return new Response<>(0, "No content with the routeId", routeId);
+            return new Response<>(0, "No content with the routeId", null);
         } else {
             return new Response<>(1, success, route);
         }
@@ -109,7 +109,7 @@ public class RouteServiceImpl implements RouteService {
         if (!resultList.isEmpty()) {
             return new Response<>(1, success, resultList);
         } else {
-            return new Response<>(0, "No routes with the startId and terminalId", startId + " -- " + terminalId);
+            return new Response<>(0, "No routes with the startId and terminalId", null);
         }
     }
 
@@ -119,7 +119,7 @@ public class RouteServiceImpl implements RouteService {
         if (routes != null && !routes.isEmpty()) {
             return new Response<>(1, success, routes);
         } else {
-            return new Response<>(0, "No Content", routes);
+            return new Response<>(0, "No Content", null);
         }
     }
 

@@ -68,7 +68,7 @@ public class StationServiceImplTest {
         Station info = new Station();
         Mockito.when(repository.findById(Mockito.anyString())).thenReturn(null);
         Response result = stationServiceImpl.update(info, headers);
-        Assert.assertEquals(new Response<>(0, "Station not exist", info), result);
+        Assert.assertEquals(new Response<>(0, "Station not exist", null), result);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class StationServiceImplTest {
         Station info = new Station();
         Mockito.when(repository.findById(Mockito.anyString())).thenReturn(null);
         Response result = stationServiceImpl.delete(info, headers);
-        Assert.assertEquals(new Response<>(0, "Station not exist", info), result);
+        Assert.assertEquals(new Response<>(0, "Station not exist", null), result);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class StationServiceImplTest {
     public void testQueryForIdBatch1() {
         List<String> nameList = new ArrayList<>();
         Response result = stationServiceImpl.queryForIdBatch(nameList, headers);
-        Assert.assertEquals(new Response<>(0, "No content according to name list", nameList), result);
+        Assert.assertEquals(new Response<>(0, "No content according to name list", null), result);
     }
 
     @Test
