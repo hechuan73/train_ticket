@@ -65,6 +65,6 @@ public class ConsignController {
 
 
     private HttpEntity fallback() {
-        return ok(new Response<>(0, null, null));
+        return ok(new Response<>());
     }
 }

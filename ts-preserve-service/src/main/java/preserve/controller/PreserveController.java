@@ -44,6 +44,6 @@ public class PreserveController {
 
 
     private HttpEntity preserveFallback(@RequestBody OrderTicketsInfo oti, @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>(0, null, null));
+        return ok(new Response<>());
     }
 }

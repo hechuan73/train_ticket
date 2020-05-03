@@ -75,6 +75,6 @@ public class FoodController {
     private HttpEntity getAllFoodFallback(@PathVariable String date, @PathVariable String startStation,
                                   @PathVariable String endStation, @PathVariable String tripId,
                                   @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>(0, null, null));
+        return ok(new Response<>());
     }
 }

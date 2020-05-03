@@ -105,11 +105,11 @@ app.controller('indexCtrl', function ($scope, $http, $window, loadDataService) {
                     }
                 }).success(function (data, status, headers, config) {
                     if (data.status) {
-                        alert(data.message);
+                        alert(data.status + data.msg);
                         $scope.reloadRoute();
                     }
                     else {
-                        alert(data.message);
+                        alert(data.status + data.msg);
                     }
                 }).error(function (data, header, config, status) {
                     alert(data.message)

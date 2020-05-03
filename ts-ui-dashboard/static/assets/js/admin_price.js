@@ -21,10 +21,10 @@ priceModule.factory('loadDataService', function ($http, $q) {
                 deferred.resolve(information);
             }
             else {
-                alert("Request the Price list fail!" + data.message);
+                alert("Request the Price list fail!" + data.msg);
             }
         }).error(function(data, header, config, status){
-            alert(data.message)
+            alert(data.msg)
         });
         return promise;
     };

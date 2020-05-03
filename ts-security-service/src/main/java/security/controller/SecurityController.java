@@ -71,6 +71,6 @@ public class SecurityController {
 
 
     private HttpEntity checkFallback(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>(0, null, null));
+        return ok(new Response<>());
     }
 }

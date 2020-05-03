@@ -21,7 +21,7 @@ trainModule.factory('loadDataService', function ($http, $q) {
                 deferred.resolve(information);
             }
             else {
-                alert("Request the train list fail!" + data.message);
+                alert("Request the train list fail!" + data.msg);
             }
         }).error(function (data, header, config, status) {
             alert(data.message)

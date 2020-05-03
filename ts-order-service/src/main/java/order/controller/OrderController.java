@@ -163,6 +163,6 @@ public class OrderController {
 
 
     private HttpEntity queryOrdersForRefreshFallback(@RequestBody OrderInfo qi, @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>(0, null, null));
+        return ok(new Response<>());
     }
 }

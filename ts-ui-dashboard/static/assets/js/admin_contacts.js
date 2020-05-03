@@ -21,7 +21,7 @@ contactsModule.factory('loadDataService', function ($http, $q) {
                 deferred.resolve(information);
             }
             else {
-                alert("Request the order list fail!" + data.message);
+                alert("Request the order list fail!" + data.msg);
             }
         }).error(function(data, header, config, status){
             alert(data.message)
