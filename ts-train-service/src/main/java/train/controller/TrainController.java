@@ -42,7 +42,7 @@ public class TrainController {
     public HttpEntity retrieve(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         TrainType trainType = trainService.retrieve(id, headers);
         if (trainType == null) {
-            return ok(new Response(0, "here is no TrainType with the trainType id", id));
+            return ok(new Response(0, "here is no TrainType with the trainType id: " + id, null));
         } else {
             return ok(new Response(1, "success", trainType));
         }
