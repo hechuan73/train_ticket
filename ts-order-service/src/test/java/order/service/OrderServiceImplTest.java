@@ -65,7 +65,7 @@ public class OrderServiceImplTest {
         UUID id = UUID.randomUUID();
         Mockito.when(orderRepository.findById(Mockito.any(UUID.class))).thenReturn(null);
         Response result = orderServiceImpl.findOrderById(id, headers);
-        Assert.assertEquals(new Response<>(0, "No Content by this id", id), result);
+        Assert.assertEquals(new Response<>(0, "No Content by this id", null), result);
     }
 
     @Test

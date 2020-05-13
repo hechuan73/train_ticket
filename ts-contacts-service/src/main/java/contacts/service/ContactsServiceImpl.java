@@ -54,7 +54,7 @@ public class ContactsServiceImpl implements ContactsService {
             return new Response<>(0, "Already Exists", contactsTemp);
         } else {
             contactsRepository.save(contacts);
-            return new Response<>(1, "Create Success", contactsTemp);
+            return new Response<>(1, "Create Success", null);
         }
     }
 
@@ -100,7 +100,7 @@ public class ContactsServiceImpl implements ContactsService {
         Contacts oldContacts = (Contacts) oldContactResponse.getData();
         if (oldContacts == null) {
             ContactsServiceImpl.LOGGER.info("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");
-            return new Response<>(0, "Contacts not found", oldContacts);
+            return new Response<>(0, "Contacts not found", null);
         } else {
             oldContacts.setName(contacts.getName());
             oldContacts.setDocumentType(contacts.getDocumentType());

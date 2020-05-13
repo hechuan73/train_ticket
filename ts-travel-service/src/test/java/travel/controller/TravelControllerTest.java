@@ -16,10 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import travel.entity.TravelInfo;
-import travel.entity.TripAllDetailInfo;
-import travel.entity.TripInfo;
-import travel.entity.TripResponse;
+import travel.entity.*;
 import travel.service.TravelService;
 
 import java.util.ArrayList;

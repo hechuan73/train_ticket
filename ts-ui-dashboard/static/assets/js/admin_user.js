@@ -52,7 +52,7 @@ app.factory('loadDataService', function ($http, $q) {
                 deferred.resolve(information);
             }
             else {
-                alert(" No user !" + data.message);
+                alert(" No user !" + data.msg);
             }
         }).error(function (data, header, config, status) {
             alert(data.message)

@@ -62,7 +62,7 @@ public class PriceServiceImplTest {
     public void testFindByRouteIdAndTrainType1() {
         Mockito.when(priceConfigRepository.findByRouteIdAndTrainType(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         Response result = priceServiceImpl.findByRouteIdAndTrainType("route_id", "train_type", headers);
-        Assert.assertEquals(new Response<>(0, "No that config", "route_idtrain_type"), result);
+        Assert.assertEquals(new Response<>(0, "No that config", null), result);
     }
 
     @Test

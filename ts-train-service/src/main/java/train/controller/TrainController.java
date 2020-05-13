@@ -31,7 +31,7 @@ public class TrainController {
     public HttpEntity create(@RequestBody TrainType trainType, @RequestHeader HttpHeaders headers) {
         boolean isCreateSuccess = trainService.create(trainType, headers);
         if (isCreateSuccess) {
-            return ok(new Response(1, "create success", isCreateSuccess));
+            return ok(new Response(1, "create success", null));
         } else {
             return ok(new Response(0, "train type already exist", trainType));
         }
@@ -42,7 +42,7 @@ public class TrainController {
     public HttpEntity retrieve(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         TrainType trainType = trainService.retrieve(id, headers);
         if (trainType == null) {
-            return ok(new Response(0, "here is no TrainType with the trainType id", id));
+            return ok(new Response(0, "here is no TrainType with the trainType id: " + id, null));
         } else {
             return ok(new Response(1, "success", trainType));
         }
@@ -66,7 +66,7 @@ public class TrainController {
         if (isDeleteSuccess) {
             return ok(new Response(1, "delete success", isDeleteSuccess));
         } else {
-            return ok(new Response(0, "there is no train according to id", id));
+            return ok(new Response(0, "there is no train according to id", null));
         }
     }
 

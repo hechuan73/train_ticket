@@ -66,7 +66,7 @@ public class ConsignServiceImpl implements ConsignService {
         log.info("SAVE consign info : " + consignRecord.toString());
         ConsignRecord result = repository.save(consignRecord);
         log.info("SAVE consign result : " + result.toString());
-        return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), +result.getPrice());
+        return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), result);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by account id success", consignRecords);
         }else {
-            return new Response<>(0, "No Content according to accountId", accountId);
+            return new Response<>(0, "No Content according to accountId", null);
         }
     }
 
@@ -121,7 +121,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null ) {
             return new Response<>(1, "Find consign by order id success", consignRecords);
         }else {
-            return new Response<>(0, "No Content according to order id", orderId);
+            return new Response<>(0, "No Content according to order id", null);
         }
     }
 
@@ -131,7 +131,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by consignee success", consignRecords);
         }else {
-            return new Response<>(0, "No Content according to consignee", consignee);
+            return new Response<>(0, "No Content according to consignee", null);
         }
     }
 }

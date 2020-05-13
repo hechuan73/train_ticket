@@ -1,5 +1,9 @@
 package seat.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import edu.fudan.common.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +18,9 @@ import static org.springframework.http.ResponseEntity.ok;
  */
 @RestController
 @RequestMapping("/api/v1/seatservice")
+@DefaultProperties(defaultFallback = "fallback", commandProperties = {
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+})
 public class SeatController {
 
     @Autowired
@@ -33,6 +40,7 @@ public class SeatController {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/seats")
+    @HystrixCommand
     public HttpEntity create(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
         return ok(seatService.distributeSeat(seatRequest, headers));
     }
@@ -47,8 +55,14 @@ public class SeatController {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/seats/left_tickets")
+    @HystrixCommand
     public HttpEntity getLeftTicketOfInterval(@RequestBody Seat seatRequest, @RequestHeader HttpHeaders headers) {
         // int
         return ok(seatService.getLeftTicketOfInterval(seatRequest, headers));
+    }
+
+
+    private HttpEntity fallback() {
+        return ok(new Response<>());
     }
 }

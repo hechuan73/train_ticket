@@ -26,7 +26,7 @@ public class ConfigServiceImpl implements ConfigService {
     public Response create(Config info, HttpHeaders headers) {
         if (repository.findByName(info.getName()) != null) {
             String result = config0 + info.getName() + " already exists.";
-            return new Response<>(0, "Already exists.", result);
+            return new Response<>(0, result, null);
         } else {
             Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
@@ -38,7 +38,7 @@ public class ConfigServiceImpl implements ConfigService {
     public Response update(Config info, HttpHeaders headers) {
         if (repository.findByName(info.getName()) == null) {
             String result = config0 + info.getName() + " doesn't exist.";
-            return new Response<>(0, "Doesn't exist.", result);
+            return new Response<>(0, result, null);
         } else {
             Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
@@ -62,7 +62,7 @@ public class ConfigServiceImpl implements ConfigService {
         Config config = repository.findByName(name);
         if (config == null) {
             String result = config0 + name + " doesn't exist.";
-            return new Response<>(0, "Doesn't exist.", result);
+            return new Response<>(0, result, null);
         } else {
             repository.deleteByName(name);
             return new Response<>(1, "Delete success", config);

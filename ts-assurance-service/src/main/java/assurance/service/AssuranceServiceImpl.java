@@ -28,7 +28,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     public Response findAssuranceById(UUID id, HttpHeaders headers) {
         Assurance assurance = assuranceRepository.findById(id);
         if (assurance == null) {
-            return new Response<>(0, "No Conotent by this id", id);
+            return new Response<>(0, "No Conotent by this id", null);
         } else {
             return new Response<>(1, "Find Assurace Success", assurance);
         }
@@ -38,7 +38,7 @@ public class AssuranceServiceImpl implements AssuranceService {
     public Response findAssuranceByOrderId(UUID orderId, HttpHeaders headers) {
         Assurance assurance = assuranceRepository.findByOrderId(orderId);
         if (assurance == null) {
-            return new Response<>(0, "No Content by this orderId", orderId);
+            return new Response<>(0, "No Content by this orderId", null);
         } else {
             return new Response<>(1, "Find Assurace Success", assurance);
         }
@@ -68,7 +68,7 @@ public class AssuranceServiceImpl implements AssuranceService {
         Assurance a = assuranceRepository.findById(assuranceId);
         if (a == null) {
             AssuranceServiceImpl.LOGGER.info("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            return new Response<>(1, "Delete Success with Assurance id", a);
+            return new Response<>(1, "Delete Success with Assurance id", null);
         } else {
             AssuranceServiceImpl.LOGGER.info("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
             return new Response<>(0, "Fail.Assurance not clear", assuranceId);
@@ -81,7 +81,7 @@ public class AssuranceServiceImpl implements AssuranceService {
         Assurance isExistAssurace = assuranceRepository.findByOrderId(orderId);
         if (isExistAssurace == null) {
             AssuranceServiceImpl.LOGGER.info("[Assurance-Add&Delete-Service][DeleteAssurance] Success.");
-            return new Response<>(1, "Delete Success with Order Id", isExistAssurace);
+            return new Response<>(1, "Delete Success with Order Id", null);
         } else {
             AssuranceServiceImpl.LOGGER.info("[Assurance-Add&Delete-Service][DeleteAssurance] Fail.Assurance not clear.");
             return new Response<>(0, "Fail.Assurance not clear", orderId);
@@ -94,7 +94,7 @@ public class AssuranceServiceImpl implements AssuranceService {
         Assurance oldAssurance = (Assurance) oldAssuranceResponse.getData();
         if (oldAssurance == null) {
             AssuranceServiceImpl.LOGGER.info("[Assurance-Modify-Service][ModifyAssurance] Fail.Assurance not found.");
-            return new Response<>(0, "Fail.Assurance not found.", assuranceId);
+            return new Response<>(0, "Fail.Assurance not found.", null);
         } else {
             AssuranceType at = AssuranceType.getTypeByIndex(typeIndex);
             if (at != null) {

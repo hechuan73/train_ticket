@@ -50,7 +50,7 @@ app.factory('loadDataService', function ($http, $q) {
                 deferred.resolve(information);
             }
             else{
-                alert("Request the order list fail!" + data.message);
+                alert("Request the order list fail!" + data.msg);
             }
         });
 
@@ -174,7 +174,7 @@ app.controller('indexCtrl', function ($scope, $http,$window,loadDataService) {
                     withCredentials: true
                 }).success(function (data, status, headers, config) {
                     if (data.status == 1) {
-                        alert(data.mgs);
+                        alert(data.msg);
                         $scope.reloadRoute();
                     }
                     else{
