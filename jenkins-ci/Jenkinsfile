@@ -16,13 +16,13 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'master') {
                         echo "Docker Building..."
-                        sh 'sudo /usr/local/bin/docker-compose build'
+                        // sh 'sudo /usr/local/bin/docker-compose build'
                         echo "Building images Successful!"
 
                         echo "Pushing images..."
                         withCredentials([usernamePassword(credentialsId: 'dockerHub-codewisdom', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
                             sh "sudo docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
-                            sh "sudo /bin/bash ./jenkins-ci/image-tag-push.sh"
+                            // sh "sudo /bin/bash ./jenkins-ci/image-tag-push.sh"
                         }
                         echo "Push Successful"
                     } else {
@@ -48,9 +48,6 @@ pipeline {
                     exclusionPattern: '**/src/test*',
                     changeBuildStatus: true
                 )
-
-                // sh 'mvn clean'
-                sh 'sudo /bin/bash ./jenkins-ci/clean.sh'
             }
         }
 
@@ -60,6 +57,7 @@ pipeline {
         always {
             pmd(canRunOnFailed: true, pattern: '**/target/pmd.xml')
             junit testResults: "**/target/surefire-reports/*.xml"
+            sh 'sudo /bin/bash ./jenkins-ci/clean.sh'
         }
         failure {
             mail from : 'jenkinsx@163.com',
