@@ -68,7 +68,7 @@ public class OrderOtherController {
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/orderOther/refresh")
     @HystrixCommand(fallbackMethod = "queryOrdersForRefreshFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
     })
     public HttpEntity queryOrdersForRefresh(@RequestBody QueryInfo qi,
                                             @RequestHeader HttpHeaders headers) {

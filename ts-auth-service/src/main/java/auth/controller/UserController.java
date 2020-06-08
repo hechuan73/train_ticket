@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping("/login")
     @HystrixCommand(fallbackMethod = "getTokenFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
     })
     public ResponseEntity<Response> getToken(@RequestBody BasicAuthDto dao , @RequestHeader HttpHeaders headers) {
         return ResponseEntity.ok(tokenService.getToken(dao, headers));

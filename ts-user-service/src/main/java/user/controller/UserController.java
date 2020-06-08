@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/userservice/users")
 @DefaultProperties(defaultFallback = "fallback", commandProperties = {
-        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
 })
 public class UserController {
 

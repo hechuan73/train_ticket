@@ -62,7 +62,7 @@ public class FoodController {
     // This relies on a lot of other services, not completely modified
     @GetMapping(path = "/foods/{date}/{startStation}/{endStation}/{tripId}")
     @HystrixCommand(fallbackMethod = "getAllFoodFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
     })
     public HttpEntity getAllFood(@PathVariable String date, @PathVariable String startStation,
                                  @PathVariable String endStation, @PathVariable String tripId,

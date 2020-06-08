@@ -34,7 +34,7 @@ public class PreserveOtherController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/preserveOther")
     @HystrixCommand(fallbackMethod = "preserveFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")
     })
     public HttpEntity preserve(@RequestBody OrderTicketsInfo oti,
                                @RequestHeader HttpHeaders headers) {

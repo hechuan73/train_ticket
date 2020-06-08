@@ -25,7 +25,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/api/v1/travel2service")
 @DefaultProperties(defaultFallback = "fallback", commandProperties = {
-        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
 })
 public class Travel2Controller {
 

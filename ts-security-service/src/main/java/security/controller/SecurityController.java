@@ -62,7 +62,7 @@ public class SecurityController {
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/securityConfigs/{accountId}")
     @HystrixCommand(fallbackMethod = "checkFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
     })
     public HttpEntity check(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
         SecurityController.LOGGER.info("[Security Service][Check Security] Check Account Id: {}", accountId);
