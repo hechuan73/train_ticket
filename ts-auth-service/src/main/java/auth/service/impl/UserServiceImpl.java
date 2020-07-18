@@ -8,7 +8,8 @@ import auth.exception.UserOperationException;
 import auth.repository.UserRepository;
 import auth.service.UserService;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,8 +22,8 @@ import java.util.*;
  * @author fdse
  */
 @Service
-@Slf4j
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createDefaultAuthUser(AuthDto dto) {
-        log.info("Register User Info is:  " + dto.getUserName());
+        LOGGER.info("Register User Info is:  " + dto.getUserName());
         User user = User.builder()
                 .userId(UUID.fromString(dto.getUserId()))
                 .username(dto.getUserName())
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response deleteByUserId(UUID userId, HttpHeaders headers) {
-        log.info("DELETE USER :" + userId);
+        LOGGER.info("DELETE USER :" + userId);
         userRepository.deleteByUserId(userId);
         return new Response(1, "DELETE USER SUCCESS", null);
     }
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!infos.isEmpty()) {
-            log.error(infos.toString());
+            LOGGER.error(infos.toString());
             throw new UserOperationException(infos.toString());
         }
     }

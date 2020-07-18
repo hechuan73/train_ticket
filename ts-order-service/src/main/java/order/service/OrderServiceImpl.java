@@ -1,7 +1,6 @@
 package order.service;
 
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import order.entity.*;
 import order.repository.OrderRepository;
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import java.util.*;
  * @author fdse
  */
 @Service
-@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -395,7 +393,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
-        log.info("UPDATE ORDER INFO: " +order.toString());
+        LOGGER.info("UPDATE ORDER INFO: " + order.toString());
         Order oldOrder = orderRepository.findById(order.getId());
         if (oldOrder == null) {
             OrderServiceImpl.LOGGER.info("[Order Service][Admin Update Order] Fail.Order not found.");

@@ -2,7 +2,6 @@ package contacts.service;
 
 import contacts.entity.*;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Service
-@Slf4j
 public class ContactsServiceImpl implements ContactsService {
 
     @Autowired
@@ -30,7 +28,7 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     public Response findContactsById(UUID id, HttpHeaders headers) {
-        log.info("FIND CONTACTS BY ID: " + id);
+        LOGGER.info("FIND CONTACTS BY ID: " + id);
         Contacts contacts = contactsRepository.findById(id);
         if (contacts != null) {
             return new Response<>(1, success, contacts);
@@ -96,7 +94,7 @@ public class ContactsServiceImpl implements ContactsService {
     @Override
     public Response modify(Contacts contacts, HttpHeaders headers) {
         Response oldContactResponse = findContactsById(contacts.getId(), headers);
-        log.info(oldContactResponse.toString());
+        LOGGER.info(oldContactResponse.toString());
         Contacts oldContacts = (Contacts) oldContactResponse.getData();
         if (oldContacts == null) {
             ContactsServiceImpl.LOGGER.info("[Contacts-Modify-Service][ModifyContacts] Fail.Contacts not found.");

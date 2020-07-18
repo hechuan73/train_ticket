@@ -1,7 +1,6 @@
 package preserveOther.service;
 
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Service
-@Slf4j
 public class PreserveOtherServiceImpl implements PreserveOtherService {
 
     @Autowired
@@ -67,13 +65,13 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
         PreserveOtherServiceImpl.LOGGER.info("[Preserve Other Service] [Step 3] TripId: {}", oti.getTripId());
         Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, httpHeaders);
         TripAllDetail gtdr = response.getData();
-        log.info("TripAllDetail : " + gtdr.toString());
+        LOGGER.info("TripAllDetail : " + gtdr.toString());
         if (response.getStatus() == 0) {
             PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Search For Trip Detail Information] {}", response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
             TripResponse tripResponse = gtdr.getTripResponse();
-            log.info("TripResponse : " + tripResponse.toString());
+            LOGGER.info("TripResponse : " + tripResponse.toString());
             if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() == 0) {
                     PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
@@ -208,7 +206,7 @@ public class PreserveOtherServiceImpl implements PreserveOtherService {
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
-            log.info("CONSIGN INFO : " + consignRequest.toString());
+            LOGGER.info("CONSIGN INFO : " + consignRequest.toString());
             Response icresult = createConsign(consignRequest, httpHeaders);
             if (icresult.getStatus() == 1) {
                 PreserveOtherServiceImpl.LOGGER.info("[Preserve Service][Step 7] Consign Success");

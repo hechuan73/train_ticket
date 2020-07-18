@@ -1,7 +1,6 @@
 package other.service;
 
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,7 +20,6 @@ import java.util.*;
  * @author fdse
  */
 @Service
-@Slf4j
 public class OrderOtherServiceImpl implements OrderOtherService {
 
     @Autowired
@@ -400,7 +398,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
-        log.info("UPDATE ORDER INFO :" + order.toString());
+        LOGGER.info("UPDATE ORDER INFO :" + order.toString());
         Order oldOrder = orderOtherRepository.findById(order.getId());
         if (oldOrder == null) {
             OrderOtherServiceImpl.LOGGER.info("[Order Service][Admin Update Order] Fail.Order not found.");

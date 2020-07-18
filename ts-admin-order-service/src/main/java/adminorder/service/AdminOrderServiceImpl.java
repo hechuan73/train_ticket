@@ -2,7 +2,6 @@ package adminorder.service;
 
 import adminorder.entity.*;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
  * @author fdse
  */
 @Service
-@Slf4j
 public class AdminOrderServiceImpl implements AdminOrderService {
     @Autowired
     private RestTemplate restTemplate;
@@ -103,7 +101,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     public Response updateOrder(Order request, HttpHeaders headers) {
 
         Response updateOrderResult;
-        log.info("UPDATE ORDER INFO : " + request.toString());
+        LOGGER.info("UPDATE ORDER INFO : " + request.toString());
         if (request.getTrainNumber().startsWith("G") || request.getTrainNumber().startsWith("D")) {
 
             AdminOrderServiceImpl.LOGGER.info("[Admin Order Service][Update Order]");

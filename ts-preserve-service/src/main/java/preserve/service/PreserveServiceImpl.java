@@ -1,7 +1,6 @@
 package preserve.service;
 
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Service
-@Slf4j
 public class PreserveServiceImpl implements PreserveService {
 
     @Autowired
@@ -61,13 +59,13 @@ public class PreserveServiceImpl implements PreserveService {
         PreserveServiceImpl.LOGGER.info("[Preserve Service] [Step 3] TripId: {}", oti.getTripId());
         Response<TripAllDetail> response = getTripAllDetailInformation(gtdi, headers);
         TripAllDetail gtdr = response.getData();
-        log.info("TripAllDetail:" + gtdr.toString());
+        LOGGER.info("TripAllDetail:" + gtdr.toString());
         if (response.getStatus() == 0) {
             PreserveServiceImpl.LOGGER.info("[Preserve Service][Search For Trip Detail Information] {}", response.getMsg());
             return new Response<>(0, response.getMsg(), null);
         } else {
             TripResponse tripResponse = gtdr.getTripResponse();
-            log.info("TripResponse:" + tripResponse.toString());
+            LOGGER.info("TripResponse:" + tripResponse.toString());
             if (oti.getSeatType() == SeatClass.FIRSTCLASS.getCode()) {
                 if (tripResponse.getConfortClass() == 0) {
                     PreserveServiceImpl.LOGGER.info("[Preserve Service][Check seat is enough] ");
@@ -204,7 +202,7 @@ public class PreserveServiceImpl implements PreserveService {
             consignRequest.setPhone(oti.getConsigneePhone());
             consignRequest.setWeight(oti.getConsigneeWeight());
             consignRequest.setWithin(oti.isWithin());
-            log.info("CONSIGN INFO : " +consignRequest.toString());
+            LOGGER.info("CONSIGN INFO : " +consignRequest.toString());
             Response icresult = createConsign(consignRequest, headers);
             if (icresult.getStatus() == 1) {
                 PreserveServiceImpl.LOGGER.info("[Preserve Service][Step 7] Consign Success");

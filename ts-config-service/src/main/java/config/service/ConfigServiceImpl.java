@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.ok;
 
 /**
  * @author fdse

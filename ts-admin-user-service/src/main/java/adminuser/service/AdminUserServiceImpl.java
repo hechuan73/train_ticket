@@ -3,7 +3,6 @@ package adminuser.service;
 import adminuser.dto.UserDto;
 import adminuser.entity.*;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import java.util.List;
  * @author fdse
  */
 @Service
-@Slf4j
 public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     private RestTemplate restTemplate;
@@ -59,7 +57,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public Response updateUser(UserDto userDto, HttpHeaders headers) {
-        log.info("UPDATE USER: " + userDto.toString());
+        LOGGER.info("UPDATE USER: " + userDto.toString());
         HttpEntity requestEntity = new HttpEntity(userDto, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 USER_SERVICE_IP_URI,
@@ -71,7 +69,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public Response addUser(UserDto userDto, HttpHeaders headers) {
-        log.info("ADD USER INFO : "+userDto.toString());
+        LOGGER.info("ADD USER INFO : "+userDto.toString());
         HttpEntity requestEntity = new HttpEntity(userDto, headers);
         ResponseEntity<Response<User>> re = restTemplate.exchange(
                 USER_SERVICE_IP_URI + "/register",

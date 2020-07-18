@@ -3,7 +3,6 @@ package adminroute.service;
 import adminroute.entity.Route;
 import adminroute.entity.RouteInfo;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
  * @author fdse
  */
 @Service
-@Slf4j
 public class AdminRouteServiceImpl implements AdminRouteService {
     @Autowired
     private RestTemplate restTemplate;

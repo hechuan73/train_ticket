@@ -28,11 +28,7 @@ public class CookieUtil {
 
     public static Cookie getCookieByName(HttpServletRequest request, String name){
         Map<String,Cookie> cookieMap = readCookieMap(request);
-        if(cookieMap.containsKey(name)){
-            return cookieMap.get(name);
-        }else{
-            return null;
-        }
+        return cookieMap.getOrDefault(name, null);
     }
 
     private static Map<String,Cookie> readCookieMap(HttpServletRequest request){

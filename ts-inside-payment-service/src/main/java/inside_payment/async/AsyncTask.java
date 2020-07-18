@@ -14,19 +14,18 @@ import org.springframework.web.client.RestTemplate;
  * @author fdse
  */
 @Component  
-public class AsyncTask {  
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());  
+public class AsyncTask {
     
     @Autowired
 	private RestTemplate restTemplate;
 
-    private static final Logger LOG = LoggerFactory.getLogger(AsyncTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AsyncTask.class);
 
     @Async("mySimpleAsync")
     public Future<Boolean> sendAsyncCallToPaymentService(OutsidePaymentInfo outsidePaymentInfo) {
-        AsyncTask.LOG.info("[Inside Payment Service][Async Task] Begin.");
+        AsyncTask.LOGGER.info("[Inside Payment Service][Async Task] Begin.");
         Boolean value = restTemplate.getForObject("http://rest-service-external:16100/greet", Boolean.class);
-        AsyncTask.LOG.info("[Inside Payment Service][Async Task] Receive call Value directly back: {}", value);
+        AsyncTask.LOGGER.info("[Inside Payment Service][Async Task] Receive call Value directly back: {}", value);
         return new AsyncResult<>(value);
     }
     

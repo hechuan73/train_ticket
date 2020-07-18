@@ -3,7 +3,6 @@ package auth.controller;
 import auth.dto.AuthDto;
 import auth.service.UserService;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
  * @author fdse
  */
 @RestController
-@Slf4j
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 

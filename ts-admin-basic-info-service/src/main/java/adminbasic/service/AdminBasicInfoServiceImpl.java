@@ -2,7 +2,6 @@ package adminbasic.service;
 
 import adminbasic.entity.*;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
  * @author fdse
  */
 @Service
-@Slf4j
 public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     @Autowired
@@ -64,7 +62,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response modifyContact(Contacts mci, HttpHeaders headers) {
         Response result;
-        log.info("MODIFY CONTACTS: " + mci.toString());
+        LOGGER.info("MODIFY CONTACTS: " + mci.toString());
         HttpEntity requestEntity = new HttpEntity(mci, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-contacts-service:12347/api/v1/contactservice/contacts",

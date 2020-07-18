@@ -3,7 +3,6 @@ package fdse.microservice.service;
 import edu.fudan.common.util.JsonUtils;
 import edu.fudan.common.util.Response;
 import fdse.microservice.entity.*;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.util.HashMap;
  * @author fdse
  */
 @Service
-@Slf4j
 public class BasicServiceImpl implements BasicService {
 
     @Autowired
@@ -65,7 +63,7 @@ public class BasicServiceImpl implements BasicService {
         String startingPlaceId = (String) queryForStationId(info.getStartingPlace(), headers).getData();
         String endPlaceId = (String) queryForStationId(info.getEndPlace(), headers).getData();
 
-        log.info("startingPlaceId : " + startingPlaceId + "endPlaceId : " + endPlaceId);
+        LOGGER.info("startingPlaceId : " + startingPlaceId + "endPlaceId : " + endPlaceId);
 
         int indexStart = 0;
         int indexEnd = 0;
@@ -74,9 +72,9 @@ public class BasicServiceImpl implements BasicService {
             indexEnd = route.getStations().indexOf(endPlaceId);
         }
 
-        log.info("indexStart : " + indexStart + " __ " + "indexEnd : " + indexEnd);
+        LOGGER.info("indexStart : " + indexStart + " __ " + "indexEnd : " + indexEnd);
         if (route != null){
-            log.info("route.getDistances().size : " + route.getDistances().size());
+            LOGGER.info("route.getDistances().size : " + route.getDistances().size());
         }
         HashMap<String, String> prices = new HashMap<>();
         try {

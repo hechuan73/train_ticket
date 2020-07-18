@@ -2,7 +2,6 @@ package verifycode.service.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +25,6 @@ import java.util.concurrent.TimeUnit;
  * @author fdse
  */
 @Service
-@Slf4j
 public class VerifyCodeServiceImpl implements VerifyCodeService {
 
     public static final int CAPTCHA_EXPIRED = 1000;
@@ -123,7 +121,7 @@ public class VerifyCodeServiceImpl implements VerifyCodeService {
         }
 
         String code = cacheCode.getIfPresent(cookieId);
-        log.info("GET Code By cookieId " + cookieId + "   is :" + code);
+        LOGGER.info("GET Code By cookieId " + cookieId + "   is :" + code);
         if (code == null) {
             return false;
         }

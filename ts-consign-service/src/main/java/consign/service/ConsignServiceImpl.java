@@ -4,7 +4,6 @@ import consign.entity.ConsignRecord;
 import consign.entity.Consign;
 import consign.repository.ConsignRepository;
 import edu.fudan.common.util.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Service
-@Slf4j
 public class ConsignServiceImpl implements ConsignService {
     @Autowired
     ConsignRepository repository;
@@ -40,7 +38,7 @@ public class ConsignServiceImpl implements ConsignService {
         ConsignRecord consignRecord = new ConsignRecord();
         //Set the record attribute
         consignRecord.setId(UUID.randomUUID());
-        log.info("Order ID is :" + consignRequest.getOrderId());
+        LOGGER.info("Order ID is :" + consignRequest.getOrderId());
         consignRecord.setOrderId(consignRequest.getOrderId());
         consignRecord.setAccountId(consignRequest.getAccountId());
         ConsignServiceImpl.LOGGER.info("The handle date is {}", consignRequest.getHandleDate());
@@ -63,9 +61,9 @@ public class ConsignServiceImpl implements ConsignService {
                 });
         consignRecord.setPrice(re.getBody().getData());
 
-        log.info("SAVE consign info : " + consignRecord.toString());
+        LOGGER.info("SAVE consign info : " + consignRecord.toString());
         ConsignRecord result = repository.save(consignRecord);
-        log.info("SAVE consign result : " + result.toString());
+        LOGGER.info("SAVE consign result : " + result.toString());
         return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), result);
     }
 
