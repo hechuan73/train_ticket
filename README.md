@@ -27,19 +27,15 @@ The easiest way to get start with the Train Ticket application is by using [Dock
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/FudanSELab/train-ticket.git
+git clone --depth=1 https://github.com/FudanSELab/train-ticket.git
 cd train-ticket/
 ```
 
 #### 2. Start the Application
 ```bash
-docker-compose -f deployment/quickstart-docker-compose/quickstart-docker-compose.yml up
+docker-compose -f deployment/docker-compose-manifests/quickstart-docker-compose.yml up
 ```
 Once the application starts, you can visit the Train Ticket web page at [http://localhost:8080](http://localhost:8080).
-
-**Jaeger**
-
-we provide a Tracing System based on [Jaeger](https://www.jaegertracing.io). You can visit the Jaeger Webpage at [http://localhost:16686](http://localhost:16686) to view traces in the system.
 
 ### Using Kubernetes
 Here is the steps to deploy the Train Ticket onto any existing Kubernetes cluster.
@@ -49,13 +45,13 @@ Here is the steps to deploy the Train Ticket onto any existing Kubernetes cluste
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/FudanSELab/train-ticket.git
+git clone --depth=1 https://github.com/FudanSELab/train-ticket.git
 cd train-ticket/
 ```
 
 #### 2. Deploy the application
 ```bash
-cd deployment/quickstart-k8s-deployment/
+cd deployment/kubernetes-manifests/quickstart-k8s
 
 # Deploy the databases
 kubectl apply -f quickstart-ts-deployment-part1.yml
@@ -69,9 +65,9 @@ kubectl apply -f quickstart-ts-deployment-part3.yml
 
 #### 4. Visit the Train Ticket web page at [http://[Node-IP]:32677](http://[Node-IP]:32677).
 
-**Jaeger**
+### More Deployment Ways
 
-we provide a Tracing System based on [Jaeger](https://www.jaegertracing.io). You can visit the Jaeger Webpage at [http://[Node-IP]:32688](http://[Node-IP]:32688) to view traces in the system.
+There are many other quick deployment ways in [deployment folder](<https://github.com/FudanSELab/train-ticket/tree/master/deployment>).  For example, you can deploy this system [with Jaeger](<https://github.com/FudanSELab/train-ticket/tree/master/deployment/kubernetes-manifests/k8s-with-jaeger>), and then visit the Jaeger Webpage to view traces.
 
 ## Build From Source
 In the above, We use pre-built images to quickly deploy the application.

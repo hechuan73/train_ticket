@@ -550,17 +550,6 @@ services:
     networks:
       - my-network
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.15
-    ports:
-      - 16686:16686
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-    networks:
-      - my-network
-
 
 networks:
     my-network:
