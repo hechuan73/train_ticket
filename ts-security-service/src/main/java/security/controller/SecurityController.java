@@ -1,8 +1,5 @@
 package security.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +58,9 @@ public class SecurityController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/securityConfigs/{accountId}")
-    @HystrixCommand(fallbackMethod = "checkFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
-    })
     public HttpEntity check(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
         SecurityController.LOGGER.info("[Security Service][Check Security] Check Account Id: {}", accountId);
         return ok(securityService.check(accountId, headers));
     }
 
-
-    private HttpEntity checkFallback(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>());
-    }
 }

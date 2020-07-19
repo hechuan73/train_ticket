@@ -1,9 +1,5 @@
 package travel2.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +20,6 @@ import static org.springframework.http.ResponseEntity.ok;
  */
 @RestController
 @RequestMapping("/api/v1/travel2service")
-@DefaultProperties(defaultFallback = "fallback", commandProperties = {
-        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
-})
 public class Travel2Controller {
 
     @Autowired
@@ -40,7 +33,6 @@ public class Travel2Controller {
     }
 
     @GetMapping(value = "/train_types/{tripId}")
-    @HystrixCommand
     public HttpEntity getTrainTypeByTripId(@PathVariable String tripId,
                                            @RequestHeader HttpHeaders headers) {
         // TrainType
@@ -48,7 +40,6 @@ public class Travel2Controller {
     }
 
     @GetMapping(value = "/routes/{tripId}")
-    @HystrixCommand
     public HttpEntity getRouteByTripId(@PathVariable String tripId,
                                        @RequestHeader HttpHeaders headers) {
         Travel2Controller.LOGGER.info("[Get Route By Trip ID] TripId: {}", tripId);
@@ -107,7 +98,6 @@ public class Travel2Controller {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trips/left")
-    @HystrixCommand
     public HttpEntity queryInfo(@RequestBody TripInfo info, @RequestHeader HttpHeaders headers) {
         if (info.getStartingPlace() == null || info.getStartingPlace().length() == 0 ||
                 info.getEndPlace() == null || info.getEndPlace().length() == 0 ||
@@ -129,7 +119,6 @@ public class Travel2Controller {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trip_detail")
-    @HystrixCommand
     public HttpEntity getTripAllDetailInfo(@RequestBody TripAllDetailInfo gtdi, @RequestHeader HttpHeaders headers) {
         return ok(service.getTripAllDetailInfo(gtdi, headers));
     }
@@ -143,14 +132,9 @@ public class Travel2Controller {
 
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/admin_trip")
-    @HystrixCommand
     public HttpEntity adminQueryAll(@RequestHeader HttpHeaders headers) {
         // ArrayList<AdminTrip>
         return ok(service.adminQueryAll(headers));
     }
 
-
-    private HttpEntity fallback() {
-        return ok(new Response<>());
-    }
 }
