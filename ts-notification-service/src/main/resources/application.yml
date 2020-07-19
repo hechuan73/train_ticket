@@ -37,9 +37,3 @@ swagger:
 #  velocity:
 #    resource-loader-path: classpath:/templates/
 #    check-template-location: true
-
-opentracing:
-  jaeger:
-    udp-sender:
-      host: jaeger
-      port: 6831

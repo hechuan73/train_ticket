@@ -7,9 +7,3 @@ spring:
 
 swagger:
   controllerPackage: cancel.controller
-
-opentracing:
-  jaeger:
-    udp-sender:
-      host: jaeger
-      port: 6831

@@ -12,9 +12,3 @@ spring:
 
 swagger:
   controllerPackage: user.controller
-
-opentracing:
-  jaeger:
-    udp-sender:
-      host: jaeger
-      port: 6831

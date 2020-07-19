@@ -14,9 +14,3 @@ server:
 
 swagger:
   controllerPackage: consignprice.controller
-
-opentracing:
-  jaeger:
-    udp-sender:
-      host: jaeger
-      port: 6831
