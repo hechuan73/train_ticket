@@ -1,8 +1,5 @@
 package foodsearch.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import edu.fudan.common.util.Response;
 import foodsearch.entity.*;
 import foodsearch.service.FoodService;
 import org.slf4j.Logger;
@@ -61,9 +58,6 @@ public class FoodController {
 
     // This relies on a lot of other services, not completely modified
     @GetMapping(path = "/foods/{date}/{startStation}/{endStation}/{tripId}")
-    @HystrixCommand(fallbackMethod = "getAllFoodFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
-    })
     public HttpEntity getAllFood(@PathVariable String date, @PathVariable String startStation,
                                  @PathVariable String endStation, @PathVariable String tripId,
                                  @RequestHeader HttpHeaders headers) {
@@ -71,10 +65,4 @@ public class FoodController {
         return ok(foodService.getAllFood(date, startStation, endStation, tripId, headers));
     }
 
-
-    private HttpEntity getAllFoodFallback(@PathVariable String date, @PathVariable String startStation,
-                                  @PathVariable String endStation, @PathVariable String tripId,
-                                  @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>());
-    }
 }

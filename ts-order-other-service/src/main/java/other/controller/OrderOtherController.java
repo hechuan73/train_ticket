@@ -1,8 +1,5 @@
 package other.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +64,6 @@ public class OrderOtherController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/orderOther/refresh")
-    @HystrixCommand(fallbackMethod = "queryOrdersForRefreshFallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
-    })
     public HttpEntity queryOrdersForRefresh(@RequestBody QueryInfo qi,
                                             @RequestHeader HttpHeaders headers) {
         OrderOtherController.LOGGER.info("[Order Other Service][Query Orders] Query Orders for {}", qi.getLoginId());
@@ -152,8 +146,4 @@ public class OrderOtherController {
         return ok(orderService.getAllOrders(headers));
     }
 
-
-    private HttpEntity queryOrdersForRefreshFallback(@RequestBody QueryInfo qi, @RequestHeader HttpHeaders headers) {
-        return ok(new Response<>());
-    }
 }

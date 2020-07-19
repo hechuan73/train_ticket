@@ -1,10 +1,6 @@
 package cancel.controller;
 
 import cancel.service.CancelService;
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +15,6 @@ import static org.springframework.http.ResponseEntity.ok;
  */
 @RestController
 @RequestMapping("/api/v1/cancelservice")
-@DefaultProperties(defaultFallback = "fallback", commandProperties = {
-        @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "15000")
-})
 public class CancelController {
 
     @Autowired
@@ -36,7 +29,6 @@ public class CancelController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/cancel/refound/{orderId}")
-    @HystrixCommand
     public HttpEntity calculate(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
         CancelController.LOGGER.info("[Cancel Order Service][Calculate Cancel Refund] OrderId: {}", orderId);
         return ok(cancelService.calculateRefund(orderId, headers));
@@ -44,7 +36,6 @@ public class CancelController {
 
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/cancel/{orderId}/{loginId}")
-    @HystrixCommand
     public HttpEntity cancelTicket(@PathVariable String orderId, @PathVariable String loginId,
                                    @RequestHeader HttpHeaders headers) {
 
@@ -58,8 +49,4 @@ public class CancelController {
         }
     }
 
-
-    private HttpEntity fallback() {
-        return ok(new Response<>());
-    }
 }
