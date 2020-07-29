@@ -28,7 +28,15 @@
 			<artifactId>ts-common</artifactId>
 			<version>0.1.0</version>
 		</dependency>
-	</dependencies>
+
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>
