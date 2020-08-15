@@ -44,6 +44,9 @@ kind: Deployment
 metadata:
   name: ts-admin-basic-info-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-admin-basic-info-service
   replicas: 1
   template:
     metadata:
@@ -77,6 +80,9 @@ kind: Deployment
 metadata:
   name: ts-admin-order-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-admin-order-service
   replicas: 1
   template:
     metadata:
@@ -109,6 +115,9 @@ kind: Deployment
 metadata:
   name: ts-admin-route-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-admin-route-service
   replicas: 1
   template:
     metadata:
@@ -141,6 +150,9 @@ kind: Deployment
 metadata:
   name: ts-admin-travel-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-admin-travel-service
   replicas: 1
   template:
     metadata:
@@ -173,6 +185,9 @@ kind: Deployment
 metadata:
   name: ts-admin-user-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-admin-user-service
   replicas: 1
   template:
     metadata:
@@ -205,6 +220,9 @@ kind: Deployment
 metadata:
   name: ts-assurance-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-assurance-service
   replicas: 1
   template:
     metadata:
@@ -237,6 +255,9 @@ kind: Deployment
 metadata:
   name: ts-basic-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-basic-service
   replicas: 1
   template:
     metadata:
@@ -269,6 +290,9 @@ kind: Deployment
 metadata:
   name: ts-cancel-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-cancel-service
   replicas: 1
   template:
     metadata:
@@ -301,6 +325,9 @@ kind: Deployment
 metadata:
   name: ts-config-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-config-service
   replicas: 1
   template:
     metadata:
@@ -333,6 +360,9 @@ kind: Deployment
 metadata:
   name: ts-consign-price-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-consign-price-service
   replicas: 1
   template:
     metadata:
@@ -365,6 +395,9 @@ kind: Deployment
 metadata:
   name: ts-consign-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-consign-service
   replicas: 1
   template:
     metadata:
@@ -397,6 +430,9 @@ kind: Deployment
 metadata:
   name: ts-contacts-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-contacts-service
   replicas: 1
   template:
     metadata:
@@ -429,6 +465,9 @@ kind: Deployment
 metadata:
   name: ts-execute-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-execute-service
   replicas: 1
   template:
     metadata:
@@ -461,6 +500,9 @@ kind: Deployment
 metadata:
   name: ts-food-map-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-food-map-service
   replicas: 1
   template:
     metadata:
@@ -493,6 +535,9 @@ kind: Deployment
 metadata:
   name: ts-food-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-food-service
   replicas: 1
   template:
     metadata:
@@ -525,6 +570,9 @@ kind: Deployment
 metadata:
   name: ts-inside-payment-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-inside-payment-service
   replicas: 1
   template:
     metadata:
@@ -557,6 +605,9 @@ kind: Deployment
 metadata:
   name: ts-auth-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-auth-service
   replicas: 1
   template:
     metadata:
@@ -589,6 +640,9 @@ kind: Deployment
 metadata:
   name: ts-news-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-news-service
   replicas: 1
   template:
     metadata:
@@ -621,6 +675,9 @@ kind: Deployment
 metadata:
   name: ts-notification-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-notification-service
   replicas: 1
   template:
     metadata:
@@ -653,6 +710,9 @@ kind: Deployment
 metadata:
   name: ts-order-other-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-order-other-service
   replicas: 1
   template:
     metadata:
@@ -685,6 +745,9 @@ kind: Deployment
 metadata:
   name: ts-order-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-order-service
   replicas: 1
   template:
     metadata:
@@ -717,6 +780,9 @@ kind: Deployment
 metadata:
   name: ts-payment-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-payment-service
   replicas: 1
   template:
     metadata:
@@ -749,6 +815,9 @@ kind: Deployment
 metadata:
   name: ts-preserve-other-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-preserve-other-service
   replicas: 1
   template:
     metadata:
@@ -781,6 +850,9 @@ kind: Deployment
 metadata:
   name: ts-preserve-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-preserve-service
   replicas: 1
   template:
     metadata:
@@ -813,6 +885,9 @@ kind: Deployment
 metadata:
   name: ts-price-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-price-service
   replicas: 1
   template:
     metadata:
@@ -845,6 +920,9 @@ kind: Deployment
 metadata:
   name: ts-rebook-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-rebook-service
   replicas: 1
   template:
     metadata:
@@ -877,6 +955,9 @@ kind: Deployment
 metadata:
   name: ts-route-plan-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-route-plan-service
   replicas: 1
   template:
     metadata:
@@ -909,6 +990,9 @@ kind: Deployment
 metadata:
   name: ts-route-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-route-service
   replicas: 1
   template:
     metadata:
@@ -941,6 +1025,9 @@ kind: Deployment
 metadata:
   name: ts-seat-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-seat-service
   replicas: 1
   template:
     metadata:
@@ -973,6 +1060,9 @@ kind: Deployment
 metadata:
   name: ts-security-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-security-service
   replicas: 1
   template:
     metadata:
@@ -1005,6 +1095,9 @@ kind: Deployment
 metadata:
   name: ts-user-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-user-service
   replicas: 1
   template:
     metadata:
@@ -1037,6 +1130,9 @@ kind: Deployment
 metadata:
   name: ts-station-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-station-service
   replicas: 1
   template:
     metadata:
@@ -1069,6 +1165,9 @@ kind: Deployment
 metadata:
   name: ts-ticket-office-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-ticket-office-service
   replicas: 1
   template:
     metadata:
@@ -1101,6 +1200,9 @@ kind: Deployment
 metadata:
   name: ts-ticketinfo-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-ticketinfo-service
   replicas: 1
   template:
     metadata:
@@ -1133,6 +1235,9 @@ kind: Deployment
 metadata:
   name: ts-train-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-train-service
   replicas: 1
   template:
     metadata:
@@ -1165,6 +1270,9 @@ kind: Deployment
 metadata:
   name: ts-travel2-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-travel2-service
   replicas: 1
   template:
     metadata:
@@ -1197,6 +1305,9 @@ kind: Deployment
 metadata:
   name: ts-travel-plan-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-travel-plan-service
   replicas: 1
   template:
     metadata:
@@ -1229,6 +1340,9 @@ kind: Deployment
 metadata:
   name: ts-travel-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-travel-service
   replicas: 1
   template:
     metadata:
@@ -1261,6 +1375,9 @@ kind: Deployment
 metadata:
   name: ts-verification-code-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-verification-code-service
   replicas: 1
   template:
     metadata:
@@ -1293,6 +1410,9 @@ kind: Deployment
 metadata:
   name: ts-voucher-service
 spec:
+  selector:
+    matchLabels:
+      app: ts-voucher-service
   replicas: 1
   template:
     metadata:

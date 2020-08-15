@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: ts-ui-dashboard
 spec:
+  selector:
+    matchLabels:
+      app: ts-ui-dashboard
   replicas: 1
   template:
     metadata:

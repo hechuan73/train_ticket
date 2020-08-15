@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: ts-user-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-user-mongo
   replicas: 1
   template:
     metadata:
@@ -26,6 +29,9 @@ kind: Deployment
 metadata:
   name: ts-auth-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-auth-mongo
   replicas: 1
   template:
     metadata:
@@ -49,6 +55,9 @@ kind: Deployment
 metadata:
   name: ts-route-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-route-mongo
   replicas: 1
   template:
     metadata:
@@ -73,6 +82,9 @@ kind: Deployment
 metadata:
   name: ts-contacts-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-contacts-mongo
   replicas: 1
   template:
     metadata:
@@ -97,6 +109,9 @@ kind: Deployment
 metadata:
   name: ts-order-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-order-mongo
   replicas: 1
   template:
     metadata:
@@ -121,6 +136,9 @@ kind: Deployment
 metadata:
   name: ts-order-other-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-order-other-mongo
   replicas: 1
   template:
     metadata:
@@ -145,6 +163,9 @@ kind: Deployment
 metadata:
   name: ts-config-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-config-mongo
   replicas: 1
   template:
     metadata:
@@ -169,6 +190,9 @@ kind: Deployment
 metadata:
   name: ts-station-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-station-mongo
   replicas: 1
   template:
     metadata:
@@ -193,6 +217,9 @@ kind: Deployment
 metadata:
   name: ts-train-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-train-mongo
   replicas: 1
   template:
     metadata:
@@ -217,6 +244,9 @@ kind: Deployment
 metadata:
   name: ts-travel-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-travel-mongo
   replicas: 1
   template:
     metadata:
@@ -241,6 +271,9 @@ kind: Deployment
 metadata:
   name: ts-travel2-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-travel2-mongo
   replicas: 1
   template:
     metadata:
@@ -265,6 +298,9 @@ kind: Deployment
 metadata:
   name: ts-price-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-price-mongo
   replicas: 1
   template:
     metadata:
@@ -289,6 +325,9 @@ kind: Deployment
 metadata:
   name: ts-security-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-security-mongo
   replicas: 1
   template:
     metadata:
@@ -313,6 +352,9 @@ kind: Deployment
 metadata:
   name: ts-inside-payment-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-inside-payment-mongo
   replicas: 1
   template:
     metadata:
@@ -337,6 +379,9 @@ kind: Deployment
 metadata:
   name: ts-payment-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-payment-mongo
   replicas: 1
   template:
     metadata:
@@ -361,6 +406,9 @@ kind: Deployment
 metadata:
   name: ts-assurance-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-assurance-mongo
   replicas: 1
   template:
     metadata:
@@ -385,6 +433,9 @@ kind: Deployment
 metadata:
   name: ts-ticket-office-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-ticket-office-mongo
   replicas: 1
   template:
     metadata:
@@ -410,6 +461,9 @@ kind: Deployment
 metadata:
   name: ts-voucher-mysql
 spec:
+  selector:
+    matchLabels:
+      app: ts-voucher-mysql
   replicas: 1
   template:
     metadata:
@@ -438,6 +492,9 @@ kind: Deployment
 metadata:
   name: ts-food-map-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-food-map-mongo
   replicas: 1
   template:
     metadata:
@@ -462,6 +519,9 @@ kind: Deployment
 metadata:
   name: ts-consign-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-consign-mongo
   replicas: 1
   template:
     metadata:
@@ -486,6 +546,9 @@ kind: Deployment
 metadata:
   name: ts-consign-price-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-consign-price-mongo
   replicas: 1
   template:
     metadata:
@@ -510,6 +573,9 @@ kind: Deployment
 metadata:
   name: ts-food-mongo
 spec:
+  selector:
+    matchLabels:
+      app: ts-food-mongo
   replicas: 1
   template:
     metadata:
