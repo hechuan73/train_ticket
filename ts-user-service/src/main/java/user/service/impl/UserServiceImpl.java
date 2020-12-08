@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private RestTemplate restTemplate = new RestTemplate();
-    private static final String AUHT_SERVICE_URI = "http://ts-auth-service:12340/api/v1";
+    private static final String AUTH_SERVICE_URI = "http://ts-auth-service:12340/api/v1";
 
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
             return new Response<>(1, "REGISTER USER SUCCESS", userSaveResult);
         } else {
-            return new Response(0, "USER HAS ALREADY EXISTS", null);
+            return new Response<>(0, "USER HAS ALREADY EXISTS", null);
         }
     }
 
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("DELETE USER BY ID :" + userId);
 
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
-        restTemplate.exchange(AUHT_SERVICE_URI + "/users/" + userId,
+        restTemplate.exchange(AUTH_SERVICE_URI + "/users/" + userId,
                 HttpMethod.DELETE,
                 httpEntity,
                 Response.class);
