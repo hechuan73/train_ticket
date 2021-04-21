@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 echo
 echo "Please input you repo password of $1"

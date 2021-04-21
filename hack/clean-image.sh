@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 echo
 echo "Clean images, Repo: $1"

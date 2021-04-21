@@ -1457,7 +1457,7 @@ spec:
     spec:
       containers:
       - name: ts-avatar-service
-        image: codewisdom/ts-avatar-service:0.0.4
+        image: codewisdom/ts-avatar-service:0.1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 17001
