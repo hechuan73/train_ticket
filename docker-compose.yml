@@ -546,6 +546,14 @@ services:
     networks:
       - my-network
 
+  ts-avatar-service:
+    image: ${NAMESPACE}/ts-avatar-service:${TAG}
+    restart: always
+    ports:
+      - 17001:17001
+    networks:
+      - my-network
+
 networks:
   my-network:
     # driver: overlay

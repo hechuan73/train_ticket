@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eux
 
 echo
 echo "Start build images, Repo: $1, Tag: $2"
