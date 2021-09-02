@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,62 @@ public class FoodServiceImpl implements FoodService {
 
     String success = "Success.";
     String orderIdNotExist = "Order Id Is Non-Existent.";
+
+    public Response createFoodOrdersInBatch(List<FoodOrder> orders, HttpHeaders headers) {
+        boolean error = false;
+        String errorOrderId = "";
+
+        // Check if foodOrder exists
+        for (FoodOrder addFoodOrder : orders) {
+            FoodOrder fo = foodOrderRepository.findByOrderId(addFoodOrder.getOrderId());
+            if (fo != null) {
+                LOGGER.error("[AddFoodOrder] Order Id Has Existed, OrderId: {}", addFoodOrder.getOrderId());
+                error = true;
+                errorOrderId = addFoodOrder.getOrderId().toString();
+                break;
+            }
+        }
+        if (error) {
+            return new Response<>(0, "Order Id " + errorOrderId + "Existed", null);
+        }
+
+        List<String> deliveryJsons = new ArrayList<>();
+        for (FoodOrder addFoodOrder : orders) {
+            FoodOrder fo = new FoodOrder();
+            fo.setId(UUID.randomUUID());
+            fo.setOrderId(addFoodOrder.getOrderId());
+            fo.setFoodType(addFoodOrder.getFoodType());
+            if (addFoodOrder.getFoodType() == 2) {
+                fo.setStationName(addFoodOrder.getStationName());
+                fo.setStoreName(addFoodOrder.getStoreName());
+            }
+            fo.setFoodName(addFoodOrder.getFoodName());
+            fo.setPrice(addFoodOrder.getPrice());
+            foodOrderRepository.save(fo);
+            LOGGER.info("[AddFoodOrderBatch] Success Save One Order [{}]", fo.getOrderId());
+
+            Delivery delivery = new Delivery();
+            delivery.setFoodName(addFoodOrder.getFoodName());
+            delivery.setOrderId(addFoodOrder.getOrderId());
+            delivery.setStationName(addFoodOrder.getStationName());
+            delivery.setStoreName(addFoodOrder.getStoreName());
+
+            String deliveryJson = JsonUtils.object2Json(delivery);
+            deliveryJsons.add(deliveryJson);
+        }
+
+        // 批量发送消息
+        for(String deliveryJson: deliveryJsons) {
+            LOGGER.info("[AddFoodOrder] delivery info [{}] send to mq", deliveryJson);
+            try {
+                sender.send(deliveryJson);
+            } catch (Exception e) {
+                LOGGER.error("[AddFoodOrder] send delivery info to mq error, exception is [{}]", e.toString());
+            }
+        }
+
+        return new Response<>(1, success, null);
+    }
 
     @Override
     public Response createFoodOrder(FoodOrder addFoodOrder, HttpHeaders headers) {

@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -57,6 +58,13 @@ public class FoodController {
         FoodController.LOGGER.info("[Food Service]Try to Create a FoodOrder!");
         return ok(foodService.createFoodOrder(addFoodOrder, headers));
     }
+
+    @PostMapping(path = "/createOrderBatch")
+    public HttpEntity createFoodBatches(@RequestBody List<FoodOrder> foodOrderList, @RequestHeader HttpHeaders headers) {
+        FoodController.LOGGER.info("[Food Service]Try to Create Food Batches!");
+        return ok(foodService.createFoodOrdersInBatch(foodOrderList, headers));
+    }
+
 
     @PutMapping(path = "/orders")
     public HttpEntity updateFoodOrder(@RequestBody FoodOrder updateFoodOrder, @RequestHeader HttpHeaders headers) {
