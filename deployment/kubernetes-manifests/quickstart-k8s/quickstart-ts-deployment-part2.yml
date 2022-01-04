@@ -559,6 +559,48 @@ spec:
             timeoutSeconds: 5
 ---
 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ts-trainfood-service
+spec:
+  selector:
+    matchLabels:
+      app: ts-trainfood-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ts-trainfood-service
+    spec:
+      containers:
+        - name: ts-trainfood-service
+          image: codewisdom/ts-trainfood-service:0.2.0
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 19999
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          readinessProbe:
+            tcpSocket:
+              port: 18855
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+---
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1856,6 +1898,20 @@ spec:
     app: ts-station-food-service
 
 ---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-trainfood-service
+spec:
+  ports:
+    - name: http
+      port: 19999
+  selector:
+    app: ts-trainfood-service
+
+---
+
 
 apiVersion: v1
 kind: Service

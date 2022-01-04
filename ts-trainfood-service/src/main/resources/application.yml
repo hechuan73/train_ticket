@@ -1,0 +1,16 @@
+server:
+  port: 19999
+
+spring:
+  application:
+    name: ts-trainfood-service
+  data:
+    mongodb:
+      host: ts-trainfood-mongo
+#      username: user
+#      password: ${MONGODB_PASSWORD}
+      database: ts
+      port: 27017
+
+swagger:
+  controllerPackage: trainfood.controller

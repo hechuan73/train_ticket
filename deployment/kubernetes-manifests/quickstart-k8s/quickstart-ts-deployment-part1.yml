@@ -514,6 +514,35 @@ spec:
 
 ---
 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ts-trainfood-mongo
+spec:
+  selector:
+    matchLabels:
+      app: ts-trainfood-mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ts-trainfood-mongo
+    spec:
+      containers:
+        - name: ts-trainfood-mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+
+---
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -929,6 +958,19 @@ spec:
     app: ts-station-food-mongo
 
 ---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-trainfood-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: ts-trainfood-mongo
+
+---
+
 
 apiVersion: v1
 kind: Service
