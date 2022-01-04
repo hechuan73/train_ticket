@@ -1,0 +1,16 @@
+server:
+  port: 18855
+
+spring:
+  application:
+    name: ts-station-food-service
+  data:
+    mongodb:
+      host: ts-staion-food-mongo
+#      username: user
+#      password: ${MONGODB_PASSWORD}
+      database: ts
+      port: 27017
+
+swagger:
+  controllerPackage: food.controller

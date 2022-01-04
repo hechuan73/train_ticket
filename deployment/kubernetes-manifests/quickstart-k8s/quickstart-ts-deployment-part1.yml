@@ -490,19 +490,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-food-map-mongo
+  name: ts-station-food-mongo
 spec:
   selector:
     matchLabels:
-      app: ts-food-map-mongo
+      app: ts-station-food-mongo
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-food-map-mongo
+        app: ts-station-food-mongo
     spec:
       containers:
-        - name: ts-food-map-mongo
+        - name: ts-station-food-mongo
           image: mongo
           imagePullPolicy: IfNotPresent
           ports:
@@ -921,12 +921,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-food-map-mongo
+  name: ts-station-food-mongo
 spec:
   ports:
     - port: 27017
   selector:
-    app: ts-food-map-mongo
+    app: ts-station-food-mongo
 
 ---
 

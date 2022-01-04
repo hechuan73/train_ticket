@@ -40,6 +40,7 @@ public class FoodServiceImpl implements FoodService {
     String success = "Success.";
     String orderIdNotExist = "Order Id Is Non-Existent.";
 
+    @Override
     public Response createFoodOrdersInBatch(List<FoodOrder> orders, HttpHeaders headers) {
         boolean error = false;
         String errorOrderId = "";
@@ -205,7 +206,7 @@ public class FoodServiceImpl implements FoodService {
 
         // need return this tow element
         List<TrainFood> trainFoodList = null;
-        Map<String, List<FoodStore>> foodStoreListMap = new HashMap<>();
+        Map<String, List<StationFoodStore>> foodStoreListMap = new HashMap<>();
 
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(null);
@@ -280,17 +281,17 @@ public class FoodServiceImpl implements FoodService {
             }
 
             HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, null);
-            ResponseEntity<Response<List<FoodStore>>> reFoodStoresListResult = restTemplate.exchange(
-                    "http://ts-food-map-service:18855/api/v1/foodmapservice/foodstores",
+            ResponseEntity<Response<List<StationFoodStore>>> reFoodStoresListResult = restTemplate.exchange(
+                    "http://ts-station-food-service:18855/api/v1/stationfoodservice/foodstores",
                     HttpMethod.POST,
                     requestEntityFoodStoresListResult,
-                    new ParameterizedTypeReference<Response<List<FoodStore>>>() {
+                    new ParameterizedTypeReference<Response<List<StationFoodStore>>>() {
                     });
-            List<FoodStore> foodStoresListResult = reFoodStoresListResult.getBody().getData();
-            if (foodStoresListResult != null && !foodStoresListResult.isEmpty()) {
+            List<StationFoodStore> stationFoodStoresListResult = reFoodStoresListResult.getBody().getData();
+            if (stationFoodStoresListResult != null && !stationFoodStoresListResult.isEmpty()) {
                 for (String stationId : stations) {
-                    List<FoodStore> res = foodStoresListResult.stream()
-                            .filter(foodStore -> (foodStore.getStationId().equals(stationId)))
+                    List<StationFoodStore> res = stationFoodStoresListResult.stream()
+                            .filter(stationFoodStore -> (stationFoodStore.getStationId().equals(stationId)))
                             .collect(Collectors.toList());
                     foodStoreListMap.put(stationId, res);
                 }

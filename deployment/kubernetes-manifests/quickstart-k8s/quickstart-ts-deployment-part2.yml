@@ -522,20 +522,20 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-food-map-service
+  name: ts-station-food-service
 spec:
   selector:
     matchLabels:
-      app: ts-food-map-service
+      app: ts-station-food-service
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-food-map-service
+        app: ts-station-food-service
     spec:
       containers:
-        - name: ts-food-map-service
-          image: codewisdom/ts-food-map-service:0.2.0
+        - name: ts-station-food-service
+          image: codewisdom/ts-station-food-service:0.2.0
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -1847,13 +1847,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-food-map-service
+  name: ts-station-food-service
 spec:
   ports:
     - name: http
       port: 18855
   selector:
-    app: ts-food-map-service
+    app: ts-station-food-service
 
 ---
 

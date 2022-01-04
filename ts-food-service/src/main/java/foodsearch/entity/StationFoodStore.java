@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class FoodStore implements Serializable{
+public class StationFoodStore implements Serializable{
 
     private UUID id;
 
@@ -23,7 +23,7 @@ public class FoodStore implements Serializable{
 
     private List<Food> foodList;
 
-    public FoodStore(){
+    public StationFoodStore(){
         //Default Constructor
     }
 

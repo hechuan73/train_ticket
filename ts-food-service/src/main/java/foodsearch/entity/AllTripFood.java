@@ -10,7 +10,7 @@ public class AllTripFood {
 
     private List<TrainFood> trainFoodList;
 
-    private Map<String, List<FoodStore>>  foodStoreListMap;
+    private Map<String, List<StationFoodStore>>  foodStoreListMap;
 
     public AllTripFood(){
         //Default Constructor

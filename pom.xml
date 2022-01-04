@@ -41,8 +41,9 @@
         <module>ts-seat-service</module>
         <module>ts-travel-plan-service</module>
         <module>ts-route-plan-service</module>
-        <module>ts-food-map-service</module>
+<!--        <module>ts-food-map-service</module>-->
         <module>ts-food-service</module>
+        <module>ts-station-food-service</module>
         <module>ts-consign-price-service</module>
         <module>ts-consign-service</module>
         <module>ts-admin-order-service</module>
