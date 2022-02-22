@@ -35,21 +35,21 @@ public class ConfigController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/configs")
     public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
-        logger.info("Query all config");
+        logger.info("[queryAll][Query all configs]");
         return ok(configService.queryAll(headers));
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/configs")
     public HttpEntity<?> createConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
-        logger.info("Create config");
+        logger.info("[createConfig][Create config][Config name: {}]", info.getName());
         return new ResponseEntity<>(configService.create(info, headers), HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "*")
     @PutMapping(value = "/configs")
     public HttpEntity updateConfig(@RequestBody Config info, @RequestHeader HttpHeaders headers) {
-        logger.info("Update config");
+        logger.info("[updateConfig][Update config][Config name: {}]", info.getName());
         return ok(configService.update(info, headers));
     }
 
@@ -57,14 +57,14 @@ public class ConfigController {
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/configs/{configName}")
     public HttpEntity deleteConfig(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
-        logger.info("Delete config");
+        logger.info("[deleteConfig][Delete config][configName: {}]", configName);
         return ok(configService.delete(configName, headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/configs/{configName}")
     public HttpEntity retrieve(@PathVariable String configName, @RequestHeader HttpHeaders headers) {
-        logger.info("Retrieve config: {}", configName);
+        logger.info("[retrieve][Retrieve config][configName: {}]", configName);
         return ok(configService.query(configName, headers));
     }
 

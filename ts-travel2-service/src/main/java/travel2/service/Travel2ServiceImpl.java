@@ -40,15 +40,15 @@ public class Travel2ServiceImpl implements Travel2Service {
 
         Trip trip = repository.findByTripId(tripId1);
         if (trip == null) {
-            Travel2ServiceImpl.LOGGER.error("[Get Route By Trip ID] Trip Not Found, TripId: {}", tripId);
+            Travel2ServiceImpl.LOGGER.error("[getRouteByTripId][Get Route By Trip ID Fail][Trip Not Found][TripId: {}]", tripId);
             return new Response<>(0, "\"[Get Route By Trip ID] Trip Not Found:\" + tripId", null);
         } else {
             Route route = getRouteByRouteId(trip.getRouteId(), headers);
             if (route == null) {
-                Travel2ServiceImpl.LOGGER.error("Get route by Trip id error.Route not found, RouteId: {}",trip.getRouteId());
+                Travel2ServiceImpl.LOGGER.error("[getRouteByTripId][Get route by Trip id error][Route not found][RouteId: {}]",trip.getRouteId());
                 return new Response<>(0, "\"[Get Route By Trip ID] Route Not Found:\" + trip.getRouteId()", null);
             } else {
-                Travel2ServiceImpl.LOGGER.info("[Get Route By Trip ID] Success");
+                Travel2ServiceImpl.LOGGER.info("[getRouteByTripId][Get Route By Trip ID Success]");
                 return new Response<>(1, "[Get Route By Trip ID] Success", route);
             }
         }
@@ -64,12 +64,12 @@ public class Travel2ServiceImpl implements Travel2Service {
             trainType = getTrainType(trip.getTrainTypeId(), headers);
         }
         else {
-            Travel2ServiceImpl.LOGGER.error("Get Train Type by Trip id error.Trip not found, TripId: {}",tripId);
+            Travel2ServiceImpl.LOGGER.error("[getTrainTypeByTripId[]Get Train Type by Trip id error][Trip not found][TripId: {}]",tripId);
         }
         if (trainType != null) {
             return new Response<>(1, "Success query Train by trip id", trainType);
         } else {
-            Travel2ServiceImpl.LOGGER.error("Get Train Type by Trip id error.Train Type not found, TripId: {}",tripId);
+            Travel2ServiceImpl.LOGGER.error("[getTrainTypeByTripId][Get Train Type by Trip id error][Train Type not found][TripId: {}]",tripId);
             return new Response<>(0, noCnontent, null);
         }
     }
@@ -87,7 +87,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (!tripList.isEmpty()) {
             return new Response<>(1, success, tripList);
         } else {
-            Travel2ServiceImpl.LOGGER.warn("Get Trips by Route ids warn.Trips not found, RouteIdNumber: {}",routeIds.size());
+            Travel2ServiceImpl.LOGGER.warn("[getTripByRoute][Get Trips by Route ids warn][Trips not found][RouteIdNumber: {}]",routeIds.size());
             return new Response<>(0, noCnontent, null);
         }
     }
@@ -102,7 +102,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             repository.save(trip);
             return new Response<>(1, "Create trip info:" + ti.toString() + ".", null);
         } else {
-            Travel2ServiceImpl.LOGGER.error("Create trip error.Trip already exists,TripId: {}",info.getTripId());
+            Travel2ServiceImpl.LOGGER.error("[getTripByRoute][Create trip error][Trip already exists][TripId: {}]",info.getTripId());
             return new Response<>(1, "Trip " + info.getTripId() + " already exists", null);
         }
     }
@@ -114,7 +114,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (trip != null) {
             return new Response<>(1, "Search Trip Success by Trip Id " + tripId, trip);
         } else {
-            Travel2ServiceImpl.LOGGER.error("Retrieve trip error.Trip not found,TripId: {}",tripId);
+            Travel2ServiceImpl.LOGGER.error("[retrieve][Retrieve trip error][Trip not found][TripId: {}]",tripId);
             return new Response<>(0, "No Content according to tripId" + tripId, null);
         }
     }
@@ -129,7 +129,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             repository.save(trip);
             return new Response<>(1, "Update trip info:" + ti.toString(), trip);
         } else {
-            Travel2ServiceImpl.LOGGER.error("Update trip error.Trip not found,TripId: {}",info.getTripId());
+            Travel2ServiceImpl.LOGGER.error("[update][Update trip error][Trip not found][TripId: {}]",info.getTripId());
             return new Response<>(1, "Trip" + info.getTripId() + "doesn 't exists", null);
         }
     }
@@ -141,7 +141,7 @@ public class Travel2ServiceImpl implements Travel2Service {
             repository.deleteByTripId(ti);
             return new Response<>(1, "Delete trip:" + tripId + ".", tripId);
         } else {
-            Travel2ServiceImpl.LOGGER.error("Delete trip error.Trip not found,TripId: {}",tripId);
+            Travel2ServiceImpl.LOGGER.error("[delete][Delete trip error][Trip not found][TripId: {}]",tripId);
             return new Response<>(0, "Trip " + tripId + " doesn't exist.", null);
         }
     }
@@ -170,7 +170,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                     tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
                 TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
                 if (response == null) {
-                    Travel2ServiceImpl.LOGGER.warn("Query trip error.Tickets not found,start: {},end: {},time: {}",info.getStartingPlace(),info.getEndPlace(),info.getDepartureTime());
+                    Travel2ServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]",info.getStartingPlace(),info.getEndPlace(),info.getDepartureTime());
                     return new Response<>(0, noCnontent, null);
                 }
                 list.add(response);
@@ -182,24 +182,24 @@ public class Travel2ServiceImpl implements Travel2Service {
     @Override
     public Response getTripAllDetailInfo(TripAllDetailInfo gtdi, HttpHeaders headers) {
         TripAllDetail gtdr = new TripAllDetail();
-        Travel2ServiceImpl.LOGGER.info("[getTripAllDetailInfo] gtdi info: {}", gtdi.toString());
+        Travel2ServiceImpl.LOGGER.debug("[getTripAllDetailInfo][gtdi info: {}]", gtdi.toString());
         Trip trip = repository.findByTripId(new TripId(gtdi.getTripId()));
         if (trip == null) {
             gtdr.setTripResponse(null);
             gtdr.setTrip(null);
-            Travel2ServiceImpl.LOGGER.error("Get trip detail error.Trip not found,TripId: {}",gtdi.getTripId());
+            Travel2ServiceImpl.LOGGER.error("[getTripAllDetailInfo][Get trip detail error][Trip not found][TripId: {}]",gtdi.getTripId());
         } else {
             String endPlaceName = gtdi.getTo();
             String startingPlaceName = gtdi.getFrom();
             String startingPlaceId = queryForStationId(startingPlaceName, headers);
             String endPlaceId = queryForStationId(endPlaceName, headers);
-            Travel2ServiceImpl.LOGGER.info("[getTripAllDetailInfo] endPlaceID: {}", endPlaceId);
+            Travel2ServiceImpl.LOGGER.debug("[getTripAllDetailInfo][endPlaceID: {}]", endPlaceId);
             Route tempRoute = getRouteByRouteId(trip.getRouteId(), headers);
             TripResponse tripResponse = getTickets(trip, tempRoute, startingPlaceId, endPlaceId, gtdi.getFrom(), gtdi.getTo(), gtdi.getTravelDate(), headers);
             if (tripResponse == null) {
                 gtdr.setTrip(null);
                 gtdr.setTripResponse(null);
-                Travel2ServiceImpl.LOGGER.warn("Query trip error.Tickets not found,start: {},end: {}", gtdi.getTo(), gtdi.getFrom());
+                Travel2ServiceImpl.LOGGER.warn("[getTripAllDetailInfo][Query trip error][Tickets not found][start: {},end: {}]", gtdi.getTo(), gtdi.getFrom());
             } else {
                 gtdr.setTripResponse(tripResponse);
                 gtdr.setTrip(repository.findByTripId(new TripId(gtdi.getTripId())));
@@ -231,7 +231,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 requestEntity,
                 new ParameterizedTypeReference<Response<TravelResult>>() {
                 });
-        Travel2ServiceImpl.LOGGER.info("Ticket info  is: {}", re.getBody().toString());
+        Travel2ServiceImpl.LOGGER.debug("[getTickets][Ticket info  is: {}]", re.getBody().toString());
         TravelResult resultForTravel =  re.getBody().getData();
 
 
@@ -244,11 +244,11 @@ public class Travel2ServiceImpl implements Travel2Service {
                 requestEntity,
                 new ParameterizedTypeReference<Response<SoldTicket>>() {
                 });
-        Travel2ServiceImpl.LOGGER.info("Order other Ticket info  is: {}", re.getBody().toString());
+        Travel2ServiceImpl.LOGGER.debug("[getTickets][Order other Ticket info  is: {}]", re.getBody().toString());
         SoldTicket result = re2.getBody().getData();
 
         if (result == null) {
-            Travel2ServiceImpl.LOGGER.warn("Get tickets warn.Sold ticket Info doesn't exist,Departure Time: {},TripId: {}",departureTime,trip.getTripId());
+            Travel2ServiceImpl.LOGGER.warn("[getTickets][Get tickets warn][Sold ticket Info doesn't exist][Departure Time: {},TripId: {}]",departureTime,trip.getTripId());
             return null;
         }
         //Set the returned ticket information
@@ -274,7 +274,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         response.setTerminalStation(endPlaceName);
 
         //Calculate the distance from the starting point
-        Travel2ServiceImpl.LOGGER.info("[getTickets] route: {}  station: {}", route.getId(), route.getStations());
+        Travel2ServiceImpl.LOGGER.info("[getTickets][Calculate Distance][route: {} , station: {}]", route.getId(), route.getStations());
         int indexStart = route.getStations().indexOf(startingPlaceId);
         int indexEnd = route.getStations().indexOf(endPlaceId);
         int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);
@@ -288,13 +288,13 @@ public class Travel2ServiceImpl implements Travel2Service {
         calendarStart.setTime(trip.getStartingTime());
         calendarStart.add(Calendar.MINUTE, minutesStart);
         response.setStartingTime(calendarStart.getTime());
-        Travel2ServiceImpl.LOGGER.info("calculate time：{}  time: {}", minutesStart, calendarStart.getTime());
+        Travel2ServiceImpl.LOGGER.info("[getTickets][Calculate Distance][calculate time：{} , time: {}]", minutesStart, calendarStart.getTime());
 
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTime(trip.getStartingTime());
         calendarEnd.add(Calendar.MINUTE, minutesEnd);
         response.setEndTime(calendarEnd.getTime());
-        Travel2ServiceImpl.LOGGER.info("calculate time：{}  time: {}", minutesEnd, calendarEnd.getTime());
+        Travel2ServiceImpl.LOGGER.info("[getTickets][Calculate Distance][calculate time：{} , time: {}]", minutesEnd, calendarEnd.getTime());
 
         response.setTripId(new TripId(result.getTrainNumber()));
         response.setTrainTypeId(trip.getTrainTypeId());
@@ -310,7 +310,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (tripList != null && !tripList.isEmpty()) {
             return new Response<>(1, success, tripList);
         }
-        Travel2ServiceImpl.LOGGER.warn("Query all trips warn: {}","No Content");
+        Travel2ServiceImpl.LOGGER.warn("[queryAll][Query all trips warn][{}]","No Content");
         return new Response<>(0, noCnontent, null);
     }
 
@@ -364,7 +364,7 @@ public class Travel2ServiceImpl implements Travel2Service {
     }
 
     private Route getRouteByRouteId(String routeId, HttpHeaders headers) {
-        Travel2ServiceImpl.LOGGER.info("[Get Route By Id] Route ID：{}", routeId);
+        Travel2ServiceImpl.LOGGER.debug("[getRouteByRouteId][Get Route By Id][Route ID：{}]", routeId);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
                 "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
@@ -374,10 +374,10 @@ public class Travel2ServiceImpl implements Travel2Service {
         Response result = re.getBody();
 
         if (result.getStatus() == 0 ) {
-            Travel2ServiceImpl.LOGGER.error("[Get Route By Id] Fail.Route not found,RouteId: {}", routeId);
+            Travel2ServiceImpl.LOGGER.error("[getRouteByRouteId][Get Route By Id Fail][Route not found][RouteId: {}]", routeId);
             return null;
         } else {
-            Travel2ServiceImpl.LOGGER.info("[Get Route By Id] Success.");
+            Travel2ServiceImpl.LOGGER.info("[getRouteByRouteId][Get Route By Id Success]");
             return JsonUtils.conveterObject(result.getData(), Route.class);
         }
     }
@@ -393,7 +393,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         seatRequest.setTrainNumber(trainNumber);
         seatRequest.setSeatType(seatType);
         seatRequest.setTravelDate(travelDate);
-        Travel2ServiceImpl.LOGGER.info("Seat request To String: {}", seatRequest.toString());
+        Travel2ServiceImpl.LOGGER.info("[getRestTicketNumber][Seat request][request: {}]", seatRequest.toString());
 
         HttpEntity requestEntity = new HttpEntity(seatRequest, null);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
@@ -404,7 +404,7 @@ public class Travel2ServiceImpl implements Travel2Service {
                 });
         int restNumber =   re.getBody().getData();
 
-        Travel2ServiceImpl.LOGGER.info("Get Rest tickets num is: {}", re.getBody().toString());
+        Travel2ServiceImpl.LOGGER.info("[getRestTicketNumber][Get Rest tickets num][num is: {}]", re.getBody().toString());
         return restNumber;
     }
 
@@ -422,7 +422,7 @@ public class Travel2ServiceImpl implements Travel2Service {
         if (!adminTrips.isEmpty()) {
             return new Response<>(1, "Travel Service Admin Query All Travel Success", adminTrips);
         } else {
-            Travel2ServiceImpl.LOGGER.warn("Admin query all trips warn: {}","No Content");
+            Travel2ServiceImpl.LOGGER.warn("[adminQueryAll][Admin query all trips warn][{}]","No Content");
             return new Response<>(0, noCnontent, null);
         }
     }

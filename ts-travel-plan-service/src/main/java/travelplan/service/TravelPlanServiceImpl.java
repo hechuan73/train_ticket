@@ -106,7 +106,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 
             return new Response<>(1, success, lists);
         } else {
-            TravelPlanServiceImpl.LOGGER.warn("Get cheapest trip warn.Route Plan Result Units: {}","No Content");
+            TravelPlanServiceImpl.LOGGER.warn("[getCheapest][Get cheapest trip warn][Route Plan Result Units: {}]","No Content");
             return new Response<>(0, cannotFind, null);
         }
     }
@@ -150,7 +150,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
             }
             return new Response<>(1, success, lists);
         } else {
-            TravelPlanServiceImpl.LOGGER.warn("Get quickest trip warn.Route Plan Result Units: {}","No Content");
+            TravelPlanServiceImpl.LOGGER.warn("[getQuickest][Get quickest trip warn][Route Plan Result Units: {}]","No Content");
             return new Response<>(0, cannotFind, null);
         }
     }
@@ -194,7 +194,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
             }
             return new Response<>(1, success, lists);
         } else {
-            TravelPlanServiceImpl.LOGGER.warn("Get min stations trip warn.Route Plan Result Units: {}","No Content");
+            TravelPlanServiceImpl.LOGGER.warn("[getMinStation][Get min stations trip warn][Route Plan Result Units: {}]","No Content");
             return new Response<>(0, cannotFind, null);
         }
     }
@@ -211,7 +211,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         seatRequest.setTravelDate(travelDate);
         seatRequest.setSeatType(seatType);
 
-        TravelPlanServiceImpl.LOGGER.info("Seat Request is: {}", seatRequest.toString());
+        TravelPlanServiceImpl.LOGGER.info("[getRestTicketNumber][Seat Request][Seat Request is: {}]", seatRequest.toString());
         HttpEntity requestEntity = new HttpEntity(seatRequest, null);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
                 "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",

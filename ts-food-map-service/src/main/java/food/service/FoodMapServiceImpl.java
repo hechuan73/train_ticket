@@ -32,7 +32,7 @@ public class FoodMapServiceImpl implements FoodMapService {
     public Response createFoodStore(FoodStore fs, HttpHeaders headers) {
         FoodStore fsTemp = foodStoreRepository.findById(fs.getId());
         if (fsTemp != null) {
-            FoodMapServiceImpl.LOGGER.error("[Init FoodStore] Already Exists Id: {}", fs.getId());
+            FoodMapServiceImpl.LOGGER.warn("[createFoodStore][Init FoodStore][FoodStore Already Exists][FoodStore Id: {}]", fs.getId());
             return new Response<>(0, "Already Exists Id", null);
         } else {
             foodStoreRepository.save(fs);
@@ -44,7 +44,7 @@ public class FoodMapServiceImpl implements FoodMapService {
     public TrainFood createTrainFood(TrainFood tf, HttpHeaders headers) {
         TrainFood tfTemp = trainFoodRepository.findById(tf.getId());
         if (tfTemp != null) {
-            FoodMapServiceImpl.LOGGER.error("[Init TrainFood] Already Exists Id: {}", tf.getId());
+            FoodMapServiceImpl.LOGGER.warn("[createTrainFood][Init TrainFood][TrainFood Already Exists][TrainFood Id: {}]", tf.getId());
         } else {
             trainFoodRepository.save(tf);
         }
@@ -57,7 +57,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (foodStores != null && !foodStores.isEmpty()) {
             return new Response<>(1, success, foodStores);
         } else {
-            FoodMapServiceImpl.LOGGER.error("List food stores error: {}", "Food store is empty");
+            FoodMapServiceImpl.LOGGER.error("[listFoodStores][List food stores error][Food store is empty]");
             return new Response<>(0, "Food store is empty", null);
         }
     }
@@ -68,7 +68,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (trainFoodList != null && !trainFoodList.isEmpty()) {
             return new Response<>(1, success, trainFoodList);
         } else {
-            FoodMapServiceImpl.LOGGER.error("List train food error: {}", noContent);
+            FoodMapServiceImpl.LOGGER.error("[listTrainFood][List train food error][{}]", noContent);
             return new Response<>(0, noContent, null);
         }
     }
@@ -79,7 +79,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (foodStoreList != null && !foodStoreList.isEmpty()) {
             return new Response<>(1, success, foodStoreList);
         } else {
-            FoodMapServiceImpl.LOGGER.error("List food stores by station id error: {}, stationId: {}", "Food store is empty", stationId);
+            FoodMapServiceImpl.LOGGER.error("[listFoodStoresByStationId][List food stores by station id error][{}][stationId: {}]", "Food store is empty", stationId);
             return new Response<>(0, "Food store is empty", null);
         }
     }
@@ -90,7 +90,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (trainFoodList != null) {
             return new Response<>(1, success, trainFoodList);
         } else {
-            FoodMapServiceImpl.LOGGER.error("List train food by trip id error: {}, tripId: {}", noContent, tripId);
+            FoodMapServiceImpl.LOGGER.error("[listTrainFoodByTripId][List train food by trip id error][{}][tripId: {}]", noContent, tripId);
             return new Response<>(0, noContent, null);
         }
     }
@@ -101,7 +101,7 @@ public class FoodMapServiceImpl implements FoodMapService {
         if (foodStoreList != null) {
             return new Response<>(1, success, foodStoreList);
         } else {
-            FoodMapServiceImpl.LOGGER.error("List food stores by station ids error: {}, stationId list: {}", "Food store is empty", stationIds);
+            FoodMapServiceImpl.LOGGER.error("[getFoodStoresByStationIds][List food stores by station ids error][{}][stationId list: {}]", "Food store is empty", stationIds);
             return new Response<>(0, noContent, null);
         }
     }

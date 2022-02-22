@@ -31,7 +31,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         Response<ArrayList<AdminTrip>> result;
         ArrayList<AdminTrip> trips = new ArrayList<>();
 
-        AdminTravelServiceImpl.LOGGER.info("[Get All Travels]");
+        AdminTravelServiceImpl.LOGGER.info("[getAllTravels][Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re = restTemplate.exchange(
                 "http://ts-travel-service:12346/api/v1/travelservice/admin_trip",
@@ -43,10 +43,10 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         if (result.getStatus() == 1) {
             ArrayList<AdminTrip> adminTrips = result.getData();
-            AdminTravelServiceImpl.LOGGER.info("[Get Travel From ts-travel-service successfully!]");
+            AdminTravelServiceImpl.LOGGER.info("[getAllTravels][Get Travel From ts-travel-service successfully!]");
             trips.addAll(adminTrips);
         } else {
-            AdminTravelServiceImpl.LOGGER.error("[Get Travel From ts-travel-service fail!]");
+            AdminTravelServiceImpl.LOGGER.error("[getAllTravels][receive response][Get Travel From ts-travel-service fail!]");
         }
 
         HttpEntity requestEntity2 = new HttpEntity(headers);
@@ -59,11 +59,11 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         result = re2.getBody();
 
         if (result.getStatus() == 1) {
-            AdminTravelServiceImpl.LOGGER.info("[Get Travel From ts-travel2-service successfully!]");
+            AdminTravelServiceImpl.LOGGER.info("[getAllTravels][Get Travel From ts-travel2-service successfully!]");
             ArrayList<AdminTrip> adminTrips = result.getData();
             trips.addAll(adminTrips);
         } else {
-            AdminTravelServiceImpl.LOGGER.error("[Get Travel From ts-travel2-service fail!]");
+            AdminTravelServiceImpl.LOGGER.error("[getAllTravels][receive response][Get Travel From ts-travel2-service fail!]");
         }
         result.setData(trips);
 
@@ -88,10 +88,10 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         result = re.getBody();
 
         if (result.getStatus() == 1) {
-            AdminTravelServiceImpl.LOGGER.info("Admin add new travel");
+            AdminTravelServiceImpl.LOGGER.info("[addTravel][Admin add new travel][success]");
             return new Response<>(1, "[Admin add new travel]", null);
         } else {
-            AdminTravelServiceImpl.LOGGER.error("Admin add new travel failed, trip id: {}", request.getTripId());
+            AdminTravelServiceImpl.LOGGER.error("[addTravel][receive response][Admin add new travel failed][trip id: {}]", request.getTripId());
             return new Response<>(0, "Admin add new travel failed", null);
         }
     }
@@ -115,11 +115,11 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         result = re.getBody();
         if (result.getStatus() != 1)  {
-            AdminTravelServiceImpl.LOGGER.info("[Admin update travel failed]");
+            AdminTravelServiceImpl.LOGGER.info("[updateTravel][Admin update travel failed]");
             return new Response<>(0, "Admin update travel failed", null);
         }
 
-        AdminTravelServiceImpl.LOGGER.info("[Admin update travel success]");
+        AdminTravelServiceImpl.LOGGER.info("[updateTravel][Admin update travel][success]");
         return result;
     }
 
@@ -142,11 +142,11 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         result = re.getBody();
         if (result.getStatus() != 1) {
-            AdminTravelServiceImpl.LOGGER.error("Admin delete travel failed, trip id: {}", tripId);
+            AdminTravelServiceImpl.LOGGER.error("[deleteTravel][receive response][Admin delete travel failed][trip id: {}]", tripId);
             return new Response<>(0, "Admin delete travel failed", null);
         }
 
-        AdminTravelServiceImpl.LOGGER.info("Admin delete travel success, trip id: {}", tripId);
+        AdminTravelServiceImpl.LOGGER.info("[deleteTravel][Admin delete travel success][trip id: {}]", tripId);
         return result;
     }
 }

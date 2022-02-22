@@ -49,12 +49,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
             LeftTicketInfo leftTicketInfo = new LeftTicketInfo();
             leftTicketInfo.setSoldTickets(ticketSet);
-            OrderOtherServiceImpl.LOGGER.info("Left ticket info is: {}", leftTicketInfo.toString());
+            OrderOtherServiceImpl.LOGGER.info("[getSoldTickets][Left ticket info][info is: {}]", leftTicketInfo.toString());
 
             return new Response<>(1, success, leftTicketInfo);
         } else {
 
-            OrderOtherServiceImpl.LOGGER.warn("No content, seat from date: {}, train number: {}",seatRequest.getTravelDate(),seatRequest.getTrainNumber());
+            OrderOtherServiceImpl.LOGGER.warn("[getSoldTickets][Seat][No content][seat from date: {}, train number: {}",seatRequest.getTravelDate(),seatRequest.getTrainNumber());
             return new Response<>(0, "Seat is Null.", null);
         }
     }
@@ -63,25 +63,25 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response findOrderById(UUID id, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(id);
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("No content, id: {}",id);
+            OrderOtherServiceImpl.LOGGER.warn("[findOrderById][Find Order By Id Fail][No content][id: {}]",id);
             return new Response<>(0, "No Content by this id", null);
         } else {
+            OrderOtherServiceImpl.LOGGER.info("[findOrderById][Find Order By Id Success][id: {}]",id);
             return new Response<>(1, success, order);
         }
     }
 
     @Override
     public Response create(Order order, HttpHeaders headers) {
-        OrderOtherServiceImpl.LOGGER.info("[Create Order] Ready Create Order");
+        OrderOtherServiceImpl.LOGGER.info("[create][Create Order][Ready Create Order]");
         ArrayList<Order> accountOrders = orderOtherRepository.findByAccountId(order.getAccountId());
         if (accountOrders.contains(order)) {
-            OrderOtherServiceImpl.LOGGER.error("[Order Create] Fail.Order already exists, OrderId: {}", order.getId());
+            OrderOtherServiceImpl.LOGGER.error("[create][Order Create Fail][Order already exists][OrderId: {}]", order.getId());
             return new Response<>(0, "Order already exist", order);
         } else {
             order.setId(UUID.randomUUID());
             orderOtherRepository.save(order);
-            OrderOtherServiceImpl.LOGGER.info("[Order Create] Success.");
-            OrderOtherServiceImpl.LOGGER.info("[Order Create] Price: {}", order.getPrice());
+            OrderOtherServiceImpl.LOGGER.info("[create][Order Create Success][OrderId:{},Price: {}]",order.getId(),order.getPrice());
             return new Response<>(1, success, order);
         }
     }
@@ -91,8 +91,9 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order orderTemp = orderOtherRepository.findById(order.getId());
         if (orderTemp == null) {
             orderOtherRepository.save(order);
+            OrderOtherServiceImpl.LOGGER.info("[initOrder][Init Order Success][OrderId: {}]", order.getId());
         } else {
-            OrderOtherServiceImpl.LOGGER.error("[Init Order] Order Already Exists, OrderId: {}", order.getId());
+            OrderOtherServiceImpl.LOGGER.error("[initOrder][Init Order Fail][Order Already Exists][OrderId: {}]", order.getId());
         }
     }
 
@@ -103,7 +104,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         UUID oldOrderId = oai.getPreviousOrderId();
         Order oldOrder = orderOtherRepository.findById(oldOrderId);
         if (oldOrder == null) {
-            OrderOtherServiceImpl.LOGGER.error("[Alter Order] Fail.Order do not exist, OrderId: {}", oldOrderId);
+            OrderOtherServiceImpl.LOGGER.error("[alterOrder][Alter Order Fail][Order do not exist][OrderId: {}]", oldOrderId);
             return new Response<>(0, "Old Order Does Not Exists", null);
         }
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
@@ -112,10 +113,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         newOrder.setId(UUID.randomUUID());
         Response cor = create(oai.getNewOrderInfo(), headers);
         if (cor.getStatus() == 1) {
-            OrderOtherServiceImpl.LOGGER.info("[Alter Order] Success.");
+            OrderOtherServiceImpl.LOGGER.info("[alterOrder][Alter Order Success][newOrderId:{}]",newOrder.getId());
             return new Response<>(1, "Alter Order Success", newOrder);
         } else {
-            OrderOtherServiceImpl.LOGGER.error("Alter Order Fail.Create new order fail, OrderId: {}", newOrder.getId());
+            OrderOtherServiceImpl.LOGGER.error("[alterOrder][Alter Order Fail][Create new order fail][newOrderId: {}]", newOrder.getId());
             return new Response<>(0, cor.getMsg(), null);
         }
     }
@@ -124,7 +125,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response<ArrayList<Order>> queryOrders(QueryInfo qi, String accountId, HttpHeaders headers) {
         //1.Get all orders of the user
         ArrayList<Order> list = orderOtherRepository.findByAccountId(UUID.fromString(accountId));
-        OrderOtherServiceImpl.LOGGER.info("[Query Order][Step 1] Get Orders Number of Account: {}", list.size());
+        OrderOtherServiceImpl.LOGGER.info("[queryOrders][Step 1][Get Orders Number of Account][size: {}]", list.size());
         //2.Check is these orders fit the requirement/
         if (qi.isEnableStateQuery() || qi.isEnableBoughtDateQuery() || qi.isEnableTravelDateQuery()) {
             ArrayList<Order> finalList = new ArrayList<>();
@@ -142,7 +143,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 } else {
                     statePassFlag = true;
                 }
-                OrderOtherServiceImpl.LOGGER.info("[Query Order][Step 2][Check Status Fits End]");
+                OrderOtherServiceImpl.LOGGER.info("[queryOrders][Step 2][Check Status Fits End]");
                 //4.Check order travel date requirement.
                 if (qi.isEnableTravelDateQuery()) {
                     if (tempOrder.getTravelDate().before(qi.getTravelDateEnd()) &&
@@ -154,7 +155,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 } else {
                     travelDatePassFlag = true;
                 }
-                OrderOtherServiceImpl.LOGGER.info("[Query Order][Step 2][Check Travel Date End]");
+                OrderOtherServiceImpl.LOGGER.info("[queryOrders][Step 2][Check Travel Date End]");
                 //5.Check order bought date requirement.
                 if (qi.isEnableBoughtDateQuery()) {
                     if (tempOrder.getBoughtDate().before(qi.getBoughtDateEnd()) &&
@@ -166,17 +167,17 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 } else {
                     boughtDatePassFlag = true;
                 }
-                OrderOtherServiceImpl.LOGGER.info("[Query Order][Step 2][Check Bought Date End]");
+                OrderOtherServiceImpl.LOGGER.info("[queryOrders][Step 2][Check Bought Date End]");
                 //6.check if all requirement fits.
                 if (statePassFlag && boughtDatePassFlag && travelDatePassFlag) {
                     finalList.add(tempOrder);
                 }
-                OrderOtherServiceImpl.LOGGER.info("[Query Order][Step 2][Check All Requirement End]");
+                OrderOtherServiceImpl.LOGGER.info("[queryOrders][Step 2][Check All Requirement End]");
             }
-            OrderOtherServiceImpl.LOGGER.info("[Query Order] Get order num: {}", finalList.size());
+            OrderOtherServiceImpl.LOGGER.info("[queryOrders][Get order num][size:{}]", finalList.size());
             return new Response<>(1, "Get order num", finalList);
         } else {
-            OrderOtherServiceImpl.LOGGER.warn("[Query Order] Orders don't fit the requirement, loginId: {}", qi.getLoginId());
+            OrderOtherServiceImpl.LOGGER.warn("[queryOrders][Orders don't fit the requirement][loginId: {}]", qi.getLoginId());
             return new Response<>(1, "Get order num", list);
         }
     }
@@ -206,7 +207,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {
                 });
-        OrderOtherServiceImpl.LOGGER.info("Stations name list is : {}", re.getBody().toString());
+        OrderOtherServiceImpl.LOGGER.info("[queryForStationId][Stations name list][Name List is : {}]", re.getBody().toString());
         return re.getBody().getData();
     }
 
@@ -214,7 +215,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response saveChanges(Order order, HttpHeaders headers) {
         Order oldOrder = orderOtherRepository.findById(order.getId());
         if (oldOrder == null) {
-            OrderOtherServiceImpl.LOGGER.error("[Modify Order] Fail.Order not found, OrderId: {}", order.getId());
+            OrderOtherServiceImpl.LOGGER.error("[saveChanges][Modify Order Fail][Order not found][OrderId: {}]", order.getId());
             return new Response<>(0, orderNotFound, null);
         } else {
             oldOrder.setAccountId(order.getAccountId());
@@ -235,7 +236,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
 
             orderOtherRepository.save(oldOrder);
-            OrderOtherServiceImpl.LOGGER.info(" Success.");
+            OrderOtherServiceImpl.LOGGER.info("[saveChanges][Modify Order Success][OrderId: {}]",order.getId());
             return new Response<>(1, success, oldOrder);
         }
     }
@@ -245,12 +246,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
         Order oldOrder = orderOtherRepository.findById(orderId);
         if (oldOrder == null) {
-            OrderOtherServiceImpl.LOGGER.error("[Cancel Order] Fail.Order not found, OrderId: {}", orderId);
+            OrderOtherServiceImpl.LOGGER.error("[cancelOrder][Cancel Order Fail][Order not found][OrderId: {}]", orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
             oldOrder.setStatus(OrderStatus.CANCEL.getCode());
             orderOtherRepository.save(oldOrder);
-            OrderOtherServiceImpl.LOGGER.info("[Cancel Order] Success.");
+            OrderOtherServiceImpl.LOGGER.info("[cancelOrder][Cancel Order Success][OrderId: {}]",oldOrder.getId());
             return new Response<>(1, success, oldOrder);
         }
     }
@@ -261,7 +262,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         SoldTicket cstr = new SoldTicket();
         cstr.setTravelDate(travelDate);
         cstr.setTrainNumber(trainNumber);
-        OrderOtherServiceImpl.LOGGER.info("[Calculate Sold Ticket] Get Orders Number: {}", orders.size());
+        OrderOtherServiceImpl.LOGGER.info("[queryAlreadySoldOrders][Calculate Sold Ticket][Get Orders Number: {}]", orders.size());
         for (Order order : orders) {
             if (order.getStatus() >= OrderStatus.CHANGE.getCode()) {
                 continue;
@@ -285,7 +286,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             } else if (order.getSeatClass() == SeatClass.HIGHSOFTBED.getCode()) {
                 cstr.setHighSoftBed(cstr.getHighSoftBed() + 1);
             } else {
-                OrderOtherServiceImpl.LOGGER.info("[Calculate Sold Tickets] Seat class not exists. Order ID: {}", order.getId());
+                OrderOtherServiceImpl.LOGGER.info("[queryAlreadySoldOrders][Calculate Sold Tickets][Seat class not exists][Order ID: {}]", order.getId());
             }
         }
         return new Response<>(1, success, cstr);
@@ -295,9 +296,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response getAllOrders(HttpHeaders headers) {
         ArrayList<Order> orders = orderOtherRepository.findAll();
         if (orders == null) {
-            OrderOtherServiceImpl.LOGGER.warn("Find all orders warn: {}","No content");
+            OrderOtherServiceImpl.LOGGER.warn("[getAllOrders][Find all orders warn][{}]","No content");
             return new Response<>(0, "No Content", null);
         } else {
+            OrderOtherServiceImpl.LOGGER.info("[getAllOrders][Find all orders Success][size:{}]",orders.size());
             return new Response<>(1, success, orders);
         }
     }
@@ -306,11 +308,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response modifyOrder(String orderId, int status, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("Modify order error.Order not found, OrderId: {}",orderId);
+            OrderOtherServiceImpl.LOGGER.error("[modifyOrder][Modify order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
             order.setStatus(status);
             orderOtherRepository.save(order);
+            OrderOtherServiceImpl.LOGGER.info("[modifyOrder][Modify order Success][OrderId: {}]",orderId);
             return new Response<>(1, success, order);
         }
     }
@@ -319,10 +322,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response getOrderPrice(String orderId, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("Get order price error.Order not found, OrderId: {}",orderId);
+            OrderOtherServiceImpl.LOGGER.error("[getOrderPrice][Get order price Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, "-1.0");
         } else {
-            OrderOtherServiceImpl.LOGGER.info("[Order Other Service][Get Order Price] Price: {}", order.getPrice());
+            OrderOtherServiceImpl.LOGGER.info("[getOrderPrice][Get Order Price Success][OrderId:{} , Price: {}]", orderId,order.getPrice());
             return new Response<>(1, success, order.getPrice());
         }
     }
@@ -331,11 +334,12 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     public Response payOrder(String orderId, HttpHeaders headers) {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("Pay order error.Order not found, OrderId: {}",orderId);
+            OrderOtherServiceImpl.LOGGER.error("[payOrder][Pay order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
             order.setStatus(OrderStatus.PAID.getCode());
             orderOtherRepository.save(order);
+            OrderOtherServiceImpl.LOGGER.info("[payOrder][Pay order Success][OrderId: {}]",orderId);
             return new Response<>(1, success, order);
         }
     }
@@ -345,9 +349,10 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         Order order = orderOtherRepository.findById(UUID.fromString(orderId));
 
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("Order not found, OrderId: {}",orderId);
+            OrderOtherServiceImpl.LOGGER.error("[getOrderById][Get Order By ID Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
+            OrderOtherServiceImpl.LOGGER.info("[getOrderById][Get Order By ID Success][OrderId: {}]",orderId);
             return new Response<>(1, success, order);
         }
     }
@@ -382,39 +387,39 @@ public class OrderOtherServiceImpl implements OrderOtherService {
         UUID orderUuid = UUID.fromString(orderId);
         Order order = orderOtherRepository.findById(orderUuid);
         if (order == null) {
-            OrderOtherServiceImpl.LOGGER.error("Delete order error.Order not found, OrderId: {}",orderId);
+            OrderOtherServiceImpl.LOGGER.error("[deleteOrder][Delete order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, "Order Not Exist.", null);
         } else {
             orderOtherRepository.deleteById(orderUuid);
+            OrderOtherServiceImpl.LOGGER.info("[deleteOrder][Delete order Success][OrderId: {}]",orderId);
             return new Response<>(1, success, orderUuid);
         }
     }
 
     @Override
     public Response addNewOrder(Order order, HttpHeaders headers) {
-        OrderOtherServiceImpl.LOGGER.info("[Admin Add Order] Ready Add Order.");
+        OrderOtherServiceImpl.LOGGER.info("[addNewOrder][Admin Add Order][Ready to Add Order]");
         ArrayList<Order> accountOrders = orderOtherRepository.findByAccountId(order.getAccountId());
         if (accountOrders.contains(order)) {
-            OrderOtherServiceImpl.LOGGER.error("[Admin Add Order] Fail.Order already exists, OrderId: {}",order.getId());
+            OrderOtherServiceImpl.LOGGER.error("[addNewOrder][Admin Add Order Fail][Order already exists][OrderId: {}]",order.getId());
             return new Response<>(0, "Order already exist", null);
         } else {
             order.setId(UUID.randomUUID());
             orderOtherRepository.save(order);
-            OrderOtherServiceImpl.LOGGER.info("[Admin Add Order] Success.");
-            OrderOtherServiceImpl.LOGGER.info("[Admin Add Order] Price: {}", order.getPrice());
+            OrderOtherServiceImpl.LOGGER.info("[addNewOrder][Admin Add Order Success][OrderId:{} , Price:{}]",order.getId(),order.getPrice());
             return new Response<>(1, success, order);
         }
     }
 
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
-        LOGGER.info("UPDATE ORDER INFO :" + order.toString());
+        LOGGER.info("[updateOrder][Admin Update Order][Order Info:{}]",order.toString());
         Order oldOrder = orderOtherRepository.findById(order.getId());
         if (oldOrder == null) {
-            OrderOtherServiceImpl.LOGGER.error("[Admin Update Order] Fail.Order not found, OrderId: {}",order.getId());
+            OrderOtherServiceImpl.LOGGER.error("[updateOrder][Admin Update Order Fail][Order not found][OrderId: {}]",order.getId());
             return new Response<>(0, orderNotFound, null);
         } else {
-            OrderOtherServiceImpl.LOGGER.info("{}", oldOrder.toString());
+            //OrderOtherServiceImpl.LOGGER.info("{}", oldOrder.toString());
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
             oldOrder.setTravelDate(order.getTravelDate());
@@ -431,7 +436,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
             oldOrder.setContactsDocumentNumber(order.getContactsDocumentNumber());
             oldOrder.setDocumentType(order.getDocumentType());
             orderOtherRepository.save(oldOrder);
-            OrderOtherServiceImpl.LOGGER.info("[Admin Update Order] Success.");
+            OrderOtherServiceImpl.LOGGER.info("[updateOrder][Admin Update Order Success][OrderId:{}]",oldOrder.getId());
             return new Response<>(1, success, oldOrder);
         }
     }

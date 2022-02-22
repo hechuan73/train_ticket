@@ -32,7 +32,7 @@ public class CancelController {
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/cancel/refound/{orderId}")
     public HttpEntity calculate(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
-        CancelController.LOGGER.info("[Calculate Cancel Refund] OrderId: {}", orderId);
+        CancelController.LOGGER.info("[calculate][Calculate Cancel Refund][OrderId: {}]", orderId);
         return ok(cancelService.calculateRefund(orderId, headers));
     }
 
@@ -41,9 +41,9 @@ public class CancelController {
     public HttpEntity cancelTicket(@PathVariable String orderId, @PathVariable String loginId,
                                    @RequestHeader HttpHeaders headers) {
 
-        CancelController.LOGGER.info("[Cancel Ticket] info: {}", orderId);
+        CancelController.LOGGER.info("[cancelTicket][Cancel Ticket][info: {}]", orderId);
         try {
-            CancelController.LOGGER.info("[Cancel Ticket] Verify Success");
+            CancelController.LOGGER.info("[cancelTicket][Cancel Ticket, Verify Success]");
             return ok(cancelService.cancelOrder(orderId, loginId, headers));
         } catch (Exception e) {
             CancelController.LOGGER.error(e.getMessage());

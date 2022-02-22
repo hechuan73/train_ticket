@@ -25,7 +25,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
-        SwaggerConfig.LOGGER.info("====-- {}", controllerPackagePath);
+        SwaggerConfig.LOGGER.info("[createRestApi][create][controllerPackagePath: {}]", controllerPackagePath);
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select().apis(RequestHandlerSelectors.basePackage(controllerPackagePath))

@@ -32,7 +32,7 @@ public class PreserveOtherController {
     @PostMapping(value = "/preserveOther")
     public HttpEntity preserve(@RequestBody OrderTicketsInfo oti,
                                @RequestHeader HttpHeaders headers) {
-        PreserveOtherController.LOGGER.info("[Preserve] Account  order from {} -----> {} at {}", oti.getFrom(), oti.getTo(), oti.getDate());
+        PreserveOtherController.LOGGER.info("[preserve][Preserve Account order][from {} to {} at {}]", oti.getFrom(), oti.getTo(), oti.getDate());
         return ok(preserveService.preserve(oti, headers));
     }
 

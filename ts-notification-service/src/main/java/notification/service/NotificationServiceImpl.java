@@ -55,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService{
             mailService.sendEmail(mail,"preserve_success.ftl");
             return true;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("[preserveSuccess][mailService.sendEmai][Exception: {}]", e.getMessage());
             return false;
         }
     }
@@ -82,7 +82,7 @@ public class NotificationServiceImpl implements NotificationService{
             mailService.sendEmail(mail,"order_create_success.ftl");
             return true;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("[orderCreateSuccess][mailService.sendEmai][Exception: {}]", e.getMessage());
             return false;
         }
     }
@@ -109,7 +109,7 @@ public class NotificationServiceImpl implements NotificationService{
             mailService.sendEmail(mail,"order_changed_success.ftl");
             return true;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("[orderChangedSuccess][mailService.sendEmai][Exception: {}]", e.getMessage());
             return false;
         }
     }
@@ -130,7 +130,7 @@ public class NotificationServiceImpl implements NotificationService{
             mailService.sendEmail(mail,"order_cancel_success.ftl");
             return true;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("[orderCancelSuccess][mailService.sendEmai][Exception: {}]", e.getMessage());
             return false;
         }
     }

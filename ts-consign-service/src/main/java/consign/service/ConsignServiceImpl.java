@@ -33,16 +33,14 @@ public class ConsignServiceImpl implements ConsignService {
 
     @Override
     public Response insertConsignRecord(Consign consignRequest, HttpHeaders headers) {
-        ConsignServiceImpl.LOGGER.info("[ Insert new consign record] {}", consignRequest.getOrderId());
+        ConsignServiceImpl.LOGGER.info("[insertConsignRecord][Insert Start][consignRequest.getOrderId: {}]", consignRequest.getOrderId());
 
         ConsignRecord consignRecord = new ConsignRecord();
         //Set the record attribute
         consignRecord.setId(UUID.randomUUID());
-        LOGGER.info("Order ID is :" + consignRequest.getOrderId());
         consignRecord.setOrderId(consignRequest.getOrderId());
         consignRecord.setAccountId(consignRequest.getAccountId());
-        ConsignServiceImpl.LOGGER.info("The handle date is {}", consignRequest.getHandleDate());
-        ConsignServiceImpl.LOGGER.info("The target date is {}", consignRequest.getTargetDate());
+        ConsignServiceImpl.LOGGER.info("[insertConsignRecord][Insert Info][handle date: {}, target date: {}]", consignRequest.getHandleDate(), consignRequest.getTargetDate());
         consignRecord.setHandleDate(consignRequest.getHandleDate());
         consignRecord.setTargetDate(consignRequest.getTargetDate());
         consignRecord.setFrom(consignRequest.getFrom());
@@ -61,15 +59,15 @@ public class ConsignServiceImpl implements ConsignService {
                 });
         consignRecord.setPrice(re.getBody().getData());
 
-        LOGGER.info("SAVE consign info : " + consignRecord.toString());
+        LOGGER.info("[insertConsignRecord][SAVE consign info][consignRecord : {}]", consignRecord.toString());
         ConsignRecord result = repository.save(consignRecord);
-        LOGGER.info("SAVE consign result : " + result.toString());
+        LOGGER.info("[insertConsignRecord][SAVE consign result][result: {}]", result.toString());
         return new Response<>(1, "You have consigned successfully! The price is " + result.getPrice(), result);
     }
 
     @Override
     public Response updateConsignRecord(Consign consignRequest, HttpHeaders headers) {
-        ConsignServiceImpl.LOGGER.info("[ Update consign record]");
+        ConsignServiceImpl.LOGGER.info("[updateConsignRecord][Update Start]");
 
         ConsignRecord originalRecord = repository.findById(consignRequest.getId());
         if (originalRecord == null) {
@@ -109,7 +107,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by account id success", consignRecords);
         }else {
-            LOGGER.warn("No Content according to accountId: {}", accountId);
+            LOGGER.warn("[queryByAccountId][No Content according to accountId][accountId: {}]", accountId);
             return new Response<>(0, "No Content according to accountId", null);
         }
     }
@@ -120,7 +118,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null ) {
             return new Response<>(1, "Find consign by order id success", consignRecords);
         }else {
-            LOGGER.warn("No Content according to orderId: {}", orderId);
+            LOGGER.warn("[queryByOrderId][No Content according to orderId][orderId: {}]", orderId);
             return new Response<>(0, "No Content according to order id", null);
         }
     }
@@ -131,7 +129,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (consignRecords != null && !consignRecords.isEmpty()) {
             return new Response<>(1, "Find consign by consignee success", consignRecords);
         }else {
-            LOGGER.warn("No Content according to consignee: {}", consignee);
+            LOGGER.warn("[queryByConsignee][No Content according to consignee][consignee: {}]", consignee);
             return new Response<>(0, "No Content according to consignee", null);
         }
     }

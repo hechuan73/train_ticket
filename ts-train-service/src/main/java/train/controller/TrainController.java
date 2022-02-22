@@ -33,7 +33,7 @@ public class TrainController {
     @CrossOrigin(origins = "*")
     @PostMapping(value = "/trains")
     public HttpEntity create(@RequestBody TrainType trainType, @RequestHeader HttpHeaders headers) {
-        TrainController.LOGGER.info("Create train,TrainTypeId: {}",trainType.getId());
+        TrainController.LOGGER.info("[create][Create train][TrainTypeId: {}]",trainType.getId());
         boolean isCreateSuccess = trainService.create(trainType, headers);
         if (isCreateSuccess) {
             return ok(new Response(1, "create success", null));
@@ -45,7 +45,7 @@ public class TrainController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/trains/{id}")
     public HttpEntity retrieve(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        TrainController.LOGGER.info("Retrieve train,TrainTypeId: {}",id);
+        TrainController.LOGGER.info("[retrieve][Retrieve train][TrainTypeId: {}]",id);
         TrainType trainType = trainService.retrieve(id, headers);
         if (trainType == null) {
             return ok(new Response(0, "here is no TrainType with the trainType id: " + id, null));
@@ -57,7 +57,7 @@ public class TrainController {
     @CrossOrigin(origins = "*")
     @PutMapping(value = "/trains")
     public HttpEntity update(@RequestBody TrainType trainType, @RequestHeader HttpHeaders headers) {
-        TrainController.LOGGER.info("Update train,TrainTypeId: {}",trainType.getId());
+        TrainController.LOGGER.info("[update][Update train][TrainTypeId: {}]",trainType.getId());
         boolean isUpdateSuccess = trainService.update(trainType, headers);
         if (isUpdateSuccess) {
             return ok(new Response(1, "update success", isUpdateSuccess));
@@ -69,7 +69,7 @@ public class TrainController {
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/trains/{id}")
     public HttpEntity delete(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        TrainController.LOGGER.info("Delete train,TrainTypeId: {}",id);
+        TrainController.LOGGER.info("[delete][Delete train][TrainTypeId: {}]",id);
         boolean isDeleteSuccess = trainService.delete(id, headers);
         if (isDeleteSuccess) {
             return ok(new Response(1, "delete success", isDeleteSuccess));
@@ -81,7 +81,7 @@ public class TrainController {
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/trains")
     public HttpEntity query(@RequestHeader HttpHeaders headers) {
-        TrainController.LOGGER.info("Query train");
+        TrainController.LOGGER.info("[query][Query train]");
         List<TrainType> trainTypes = trainService.query(headers);
         if (trainTypes != null && !trainTypes.isEmpty()) {
             return ok(new Response(1, "success", trainTypes));

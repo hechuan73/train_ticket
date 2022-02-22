@@ -28,7 +28,7 @@ public class TrainServiceImpl implements TrainService {
             result = true;
         }
         else {
-            TrainServiceImpl.LOGGER.error("Create train error.Train already exists,TrainTypeId: {}",trainType.getId());
+            TrainServiceImpl.LOGGER.error("[create][Create train error][Train already exists][TrainTypeId: {}]",trainType.getId());
         }
         return result;
     }
@@ -36,7 +36,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public TrainType retrieve(String id, HttpHeaders headers) {
         if (repository.findById(id) == null) {
-            TrainServiceImpl.LOGGER.error("Retrieve train error.Train not found,TrainTypeId: {}",id);
+            TrainServiceImpl.LOGGER.error("[retrieve][Retrieve train error][Train not found][TrainTypeId: {}]",id);
             return null;
         } else {
             return repository.findById(id);
@@ -53,7 +53,7 @@ public class TrainServiceImpl implements TrainService {
             result = true;
         }
         else {
-            TrainServiceImpl.LOGGER.error("Update train error.Train not found,TrainTypeId: {}",trainType.getId());
+            TrainServiceImpl.LOGGER.error("[update][Update train error][Train not found][TrainTypeId: {}]",trainType.getId());
         }
         return result;
     }
@@ -66,7 +66,7 @@ public class TrainServiceImpl implements TrainService {
             result = true;
         }
         else {
-            TrainServiceImpl.LOGGER.error("Delete train error.Train not found,TrainTypeId: {}",id);
+            TrainServiceImpl.LOGGER.error("[delete][Delete train error][Train not found][TrainTypeId: {}]",id);
         }
         return result;
     }

@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService{
             paymentRepository.save(payment);
             return new Response<>(1, "Pay Success", null);
         }else{
-            PaymentServiceImpl.LOGGER.warn("Pay Failed.Order not found with order id, PaymentId: {}, OrderId: {}",info.getId(),info.getOrderId());
+            PaymentServiceImpl.LOGGER.warn("[pay][Pay Failed][Order not found with order id][PaymentId: {}, OrderId: {}]",info.getId(),info.getOrderId());
             return new Response<>(0, "Pay Failed, order not found with order id" +info.getOrderId(), null);
         }
     }
@@ -57,9 +57,10 @@ public class PaymentServiceImpl implements PaymentService{
     public Response query(HttpHeaders headers){
         List<Payment> payments = paymentRepository.findAll();
         if(payments!= null && !payments.isEmpty()){
+            PaymentServiceImpl.LOGGER.info("[query][Find all payment Success][size:{}]",payments.size());
             return new Response<>(1,"Query Success",  payments);
         }else {
-            PaymentServiceImpl.LOGGER.warn("Find all payment warn: {}","No content");
+            PaymentServiceImpl.LOGGER.warn("[query][Find all payment warn][{}]","No content");
             return new Response<>(0, "No Content", null);
         }
     }
@@ -68,10 +69,10 @@ public class PaymentServiceImpl implements PaymentService{
     public void initPayment(Payment payment, HttpHeaders headers){
         Payment paymentTemp = paymentRepository.findById(payment.getId());
         if(paymentTemp == null){
-            PaymentServiceImpl.LOGGER.error("Init payment error.Payment not found, PaymentId: {}",payment.getId());
             paymentRepository.save(payment);
+            PaymentServiceImpl.LOGGER.error("[initPayment][Init payment error][Payment not found][PaymentId: {}]",payment.getId());
         }else{
-            PaymentServiceImpl.LOGGER.info("[Init Payment] Already Exists: {}", payment.getId());
+            PaymentServiceImpl.LOGGER.info("[initPayment][Init Payment Already Exists][PaymentId: {}]", payment.getId());
         }
     }
 }

@@ -27,14 +27,14 @@ public class TrainFoodController {
     @CrossOrigin(origins = "*")
     @GetMapping("/trainfoods")
     public HttpEntity getAllTrainFood(@RequestHeader HttpHeaders headers) {
-        TrainFoodController.LOGGER.info("[Food Map Service][Get All TrainFoods]");
+        TrainFoodController.LOGGER.info("[getAllTrainFood][Get All TrainFoods]");
         return ok(foodMapService.listTrainFood(headers));
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/trainfoods/{tripId}")
     public HttpEntity getTrainFoodOfTrip(@PathVariable String tripId, @RequestHeader HttpHeaders headers) {
-        TrainFoodController.LOGGER.info("[Food Map Service][Get TrainFoods By TripId]");
+        TrainFoodController.LOGGER.info("[getTrainFoodOfTrip][Get TrainFoods By TripId][tripId: {}]", tripId);
         return ok(foodMapService.listTrainFoodByTripId(tripId, headers));
     }
 }

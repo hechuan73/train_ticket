@@ -59,8 +59,7 @@ public class InitData implements CommandLineRunner{
             }
 
         } catch(Exception e){
-            InitData.LOGGER.info("the foodstores.txt has format error!");
-            InitData.LOGGER.error(e.getMessage());
+            InitData.LOGGER.error("[InitData.run][the foodstores.txt has format error!][Exception: {}]", e.getMessage());
             System.exit(1);
         }
 
@@ -81,14 +80,13 @@ public class InitData implements CommandLineRunner{
             }
 
         } catch(Exception e){
-            InitData.LOGGER.info("the trainfood.txt has format error!");
-            InitData.LOGGER.error(e.getMessage());
+            InitData.LOGGER.error("[InitData.run][the trainfood.txt has format error!][Exception: {}]", e.getMessage());
             System.exit(1);
         }
     }
 
     private List<Food> toFoodList(String s){
-        InitData.LOGGER.info("s= {}", s);
+        InitData.LOGGER.info("[toFoodList][list str: {}]", s);
         String[] foodstring = s.split("_");
         List<Food> foodList = new ArrayList<>();
         for(int i = 0; i< foodstring.length; i++){

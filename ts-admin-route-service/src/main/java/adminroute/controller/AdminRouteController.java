@@ -31,20 +31,20 @@ public class AdminRouteController {
     @CrossOrigin(origins = "*")
     @GetMapping(path = "/adminroute")
     public HttpEntity getAllRoutes(@RequestHeader HttpHeaders headers) {
-        logger.info("Get all routes request");
+        logger.info("[getAllRoutes][Get all routes request]");
         return ok(adminRouteService.getAllRoutes(headers));
     }
 
     @PostMapping(value = "/adminroute")
     public HttpEntity addRoute(@RequestBody RouteInfo request, @RequestHeader HttpHeaders headers) {
-        logger.info("Create and modify route, route id: {}, from station {} to station {}",
+        logger.info("[addRoute][Create and modify route][route id: {}, from station {} to station {}]",
                 request.getId(), request.getStartStation(), request.getEndStation());
         return ok(adminRouteService.createAndModifyRoute(request, headers));
     }
 
     @DeleteMapping(value = "/adminroute/{routeId}")
     public HttpEntity deleteRoute(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
-        logger.info("Delete route, route id: {}", routeId);
+        logger.info("[deleteRoute][Delete route][route id: {}]", routeId);
         return ok(adminRouteService.deleteRoute(routeId, headers));
     }
 

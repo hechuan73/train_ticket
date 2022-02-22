@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
-        LOGGER.info("Save User Name id：" + userDto.getUserName());
+        LOGGER.info("[saveUser][Save User Name][user name: {}]", userDto.getUserName());
         UUID userId = userDto.getUserId();
         if (userDto.getUserId() == null) {
             userId = UUID.randomUUID();
@@ -57,18 +57,17 @@ public class UserServiceImpl implements UserService {
                     .password(user.getPassword()).build());
 
             User userSaveResult = userRepository.save(user);
-            LOGGER.info("Send authorization message to ts-auth-service....");
+            LOGGER.info("[saveUser][Send authorization message to ts-auth-service....]");
 
             return new Response<>(1, "REGISTER USER SUCCESS", userSaveResult);
         } else {
-            UserServiceImpl.LOGGER.error("Save user error.User already exists,UserId: {}",userDto.getUserId());
+            UserServiceImpl.LOGGER.error("[saveUser][Save user error][User already exists][UserId: {}]",userDto.getUserId());
             return new Response<>(0, "USER HAS ALREADY EXISTS", null);
         }
     }
 
     private Response createDefaultAuthUser(AuthDto dto) {
-        LOGGER.info("CALL TO AUTH");
-        LOGGER.info("AuthDto : " + dto.toString());
+        LOGGER.info("[createDefaultAuthUser][CALL TO AUTH][AuthDto: {}]", dto.toString());
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<AuthDto> entity = new HttpEntity<>(dto, null);
         ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange("http://ts-auth-service:12340/api/v1/auth",
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
         if (users != null && !users.isEmpty()) {
             return new Response<>(1, "Success", users);
         }
-        UserServiceImpl.LOGGER.warn("Get all users warn: {}","No Content");
+        UserServiceImpl.LOGGER.warn("[getAllUsers][Get all users warn: {}]","No Content");
         return new Response<>(0, "NO User", null);
     }
 
@@ -95,7 +94,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             return new Response<>(1, "Find User Success", user);
         }
-        UserServiceImpl.LOGGER.warn("Get user by name warn,User Name: {}",userName);
+        UserServiceImpl.LOGGER.warn("[findByUserName][Get user by name warn,user is null][UserName: {}]",userName);
         return new Response<>(0, "No User", null);
     }
 
@@ -105,30 +104,30 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             return new Response<>(1, "Find User Success", user);
         }
-        UserServiceImpl.LOGGER.error("Get user by id error,UserId: {}",userId);
+        UserServiceImpl.LOGGER.error("[findByUserId][Get user by id error,user is null][UserId: {}]",userId);
         return new Response<>(0, "No User", null);
     }
 
     @Override
     public Response deleteUser(UUID userId, HttpHeaders headers) {
-        LOGGER.info("DELETE USER BY ID :" + userId);
+        LOGGER.info("[deleteUser][DELETE USER BY ID][userId: {}]", userId);
         User user = userRepository.findByUserId(userId);
         if (user != null) {
             // first  only admin token can delete success
             deleteUserAuth(userId, headers);
             // second
             userRepository.deleteByUserId(userId);
-            LOGGER.info("DELETE SUCCESS");
+            LOGGER.info("[deleteUser][DELETE SUCCESS][userId: {}]", userId);
             return new Response<>(1, "DELETE SUCCESS", null);
         } else {
-            UserServiceImpl.LOGGER.error("Delete user error.User not found,UserId: {}",userId);
+            UserServiceImpl.LOGGER.error("[deleteUser][Delete user error][User not found][UserId: {}]",userId);
             return new Response<>(0, "USER NOT EXISTS", null);
         }
     }
 
     @Override
     public Response updateUser(UserDto userDto, HttpHeaders headers) {
-        LOGGER.info("UPDATE USER :" + userDto.toString());
+        LOGGER.info("[updateUser][UPDATE USER: {}]", userDto.toString());
         User oldUser = userRepository.findByUserName(userDto.getUserName());
         if (oldUser != null) {
             User newUser = User.builder().email(userDto.getEmail())
@@ -142,19 +141,19 @@ public class UserServiceImpl implements UserService {
             userRepository.save(newUser);
             return new Response<>(1, "SAVE USER SUCCESS", newUser);
         } else {
-            UserServiceImpl.LOGGER.error("Update user error.User not found,UserId: {}",userDto.getUserId());
+            UserServiceImpl.LOGGER.error("[updateUser][Update user error][User not found][UserId: {}]",userDto.getUserId());
             return new Response(0, "USER NOT EXISTS", null);
         }
     }
 
     public void deleteUserAuth(UUID userId, HttpHeaders headers) {
-        LOGGER.info("DELETE USER BY ID :" + userId);
+        LOGGER.info("[deleteUserAuth][DELETE USER BY ID][userId: {}]", userId);
 
         HttpEntity<Response> httpEntity = new HttpEntity<>(null);
         restTemplate.exchange(AUTH_SERVICE_URI + "/users/" + userId,
                 HttpMethod.DELETE,
                 httpEntity,
                 Response.class);
-        LOGGER.info("DELETE USER AUTH SUCCESS");
+        LOGGER.info("[deleteUserAuth][DELETE USER AUTH SUCCESS][userId: {}]", userId);
     }
 }
