@@ -6,6 +6,7 @@ import org.apache.skywalking.apm.toolkit.trace.TraceCrossThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,17 @@ public class TravelServiceImpl implements TravelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TravelServiceImpl.class);
 
     private static final ExecutorService executorService = Executors.newFixedThreadPool(20, new CustomizableThreadFactory("HttpClientThreadPool-"));
+
+    @Value("${train-service.url}")
+    String train_service_url;
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${route-service.url}")
+    String route_service_url;
+    @Value("${basic-service.url}")
+    String basic_service_url;
+    @Value("${seat-service.url}")
+    String seat_service_url;
 
     String success = "Success";
     String noContent = "No Content";
@@ -305,7 +317,7 @@ public class TravelServiceImpl implements TravelService {
 
         HttpEntity requestEntity = new HttpEntity(query, null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-basic-service:15680/api/v1/basicservice/basic/travel",
+                basic_service_url + "/api/v1/basicservice/basic/travel",
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -315,7 +327,7 @@ public class TravelServiceImpl implements TravelService {
         //Ticket order _ high-speed train (number of tickets purchased)
         requestEntity = new HttpEntity(null);
         ResponseEntity<Response<SoldTicket>> re2 = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order/" + departureTime + "/" + trip.getTripId().toString(),
+                order_service_url + "/api/v1/orderservice/order/" + departureTime + "/" + trip.getTripId().toString(),
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<SoldTicket>>() {
@@ -407,7 +419,7 @@ public class TravelServiceImpl implements TravelService {
     private TrainType getTrainType(String trainTypeId, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<TrainType>> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
+                train_service_url + "/api/v1/trainservice/trains/" + trainTypeId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<TrainType>>() {
@@ -419,7 +431,7 @@ public class TravelServiceImpl implements TravelService {
     private String queryForStationId(String stationName, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<String>> re = restTemplate.exchange(
-                "http://ts-basic-service:15680/api/v1/basicservice/basic/" + stationName,
+                basic_service_url + "/api/v1/basicservice/basic/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<String>>() {
@@ -433,7 +445,7 @@ public class TravelServiceImpl implements TravelService {
         TravelServiceImpl.LOGGER.info("[Travel Service][Get Route By Id] Route ID：{}", routeId);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
+                route_service_url + "/api/v1/routeservice/routes/" + routeId,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -464,7 +476,7 @@ public class TravelServiceImpl implements TravelService {
 
         HttpEntity requestEntity = new HttpEntity(seatRequest, null);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
-                "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",
+                seat_service_url + "/api/v1/seatservice/seats/left_tickets",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {

@@ -15,3 +15,6 @@ spring:
 
 swagger:
   controllerPackage: order.controller
+
+station-service:
+  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}

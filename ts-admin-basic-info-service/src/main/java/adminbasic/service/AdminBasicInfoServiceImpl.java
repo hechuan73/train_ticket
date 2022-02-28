@@ -5,6 +5,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,10 +25,21 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminBasicInfoServiceImpl.class);
 
-    String stations = "http://ts-station-service:12345/api/v1/stationservice/stations";
-    String trains = "http://ts-train-service:14567/api/v1/trainservice/trains";
-    String configs = "http://ts-config-service:15679/api/v1/configservice/configs";
-    String prices = "http://ts-price-service:16579/api/v1/priceservice/prices";
+    @Value("${station-service.url}")
+    String station_service_url;
+    @Value("${train-service.url}")
+    String train_service_url;
+    @Value("${config-service.url}")
+    String config_service_url;
+    @Value("${price-service.url}")
+    String price_service_url;
+    @Value("${contacts-service.url}")
+    String contacts_service_url;
+
+    String stations = station_service_url + "/api/v1/stationservice/stations";
+    String trains = train_service_url + "/api/v1/trainservice/trains";
+    String configs = config_service_url + "/api/v1/configservice/configs";
+    String prices = price_service_url + "/api/v1/priceservice/prices";
 
     @Override
     public Response getAllContacts(HttpHeaders headers) {
@@ -35,7 +47,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-contacts-service:12347/api/v1/contactservice/contacts",
+                contacts_service_url + "/api/v1/contactservice/contacts",
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -50,7 +62,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-contacts-service:12347/api/v1/contactservice/contacts/" + contactsId,
+                contacts_service_url + "/api/v1/contactservice/contacts/" + contactsId,
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
@@ -65,7 +77,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
         LOGGER.info("MODIFY CONTACTS: " + mci.toString());
         HttpEntity requestEntity = new HttpEntity(mci, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-contacts-service:12347/api/v1/contactservice/contacts",
+                contacts_service_url + "/api/v1/contactservice/contacts",
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -81,7 +93,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(c, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-contacts-service:12347/api/v1/contactservice/contacts/admin",
+                contacts_service_url + "/api/v1/contactservice/contacts/admin",
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
@@ -185,7 +197,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains/" + id,
+                train_service_url + "/api/v1/trainservice/trains/" + id,
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);
@@ -239,7 +251,7 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-config-service:15679/api/v1/configservice/configs/" + name,
+                config_service_url + "/api/v1/configservice/configs/" + name,
                 HttpMethod.DELETE,
                 requestEntity,
                 Response.class);

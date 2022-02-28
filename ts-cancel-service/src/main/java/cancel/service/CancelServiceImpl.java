@@ -5,6 +5,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,17 @@ public class CancelServiceImpl implements CancelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelServiceImpl.class);
 
     String orderStatusCancelNotPermitted = "Order Status Cancel Not Permitted";
+
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
+    @Value("${user-service.url}")
+    String user_service_url;
+    @Value("${inside-payment-service.url}")
+    String inside_payment_service_url;
+    @Value("${notification-service.url}")
+    String notification_service_url;
 
     @Override
     public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) {
@@ -133,7 +145,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(notifyInfo, newHeaders);
         ResponseEntity<Boolean> re = restTemplate.exchange(
-                "http://ts-notification-service:17853/api/v1/notifyservice/notification/order_cancel_success",
+                notification_service_url + "/api/v1/notifyservice/notification/order_cancel_success",
                 HttpMethod.POST,
                 requestEntity,
                 Boolean.class);
@@ -229,7 +241,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(order, newHeaders);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order",
+                order_service_url + "/api/v1/orderservice/order",
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -252,7 +264,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(order, newHeaders);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
+                order_other_service_url + "/api/v1/orderOtherService/orderOther",
                 HttpMethod.PUT,
                 requestEntity,
                 Response.class);
@@ -266,7 +278,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(newHeaders);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-inside-payment-service:18673/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + money,
+                inside_payment_service_url + "/api/v1/inside_pay_service/inside_payment/drawback/" + userId + "/" + money,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -280,7 +292,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(newHeaders);
         ResponseEntity<Response<User>> re = restTemplate.exchange(
-                "http://ts-user-service:12342/api/v1/userservice/users/id/" + orderId,
+                user_service_url + "/api/v1/userservice/users/id/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<User>>() {
@@ -293,7 +305,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(newHeaders);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
+                order_service_url + "/api/v1/orderservice/order/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
@@ -306,7 +318,7 @@ public class CancelServiceImpl implements CancelService {
         HttpHeaders newHeaders = getAuthorizationHeadersFrom(headers);
         HttpEntity requestEntity = new HttpEntity(newHeaders);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
+                order_other_service_url + "/api/v1/orderOtherService/orderOther/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {

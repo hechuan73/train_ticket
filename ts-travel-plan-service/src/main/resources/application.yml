@@ -9,3 +9,21 @@ spring:
 
 swagger:
   controllerPackage: travelplan.controller
+
+station-service:
+  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}
+
+travel-service:
+  url: http://${TRAVEL_SERVICE_HOST:ts-travel-service}:${TRAVEL_SERVICE_PORT:12346}
+
+travel2-service:
+  url: http://${TRAVEL2_SERVICE_HOST:ts-travel2-service}:${TRAVEL2_SERVICE_PORT:16346}
+
+seat-service:
+  url: http://${SEAT_SERVICE_HOST:ts-seat-service}:${SEAT_SERVICE_PORT:18898}
+
+basic-service:
+  url: http://${BASIC_SERVICE_HOST:ts-basic-service}:${BASIC_SERVICE_PORT:15680}
+
+route-plan-service:
+  url: http://${ROUTE_PLAN_SERVICE_HOST:ts-route-plan-service}:${ROUTE_PLAN_SERVICE_PORT:14578}

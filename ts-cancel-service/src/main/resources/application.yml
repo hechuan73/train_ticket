@@ -7,3 +7,18 @@ spring:
 
 swagger:
   controllerPackage: cancel.controller
+
+order-service:
+  url: http://${ORDER_SERVICE_HOST:ts-order-service}:${ORDER_SERVICE_PORT:12031}
+
+order-other-service:
+  url: http://${ORDER_OTHER_SERVICE_HOST:ts-order-other-service}:${ORDER_OTHER_SERVICE_PORT:12032}
+
+user-service:
+  url: http://${USER_SERVICE_HOST:ts-user-service}:${USER_SERVICE_PORT:12342}
+
+inside-payment-service:
+  url: http://${INSIDE_PAYMENT_SERVICE_HOST:ts-inside-payment-service}:${INSIDE_PAYMENT_SERVICE_PORT:18673}
+
+notification-service:
+  url: http://${NOTIFICATION_SERVICE_HOST:ts-notification-service}:${NOTIFICATION_SERVICE_PORT:17853}

@@ -7,3 +7,6 @@ spring:
 
 swagger:
   controllerPackage: adminroute.controller
+
+route-service:
+  url: http://${ROUTE_SERVICE_HOST:ts-route-service}:${ROUTE_SERVICE_PORT:11178}

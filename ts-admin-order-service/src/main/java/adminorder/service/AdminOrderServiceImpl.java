@@ -5,6 +5,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private RestTemplate restTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminOrderServiceImpl.class);
 
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
+
     @Override
     public Response getAllOrders(HttpHeaders headers) {
 
@@ -33,7 +39,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         //From ts-order-service
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<ArrayList<Order>>> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order",
+                order_service_url + "/api/v1/orderservice/order",
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
@@ -50,7 +56,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         //From ts-order-other-service
         HttpEntity requestEntity2 = new HttpEntity(null);
         ResponseEntity<Response<ArrayList<Order>>> re2 = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther",
+                order_other_service_url + "/api/v1/orderOtherService/orderOther",
                 HttpMethod.GET,
                 requestEntity2,
                 new ParameterizedTypeReference<Response<ArrayList<Order>>>() {
@@ -76,7 +82,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Delete Order]");
             HttpEntity requestEntity = new HttpEntity(null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
+                     order_service_url + "/api/v1/orderservice/order/" + orderId,
                     HttpMethod.DELETE,
                     requestEntity,
                     Response.class);
@@ -86,7 +92,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Delete Order Other]");
             HttpEntity requestEntity = new HttpEntity(null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
+                    order_other_service_url + "/api/v1/orderOtherService/orderOther/" + orderId,
                     HttpMethod.DELETE,
                     requestEntity,
                     Response.class);
@@ -107,7 +113,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Update Order]");
             HttpEntity requestEntity = new HttpEntity(request, null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/admin",
+                    order_service_url + "/api/v1/orderservice/order/admin",
                     HttpMethod.PUT,
                     requestEntity,
                     Response.class);
@@ -117,7 +123,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Add New Order Other]");
             HttpEntity requestEntity = new HttpEntity(request, null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/admin",
+                    order_other_service_url + "/api/v1/orderOtherService/orderOther/admin",
                     HttpMethod.PUT,
                     requestEntity,
                     Response.class);
@@ -135,7 +141,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Add New Order]");
             HttpEntity requestEntity = new HttpEntity(request, null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/admin",
+                    order_service_url + "/api/v1/orderservice/order/admin",
                     HttpMethod.POST,
                     requestEntity,
                     Response.class);
@@ -145,7 +151,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             AdminOrderServiceImpl.LOGGER.info("[Add New Order Other]");
             HttpEntity requestEntity = new HttpEntity(request, null);
             ResponseEntity<Response> re = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/admin",
+                     order_other_service_url + "/api/v1/orderOtherService/orderOther/admin",
                     HttpMethod.POST,
                     requestEntity,
                     Response.class);

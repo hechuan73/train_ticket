@@ -12,3 +12,6 @@ spring:
 
 swagger:
   controllerPackage: user.controller
+
+auth-service:
+  url: http://${AUTH_SERVICE_HOST:ts-auth-service}:${AUTH_SERVICE_PORT:12340}

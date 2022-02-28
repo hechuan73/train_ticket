@@ -8,6 +8,7 @@ import foodsearch.repository.FoodOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +37,15 @@ public class FoodServiceImpl implements FoodService {
     private RabbitSend sender;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FoodServiceImpl.class);
+
+    @Value("${station-service.url}")
+    String station_service_url;
+    @Value("${travel-service.url}")
+    String travel_service_url;
+    @Value("${train-food-service.url}")
+    String train_food_service_url;
+    @Value("${station-food-service.url}")
+    String station_food_service_url;
 
     String success = "Success.";
     String orderIdNotExist = "Order Id Is Non-Existent.";
@@ -211,7 +221,7 @@ public class FoodServiceImpl implements FoodService {
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(null);
         ResponseEntity<Response<List<TrainFood>>> reGetTrainFoodListResult = restTemplate.exchange(
-                "http://ts-trainfood-service:19999/api/v1/trainfoodservice/trainfoods/" + tripId,
+                train_food_service_url + "/api/v1/trainfoodservice/trainfoods/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetTrainFoodListResult,
                 new ParameterizedTypeReference<Response<List<TrainFood>>>() {
@@ -230,7 +240,7 @@ public class FoodServiceImpl implements FoodService {
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetRouteResult = new HttpEntity(null, null);
         ResponseEntity<Response<Route>> reGetRouteResult = restTemplate.exchange(
-                "http://ts-travel-service:12346/api/v1/travelservice/routes/" + tripId,
+                travel_service_url + "/api/v1/travelservice/routes/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetRouteResult,
                 new ParameterizedTypeReference<Response<Route>>() {
@@ -245,7 +255,7 @@ public class FoodServiceImpl implements FoodService {
                 /**--------------------------------------------------------------------------------------*/
                 HttpEntity requestEntityStartStationId = new HttpEntity(null);
                 ResponseEntity<Response<String>> reStartStationId = restTemplate.exchange(
-                        "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + startStation,
+                        station_service_url + "/api/v1/stationservice/stations/id/" + startStation,
                         HttpMethod.GET,
                         requestEntityStartStationId,
                         new ParameterizedTypeReference<Response<String>>() {
@@ -264,7 +274,7 @@ public class FoodServiceImpl implements FoodService {
                 /**--------------------------------------------------------------------------------------*/
                 HttpEntity requestEntityEndStationId = new HttpEntity(null);
                 ResponseEntity<Response<String>> reEndStationId = restTemplate.exchange(
-                        "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + endStation,
+                        station_service_url + "/api/v1/stationservice/stations/id/" + endStation,
                         HttpMethod.GET,
                         requestEntityEndStationId,
                         new ParameterizedTypeReference<Response<String>>() {
@@ -282,7 +292,7 @@ public class FoodServiceImpl implements FoodService {
 
             HttpEntity requestEntityFoodStoresListResult = new HttpEntity(stations, null);
             ResponseEntity<Response<List<StationFoodStore>>> reFoodStoresListResult = restTemplate.exchange(
-                    "http://ts-station-food-service:18855/api/v1/stationfoodservice/foodstores",
+                     station_food_service_url + "/api/v1/stationfoodservice/foodstores",
                     HttpMethod.POST,
                     requestEntityFoodStoresListResult,
                     new ParameterizedTypeReference<Response<List<StationFoodStore>>>() {

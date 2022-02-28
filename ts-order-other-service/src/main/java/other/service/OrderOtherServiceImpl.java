@@ -3,6 +3,7 @@ package other.service;
 import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,9 @@ public class OrderOtherServiceImpl implements OrderOtherService {
     private RestTemplate restTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderOtherServiceImpl.class);
+
+    @Value("${station-service.url}")
+    String station_service_url;
 
     String success = "Success";
     String orderNotFound = "Order Not Found";
@@ -201,7 +205,7 @@ public class OrderOtherServiceImpl implements OrderOtherService {
 
         HttpEntity requestEntity = new HttpEntity(ids, null);
         ResponseEntity<Response<List<String>>> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations/namelist",
+                station_service_url + "/api/v1/stationservice/stations/namelist",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {

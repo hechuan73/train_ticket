@@ -6,6 +6,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,11 @@ public class AdminTravelServiceImpl implements AdminTravelService {
     private RestTemplate restTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminTravelServiceImpl.class);
 
+    @Value("${travel-service.url}")
+    String travel_service_url;
+    @Value("${travel2-service.url}")
+    String travel2_service_url;
+
     @Override
     public Response getAllTravels(HttpHeaders headers) {
         Response<ArrayList<AdminTrip>> result;
@@ -34,7 +40,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         AdminTravelServiceImpl.LOGGER.info("[Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re = restTemplate.exchange(
-                "http://ts-travel-service:12346/api/v1/travelservice/admin_trip",
+                travel_service_url + "/api/v1/travelservice/admin_trip",
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
@@ -51,7 +57,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         HttpEntity requestEntity2 = new HttpEntity(headers);
         ResponseEntity<Response<ArrayList<AdminTrip>>> re2 = restTemplate.exchange(
-                "http://ts-travel2-service:16346/api/v1/travel2service/admin_trip",
+                travel2_service_url + "/api/v1/travel2service/admin_trip",
                 HttpMethod.GET,
                 requestEntity2,
                 new ParameterizedTypeReference<Response<ArrayList<AdminTrip>>>() {
@@ -75,9 +81,9 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         Response result;
         String requestUrl;
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
-            requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
+            requestUrl = travel_service_url + "/api/v1/travelservice/trips";
         } else {
-            requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
+            requestUrl = travel2_service_url + "/api/v1/travel2service/trips";
         }
         HttpEntity requestEntity = new HttpEntity(request, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -102,9 +108,9 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         String requestUrl = "";
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
-            requestUrl = "http://ts-travel-service:12346/api/v1/travelservice/trips";
+            requestUrl = travel_service_url + "/api/v1/travelservice/trips";
         } else {
-            requestUrl = "http://ts-travel2-service:16346/api/v1/travel2service/trips";
+            requestUrl = travel2_service_url + "/api/v1/travel2service/trips";
         }
         HttpEntity requestEntity = new HttpEntity(request, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
@@ -129,9 +135,9 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         Response result;
         String requestUtl = "";
         if (tripId.charAt(0) == 'G' || tripId.charAt(0) == 'D') {
-            requestUtl = "http://ts-travel-service:12346/api/v1/travelservice/trips/" + tripId;
+            requestUtl = travel_service_url + "/api/v1/travelservice/trips/" + tripId;
         } else {
-            requestUtl = "http://ts-travel2-service:16346/api/v1/travel2service/trips/" + tripId;
+            requestUtl = travel2_service_url + "/api/v1/travel2service/trips/" + tripId;
         }
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
