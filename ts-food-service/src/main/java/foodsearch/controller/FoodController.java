@@ -55,33 +55,33 @@ public class FoodController {
 
     @PostMapping(path = "/orders")
     public HttpEntity createFoodOrder(@RequestBody FoodOrder addFoodOrder, @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Try to Create a FoodOrder!");
+        FoodController.LOGGER.info("[createFoodOrder][Try to Create a FoodOrder!]");
         return ok(foodService.createFoodOrder(addFoodOrder, headers));
     }
 
     @PostMapping(path = "/createOrderBatch")
     public HttpEntity createFoodBatches(@RequestBody List<FoodOrder> foodOrderList, @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Try to Create Food Batches!");
+        FoodController.LOGGER.info("[createFoodBatches][Try to Create Food Batches!]");
         return ok(foodService.createFoodOrdersInBatch(foodOrderList, headers));
     }
 
 
     @PutMapping(path = "/orders")
     public HttpEntity updateFoodOrder(@RequestBody FoodOrder updateFoodOrder, @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Try to Update a FoodOrder!");
+        FoodController.LOGGER.info("[updateFoodOrder][Try to Update a FoodOrder!]");
         return ok(foodService.updateFoodOrder(updateFoodOrder, headers));
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @DeleteMapping(path = "/orders/{orderId}")
     public HttpEntity deleteFoodOrder(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Try to Cancel a FoodOrder!");
+        FoodController.LOGGER.info("[deleteFoodOrder][Try to Cancel a FoodOrder!]");
         return ok(foodService.deleteFoodOrder(orderId, headers));
     }
 
     @GetMapping(path = "/orders/{orderId}")
     public HttpEntity findFoodOrderByOrderId(@PathVariable String orderId, @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Try to Find all FoodOrder!");
+        FoodController.LOGGER.info("[findFoodOrderByOrderId][Try to Find FoodOrder By orderId!][orderId: {}]", orderId);
         return ok(foodService.findByOrderId(orderId, headers));
     }
 
@@ -90,7 +90,7 @@ public class FoodController {
     public HttpEntity getAllFood(@PathVariable String date, @PathVariable String startStation,
                                  @PathVariable String endStation, @PathVariable String tripId,
                                  @RequestHeader HttpHeaders headers) {
-        FoodController.LOGGER.info("[Food Service]Get the Get Food Request!");
+        FoodController.LOGGER.info("[getAllFood][Get Food Request!]");
         return ok(foodService.getAllFood(date, startStation, endStation, tripId, headers));
     }
 

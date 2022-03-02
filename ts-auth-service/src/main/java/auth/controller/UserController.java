@@ -45,20 +45,20 @@ public class UserController {
             Response<?> res = tokenService.getToken(dao, headers);
             return ResponseEntity.ok(res);
         } catch (UserOperationException e) {
-            logger.error("Get token error, message: {}", e.getMessage());
+            logger.error("[getToken][tokenService.getToken error][UserOperationException, message: {}]", e.getMessage());
             return ResponseEntity.ok(new Response<>(0, "get token error", null));
         }
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUser(@RequestHeader HttpHeaders headers) {
-        logger.info("Get all users");
+        logger.info("[getAllUser][Get all users]");
         return ResponseEntity.ok().body(userService.getAllUser(headers));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Response> deleteUserById(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
-        logger.info("Delete user, userId: {}", userId);
+        logger.info("[deleteUserById][Delete user][userId: {}]", userId);
         return ResponseEntity.ok(userService.deleteByUserId(UUID.fromString(userId), headers));
     }
 

@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping
     public HttpEntity<Response> createDefaultUser(@RequestBody AuthDto authDto) {
-        logger.info("Create default auth user with authDto: {}", authDto.toString());
+        logger.info("[createDefaultUser][Create default auth user with authDto][AuthDto: {}]", authDto.toString());
         userService.createDefaultAuthUser(authDto);
         Response response = new Response(1, "SUCCESS", authDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

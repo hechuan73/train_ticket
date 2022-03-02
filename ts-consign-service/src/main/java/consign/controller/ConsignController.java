@@ -33,33 +33,33 @@ public class ConsignController {
     @PostMapping(value = "/consigns")
     public HttpEntity insertConsign(@RequestBody Consign request,
                                     @RequestHeader HttpHeaders headers) {
-        logger.info("Insert consign record, id:{}", request.getId());
+        logger.info("[insertConsign][Insert consign record][id:{}]", request.getId());
         return ok(service.insertConsignRecord(request, headers));
     }
 
     @PutMapping(value = "/consigns")
     public HttpEntity updateConsign(@RequestBody Consign request, @RequestHeader HttpHeaders headers) {
-        logger.info("Update consign record, id: {}", request.getId());
+        logger.info("[updateConsign][Update consign record][id: {}]", request.getId());
         return ok(service.updateConsignRecord(request, headers));
     }
 
     @GetMapping(value = "/consigns/account/{id}")
     public HttpEntity findByAccountId(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        logger.info("Find consign by account id: {}", id);
+        logger.info("[findByAccountId][Find consign by account id][id: {}]", id);
         UUID newid = UUID.fromString(id);
         return ok(service.queryByAccountId(newid, headers));
     }
 
     @GetMapping(value = "/consigns/order/{id}")
     public HttpEntity findByOrderId(@PathVariable String id, @RequestHeader HttpHeaders headers) {
-        logger.info("Find consign by order id: {}", id);
+        logger.info("[findByOrderId][Find consign by order id][id: {}]", id);
         UUID newid = UUID.fromString(id);
         return ok(service.queryByOrderId(newid, headers));
     }
 
     @GetMapping(value = "/consigns/{consignee}")
     public HttpEntity findByConsignee(@PathVariable String consignee, @RequestHeader HttpHeaders headers) {
-        logger.info("Find consign by consignee: {}", consignee);
+        logger.info("[findByConsignee][Find consign by consignee][consignee: {}]", consignee);
         return ok(service.queryByConsignee(consignee, headers));
     }
 

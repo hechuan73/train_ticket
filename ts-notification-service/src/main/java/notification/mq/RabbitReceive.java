@@ -53,11 +53,11 @@ public class RabbitReceive {
         NotifyInfo info = JsonUtils.json2Object(payload, NotifyInfo.class);
 
         if (info == null) {
-            logger.error("Receive email object is null, error.");
+            logger.error("[process][json2Object][Receive email object is null, error]");
             return;
         }
 
-        logger.info("Receive email object:" + info);
+        logger.info("[process][Receive email object][info: {}]", info);
 
         Mail mail = new Mail();
         mail.setMailFrom(email);
@@ -77,15 +77,15 @@ public class RabbitReceive {
 
         try {
             mailService.sendEmail(mail, "preserve_success.ftl");
-            logger.info("Send email to user " + username + " success");
+            logger.info("[process][Send email to user {} success]", username);
             info.setSendStatus(true);
         } catch (Exception e) {
-            logger.error("Send email error: " + e);
+            logger.error("[process][mailService.sendEmail][Send email error][Exception: {}]", e.getMessage());
             info.setSendStatus(false);
         }
 
         info.setId(UUID.randomUUID());
-        logger.info("Save notify info object [{}] into database", info.getId());
+        logger.info("[process][Save notify info object [{}] into database]", info.getId());
         notifyRepository.save(info);
     }
 }

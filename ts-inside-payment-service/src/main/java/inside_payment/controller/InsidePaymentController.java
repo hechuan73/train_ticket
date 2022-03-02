@@ -30,50 +30,50 @@ public class InsidePaymentController {
 
     @PostMapping(value = "/inside_payment")
     public HttpEntity pay(@RequestBody PaymentInfo info, @RequestHeader HttpHeaders headers) {
-        InsidePaymentController.LOGGER.info("[Inside Payment Service][Pay] Pay for: {}", info.getOrderId());
+        InsidePaymentController.LOGGER.info("[pay][Inside Payment Service.Pay][Pay for: {}]", info.getOrderId());
         return ok(service.pay(info, headers));
     }
 
     @PostMapping(value = "/inside_payment/account")
     public HttpEntity createAccount(@RequestBody AccountInfo info, @RequestHeader HttpHeaders headers) {
-        LOGGER.info("Create account, accountInfo: {}", info);
+        LOGGER.info("[createAccount][Create account][accountInfo: {}]", info);
         return ok(service.createAccount(info, headers));
     }
 
     @GetMapping(value = "/inside_payment/{userId}/{money}")
     public HttpEntity addMoney(@PathVariable String userId, @PathVariable
             String money, @RequestHeader HttpHeaders headers) {
-        LOGGER.info("add money, userId: {}, money: {}", userId, money);
+        LOGGER.info("[addMoney][add money][userId: {}, money: {}]", userId, money);
         return ok(service.addMoney(userId, money, headers));
     }
 
     @GetMapping(value = "/inside_payment/payment")
     public HttpEntity queryPayment(@RequestHeader HttpHeaders headers) {
-        LOGGER.info("query payment");
+        LOGGER.info("[queryPayment][query payment]");
         return ok(service.queryPayment(headers));
     }
 
     @GetMapping(value = "/inside_payment/account")
     public HttpEntity queryAccount(@RequestHeader HttpHeaders headers) {
-        LOGGER.info("query account");
+        LOGGER.info("[queryAccount][query account]");
         return ok(service.queryAccount(headers));
     }
 
     @GetMapping(value = "/inside_payment/drawback/{userId}/{money}")
     public HttpEntity drawBack(@PathVariable String userId, @PathVariable String money, @RequestHeader HttpHeaders headers) {
-        LOGGER.info("draw back payment, userId: {}, money: {}", userId, money);
+        LOGGER.info("[drawBack][draw back payment][userId: {}, money: {}]", userId, money);
         return ok(service.drawBack(userId, money, headers));
     }
 
     @PostMapping(value = "/inside_payment/difference")
     public HttpEntity payDifference(@RequestBody PaymentInfo info, @RequestHeader HttpHeaders headers) {
-        LOGGER.info("pay difference");
+        LOGGER.info("[payDifference][pay difference]");
         return ok(service.payDifference(info, headers));
     }
 
     @GetMapping(value = "/inside_payment/money")
     public HttpEntity queryAddMoney(@RequestHeader HttpHeaders headers) {
-        LOGGER.info("query add money");
+        LOGGER.info("[queryAddMoney][query add money]");
         return ok(service.queryAddMoney(headers));
     }
 

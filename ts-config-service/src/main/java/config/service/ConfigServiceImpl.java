@@ -29,12 +29,12 @@ public class ConfigServiceImpl implements ConfigService {
     public Response create(Config info, HttpHeaders headers) {
         if (repository.findByName(info.getName()) != null) {
             String result = config0 + info.getName() + " already exists.";
-            logger.warn(result);
+            logger.warn("[create][{} already exists][config info: {}]", config0, info.getName());
             return new Response<>(0, result, null);
         } else {
             Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
-            logger.info("Config: ({}) create success", info);
+            logger.info("[create][create success][Config: {}]", info);
             return new Response<>(1, "Create success", config);
         }
     }
@@ -48,7 +48,7 @@ public class ConfigServiceImpl implements ConfigService {
         } else {
             Config config = new Config(info.getName(), info.getValue(), info.getDescription());
             repository.save(config);
-            logger.info("Config: ({}) update success", config);
+            logger.info("[update][update success][Config: {}]", config);
             return new Response<>(1, "Update success", config);
         }
     }
@@ -58,10 +58,10 @@ public class ConfigServiceImpl implements ConfigService {
     public Response query(String name, HttpHeaders headers) {
         Config config = repository.findByName(name);
         if (config == null) {
-            logger.warn("Config does not exist, name: {}, message: {}", name, "No content");
+            logger.warn("[query][Config does not exist][name: {}, message: {}]", name, "No content");
             return new Response<>(0, "No content", null);
         } else {
-            logger.info("Query config {} success", name);
+            logger.info("[query][Query config success][config name: {}]", name);
             return new Response<>(1, "Success", config);
         }
     }
@@ -71,11 +71,11 @@ public class ConfigServiceImpl implements ConfigService {
         Config config = repository.findByName(name);
         if (config == null) {
             String result = config0 + name + " doesn't exist.";
-            logger.warn(result);
+            logger.warn("[delete][config doesn't exist][config name: {}]", name);
             return new Response<>(0, result, null);
         } else {
             repository.deleteByName(name);
-            logger.info("Config {} delete success", name);
+            logger.info("[delete][Config delete success][config name: {}]", name);
             return new Response<>(1, "Delete success", config);
         }
     }
@@ -85,10 +85,10 @@ public class ConfigServiceImpl implements ConfigService {
         List<Config> configList = repository.findAll();
 
         if (configList != null && !configList.isEmpty()) {
-            logger.info("Query all config success");
+            logger.info("[queryAll][Query all config success]");
             return new Response<>(1, "Find all  config success", configList);
         } else {
-            logger.warn("Query config: {}", "No content");
+            logger.warn("[queryAll][Query config, No content]");
             return new Response<>(0, "No content", null);
         }
     }

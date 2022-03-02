@@ -74,7 +74,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
     @Override
     public Response modifyContact(Contacts mci, HttpHeaders headers) {
         Response result;
-        LOGGER.info("MODIFY CONTACTS: " + mci.toString());
         HttpEntity requestEntity = new HttpEntity(mci, headers);
         ResponseEntity<Response> re = restTemplate.exchange(
                 contacts_service_url + "/api/v1/contactservice/contacts",
@@ -281,8 +280,6 @@ public class AdminBasicInfoServiceImpl implements AdminBasicInfoService {
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
-
-        AdminBasicInfoServiceImpl.LOGGER.info("[!!!!GetAllPriceResult] ");
         return re.getBody();
     }
 

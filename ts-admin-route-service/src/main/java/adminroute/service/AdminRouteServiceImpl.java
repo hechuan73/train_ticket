@@ -35,7 +35,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 requestEntity,
                 Response.class);
         if (re.getStatusCode() != HttpStatus.ACCEPTED) {
-            logger.error("Get routes error, response code: {}", re.getStatusCodeValue());
+            logger.error("[getAllRoutes][receive response][Get routes error][response code: {}]", re.getStatusCodeValue());
         }
         return re.getBody();
 
@@ -52,7 +52,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 new ParameterizedTypeReference<Response<Route>>() {
                 });
         if (re.getStatusCode() != HttpStatus.ACCEPTED) {
-            logger.error("Get status error, response code: {}", re.getStatusCodeValue());
+            logger.error("[createAndModifyRoute][receive response][Get status error][response code: {}]", re.getStatusCodeValue());
         }
         return re.getBody();
     }
@@ -67,7 +67,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
                 requestEntity,
                 Response.class);
         if (re.getStatusCode() != HttpStatus.ACCEPTED) {
-            logger.error("Delete error, response code: {}", re.getStatusCodeValue());
+            logger.error("[deleteRoute][response response][Delete error][response code: {}]", re.getStatusCodeValue());
         }
         return re.getBody();
 

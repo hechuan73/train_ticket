@@ -31,19 +31,19 @@ public class PaymentController {
 
     @PostMapping(path = "/payment")
     public HttpEntity pay(@RequestBody Payment info, @RequestHeader HttpHeaders headers) {
-        PaymentController.LOGGER.info("Pay, PaymentId: {}", info.getId());
+        PaymentController.LOGGER.info("[pay][Pay][PaymentId: {}]", info.getId());
         return ok(service.pay(info, headers));
     }
 
     @PostMapping(path = "/payment/money")
     public HttpEntity addMoney(@RequestBody Payment info, @RequestHeader HttpHeaders headers) {
-        PaymentController.LOGGER.info("Add money, PaymentId: {}", info.getId());
+        PaymentController.LOGGER.info("[addMoney][Add money][PaymentId: {}]", info.getId());
         return ok(service.addMoney(info, headers));
     }
 
     @GetMapping(path = "/payment")
     public HttpEntity query(@RequestHeader HttpHeaders headers) {
-        PaymentController.LOGGER.info("Query payment");
+        PaymentController.LOGGER.info("[query][Query payment]");
         return ok(service.query(headers));
     }
 }

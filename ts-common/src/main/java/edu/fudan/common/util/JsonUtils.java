@@ -29,7 +29,7 @@ public class JsonUtils {
             ObjectMapper objectMapper = new ObjectMapper();
             result = objectMapper.writeValueAsString(obj);
         } catch (IOException e) {
-            JsonUtils.LOGGER.error(e.getMessage());
+            JsonUtils.LOGGER.error("[object2Json][writeValueAsString][IOException: {}]", e.getMessage());
         }
         return result;
     }
@@ -61,9 +61,9 @@ public class JsonUtils {
             ObjectMapper objectMapper = new ObjectMapper();
             result = objectMapper.readValue(json, cls);
         } catch (NullPointerException e) {
-            JsonUtils.LOGGER.error(e.getMessage());
+            JsonUtils.LOGGER.error("[json2Object][objectMapper.readValue][NullPointerException: {}]",e.getMessage());
         } catch (IOException e) {
-            JsonUtils.LOGGER.error(e.getMessage());
+            JsonUtils.LOGGER.error("[json2Object][objectMapper.readValue][IOException: {}]",e.getMessage());
         }
 
         return result;

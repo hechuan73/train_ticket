@@ -32,32 +32,32 @@ public class PriceController {
     @GetMapping(value = "/prices/{routeId}/{trainType}")
     public HttpEntity query(@PathVariable String routeId, @PathVariable String trainType,
                             @RequestHeader HttpHeaders headers) {
-        PriceController.LOGGER.info("Query price, RouteId: {}, TrainType: {}",routeId,trainType);
+        PriceController.LOGGER.info("[findByRouteIdAndTrainType][Query price][RouteId: {}, TrainType: {}]",routeId,trainType);
         return ok(service.findByRouteIdAndTrainType(routeId, trainType, headers));
     }
 
     @GetMapping(value = "/prices")
     public HttpEntity queryAll(@RequestHeader HttpHeaders headers) {
-        PriceController.LOGGER.info("Query all prices");
+        PriceController.LOGGER.info("[findAllPriceConfig][Query all prices]");
         return ok(service.findAllPriceConfig(headers));
     }
 
     @PostMapping(value = "/prices")
     public HttpEntity<?> create(@RequestBody PriceConfig info,
                                 @RequestHeader HttpHeaders headers) {
-        PriceController.LOGGER.info("Create price, RouteId: {}, TrainType: {}",info.getRouteId(),info.getTrainType());
+        PriceController.LOGGER.info("[createNewPriceConfig][Create price][RouteId: {}, TrainType: {}]",info.getRouteId(),info.getTrainType());
         return new ResponseEntity<>(service.createNewPriceConfig(info, headers), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/prices")
     public HttpEntity delete(@RequestBody PriceConfig info, @RequestHeader HttpHeaders headers) {
-        PriceController.LOGGER.info("Delete price, PriceConfigId: {}",info.getId());
+        PriceController.LOGGER.info("[deletePriceConfig][Delete price][PriceConfigId: {}]",info.getId());
         return ok(service.deletePriceConfig(info, headers));
     }
 
     @PutMapping(value = "/prices")
     public HttpEntity update(@RequestBody PriceConfig info, @RequestHeader HttpHeaders headers) {
-        PriceController.LOGGER.info("Update price, PriceConfigId: {}",info.getId());
+        PriceController.LOGGER.info("[updatePriceConfig][Update price][PriceConfigId: {}]",info.getId());
         return ok(service.updatePriceConfig(info, headers));
     }
 }

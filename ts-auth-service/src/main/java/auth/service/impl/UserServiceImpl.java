@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createDefaultAuthUser(AuthDto dto) {
-        LOGGER.info("Register User Info is:  " + dto.getUserName());
+        LOGGER.info("[createDefaultAuthUser][Register User Info][AuthDto name: {}]", dto.getUserName());
         User user = User.builder()
                 .userId(UUID.fromString(dto.getUserId()))
                 .username(dto.getUserName())
@@ -59,14 +59,14 @@ public class UserServiceImpl implements UserService {
         try {
             checkUserCreateInfo(user);
         } catch (UserOperationException e) {
-            LOGGER.error("Create default auth user error, message: {}", e.getMessage());
+            LOGGER.error("[createDefaultAuthUser][Create default auth user][UserOperationException][message: {}]", e.getMessage());
         }
         return userRepository.save(user);
     }
 
     @Override
     public Response deleteByUserId(UUID userId, HttpHeaders headers) {
-        LOGGER.info("DELETE USER :" + userId);
+        LOGGER.info("[deleteByUserId][DELETE USER][user id: {}]", userId);
         userRepository.deleteByUserId(userId);
         return new Response(1, "DELETE USER SUCCESS", null);
     }
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
      * @param user
      */
     private void checkUserCreateInfo(User user) throws UserOperationException {
-        LOGGER.info("Check user create info, userId: {}, userName: {}", user.getUserId(), user.getUsername());
+        LOGGER.info("[checkUserCreateInfo][Check user create info][userId: {}, userName: {}]", user.getUserId(), user.getUsername());
         List<String> infos = new ArrayList<>();
 
         if (null == user.getUsername() || "".equals(user.getUsername())) {
