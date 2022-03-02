@@ -14,3 +14,6 @@ server:
 
 swagger:
   controllerPackage: consign.controller
+
+consign-price-service:
+  url: http://${CONSIGN_PRICE_SERVICE_HOST:ts-consign-price-service}:${CONSIGN_PRICE_SERVICE_PORT:16110}

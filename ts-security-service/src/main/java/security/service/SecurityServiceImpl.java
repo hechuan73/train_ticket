@@ -4,6 +4,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,11 @@ public class SecurityServiceImpl implements SecurityService {
     RestTemplate restTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
+
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
 
     String success = "Success";
 
@@ -115,7 +121,7 @@ public class SecurityServiceImpl implements SecurityService {
     private OrderSecurity getSecurityOrderInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
+                order_service_url + "/api/v1/orderservice/order/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<OrderSecurity>>() {
@@ -129,7 +135,7 @@ public class SecurityServiceImpl implements SecurityService {
     private OrderSecurity getSecurityOrderOtherInfoFromOrder(Date checkDate, String accountId, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<OrderSecurity>> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
+                order_other_service_url + "/api/v1/orderOtherService/orderOther/security/" + checkDate + "/" + accountId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<OrderSecurity>>() {

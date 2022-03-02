@@ -7,6 +7,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,9 @@ public class ConsignServiceImpl implements ConsignService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsignServiceImpl.class);
 
+    @Value("${consign-price-service.url}")
+    String consign_price_service_url;
+
     @Override
     public Response insertConsignRecord(Consign consignRequest, HttpHeaders headers) {
         ConsignServiceImpl.LOGGER.info("[insertConsignRecord][Insert Start][consignRequest.getOrderId: {}]", consignRequest.getOrderId());
@@ -52,7 +56,7 @@ public class ConsignServiceImpl implements ConsignService {
         //get the price
         HttpEntity requestEntity = new HttpEntity(null, headers);
         ResponseEntity<Response<Double>> re = restTemplate.exchange(
-                "http://ts-consign-price-service:16110/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
+                consign_price_service_url + "/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Double>>() {
@@ -84,7 +88,7 @@ public class ConsignServiceImpl implements ConsignService {
         if (originalRecord.getWeight() != consignRequest.getWeight()) {
             HttpEntity requestEntity = new HttpEntity<>(null, headers);
             ResponseEntity<Response<Double>> re = restTemplate.exchange(
-                    "http://ts-consign-price-service:16110/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
+                    consign_price_service_url + "/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<Double>>() {

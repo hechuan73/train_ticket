@@ -4,6 +4,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,17 @@ public class SeatServiceImpl implements SeatService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SeatServiceImpl.class);
 
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
+    @Value("${travel-service.url}")
+    String travel_service_url;
+    @Value("${travel2-service.url}")
+    String travel2_service_url;
+    @Value("${config-service.url}")
+    String config_service_url;
+
     @Override
     public Response distributeSeat(Seat seatRequest, HttpHeaders headers) {
         Response<Route> routeResult;
@@ -46,7 +58,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the microservice to query all the station information for the train
             HttpEntity requestEntity = new HttpEntity(null);
             re = restTemplate.exchange(
-                    "http://ts-travel-service:12346/api/v1/travelservice/routes/" + trainNumber,
+                    travel_service_url + "/api/v1/travelservice/routes/" + trainNumber,
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<Route>>() {
@@ -57,7 +69,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the microservice to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
             re3 = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/tickets",
+                    order_service_url + "/api/v1/orderservice/order/tickets",
                     HttpMethod.POST,
                     requestEntity,
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
@@ -68,7 +80,7 @@ public class SeatServiceImpl implements SeatService {
             //Calls the microservice to query the total number of seats specified for that vehicle
             requestEntity = new HttpEntity(null);
             re2 = restTemplate.exchange(
-                    "http://ts-travel-service:12346/api/v1/travelservice/train_types/" + seatRequest.getTrainNumber(),
+                    travel_service_url + "/api/v1/travelservice/train_types/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<TrainType>>() {
@@ -82,7 +94,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
             re = restTemplate.exchange(
-                    "http://ts-travel2-service:16346/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
+                    travel2_service_url + "/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<Route>>() {
@@ -93,7 +105,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the microservice to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
             re3 = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/tickets",
+                    order_other_service_url + "/api/v1/orderOtherService/orderOther/tickets",
                     HttpMethod.POST,
                     requestEntity,
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
@@ -104,7 +116,7 @@ public class SeatServiceImpl implements SeatService {
             //Calls the microservice to query the total number of seats specified for that vehicle
             requestEntity = new HttpEntity(null);
             re2 = restTemplate.exchange(
-                    "http://ts-travel2-service:16346/api/v1/travel2service/train_types/" + seatRequest.getTrainNumber(),
+                    travel2_service_url + "/api/v1/travel2service/train_types/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<TrainType>>() {
@@ -187,7 +199,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
             re = restTemplate.exchange(
-                    "http://ts-travel-service:12346/api/v1/travelservice/routes/" + trainNumber,
+                    travel_service_url + "/api/v1/travelservice/routes/" + trainNumber,
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<Route>>() {
@@ -198,7 +210,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the micro service to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
             re3 = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/tickets",
+                    order_service_url + "/api/v1/orderservice/order/tickets",
                     HttpMethod.POST,
                     requestEntity,
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
@@ -210,7 +222,7 @@ public class SeatServiceImpl implements SeatService {
             //Calls the microservice to query the total number of seats specified for that vehicle
             requestEntity = new HttpEntity(null);
             re2 = restTemplate.exchange(
-                    "http://ts-travel-service:12346/api/v1/travelservice/train_types/" + seatRequest.getTrainNumber(),
+                    travel_service_url + "/api/v1/travelservice/train_types/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<TrainType>>() {
@@ -225,7 +237,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
             re = restTemplate.exchange(
-                    "http://ts-travel2-service:16346/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
+                    travel2_service_url + "/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<Route>>() {
@@ -236,7 +248,7 @@ public class SeatServiceImpl implements SeatService {
             //Call the micro service to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
             re3 = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/tickets",
+                    order_other_service_url + "/api/v1/orderOtherService/orderOther/tickets",
                     HttpMethod.POST,
                     requestEntity,
                     new ParameterizedTypeReference<Response<LeftTicketInfo>>() {
@@ -248,7 +260,7 @@ public class SeatServiceImpl implements SeatService {
             //Calls the microservice to query the total number of seats specified for that vehicle
             requestEntity = new HttpEntity(null);
             re2 = restTemplate.exchange(
-                    "http://ts-travel2-service:16346/api/v1/travel2service/train_types/" + seatRequest.getTrainNumber(),
+                    travel2_service_url + "/api/v1/travel2service/train_types/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
                     requestEntity,
                     new ParameterizedTypeReference<Response<TrainType>>() {
@@ -306,7 +318,7 @@ public class SeatServiceImpl implements SeatService {
         String configName = "DirectTicketAllocationProportion";
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<Config>> re = restTemplate.exchange(
-                "http://ts-config-service:15679/api/v1/configservice/configs/" + configName,
+                config_service_url + "/api/v1/configservice/configs/" + configName,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Config>>() {

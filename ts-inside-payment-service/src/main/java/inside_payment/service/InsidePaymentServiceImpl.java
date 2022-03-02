@@ -7,6 +7,7 @@ import inside_payment.repository.PaymentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,13 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InsidePaymentServiceImpl.class);
 
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
+    @Value("${payment-service.url}")
+    String payment_service_url;
+
     @Override
     public Response pay(PaymentInfo info, HttpHeaders headers) {
 
@@ -42,9 +50,9 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
         String requestOrderURL = "";
         if (info.getTripId().startsWith("G") || info.getTripId().startsWith("D")) {
-            requestOrderURL =  "http://ts-order-service:12031/api/v1/orderservice/order/" + info.getOrderId();
+            requestOrderURL =  order_service_url + "/api/v1/orderservice/order/" + info.getOrderId();
         } else {
-            requestOrderURL = "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + info.getOrderId();
+            requestOrderURL = order_other_service_url + "/api/v1/orderOtherService/orderOther/" + info.getOrderId();
         }
         HttpEntity requestGetOrderResults = new HttpEntity(headers);
         ResponseEntity<Response<Order>> reGetOrderResults = restTemplate.exchange(
@@ -98,7 +106,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
                 HttpEntity requestEntityOutsidePaySuccess = new HttpEntity(outsidePaymentInfo, headers);
                 ResponseEntity<Response> reOutsidePaySuccess = restTemplate.exchange(
-                        "http://ts-payment-service:19001/api/v1/paymentservice/payment",
+                        payment_service_url + "/api/v1/paymentservice/payment",
                         HttpMethod.POST,
                         requestEntityOutsidePaySuccess,
                         Response.class);
@@ -284,7 +292,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
             HttpEntity requestEntityOutsidePaySuccess = new HttpEntity(outsidePaymentInfo, headers);
             ResponseEntity<Response> reOutsidePaySuccess = restTemplate.exchange(
-                    "http://ts-payment-service:19001/api/v1/paymentservice/payment",
+                    payment_service_url + "/api/v1/paymentservice/payment",
                     HttpMethod.POST,
                     requestEntityOutsidePaySuccess,
                     Response.class);
@@ -325,7 +333,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
 
             HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(headers);
             ResponseEntity<Response> reModifyOrderStatusResult = restTemplate.exchange(
-                    "http://ts-order-service:12031/api/v1/orderservice/order/status/" + orderId + "/" + orderStatus,
+                    order_service_url + "/api/v1/orderservice/order/status/" + orderId + "/" + orderStatus,
                     HttpMethod.GET,
                     requestEntityModifyOrderStatusResult,
                     Response.class);
@@ -334,7 +342,7 @@ public class InsidePaymentServiceImpl implements InsidePaymentService {
         } else {
             HttpEntity requestEntityModifyOrderStatusResult = new HttpEntity(headers);
             ResponseEntity<Response> reModifyOrderStatusResult = restTemplate.exchange(
-                    "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + orderStatus,
+                    order_other_service_url + "/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + orderStatus,
                     HttpMethod.GET,
                     requestEntityModifyOrderStatusResult,
                     Response.class);

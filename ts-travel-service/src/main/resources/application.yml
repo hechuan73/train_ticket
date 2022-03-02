@@ -14,3 +14,18 @@ spring:
       port: 27017
 swagger:
   controllerPackage: travel.controller
+
+train-service:
+  url: http://${TRAIN_SERVICE_HOST:ts-train-service}:${TRAIN_SERVICE_PORT:14567}
+
+order-service:
+  url: http://${ORDER_SERVICE_HOST:ts-order-service}:${ORDER_SERVICE_PORT:12031}
+
+route-service:
+  url: http://${ROUTE_SERVICE_HOST:ts-route-service}:${ROUTE_SERVICE_PORT:11178}
+
+basic-service:
+  url: http://${BASIC_SERVICE_HOST:ts-basic-service}:${BASIC_SERVICE_PORT:15680}
+
+seat-service:
+  url: http://${SEAT_SERVICE_HOST:ts-seat-service}:${SEAT_SERVICE_PORT:18898}

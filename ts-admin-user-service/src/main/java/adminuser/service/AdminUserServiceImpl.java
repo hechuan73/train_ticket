@@ -6,6 +6,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     private RestTemplate restTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminUserServiceImpl.class);
-    private static final String USER_SERVICE_IP_URI = "http://ts-user-service:12342/api/v1/userservice/users";
+    @Value("${user-service.url}")
+    String user_service_url;
+    private final String USER_SERVICE_IP_URI = user_service_url + "/api/v1/userservice/users";
 
 
     @Override

@@ -5,6 +5,7 @@ import execute.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +26,11 @@ public class ExecuteServiceImpl implements ExecuteService {
     String orderStatusWrong = "Order Status Wrong";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteServiceImpl.class);
+
+    @Value("${order-service.url}")
+    String order_service_url;
+    @Value("${order-other-service.url}")
+    String order_other_service_url;
 
     @Override
     public Response ticketExecute(String orderId, HttpHeaders headers) {
@@ -127,7 +133,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         headers = null;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order/status/" + orderId + "/" + status,
+                order_service_url + "/api/v1/orderservice/order/status/" + orderId + "/" + status,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -140,7 +146,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         headers = null;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + status,
+                order_other_service_url + "/api/v1/orderOtherService/orderOther/status/" + orderId + "/" + status,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -152,7 +158,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         headers = null;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
-                "http://ts-order-service:12031/api/v1/orderservice/order/" + orderId,
+                order_service_url + "/api/v1/orderservice/order/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {
@@ -165,7 +171,7 @@ public class ExecuteServiceImpl implements ExecuteService {
         headers = null;
         HttpEntity requestEntity = new HttpEntity(headers);
         ResponseEntity<Response<Order>> re = restTemplate.exchange(
-                "http://ts-order-other-service:12032/api/v1/orderOtherService/orderOther/" + orderId,
+                order_other_service_url + "/api/v1/orderOtherService/orderOther/" + orderId,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Order>>() {

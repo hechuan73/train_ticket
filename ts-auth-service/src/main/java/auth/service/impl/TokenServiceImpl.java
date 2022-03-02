@@ -12,6 +12,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -44,6 +45,9 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${verification-code-service.url}")
+    String verification_code_service_url;
+
     @Override
     public Response getToken(BasicAuthDto dto, HttpHeaders headers) throws UserOperationException {
         String username = dto.getUsername();
@@ -54,7 +58,7 @@ public class TokenServiceImpl implements TokenService {
         if (!StringUtils.isEmpty(verifyCode)) {
             HttpEntity requestEntity = new HttpEntity(headers);
             ResponseEntity<Boolean> re = restTemplate.exchange(
-                    "http://ts-verification-code-service:15678/api/v1/verifycode/verify/" + verifyCode,
+                     verification_code_service_url + "/api/v1/verifycode/verify/" + verifyCode,
                     HttpMethod.GET,
                     requestEntity,
                     Boolean.class);

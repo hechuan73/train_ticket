@@ -4,6 +4,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,19 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private RestTemplate restTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TravelPlanServiceImpl.class);
+
+    @Value("${station-service.url}")
+    String station_service_url;
+    @Value("${basic-service.url}")
+    String basic_service_url;
+    @Value("${seat-service.url}")
+    String seat_service_url;
+    @Value("${travel-service.url}")
+    String travel_service_url;
+    @Value("${travel2-service.url}")
+    String travel2_service_url;
+    @Value("${route-plan-service.url}")
+    String route_plan_service_url;
 
     String success = "Success";
     String cannotFind = "Cannot Find";
@@ -214,7 +228,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
         TravelPlanServiceImpl.LOGGER.info("[getRestTicketNumber][Seat Request][Seat Request is: {}]", seatRequest.toString());
         HttpEntity requestEntity = new HttpEntity(seatRequest, null);
         ResponseEntity<Response<Integer>> re = restTemplate.exchange(
-                "http://ts-seat-service:18898/api/v1/seatservice/seats/left_tickets",
+                seat_service_url + "/api/v1/seatservice/seats/left_tickets",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<Integer>>() {
@@ -226,7 +240,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private ArrayList<RoutePlanResultUnit> getRoutePlanResultCheapest(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, null);
         ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
-                "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/cheapestRoute",
+                route_plan_service_url + "/api/v1/routeplanservice/routePlan/cheapestRoute",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
@@ -237,7 +251,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private ArrayList<RoutePlanResultUnit> getRoutePlanResultQuickest(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, null);
         ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
-                "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/quickestRoute",
+                route_plan_service_url + "/api/v1/routeplanservice/routePlan/quickestRoute",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
@@ -249,7 +263,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private ArrayList<RoutePlanResultUnit> getRoutePlanResultMinStation(RoutePlanInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, null);
         ResponseEntity<Response<ArrayList<RoutePlanResultUnit>>> re = restTemplate.exchange(
-                "http://ts-route-plan-service:14578/api/v1/routeplanservice/routePlan/minStopStations",
+                route_plan_service_url + "/api/v1/routeplanservice/routePlan/minStopStations",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<RoutePlanResultUnit>>>() {
@@ -260,7 +274,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private List<TripResponse> tripsFromHighSpeed(TripInfo info, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(info, null);
         ResponseEntity<Response<List<TripResponse>>> re = restTemplate.exchange(
-                "http://ts-travel-service:12346/api/v1/travelservice/trips/left",
+                travel_service_url + "/api/v1/travelservice/trips/left",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<TripResponse>>>() {
@@ -272,7 +286,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 
         HttpEntity requestEntity = new HttpEntity(info, null);
         ResponseEntity<Response<ArrayList<TripResponse>>> re = restTemplate.exchange(
-                "http://ts-travel2-service:16346/api/v1/travel2service/trips/left",
+                travel2_service_url + "/api/v1/travel2service/trips/left",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<ArrayList<TripResponse>>>() {
@@ -285,7 +299,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
 
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response<String>> re = restTemplate.exchange(
-                "http://ts-basic-service:15680/api/v1/basicservice/basic/" + stationName,
+                basic_service_url + "/api/v1/basicservice/basic/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Response<String>>() {
@@ -297,7 +311,7 @@ public class TravelPlanServiceImpl implements TravelPlanService {
     private List<String> transferStationIdToStationName(ArrayList<String> stations, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(stations, null);
         ResponseEntity<Response<List<String>>> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations/namelist",
+                station_service_url + "/api/v1/stationservice/stations/namelist",
                 HttpMethod.POST,
                 requestEntity,
                 new ParameterizedTypeReference<Response<List<String>>>() {

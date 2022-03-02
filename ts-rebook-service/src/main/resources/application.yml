@@ -26,3 +26,24 @@ swagger:
 #          destination: ts-rebook-service-queue-output
 #          contentType: text/plain
 #          binder: rabbit
+
+station-service:
+  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}
+
+order-service:
+  url: http://${ORDER_SERVICE_HOST:ts-order-service}:${ORDER_SERVICE_PORT:12031}
+
+order-other-service:
+  url: http://${ORDER_OTHER_SERVICE_HOST:ts-order-other-service}:${ORDER_OTHER_SERVICE_PORT:12032}
+
+travel-service:
+  url: http://${TRAVEL_SERVICE_HOST:ts-travel-service}:${TRAVEL_SERVICE_PORT:12346}
+
+travel2-service:
+  url: http://${TRAVEL2_SERVICE_HOST:ts-travel2-service}:${TRAVEL2_SERVICE_PORT:16346}
+
+inside-payment-service:
+  url: http://${INSIDE_PAYMENT_SERVICE_HOST:ts-inside-payment-service}:${INSIDE_PAYMENT_SERVICE_PORT:18673}
+
+seat-service:
+  url: http://${SEAT_SERVICE_HOST:ts-seat-service}:${SEAT_SERVICE_PORT:18898}

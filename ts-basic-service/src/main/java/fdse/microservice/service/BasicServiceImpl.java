@@ -6,6 +6,7 @@ import fdse.microservice.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +26,15 @@ public class BasicServiceImpl implements BasicService {
     private RestTemplate restTemplate;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BasicServiceImpl.class);
+
+    @Value("${station-service.url}")
+    String station_service_url;
+    @Value("${train-service.url}")
+    String train_service_url;
+    @Value("${price-service.url}")
+    String price_service_url;
+    @Value("${route-service.url}")
+    String route_service_url;
 
     @Override
     public Response queryForTravel(Travel info, HttpHeaders headers) {
@@ -110,7 +120,7 @@ public class BasicServiceImpl implements BasicService {
         BasicServiceImpl.LOGGER.info("[queryForStationId][Query For Station Id][stationName: {}]", stationName);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
+                station_service_url + "/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -126,7 +136,7 @@ public class BasicServiceImpl implements BasicService {
         BasicServiceImpl.LOGGER.info("[checkStationExists][Check Station Exists][stationName: {}]", stationName);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-station-service:12345/api/v1/stationservice/stations/id/" + stationName,
+                station_service_url + "/api/v1/stationservice/stations/id/" + stationName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -139,7 +149,7 @@ public class BasicServiceImpl implements BasicService {
         BasicServiceImpl.LOGGER.info("[queryTrainType][Query Train Type][Train Type id: {}]", trainTypeId);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains/" + trainTypeId,
+                train_service_url + "/api/v1/trainservice/trains/" + trainTypeId,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -152,7 +162,7 @@ public class BasicServiceImpl implements BasicService {
         BasicServiceImpl.LOGGER.info("[getRouteByRouteId][Get Route By Id][Route ID：{}]", routeId);
         HttpEntity requestEntity = new HttpEntity(null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-route-service:11178/api/v1/routeservice/routes/" + routeId,
+                route_service_url + "/api/v1/routeservice/routes/" + routeId,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -170,7 +180,7 @@ public class BasicServiceImpl implements BasicService {
         BasicServiceImpl.LOGGER.info("[queryPriceConfigByRouteIdAndTrainType][Query For Price Config][RouteId: {} ,TrainType: {}]", routeId, trainType);
         HttpEntity requestEntity = new HttpEntity(null, null);
         ResponseEntity<Response> re = restTemplate.exchange(
-                "http://ts-price-service:16579/api/v1/priceservice/prices/" + routeId + "/" + trainType,
+                price_service_url + "/api/v1/priceservice/prices/" + routeId + "/" + trainType,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);

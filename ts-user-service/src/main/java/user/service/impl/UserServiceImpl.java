@@ -4,6 +4,7 @@ import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private RestTemplate restTemplate = new RestTemplate();
-    private static final String AUTH_SERVICE_URI = "http://ts-auth-service:12340/api/v1";
+
+    @Value("${auth-service.url}")
+    String auth_service_url;
+    private final String AUTH_SERVICE_URI = auth_service_url + "/api/v1";
 
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
@@ -70,7 +74,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[createDefaultAuthUser][CALL TO AUTH][AuthDto: {}]", dto.toString());
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<AuthDto> entity = new HttpEntity<>(dto, null);
-        ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange("http://ts-auth-service:12340/api/v1/auth",
+        ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange(auth_service_url + "/api/v1/auth",
                 HttpMethod.POST,
                 entity,
                 new ParameterizedTypeReference<Response<AuthDto>>() {

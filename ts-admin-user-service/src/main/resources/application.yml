@@ -7,3 +7,6 @@ spring:
 
 swagger:
   controllerPackage: adminuser.controller
+
+user-service:
+  url: http://${USER_SERVICE_HOST:ts-user-service}:${USER_SERVICE_PORT:12342}

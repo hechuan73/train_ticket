@@ -11,3 +11,6 @@ spring:
 
 swagger:
   controllerPackage: auth.controller
+
+verification-code-service:
+  url: http://${VERIFICATION_CODE_SERVICE_HOST:ts-verification-code-service}:${VERIFICATION_CODE_SERVICE_PORT:15678}

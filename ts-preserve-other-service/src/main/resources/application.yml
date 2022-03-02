@@ -20,3 +20,36 @@ spring:
 
 swagger:
   controllerPackage: preserveOther.controller
+
+station-service:
+  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}
+
+contacts-service:
+  url: http://${CONTACTS_SERVICE_HOST:ts-contacts-service}:${CONTACTS_SERVICE_PORT:12347}
+
+order-other-service:
+  url: http://${ORDER_OTHER_SERVICE_HOST:ts-order-other-service}:${ORDER_OTHER_SERVICE_PORT:12032}
+
+travel2-service:
+  url: http://${TRAVEL2_SERVICE_HOST:ts-travel2-service}:${TRAVEL2_SERVICE_PORT:16346}
+
+user-service:
+  url: http://${USER_SERVICE_HOST:ts-user-service}:${USER_SERVICE_PORT:12342}
+
+food-service:
+  url: http://${FOOD_SERVICE_HOST:ts-food-service}:${FOOD_SERVICE_PORT:18856}
+
+basic-service:
+  url: http://${BASIC_SERVICE_HOST:ts-basic-service}:${BASIC_SERVICE_PORT:15680}
+
+seat-service:
+  url: http://${SEAT_SERVICE_HOST:ts-seat-service}:${SEAT_SERVICE_PORT:18898}
+
+assurance-service:
+  url: http://${ASSURANCE_SERVICE_HOST:ts-assurance-service}:${ASSURANCE_SERVICE_PORT:18888}
+
+security-service:
+  url: http://${SECURITY_SERVICE_HOST:ts-security-service}:${SECURITY_SERVICE_PORT:11188}
+
+consign-service:
+  url: http://${CONSIGN_SERVICE_HOST:ts-consign-service}:${CONSIGN_SERVICE_PORT:16111}

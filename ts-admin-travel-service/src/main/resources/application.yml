@@ -7,3 +7,9 @@ spring:
 
 swagger:
   controllerPackage: admintravel.controller
+
+travel-service:
+  url: http://${TRAVEL_SERVICE_HOST:ts-travel-service}:${TRAVEL_SERVICE_PORT:12346}
+
+travel2-service:
+  url: http://${TRAVEL2_SERVICE_HOST:ts-travel2-service}:${TRAVEL2_SERVICE_PORT:16346}
