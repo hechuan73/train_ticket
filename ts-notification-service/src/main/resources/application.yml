@@ -3,6 +3,10 @@ server:
   port: 17853  # HTTP (Tomcat) port
 
 spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-notification-service
   mail:
