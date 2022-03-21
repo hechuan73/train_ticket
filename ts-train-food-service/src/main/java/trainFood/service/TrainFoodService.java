@@ -1,8 +1,8 @@
-package trainfood.service;
+package trainFood.service;
 
 import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
-import trainfood.entity.*;
+import trainFood.entity.*;
 
 public interface TrainFoodService {
     TrainFood createTrainFood(TrainFood tf, HttpHeaders headers);

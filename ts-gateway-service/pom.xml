@@ -5,12 +5,29 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fdse.microservice</groupId>
-    <artifactId>ts-trainfood-service</artifactId>
+    <artifactId>ts-gateway-service</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>ts-gateway-service</name>
+
+    <parent>
+        <groupId>org.services</groupId>
+        <artifactId>ts-service</artifactId>
+        <version>0.1.0</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
+            <groupId>org.services</groupId>
+            <artifactId>ts-common</artifactId>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -28,26 +45,19 @@
             <version>2.0.0.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.services</groupId>
-            <artifactId>ts-common</artifactId>
-            <version>0.1.0</version>
-            <scope>compile</scope>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <version>3.1.0</version>
         </dependency>
     </dependencies>
-    <packaging>jar</packaging>
 
-    <name>ts-trainfood-service</name>
-
-    <parent>
-        <groupId>org.services</groupId>
-        <artifactId>ts-service</artifactId>
-        <version>0.1.0</version>
-        <relativePath>../</relativePath>
-    </parent>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -1,4 +1,4 @@
-package trainfood.service;
+package trainFood.service;
 
 import edu.fudan.common.util.Response;
 import org.slf4j.Logger;
@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import trainfood.entity.*;
-import trainfood.repository.TrainFoodRepository;
+import trainFood.entity.*;
+import trainFood.repository.TrainFoodRepository;
 
 import java.util.List;
 

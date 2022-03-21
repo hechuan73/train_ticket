@@ -1,11 +1,11 @@
-package trainfood.repository;
+package trainFood.repository;
 
 
 import food.entity.*;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import trainfood.entity.TrainFood;
+import trainFood.entity.TrainFood;
 
 import java.util.List;
 import java.util.UUID;

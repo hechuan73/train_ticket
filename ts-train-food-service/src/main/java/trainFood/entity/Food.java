@@ -1,4 +1,4 @@
-package trainfood.entity;
+package trainFood.entity;
 
 
 import lombok.Data;

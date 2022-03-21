@@ -1,14 +1,13 @@
-package trainfood.init;
+package trainFood.init;
 
-import trainfood.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import trainfood.entity.Food;
-import trainfood.entity.TrainFood;
-import trainfood.service.TrainFoodService;
+import trainFood.entity.Food;
+import trainFood.entity.TrainFood;
+import trainFood.service.TrainFoodService;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

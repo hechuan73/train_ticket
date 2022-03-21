@@ -1,4 +1,4 @@
-package trainfood.config;
+package trainFood.config;
 
 import edu.fudan.common.security.jwt.JWTFilter;
 import org.springframework.context.annotation.Bean;
