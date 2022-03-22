@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -117,9 +118,9 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public Response queryById(String stationId, HttpHeaders headers) {
-        Station station = repository.findById(stationId);
+        Optional<Station> station = repository.findById(stationId);
         if (station != null) {
-            return new Response<>(1, success, station.getName());
+            return new Response<>(1, success, station.get().getName());
         } else {
             StationServiceImpl.LOGGER.error("[queryById][Find station name error][Station not found][StationId: {}]",stationId);
             return new Response<>(0, "No that stationId", stationId);
@@ -130,7 +131,8 @@ public class StationServiceImpl implements StationService {
     public Response queryByIdBatch(List<String> idList, HttpHeaders headers) {
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < idList.size(); i++) {
-            Station station = repository.findById(idList.get(i));
+            Optional<Station> stationOld = repository.findById(idList.get(i));
+            Station station=stationOld.get();
             if (station != null) {
                 result.add(station.getName());
             }
