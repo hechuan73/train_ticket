@@ -92,7 +92,7 @@ public class AssuranceServiceImplTest {
     public void testCreate3() {
         UUID orderId = UUID.randomUUID();
         Mockito.when(assuranceRepository.findByOrderId(orderId)).thenReturn(null);
-        Mockito.when(assuranceRepository.save(Mockito.anyCollection())).thenReturn(null);
+        Mockito.when(assuranceRepository.save(Mockito.any(Assurance.class))).thenReturn(null);
         Response result = assuranceServiceImpl.create(1, orderId.toString(), headers);
         Assert.assertNotNull(result);
     }
