@@ -5,11 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import train.entity.TrainType;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface TrainTypeRepository extends MongoRepository<TrainType,String> {
 
-    TrainType findById(String id);
+    Optional<TrainType> findById(String id);
     @Override
     List<TrainType> findAll();
     void deleteById(String id);

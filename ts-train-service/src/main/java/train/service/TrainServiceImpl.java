@@ -39,7 +39,7 @@ public class TrainServiceImpl implements TrainService {
             TrainServiceImpl.LOGGER.error("[retrieve][Retrieve train error][Train not found][TrainTypeId: {}]",id);
             return null;
         } else {
-            return repository.findById(id);
+            return repository.findById(id).get();
         }
     }
 
