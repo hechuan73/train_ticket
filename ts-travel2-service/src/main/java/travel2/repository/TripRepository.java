@@ -1,5 +1,6 @@
 package travel2.repository;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 import travel2.entity.Trip;
 import travel2.entity.TripId;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 /**
  * @author fdse
  */
-public interface TripRepository extends CrudRepository<Trip,TripId> {
+public interface TripRepository extends MongoRepository<Trip,TripId> {
 
     Trip findByTripId(TripId tripId);
 

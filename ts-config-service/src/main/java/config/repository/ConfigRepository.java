@@ -1,6 +1,7 @@
 package config.repository;
 
 import config.entity.Config;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * @author fdse
  */
-public interface ConfigRepository extends CrudRepository<Config, String> {
+public interface ConfigRepository extends MongoRepository<Config, String> {
 
     /**
      * find by name
