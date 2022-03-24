@@ -1141,7 +1141,7 @@ spec:
             - name: NACOS_REPLICAS
               value: "3"
             - name: MYSQL_SERVICE_HOST
-              value: "10.176.122.77"
+              value: "10.176.122.1"
             - name: MYSQL_SERVICE_DB_NAME
               value: "nacos"
             - name: MYSQL_SERVICE_PORT
@@ -1149,7 +1149,7 @@ spec:
             - name: MYSQL_SERVICE_USER
               value: "root"
             - name: MYSQL_SERVICE_PASSWORD
-              value: "123456"
+              value: "Abcd1234#"
             - name: NACOS_SERVER_PORT
               value: "8848"
             - name: PREFER_HOST_MODE
