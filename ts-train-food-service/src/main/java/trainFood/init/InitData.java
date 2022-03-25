@@ -26,7 +26,7 @@ public class InitData implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        BufferedReader br2 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/trainfood.txt")));
+        BufferedReader br2 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("../../../resources/trainfood.txt")));
         try{
             String line2 = br2.readLine();
             while( line2 != null ){
