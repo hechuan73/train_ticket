@@ -107,23 +107,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-order-mongo
+  name: ts-order-mysql
 spec:
   selector:
     matchLabels:
-      app: ts-order-mongo
+      app: ts-order-mysql
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-order-mongo
+        app: ts-order-mysql
     spec:
       containers:
-        - name: ts-order-mongo
-          image: mongo
+        - name: ts-order-mysql
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-order-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -134,23 +139,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-order-other-mongo
+  name: ts-order-other-mysql
 spec:
   selector:
     matchLabels:
-      app: ts-order-other-mongo
+      app: ts-order-other-mysql
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-order-other-mongo
+        app: ts-order-other-mysql
     spec:
       containers:
-        - name: ts-order-other-mongo
-          image: mongo
+        - name: ts-order-other-mysql
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-order-other-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -161,23 +171,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-config-mongo
+  name: ts-config-mysql
 spec:
   selector:
     matchLabels:
-      app: ts-config-mongo
+      app: ts-config-mysql
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-config-mongo
+        app: ts-config-mysql
     spec:
       containers:
-        - name: ts-config-mongo
-          image: mongo
+        - name: ts-config-mysql
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-config-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -188,23 +203,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-station-mongo
+  name: ts-station-mysql
 spec:
   selector:
     matchLabels:
-      app: ts-station-mongo
+      app: ts-station-mysql
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-station-mongo
+        app: ts-station-mysql
     spec:
       containers:
-        - name: ts-station-mongo
-          image: mongo
+        - name: ts-station-mysql
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-station-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -490,23 +510,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ts-station-food-mongo
+  name: ts-station-food-service
 spec:
   selector:
     matchLabels:
-      app: ts-station-food-mongo
+      app: ts-station-food-service
   replicas: 1
   template:
     metadata:
       labels:
-        app: ts-station-food-mongo
+        app: ts-station-food-service
     spec:
       containers:
-        - name: ts-station-food-mongo
-          image: mongo
+        - name: ts-station-food-service
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-station-food-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -810,48 +835,48 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-order-mongo
+  name: ts-order-mysql
 spec:
   ports:
-    - port: 27017
+    - port: 3306
   selector:
-    app: ts-order-mongo
+    app: ts-order-mysql
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-order-other-mongo
+  name: ts-order-other-mysql
 spec:
   ports:
-    - port: 27017
+    - port: 3306
   selector:
-    app: ts-order-other-mongo
+    app: ts-order-other-mysql
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-config-mongo
+  name: ts-config-mysql
 spec:
   ports:
-    - port: 27017
+    - port: 3306
   selector:
-    app: ts-config-mongo
+    app: ts-config-mysql
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-station-mongo
+  name: ts-station-mysql
 spec:
   ports:
-    - port: 27017
+    - port: 3306
   selector:
-    app: ts-station-mongo
+    app: ts-station-mysql
 
 ---
 
@@ -978,12 +1003,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ts-station-food-mongo
+  name: ts-station-food-mysql
 spec:
   ports:
-    - port: 27017
+    - port: 3306
   selector:
-    app: ts-station-food-mongo
+    app: ts-station-food-mysql
 
 ---
 

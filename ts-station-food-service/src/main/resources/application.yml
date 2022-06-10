@@ -8,13 +8,15 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-station-food-service
-  data:
-    mongodb:
-      host: ts-staion-food-mongo
-#      username: user
-#      password: ${MONGODB_PASSWORD}
-      database: ts
-      port: 27017
+  datasource:
+#    url: jdbc:mysql://10.176.122.80:32005/ts-station-food-mysql?useSSL=false
+    url: jdbc:mysql://ts-station-food-mysql:3306/ts-station-food-mysql?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
 
 swagger:
   controllerPackage: food.controller

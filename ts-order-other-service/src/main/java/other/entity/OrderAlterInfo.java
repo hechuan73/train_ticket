@@ -2,19 +2,27 @@ package other.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import java.util.UUID;
 
 /**
  * @author fdse
  */
 @Data
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 @AllArgsConstructor
 public class OrderAlterInfo {
 
-    private UUID accountId;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 32)
+    private String accountId;
 
-    private UUID previousOrderId;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 32)
+    private String previousOrderId;
 
     private String loginToken;
 

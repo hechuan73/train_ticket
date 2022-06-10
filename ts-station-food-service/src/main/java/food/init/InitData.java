@@ -33,7 +33,7 @@ public class InitData implements CommandLineRunner{
             while( line != null ){
                 if( !line.trim().equals("") ){
                     StationFoodStore fs = new StationFoodStore();
-                    fs.setId(UUID.randomUUID());
+                    fs.setId(UUID.randomUUID().toString());
                     String[] lineTemp = line.trim().split("=");
                     fs.setStationId(lineTemp[1]);
 

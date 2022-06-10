@@ -28,7 +28,7 @@ public class StationFoodServiceImpl implements StationFoodService {
 
     @Override
     public Response createFoodStore(StationFoodStore fs, HttpHeaders headers) {
-        StationFoodStore fsTemp = stationFoodRepository.findById(fs.getId());
+        StationFoodStore fsTemp = stationFoodRepository.findById(fs.getId()).get();
         if (fsTemp != null) {
             StationFoodServiceImpl.LOGGER.error("[Init FoodStore] Already Exists Id: {}", fs.getId());
             return new Response<>(0, "Already Exists Id", null);

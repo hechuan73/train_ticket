@@ -3,8 +3,10 @@ package order.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Proxy;
+
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,13 +14,17 @@ import java.util.UUID;
  * @author fdse
  */
 @Data
-@Document(collection = "orders")
+@Table(name = "orders")
+@Entity
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
 
     @Id
-    private UUID id;
+    @Column(length = 32)
+    @GeneratedValue(generator = "jpa-uuid")
+    private String id;
 
     private Date boughtDate;
 
@@ -31,7 +37,9 @@ public class Order {
     /**
      * Which Account Bought it
      */
-    private UUID accountId;
+    @Column(length = 32)
+    @GeneratedValue(generator = "jpa-uuid")
+    private String accountId;
 
     /**
      * Tickets bought for whom....

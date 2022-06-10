@@ -1,15 +1,15 @@
 package fdse.microservice.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
-@Document(collection="station")
+@Entity
 public class Station {
     @Valid
     @NotNull

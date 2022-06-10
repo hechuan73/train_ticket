@@ -5,13 +5,16 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
     application:
       name: ts-config-service
-    data:
-      mongodb:
-        host: ts-config-mongo
-#       username: user
-#       password: ${MONGODB_PASSWORD}
-        database: ts
-        port: 27017
+    datasource:
+#      url: jdbc:mysql://10.176.122.80:32003/ts-config-mysql?useSSL=false
+      url: jdbc:mysql://ts-config-mysql:3306/ts-config-mysql?useSSL=false
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+
 
 # HTTP Server
 server:

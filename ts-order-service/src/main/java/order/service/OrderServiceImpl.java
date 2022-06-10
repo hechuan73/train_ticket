@@ -58,8 +58,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response findOrderById(UUID id, HttpHeaders headers) {
-        Order order = orderRepository.findById(id);
+    public Response findOrderById(String id, HttpHeaders headers) {
+        Order order = orderRepository.findById(id).get();
         if (order == null) {
             OrderServiceImpl.LOGGER.warn("[findOrderById][Find Order By Id Fail][No content][id: {}] ",id);  //获取资源但资源为空
             return new Response<>(0, "No Content by this id", null);
@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
             OrderServiceImpl.LOGGER.error("[create][Order Create Fail][Order already exists][OrderId: {}]", order.getId());
             return new Response<>(0, "Order already exist", null);
         } else {
-            order.setId(UUID.randomUUID());
+            order.setId(UUID.randomUUID().toString());
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[create][Order Create Success][Order Price][OrderId:{} , Price: {}]",order.getId(),order.getPrice());
             return new Response<>(1, success, order);
@@ -87,8 +87,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response alterOrder(OrderAlterInfo oai, HttpHeaders headers) {
 
-        UUID oldOrderId = oai.getPreviousOrderId();
-        Order oldOrder = orderRepository.findById(oldOrderId);
+        String oldOrderId = oai.getPreviousOrderId();
+        Order oldOrder = orderRepository.findById(oldOrderId).get();
         if (oldOrder == null) {
             OrderServiceImpl.LOGGER.error("[alterOrder][Alter Order Fail][Order do not exist][OrderId: {}]", oldOrderId);
             return new Response<>(0, "Old Order Does Not Exists", null);
@@ -96,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
         saveChanges(oldOrder, headers);
         Order newOrder = oai.getNewOrderInfo();
-        newOrder.setId(UUID.randomUUID());
+        newOrder.setId(UUID.randomUUID().toString());
         Response cor = create(oai.getNewOrderInfo(), headers);
         if (cor.getStatus() == 1) {
             OrderServiceImpl.LOGGER.info("[alterOrder][Alter Order Success][newOrderId: {}]",newOrder.getId());
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response<ArrayList<Order>> queryOrders(OrderInfo qi, String accountId, HttpHeaders headers) {
         //1.Get all orders of the user
-        ArrayList<Order> list = orderRepository.findByAccountId(UUID.fromString(accountId));
+        ArrayList<Order> list = orderRepository.findByAccountId(accountId);
         OrderServiceImpl.LOGGER.info("[queryOrders][Step 1][Get Orders Number of Account][size: {}]", list.size());
         //2.Check is these orders fit the requirement/
         if (qi.isEnableStateQuery() || qi.isEnableBoughtDateQuery() || qi.isEnableTravelDateQuery()) {
@@ -201,7 +201,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response saveChanges(Order order, HttpHeaders headers) {
 
-        Order oldOrder = orderRepository.findById(order.getId());
+        Order oldOrder = orderRepository.findById(order.getId()).get();
         if (oldOrder == null) {
             OrderServiceImpl.LOGGER.error("[saveChanges][Modify Order Fail][Order not found][OrderId: {}]", order.getId());
             return new Response<>(0, orderNotFound, null);
@@ -228,8 +228,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Response cancelOrder(UUID accountId, UUID orderId, HttpHeaders headers) {
-        Order oldOrder = orderRepository.findById(orderId);
+    public Response cancelOrder(String accountId, String orderId, HttpHeaders headers) {
+        Order oldOrder = orderRepository.findById(orderId).get();
         if (oldOrder == null) {
             OrderServiceImpl.LOGGER.error("[cancelOrder][Cancel Order Fail][Order not found][OrderId: {}]", orderId);
             return new Response<>(0, orderNotFound, null);
@@ -291,7 +291,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response modifyOrder(String orderId, int status, HttpHeaders headers) {
-        Order order = orderRepository.findById(UUID.fromString(orderId));
+        Order order = orderRepository.findById(orderId).get();
         if (order == null) {
             OrderServiceImpl.LOGGER.error("[modifyOrder][Modify order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
@@ -305,7 +305,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response getOrderPrice(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(UUID.fromString(orderId));
+        Order order = orderRepository.findById(orderId).get();
         if (order == null) {
             OrderServiceImpl.LOGGER.error("[getOrderPrice][Get order price Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, "-1.0");
@@ -317,7 +317,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response payOrder(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(UUID.fromString(orderId));
+        Order order = orderRepository.findById(orderId).get();
         if (order == null) {
             OrderServiceImpl.LOGGER.error("[payOrder][Pay order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
@@ -331,7 +331,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response getOrderById(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(UUID.fromString(orderId));
+        Order order = orderRepository.findById(orderId).get();
         if (order == null) {
             OrderServiceImpl.LOGGER.warn("[getOrderById][Get Order By ID Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
@@ -343,7 +343,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void initOrder(Order order, HttpHeaders headers) {
-        Order orderTemp = orderRepository.findById(order.getId());
+        Order orderTemp = orderRepository.findById(order.getId()).get();
         if (orderTemp == null) {
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[initOrder][Init Order Success][OrderId: {}]", order.getId());
@@ -355,7 +355,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response checkSecurityAboutOrder(Date dateFrom, String accountId, HttpHeaders headers) {
         OrderSecurity result = new OrderSecurity();
-        ArrayList<Order> orders = orderRepository.findByAccountId(UUID.fromString(accountId));
+        ArrayList<Order> orders = orderRepository.findByAccountId(accountId);
         int countOrderInOneHour = 0;
         int countTotalValidOrder = 0;
         Calendar ca = Calendar.getInstance();
@@ -379,8 +379,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response deleteOrder(String orderId, HttpHeaders headers) {
-        UUID orderUuid = UUID.fromString(orderId);
-        Order order = orderRepository.findById(orderUuid);
+        String orderUuid = UUID.fromString(orderId).toString();
+        Order order = orderRepository.findById(orderUuid).get();
 
         if (order == null) {
             OrderServiceImpl.LOGGER.error("[deleteOrder][Delete order Fail][Order not found][OrderId: {}]",orderId);
@@ -400,7 +400,7 @@ public class OrderServiceImpl implements OrderService {
             OrderServiceImpl.LOGGER.error("[addNewOrder][Admin Add Order Fail][Order already exists][OrderId: {}]",order.getId());
             return new Response<>(0, "Order already exist", null);
         } else {
-            order.setId(UUID.randomUUID());
+            order.setId(UUID.randomUUID().toString());
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[addNewOrder][Admin Add Order Success][OrderId: {} , Price: {}]",order.getId() ,order.getPrice());
             return new Response<>(1, "Add new Order Success", order);
@@ -410,7 +410,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
         LOGGER.info("[updateOrder][Admin Update Order][Order Info:{}] ", order.toString());
-        Order oldOrder = orderRepository.findById(order.getId());
+        Order oldOrder = orderRepository.findById(order.getId()).get();
         if (oldOrder == null) {
             OrderServiceImpl.LOGGER.error("[updateOrder][Admin Update Order Fail][Order not found][OrderId: {}]",order.getId());
             return new Response<>(0, "Order Not Found, Can't update", null);

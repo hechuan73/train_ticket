@@ -1,19 +1,20 @@
 package food.repository;
 
 import food.entity.StationFoodStore;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface StationFoodRepository extends MongoRepository<StationFoodStore, String> {
+public interface StationFoodRepository extends CrudRepository<StationFoodStore, String> {
 
-    StationFoodStore findById(UUID id);
+    @Override
+    Optional<StationFoodStore> findById(String id);
 
-    @Query("{ 'stationId' : ?0 }")
+//    @Query("{ 'stationId' : ?0 }")
     List<StationFoodStore> findByStationId(String stationId);
     List<StationFoodStore> findByStationIdIn(List<String> stationIds);
 
@@ -21,5 +22,6 @@ public interface StationFoodRepository extends MongoRepository<StationFoodStore,
     @Override
     List<StationFoodStore> findAll();
 
-    void deleteById(UUID id);
+    @Override
+    void deleteById(String id);
 }

@@ -22,14 +22,14 @@ public class InitData implements CommandLineRunner {
 
         Order order1 = new Order();
 
-        order1.setAccountId(UUID.fromString("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"));
+        order1.setAccountId("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f");
         order1.setBoughtDate(new Date(System.currentTimeMillis()));
         order1.setCoachNumber(5);
         order1.setContactsDocumentNumber("Test");
         order1.setContactsName("Test");
         order1.setDocumentType(1);
         order1.setFrom("shanghai");
-        order1.setId(UUID.fromString("4d2a46c7-71cb-4cf1-c5bb-b68406d9da6f"));
+        order1.setId("4d2a46c7-71cb-4cf1-c5bb-b68406d9da6f");
         order1.setPrice("100");
         order1.setSeatClass(SeatClass.FIRSTCLASS.getCode());
         order1.setSeatNumber("6A");

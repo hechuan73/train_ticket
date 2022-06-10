@@ -2,9 +2,8 @@ package other.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,12 +11,16 @@ import java.util.UUID;
  * @author fdse
  */
 @Data
-@Document(collection = "orders")
+@Table(name = "orderOther")
+@Entity
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
 
     @Id
-    private UUID id;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 32)
+    private String id;
 
     private Date boughtDate;
 
@@ -28,7 +31,9 @@ public class Order {
     /**
      * Which Account Bought it
      */
-    private UUID accountId;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 32)
+    private String accountId;
 
     /**
      * Tickets bought for whom

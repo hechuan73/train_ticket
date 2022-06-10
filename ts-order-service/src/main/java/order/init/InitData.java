@@ -26,11 +26,11 @@ public class InitData implements CommandLineRunner {
     @Override
     public void run(String... args)throws Exception{
         Order order = new Order();
-        order.setId(UUID.fromString("5ad7750b-a68b-49c0-a8c0-32776b067703"));
+        order.setId("5ad7750b-a68b-49c0-a8c0-32776b067703");
         order.setBoughtDate(new Date());
         order.setTravelDate(new Date("Sat Jul 29 00:00:00 GMT+0800 2017")); //NOSONAR
         order.setTravelTime(new Date("Mon May 04 09:02:00 GMT+0800 2013")); //NOSONAR
-        order.setAccountId(UUID.fromString(accountId));
+        order.setAccountId(accountId);
         order.setContactsName(contactName);
         order.setDocumentType(1);
         order.setContactsDocumentNumber(contactDocumentNumber);
@@ -46,11 +46,11 @@ public class InitData implements CommandLineRunner {
 
 
         Order orderTwo = new Order();
-        orderTwo.setId(UUID.fromString("8177ac5a-61ac-42f4-83f4-bd7b394d0531"));
+        orderTwo.setId("8177ac5a-61ac-42f4-83f4-bd7b394d0531");
         orderTwo.setBoughtDate(new Date());
         orderTwo.setTravelDate(new Date("Sat Jul 29 00:00:00 GMT+0800 2017")); //NOSONAR
         orderTwo.setTravelTime(new Date("Mon May 04 09:01:00 GMT+0800 2013")); //NOSONAR
-        orderTwo.setAccountId(UUID.fromString(accountId));
+        orderTwo.setAccountId(accountId);
         orderTwo.setContactsName(contactName);
         orderTwo.setDocumentType(1);
         orderTwo.setContactsDocumentNumber(contactDocumentNumber);
@@ -65,11 +65,11 @@ public class InitData implements CommandLineRunner {
         service.initOrder(orderTwo, null);
 
         Order orderThree = new Order();
-        orderThree.setId(UUID.fromString("d3c91694-d5b8-424c-9974-e14c89226e49"));
+        orderThree.setId("d3c91694-d5b8-424c-9974-e14c89226e49");
         orderThree.setBoughtDate(new Date());
         orderThree.setTravelDate(new Date("Sat Jul 29 00:00:00 GMT+0800 2017")); //NOSONAR
         orderThree.setTravelTime(new Date("Mon May 04 09:00:00 GMT+0800 2013")); //NOSONAR
-        orderThree.setAccountId(UUID.fromString(accountId));
+        orderThree.setAccountId(accountId);
         orderThree.setContactsName(contactName);
         orderThree.setDocumentType(1);
         orderThree.setContactsDocumentNumber(contactDocumentNumber);
