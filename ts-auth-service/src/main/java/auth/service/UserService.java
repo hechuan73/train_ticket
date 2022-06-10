@@ -44,6 +44,6 @@ public interface UserService {
      * @param headers headers
      * @return Response
      */
-    Response deleteByUserId(UUID userId, HttpHeaders headers);
+    Response deleteByUserId(String userId, HttpHeaders headers);
 
 }

@@ -21,7 +21,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public boolean create(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
-        if (repository.findById(trainType.getId()) == null) {
+        if (!repository.findById(trainType.getId()).isPresent()) {
             TrainType type = new TrainType(trainType.getId(), trainType.getEconomyClass(), trainType.getConfortClass());
             type.setAverageSpeed(trainType.getAverageSpeed());
             repository.save(type);
@@ -35,7 +35,7 @@ public class TrainServiceImpl implements TrainService {
 
     @Override
     public TrainType retrieve(String id, HttpHeaders headers) {
-        if (repository.findById(id) == null) {
+        if (!repository.findById(id).isPresent()) {
             TrainServiceImpl.LOGGER.error("[retrieve][Retrieve train error][Train not found][TrainTypeId: {}]",id);
             return null;
         } else {
@@ -46,7 +46,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public boolean update(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
-        if (repository.findById(trainType.getId()) != null) {
+        if (repository.findById(trainType.getId()).isPresent()) {
             TrainType type = new TrainType(trainType.getId(), trainType.getEconomyClass(), trainType.getConfortClass());
             type.setAverageSpeed(trainType.getAverageSpeed());
             repository.save(type);
@@ -61,7 +61,7 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public boolean delete(String id, HttpHeaders headers) {
         boolean result = false;
-        if (repository.findById(id) != null) {
+        if (repository.findById(id).isPresent()) {
             repository.deleteById(id);
             result = true;
         }

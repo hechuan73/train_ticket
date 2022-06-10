@@ -79,7 +79,7 @@ public class ContactsControllerTest {
     @Test
     public void testDeleteContacts() throws Exception {
         UUID contactsId = UUID.randomUUID();
-        Mockito.when(contactsService.delete(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        Mockito.when(contactsService.delete(Mockito.any(UUID.class).toString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
         String result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/contactservice/contacts/" + contactsId.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -100,7 +100,7 @@ public class ContactsControllerTest {
     @Test
     public void testFindContactsByAccountId() throws Exception {
         UUID accountId = UUID.randomUUID();
-        Mockito.when(contactsService.findContactsByAccountId(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        Mockito.when(contactsService.findContactsByAccountId(Mockito.any(UUID.class).toString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/contactservice/contacts/account/" + accountId.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -110,7 +110,7 @@ public class ContactsControllerTest {
     @Test
     public void testGetContactsByContactsId() throws Exception {
         UUID id = UUID.randomUUID();
-        Mockito.when(contactsService.findContactsById(Mockito.any(UUID.class), Mockito.any(HttpHeaders.class))).thenReturn(response);
+        Mockito.when(contactsService.findContactsById(Mockito.any(UUID.class).toString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
         String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/contactservice/contacts/" + id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();

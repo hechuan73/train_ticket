@@ -8,11 +8,15 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-user-service
-  data:
-    mongodb:
-      host: ts-user-mongo
-      database: ts-user-mongo
-      port: 27017
+  datasource:
+    url: jdbc:mysql://ts-user-mysql:3306/ts-user-mysql?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+
 
 swagger:
   controllerPackage: user.controller

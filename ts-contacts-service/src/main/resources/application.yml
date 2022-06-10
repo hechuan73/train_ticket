@@ -8,11 +8,15 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-contacts-service
-  data:
-    mongodb:
-      host: ts-contacts-mongo
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://ts-contacts-mysql:3306/ts-contacts-mysql?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+
 
 swagger:
   controllerPackage: contacts.controller

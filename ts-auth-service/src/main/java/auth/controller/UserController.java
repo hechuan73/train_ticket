@@ -59,7 +59,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Response> deleteUserById(@PathVariable String userId, @RequestHeader HttpHeaders headers) {
         logger.info("[deleteUserById][Delete user][userId: {}]", userId);
-        return ResponseEntity.ok(userService.deleteByUserId(UUID.fromString(userId), headers));
+        return ResponseEntity.ok(userService.deleteByUserId(userId, headers));
     }
 
 }

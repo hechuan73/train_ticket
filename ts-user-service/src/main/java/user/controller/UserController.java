@@ -61,7 +61,7 @@ public class UserController {
                                                    @RequestHeader HttpHeaders headers) {
         // only admin token can delete
         UserController.LOGGER.info("[deleteUserById][Delete user][UserId: {}]",userId);
-        return ok(userService.deleteUser(UUID.fromString(userId), headers));
+        return ok(userService.deleteUser(userId, headers));
     }
 
     @PutMapping

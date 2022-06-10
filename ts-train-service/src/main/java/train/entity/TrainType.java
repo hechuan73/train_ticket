@@ -1,13 +1,14 @@
 package train.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Id;
+
+import javax.persistence.Entity;
 
 import javax.validation.Valid;
 
 @Data
-@Document(collection="trainType")
+@Entity
 public class TrainType {
     @Valid
     @Id

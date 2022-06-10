@@ -44,7 +44,7 @@ public class UserServiceImplTest {
 
     @Test
     public void testSaveUser() {
-        UserDto userDto = new UserDto(UUID.randomUUID(), "user_name", "xxx", 0, 1, "", "");
+        UserDto userDto = new UserDto(UUID.randomUUID().toString(), "user_name", "xxx", 0, 1, "", "");
         Mockito.when(userRepository.findByUserName(Mockito.anyString())).thenReturn(null);
 
         //mock createDefaultAuthUser()
@@ -98,7 +98,7 @@ public class UserServiceImplTest {
     public void testFindByUserId1() {
         UUID userId = UUID.randomUUID();
         User user = new User();
-        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class))).thenReturn(user);
+        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class).toString())).thenReturn(user);
         Response result = userServiceImpl.findByUserId(userId.toString(), headers);
         Assert.assertEquals(new Response<>(1, "Find User Success", user), result);
     }
@@ -106,22 +106,22 @@ public class UserServiceImplTest {
     @Test
     public void testFindByUserId2() {
         UUID userId = UUID.randomUUID();
-        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class))).thenReturn(null);
+        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class).toString())).thenReturn(null);
         Response result = userServiceImpl.findByUserId(userId.toString(), headers);
         Assert.assertEquals(new Response<>(0, "No User", null), result);
     }
 
     @Test
     public void testDeleteUser1() {
-        UUID userId = UUID.randomUUID();
+        String userId = UUID.randomUUID().toString();
         User user = new User();
-        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class))).thenReturn(user);
+        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class).toString())).thenReturn(user);
         HttpEntity<Response> httpEntity = new HttpEntity<>(headers);
         Mockito.when(restTemplate.exchange("http://ts-auth-service:12340/api/v1" + "/users/" + userId,
                 HttpMethod.DELETE,
                 httpEntity,
                 Response.class)).thenReturn(null);
-        Mockito.doNothing().doThrow(new RuntimeException()).when(userRepository).deleteByUserId(Mockito.any(UUID.class));
+        Mockito.doNothing().doThrow(new RuntimeException()).when(userRepository).deleteByUserId(Mockito.any(UUID.class).toString());
         Response result = userServiceImpl.deleteUser(userId, headers);
         Assert.assertEquals(new Response<>(1, "DELETE SUCCESS", null), result);
     }
@@ -129,8 +129,8 @@ public class UserServiceImplTest {
     @Test
     public void testDeleteUser2() {
         UUID userId = UUID.randomUUID();
-        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class))).thenReturn(null);
-        Response result = userServiceImpl.deleteUser(userId, headers);
+        Mockito.when(userRepository.findByUserId(Mockito.any(UUID.class).toString())).thenReturn(null);
+        Response result = userServiceImpl.deleteUser(userId.toString(), headers);
         Assert.assertEquals(new Response<>(0, "USER NOT EXISTS", null), result);
     }
 
@@ -139,7 +139,7 @@ public class UserServiceImplTest {
         UserDto userDto = new UserDto();
         User oldUser = new User();
         Mockito.when(userRepository.findByUserName(Mockito.anyString())).thenReturn(oldUser);
-        Mockito.doNothing().doThrow(new RuntimeException()).when(userRepository).deleteByUserId(Mockito.any(UUID.class));
+        Mockito.doNothing().doThrow(new RuntimeException()).when(userRepository).deleteByUserId(Mockito.any(UUID.class).toString());
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(null);
         Response result = userServiceImpl.updateUser(userDto, headers);
         Assert.assertEquals("SAVE USER SUCCESS", result.getMsg());
@@ -161,7 +161,7 @@ public class UserServiceImplTest {
                 HttpMethod.DELETE,
                 httpEntity,
                 Response.class)).thenReturn(null);
-        userServiceImpl.deleteUserAuth(userId, headers);
+        userServiceImpl.deleteUserAuth(userId.toString(), headers);
         Mockito.verify(restTemplate, Mockito.times(1))
                 .exchange(Mockito.anyString(), Mockito.any(HttpMethod.class), Mockito.any(HttpEntity.class), Mockito.any(Class.class));
     }

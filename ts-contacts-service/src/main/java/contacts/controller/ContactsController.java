@@ -49,7 +49,7 @@ public class ContactsController {
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/contacts/admin")
     public HttpEntity<?> createNewContactsAdmin(@RequestBody Contacts aci, @RequestHeader HttpHeaders headers) {
-        aci.setId(UUID.randomUUID());
+        aci.setId(UUID.randomUUID().toString());
         ContactsController.LOGGER.info("[createNewContactsAdmin][Create Contacts In Admin]");
         return new ResponseEntity<>(contactsService.createContacts(aci, headers), HttpStatus.CREATED);
     }
@@ -58,7 +58,7 @@ public class ContactsController {
     @CrossOrigin(origins = "*")
     @DeleteMapping(path = "/contacts/{contactsId}")
     public HttpEntity deleteContacts(@PathVariable String contactsId, @RequestHeader HttpHeaders headers) {
-        return ok(contactsService.delete(UUID.fromString(contactsId), headers));
+        return ok(contactsService.delete(contactsId, headers));
     }
 
 
@@ -74,7 +74,7 @@ public class ContactsController {
     public HttpEntity findContactsByAccountId(@PathVariable String accountId, @RequestHeader HttpHeaders headers) {
         ContactsController.LOGGER.info("[findContactsByAccountId][Find Contacts By Account Id][accountId: {}]", accountId);
         ContactsController.LOGGER.info("[ContactsService][VerifyLogin Success]");
-        return ok(contactsService.findContactsByAccountId(UUID.fromString(accountId), headers));
+        return ok(contactsService.findContactsByAccountId(accountId, headers));
     }
 
     @CrossOrigin(origins = "*")
@@ -82,7 +82,7 @@ public class ContactsController {
     public HttpEntity getContactsByContactsId(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         ContactsController.LOGGER.info("[ContactsService][Contacts Id Print][id: {}]", id);
         ContactsController.LOGGER.info("[ContactsService][VerifyLogin Success]");
-        return ok(contactsService.findContactsById(UUID.fromString(id), headers));
+        return ok(contactsService.findContactsById(id, headers));
     }
 
 

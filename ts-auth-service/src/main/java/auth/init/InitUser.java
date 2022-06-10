@@ -29,7 +29,7 @@ public class InitUser implements CommandLineRunner {
         User whetherExistUser = userRepository.findByUsername("fdse_microservice").orElse(new User());
         if (whetherExistUser.getUsername() == null) {
             User user = User.builder()
-                    .userId(UUID.fromString("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f"))
+                    .userId(UUID.fromString("4d2a46c7-71cb-4cf1-b5bb-b68406d9da6f").toString())
                     .username("fdse_microservice")
                     .password(passwordEncoder.encode("111111"))
                     .roles(new HashSet<>(Arrays.asList("ROLE_USER")))
@@ -40,7 +40,7 @@ public class InitUser implements CommandLineRunner {
         User whetherExistAdmin = userRepository.findByUsername("admin").orElse(new User());
         if (whetherExistAdmin.getUsername() == null) {
             User admin = User.builder()
-                    .userId(UUID.randomUUID())
+                    .userId(UUID.randomUUID().toString())
                     .username("admin")
                     .password(passwordEncoder.encode("222222"))
                     .roles(new HashSet<>(Arrays.asList("ROLE_ADMIN")))

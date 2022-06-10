@@ -5,13 +5,15 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-train-service
-  data:
-    mongodb:
-      host: ts-train-mongo
-#      username: user
-#      password: ${MONGODB_PASSWORD}
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://ts-train-mysql:3306/ts-train-mysql?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+
 
 # HTTP Server
 server:

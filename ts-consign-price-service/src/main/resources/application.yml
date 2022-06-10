@@ -5,11 +5,14 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-consign-price-service
-  data:
-    mongodb:
-      host: ts-consign-price-mongo
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://ts-consign-price-mysql:3306/ts-consign-price-mysql?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
 
 
 # HTTP Server

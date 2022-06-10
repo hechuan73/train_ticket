@@ -1,6 +1,5 @@
 package train.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 import train.entity.TrainType;
 
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface TrainTypeRepository extends MongoRepository<TrainType,String> {
+public interface TrainTypeRepository extends CrudRepository<TrainType,String> {
 
     Optional<TrainType> findById(String id);
     @Override

@@ -8,6 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,12 +21,16 @@ import java.util.stream.Collectors;
  * @author fdse
  */
 @Data
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
 
-    private UUID userId;
+//    private UUID userId;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 36)
+    private String userId;
 
     private String username;
 

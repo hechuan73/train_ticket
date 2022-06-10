@@ -1,20 +1,24 @@
 package user.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import user.entity.User;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * @author fdse
  */
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, String> {
 
     User findByUserName(String userName);
 
-    User findByUserId(UUID userId);
+    User findByUserId(String userId);
 
-    void deleteByUserId(UUID userId);
+    void deleteByUserId(String userId);
+
+    @Override
+    List<User> findAll();
 }
