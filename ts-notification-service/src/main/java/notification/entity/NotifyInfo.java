@@ -7,6 +7,8 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
+
+import javax.persistence.Entity;
 import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 

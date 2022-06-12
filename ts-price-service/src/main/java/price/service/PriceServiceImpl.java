@@ -42,7 +42,7 @@ public class PriceServiceImpl implements PriceService {
             priceConfigRepository.save(priceConfig);
         } else {
             // modify
-            priceConfig = priceConfigRepository.findById(createAndModifyPriceConfig.getId());
+            priceConfig = priceConfigRepository.findById(createAndModifyPriceConfig.getId()).get();
             if (priceConfig == null) {
                 priceConfig = new PriceConfig();
                 priceConfig.setId(createAndModifyPriceConfig.getId());
@@ -59,7 +59,7 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceConfig findById(String id, HttpHeaders headers) {
         PriceServiceImpl.LOGGER.info("[findById][ID: {}]", id);
-        return priceConfigRepository.findById(UUID.fromString(id).toString());
+        return priceConfigRepository.findById(UUID.fromString(id).toString()).get();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Response deletePriceConfig(PriceConfig c, HttpHeaders headers) {
-        PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
+        PriceConfig priceConfig = priceConfigRepository.findById(c.getId()).get();
         if (priceConfig == null) {
             PriceServiceImpl.LOGGER.error("[deletePriceConfig][Delete price config error][Price config not found][PriceConfigId: {}]",c.getId());
             return new Response<>(0, noThatConfig, null);
@@ -113,7 +113,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Response updatePriceConfig(PriceConfig c, HttpHeaders headers) {
-        PriceConfig priceConfig = priceConfigRepository.findById(c.getId());
+        PriceConfig priceConfig = priceConfigRepository.findById(c.getId()).get();
         if (priceConfig == null) {
             PriceServiceImpl.LOGGER.error("[updatePriceConfig][Update price config error][Price config not found][PriceConfigId: {}]",c.getId());
             return new Response<>(0, noThatConfig, null);
