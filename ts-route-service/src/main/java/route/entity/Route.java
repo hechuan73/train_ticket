@@ -1,10 +1,14 @@
 package route.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+
 import java.util.List;
 
 /**
@@ -12,15 +16,17 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-@Document(collection = "routes")
+@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Route {
 
     @Id
     private String id;
 
+    @ElementCollection(targetClass = String.class)
     private List<String> stations;
 
+    @ElementCollection(targetClass = Integer.class)
     private List<Integer> distances;
 
     private String startStationId;

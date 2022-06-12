@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import route.entity.Route;
 import route.entity.RouteInfo;
 import route.repository.RouteRepository;
@@ -57,12 +58,12 @@ public class RouteServiceImpl implements RouteService {
             return new Response<>(1, "Save Success", route);
         } else {
             Optional<Route> routeOld = routeRepository.findById(info.getId());
-            Route route=routeOld.get();
-            if (route == null) {
+            Route route;
+            if(routeOld.isPresent()) route=routeOld.get();
+            else {
                 route = new Route();
                 route.setId(info.getId());
             }
-
             route.setStartStationId(info.getStartStation());
             route.setTerminalStationId(info.getEndStation());
             route.setStations(stationList);
@@ -74,10 +75,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    @Transactional
     public Response deleteRoute(String routeId, HttpHeaders headers) {
         routeRepository.removeRouteById(routeId);
         Optional<Route> route = routeRepository.findById(routeId);
-        if (route == null) {
+        if (!route.isPresent()) {
             return new Response<>(1, "Delete Success", routeId);
         } else {
             RouteServiceImpl.LOGGER.error("[deleteRoute][Delete error][Route not found][RouteId: {}]",routeId);
@@ -88,7 +90,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Response getRouteById(String routeId, HttpHeaders headers) {
         Optional<Route> route = routeRepository.findById(routeId);
-        if (route == null) {
+        if (!route.isPresent()) {
             RouteServiceImpl.LOGGER.error("[getRouteById][Find route error][Route not found][RouteId: {}]",routeId);
             return new Response<>(0, "No content with the routeId", null);
         } else {

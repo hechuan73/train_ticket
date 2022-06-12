@@ -3,21 +3,27 @@ package foodsearch.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Entity;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@Document(collection = "foodorder")
+@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 public class FoodOrder {
 
     @Id
-    private UUID id;
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 36)
+    private String id;
 
-    private UUID orderId;
+    private String orderId;
 
     //1:train food;2:food store
     private int foodType;

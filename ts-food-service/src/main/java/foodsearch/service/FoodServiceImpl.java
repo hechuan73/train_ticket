@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class FoodServiceImpl implements FoodService {
         List<String> deliveryJsons = new ArrayList<>();
         for (FoodOrder addFoodOrder : orders) {
             FoodOrder fo = new FoodOrder();
-            fo.setId(UUID.randomUUID());
+            fo.setId(UUID.randomUUID().toString());
             fo.setOrderId(addFoodOrder.getOrderId());
             fo.setFoodType(addFoodOrder.getFoodType());
             if (addFoodOrder.getFoodType() == 2) {
@@ -86,7 +87,7 @@ public class FoodServiceImpl implements FoodService {
 
             Delivery delivery = new Delivery();
             delivery.setFoodName(addFoodOrder.getFoodName());
-            delivery.setOrderId(addFoodOrder.getOrderId());
+            delivery.setOrderId(UUID.fromString(addFoodOrder.getOrderId()));
             delivery.setStationName(addFoodOrder.getStationName());
             delivery.setStoreName(addFoodOrder.getStoreName());
 
@@ -116,7 +117,7 @@ public class FoodServiceImpl implements FoodService {
             return new Response<>(0, "Order Id Has Existed.", null);
         } else {
             fo = new FoodOrder();
-            fo.setId(UUID.randomUUID());
+            fo.setId(UUID.randomUUID().toString());
             fo.setOrderId(addFoodOrder.getOrderId());
             fo.setFoodType(addFoodOrder.getFoodType());
             if (addFoodOrder.getFoodType() == 2) {
@@ -130,7 +131,7 @@ public class FoodServiceImpl implements FoodService {
 
             Delivery delivery = new Delivery();
             delivery.setFoodName(addFoodOrder.getFoodName());
-            delivery.setOrderId(addFoodOrder.getOrderId());
+            delivery.setOrderId(UUID.fromString(addFoodOrder.getOrderId()));
             delivery.setStationName(addFoodOrder.getStationName());
             delivery.setStoreName(addFoodOrder.getStoreName());
 
@@ -146,14 +147,16 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
+    @Transactional
     @Override
     public Response deleteFoodOrder(String orderId, HttpHeaders headers) {
-        FoodOrder foodOrder = foodOrderRepository.findByOrderId(UUID.fromString(orderId));
+        FoodOrder foodOrder = foodOrderRepository.findByOrderId(UUID.fromString(orderId).toString());
         if (foodOrder == null) {
             FoodServiceImpl.LOGGER.error("[deleteFoodOrder][Cancel FoodOrder][Order Id Is Non-Existent][orderId: {}]", orderId);
             return new Response<>(0, orderIdNotExist, null);
         } else {
-            foodOrderRepository.deleteFoodOrderByOrderId(UUID.fromString(orderId));
+//            foodOrderRepository.deleteFoodOrderByOrderId(UUID.fromString(orderId));
+            foodOrderRepository.deleteFoodOrderByOrderId(orderId);
             FoodServiceImpl.LOGGER.info("[deleteFoodOrder][Cancel FoodOrder Success]");
             return new Response<>(1, success, null);
         }
@@ -173,7 +176,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Response updateFoodOrder(FoodOrder updateFoodOrder, HttpHeaders headers) {
-        FoodOrder fo = foodOrderRepository.findById(updateFoodOrder.getId());
+        FoodOrder fo = foodOrderRepository.findById(updateFoodOrder.getId()).orElse(null);
         if (fo == null) {
             FoodServiceImpl.LOGGER.info("[updateFoodOrder][Update FoodOrder][Order Id Is Non-Existent][orderId: {}]", updateFoodOrder.getOrderId());
             return new Response<>(0, orderIdNotExist, null);
@@ -193,7 +196,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Response findByOrderId(String orderId, HttpHeaders headers) {
-        FoodOrder fo = foodOrderRepository.findByOrderId(UUID.fromString(orderId));
+        FoodOrder fo = foodOrderRepository.findByOrderId(UUID.fromString(orderId).toString());
         if (fo != null) {
             FoodServiceImpl.LOGGER.info("[findByOrderId][Find Order by id Success][orderId: {}]", orderId);
             return new Response<>(1, success, fo);
