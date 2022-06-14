@@ -1,7 +1,6 @@
 package route.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import route.entity.Route;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Optional;
  * @author fdse
  */
 @Repository
-public interface RouteRepository extends MongoRepository<Route, String> {
+public interface RouteRepository extends CrudRepository<Route, String> {
 
     /**
      * find route by id
@@ -19,7 +18,6 @@ public interface RouteRepository extends MongoRepository<Route, String> {
      * @param id id
      * @return Route
      */
-    @Query("{ 'id': ?0 }")
     Optional<Route> findById(String id);
 
     /**
@@ -44,7 +42,6 @@ public interface RouteRepository extends MongoRepository<Route, String> {
      * @param terminalId  Terminal Station Id
      * @return ArrayList<Route>
      */
-    @Query("{ 'startStationId': ?0 , 'terminalStationId': ?1 }")
     ArrayList<Route> findByStartStationIdAndTerminalStationId(String startingId, String terminalId);
 
 }

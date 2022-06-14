@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import security.entity.*;
 import security.repository.SecurityRepository;
@@ -59,7 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
             return new Response<>(0, "Security Config Already Exist", null);
         } else {
             SecurityConfig config = new SecurityConfig();
-            config.setId(UUID.randomUUID());
+            config.setId(UUID.randomUUID().toString());
             config.setName(info.getName());
             config.setValue(info.getValue());
             config.setDescription(info.getDescription());
@@ -70,7 +71,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Response modifySecurityConfig(SecurityConfig info, HttpHeaders headers) {
-        SecurityConfig sc = securityRepository.findById(info.getId());
+        SecurityConfig sc = securityRepository.findById(info.getId()).orElse(null);
         if (sc == null) {
             SecurityServiceImpl.LOGGER.error("[modifySecurityConfig][Modify Security config error][Security config not found][SecurityConfigId: {},Name: {}]",info.getId(),info.getName());
             return new Response<>(0, "Security Config Not Exist", null);
@@ -83,10 +84,11 @@ public class SecurityServiceImpl implements SecurityService {
         }
     }
 
+    @Transactional
     @Override
     public Response deleteSecurityConfig(String id, HttpHeaders headers) {
-        securityRepository.deleteById(UUID.fromString(id));
-        SecurityConfig sc = securityRepository.findById(UUID.fromString(id));
+        securityRepository.deleteById(id);
+        SecurityConfig sc = securityRepository.findById(id).orElse(null);
         if (sc == null) {
             return new Response<>(1, success, id);
         } else {

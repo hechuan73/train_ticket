@@ -5,13 +5,14 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-route-service
-  data:
-    mongodb:
-      host: ts-route-mongo
-#      username: user
-#      password: ${MONGODB_PASSWORD}
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://${ROUTE_MYSQL_HOST:ts-route-mysql}:${ROUTE_MYSQL_PORT:3306}/${ROUTE_MYSQL_DATABASE:ts-route-mysql}?useSSL=false
+    username: ${ROUTE_MYSQL_USER:root}
+    password: ${ROUTE_MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 # HTTP Server
 server:

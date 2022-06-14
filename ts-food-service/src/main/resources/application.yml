@@ -8,13 +8,14 @@ spring:
         server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
   application:
     name: ts-food-service
-  data:
-    mongodb:
-      host: ts-food-mongo
-#      username: user
-#      password: ${MONGODB_PASSWORD}
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://${FOOD_MYSQL_HOST:ts-food-mysql}:${FOOD_MYSQL_PORT:3306}/${FOOD_MYSQL_DATABASE:ts-food-mysql}?useSSL=false
+    username: ${FOOD_MYSQL_USER:root}
+    password: ${FOOD_MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
   rabbitmq:
     host: ${rabbitmq_host:localhost}
     port: ${rabbitmq_port:5672}

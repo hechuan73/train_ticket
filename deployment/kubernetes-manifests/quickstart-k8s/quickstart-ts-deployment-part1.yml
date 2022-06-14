@@ -680,11 +680,16 @@ spec:
         app: ts-food-mysql
     spec:
       containers:
-        - name: ts-food-mongo
-          image: mongo
+        - name: ts-food-mysql
+          image: mysql:5.7
           imagePullPolicy: IfNotPresent
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: ts-food-mysql
           ports:
-            - containerPort: 27017
+            - containerPort: 3306
           resources:
             requests:
               cpu: 50m
@@ -1112,6 +1117,53 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ts-food-mysql
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: ts-food-mysql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-gateway-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: ts-gateway-mongo
+---
+#deploy cluster nacos
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-server
+#  namespace: pie-engine-studio
+  labels:
+    app: nacos-headless
+spec:
+  ports:
+    - port: 8848
+      name: server
+      targetPort: 8848
+      nodePort: 30807
+    - port: 7848
+      name: rpc
+      targetPort: 7848
+  selector:
+    app: nacos
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-headless
+#  namespace: pie-engine-studio
+  labels:
+    app: nacos-headless
+
 spec:
   ports:
     - port: 3306

@@ -1,26 +1,26 @@
 package security.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import security.entity.SecurityConfig;
 import java.util.ArrayList;
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * @author fdse
  */
 @Repository
-public interface SecurityRepository extends MongoRepository<SecurityConfig,String>{
+public interface SecurityRepository extends CrudRepository<SecurityConfig,String> {
 
-    @Query("{ 'name': ?0 }")
+
     SecurityConfig findByName(String name);
 
-    @Query("{ 'id': ?0 }")
-    SecurityConfig findById(UUID id);
+
+    Optional<SecurityConfig> findById(String id);
 
     @Override
     ArrayList<SecurityConfig> findAll();
 
-    void deleteById(UUID id);
+    void deleteById(String id);
 }
