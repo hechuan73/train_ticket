@@ -6,9 +6,9 @@ spring:
   application:
     name: ts-route-service
   datasource:
-    url: jdbc:mysql://ts-route-mysql:3306/ts-route-mysql?useSSL=false
-    username: root
-    password: root
+    url: jdbc:mysql://${ROUTE_MYSQL_HOST:ts-route-mysql}:${ROUTE_MYSQL_PORT:3306}/${ROUTE_MYSQL_DATABASE:ts-route-mysql}?useSSL=false
+    username: ${ROUTE_MYSQL_USER:root}
+    password: ${ROUTE_MYSQL_PASSWORD:root}
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
