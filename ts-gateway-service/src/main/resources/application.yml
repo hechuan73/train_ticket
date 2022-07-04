@@ -5,13 +5,15 @@ server:
 spring:
   application:
     name: ts-gateway-service
-  data:
-    mongodb:
-      host: ts-gateway-mongo
-      #      username: user
-      #      password: ${MONGODB_PASSWORD}
-      database: ts
-      port: 27017
+  datasource:
+    url: jdbc:mysql://${GATEWAY_MYSQL_HOST:ts-gateway-mysql}:${GATEWAY_MYSQL_PORT:3306}/${GATEWAY_MYSQL_DATABASE:ts-gateway-mysql}?useSSL=false
+    username: ${GATEWAY_MYSQL_USER:root}
+    password: ${GATEWAY_MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
   cloud:
     nacos:
       discovery:
