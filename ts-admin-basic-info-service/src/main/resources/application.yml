@@ -11,18 +11,3 @@ spring:
 
 swagger:
   controllerPackage: adminbasic.microservice
-
-station-service:
-  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}
-
-train-service:
-  url: http://${TRAIN_SERVICE_HOST:ts-train-service}:${TRAIN_SERVICE_PORT:14567}
-
-config-service:
-  url: http://${CONFIG_SERVICE_HOST:ts-config-service}:${CONFIG_SERVICE_PORT:15679}
-
-price-service:
-  url: http://${PRICE_SERVICE_HOST:ts-price-service}:${PRICE_SERVICE_PORT:16579}
-
-contacts-service:
-  url: http://${CONTACTS_SERVICE_HOST:ts-contacts-service}:${CONTACTS_SERVICE_PORT:12347}
