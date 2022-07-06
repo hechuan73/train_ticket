@@ -6,7 +6,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
+        server-addr: ${NACOS_ADDRS:nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local}
   application:
     name: ts-notification-service
   mail:
@@ -25,7 +25,7 @@ spring:
             required: true
   datasource:
     url: jdbc:mysql://${NOTIFICATION_MYSQL_HOST:ts-notification-mysql}:${NOTIFICATION_MYSQL_PORT:3306}/${NOTIFICATION_MYSQL_DATABASE:ts-notification-mysql}?useSSL=false
-    username: ${NOTIFICATION_MYSQL_USERNAME:root}
+    username: ${NOTIFICATION_MYSQL_USER:root}
     password: ${NOTIFICATION_MYSQL_PASSWORD:root}
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
