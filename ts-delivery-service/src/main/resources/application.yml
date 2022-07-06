@@ -15,7 +15,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   rabbitmq:
     host: ${rabbitmq_host:localhost}
-    port: ${rabbitmq_port:5672}
+    port: 5672
   jpa:
     hibernate:
       ddl-auto: update

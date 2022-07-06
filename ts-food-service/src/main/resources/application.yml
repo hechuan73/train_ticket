@@ -18,7 +18,7 @@ spring:
       ddl-auto: update
   rabbitmq:
     host: ${rabbitmq_host:localhost}
-    port: ${rabbitmq_port:5672}
+    port: 5672
 swagger:
   controllerPackage: foodsearch.controller
 
