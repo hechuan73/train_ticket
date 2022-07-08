@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,10 +33,18 @@ public class ConsignServiceImpl implements ConsignService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsignServiceImpl.class);
 
-    @Value("${consign-price-service.url}")
-    String consign_price_service_url;
+    private String getServiceUrl(String serviceName) {
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
+        ServiceInstance serviceInstance = serviceInstances.get(0);
+        String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+        return service_url;
+    }
+
 
     @Override
     public Response insertConsignRecord(Consign consignRequest, HttpHeaders headers) {
@@ -56,6 +66,7 @@ public class ConsignServiceImpl implements ConsignService {
 
         //get the price
         HttpEntity requestEntity = new HttpEntity(null, headers);
+        String consign_price_service_url = getServiceUrl("ts-consign-price-service");
         ResponseEntity<Response<Double>> re = restTemplate.exchange(
                 consign_price_service_url + "/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
                 HttpMethod.GET,
@@ -88,6 +99,7 @@ public class ConsignServiceImpl implements ConsignService {
         //Recalculate price
         if (originalRecord.getWeight() != consignRequest.getWeight()) {
             HttpEntity requestEntity = new HttpEntity<>(null, headers);
+            String consign_price_service_url = getServiceUrl("ts-consign-price-service");
             ResponseEntity<Response<Double>> re = restTemplate.exchange(
                     consign_price_service_url + "/api/v1/consignpriceservice/consignprice/" + consignRequest.getWeight() + "/" + consignRequest.isWithin(),
                     HttpMethod.GET,
