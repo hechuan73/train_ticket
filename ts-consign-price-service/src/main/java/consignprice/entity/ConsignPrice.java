@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import java.util.UUID;
 
@@ -18,13 +15,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @GenericGenerator(name = "jpa-uuid",strategy="uuid")
+@Table(name="consign_price")
 public class ConsignPrice {
     @Id
-//    private UUID id;
     @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 36)
     private String id;
 
+    @Column(name = "idx")
     private int index;
     @Column(name = "initial_weight")
     private double initialWeight;

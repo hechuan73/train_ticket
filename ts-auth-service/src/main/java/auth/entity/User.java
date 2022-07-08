@@ -9,12 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+
+import javax.persistence.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,17 +22,20 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "auth_user")
 public class User implements UserDetails {
-
-//    private UUID userId;
-    @GeneratedValue(generator = "jpa-uuid")
-    @Column(length = 36, name = "user_id")
+    @Id
+    @Column(length=36, name = "user_id")
     private String userId;
-    @Column(name = "user_name")
+
+    @Column(length=36, name = "user_name")
     private String username;
 
     private String password;
 
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(name = "user_id"))
     private Set<String> roles = new HashSet<>();
 
     @Override

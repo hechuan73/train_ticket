@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -29,11 +31,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     private RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${auth-service.url}")
-    String auth_service_url;
-    private final String AUTH_SERVICE_URI = auth_service_url + "/api/v1";
+    private String getServiceUrl(String serviceName) {
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
+        ServiceInstance serviceInstance = serviceInstances.get(0);
+        String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+        return service_url;
+    }
 
     @Override
     public Response saveUser(UserDto userDto, HttpHeaders headers) {
@@ -74,6 +82,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[createDefaultAuthUser][CALL TO AUTH][AuthDto: {}]", dto.toString());
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<AuthDto> entity = new HttpEntity<>(dto, null);
+        String auth_service_url = getServiceUrl("ts-auth-service");
         ResponseEntity<Response<AuthDto>> res  = restTemplate.exchange(auth_service_url + "/api/v1/auth",
                 HttpMethod.POST,
                 entity,
@@ -154,6 +163,8 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[deleteUserAuth][DELETE USER BY ID][userId: {}]", userId);
 
         HttpEntity<Response> httpEntity = new HttpEntity<>(null);
+        String auth_service_url = getServiceUrl("ts-auth-service");
+        String AUTH_SERVICE_URI = auth_service_url + "/api/v1";
         restTemplate.exchange(AUTH_SERVICE_URI + "/users/" + userId,
                 HttpMethod.DELETE,
                 httpEntity,
