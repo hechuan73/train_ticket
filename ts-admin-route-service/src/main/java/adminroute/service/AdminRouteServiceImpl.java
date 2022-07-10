@@ -7,10 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author fdse
@@ -19,16 +23,23 @@ import org.springframework.web.client.RestTemplate;
 public class AdminRouteServiceImpl implements AdminRouteService {
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     public static final Logger logger = LoggerFactory.getLogger(AdminRouteServiceImpl.class);
 
-    @Value("${route-service.url}")
-    String route_service_url;
+    private String getServiceUrl(String serviceName) {
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
+        ServiceInstance serviceInstance = serviceInstances.get(0);
+        String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+        return service_url;
+    }
 
     @Override
     public Response getAllRoutes(HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(null);
+        String route_service_url = getServiceUrl("ts-route-service");
         ResponseEntity<Response> re = restTemplate.exchange(
                  route_service_url + "/api/v1/routeservice/routes",
                 HttpMethod.GET,
@@ -45,6 +56,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     public Response createAndModifyRoute(RouteInfo request, HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(request, null);
+        String route_service_url = getServiceUrl("ts-route-service");
         ResponseEntity<Response<Route>> re = restTemplate.exchange(
                 route_service_url + "/api/v1/routeservice/routes",
                 HttpMethod.POST,
@@ -61,6 +73,7 @@ public class AdminRouteServiceImpl implements AdminRouteService {
     public Response deleteRoute(String routeId, HttpHeaders headers) {
 
         HttpEntity requestEntity = new HttpEntity(null);
+        String route_service_url = getServiceUrl("ts-route-service");
         ResponseEntity<Response> re = restTemplate.exchange(
                 route_service_url + "/api/v1/routeservice/routes/" + routeId,
                 HttpMethod.DELETE,

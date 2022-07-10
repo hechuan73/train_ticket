@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author fdse
@@ -25,12 +28,16 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private DiscoveryClient discoveryClient;
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminTravelServiceImpl.class);
 
-    @Value("${travel-service.url}")
-    String travel_service_url;
-    @Value("${travel2-service.url}")
-    String travel2_service_url;
+    private String getServiceUrl(String serviceName) {
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
+        ServiceInstance serviceInstance = serviceInstances.get(0);
+        String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+        return service_url;
+    }
 
     @Override
     public Response getAllTravels(HttpHeaders headers) {
@@ -39,6 +46,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         AdminTravelServiceImpl.LOGGER.info("[getAllTravels][Get All Travels]");
         HttpEntity requestEntity = new HttpEntity(headers);
+        String travel_service_url = getServiceUrl("ts-travel-service");
         ResponseEntity<Response<ArrayList<AdminTrip>>> re = restTemplate.exchange(
                 travel_service_url + "/api/v1/travelservice/admin_trip",
                 HttpMethod.GET,
@@ -56,6 +64,7 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         }
 
         HttpEntity requestEntity2 = new HttpEntity(headers);
+        String travel2_service_url = getServiceUrl("ts-travel2-service");
         ResponseEntity<Response<ArrayList<AdminTrip>>> re2 = restTemplate.exchange(
                 travel2_service_url + "/api/v1/travel2service/admin_trip",
                 HttpMethod.GET,
@@ -80,6 +89,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
     public Response addTravel(TravelInfo request, HttpHeaders headers) {
         Response result;
         String requestUrl;
+        String travel_service_url = getServiceUrl("ts-travel-service");
+        String travel2_service_url = getServiceUrl("ts-travel2-service");
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
             requestUrl = travel_service_url + "/api/v1/travelservice/trips";
         } else {
@@ -107,6 +118,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
         Response result;
 
         String requestUrl = "";
+        String travel_service_url = getServiceUrl("ts-travel-service");
+        String travel2_service_url = getServiceUrl("ts-travel2-service");
         if (request.getTrainTypeId().charAt(0) == 'G' || request.getTrainTypeId().charAt(0) == 'D') {
             requestUrl = travel_service_url + "/api/v1/travelservice/trips";
         } else {
@@ -134,6 +147,8 @@ public class AdminTravelServiceImpl implements AdminTravelService {
 
         Response result;
         String requestUtl = "";
+        String travel_service_url = getServiceUrl("ts-travel-service");
+        String travel2_service_url = getServiceUrl("ts-travel2-service");
         if (tripId.charAt(0) == 'G' || tripId.charAt(0) == 'D') {
             requestUtl = travel_service_url + "/api/v1/travelservice/trips/" + tripId;
         } else {

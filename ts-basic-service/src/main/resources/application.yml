@@ -5,21 +5,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
+        server-addr: ${NACOS_ADDRS:nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local}
   application:
     name: ts-basic-service
 
 swagger:
   controllerPackage: fdse.microservice.controller
-
-station-service:
-  url: http://${STATION_SERVICE_HOST:ts-station-service}:${STATION_SERVICE_PORT:12345}
-
-train-service:
-  url: http://${TRAIN_SERVICE_HOST:ts-train-service}:${TRAIN_SERVICE_PORT:14567}
-
-price-service:
-  url: http://${PRICE_SERVICE_HOST:ts-price-service}:${PRICE_SERVICE_PORT:16579}
-
-route-service:
-  url: http://${ROUTE_SERVICE_HOST:ts-route-service}:${ROUTE_SERVICE_PORT:11178}
