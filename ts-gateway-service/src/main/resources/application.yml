@@ -3,6 +3,8 @@ server:
   port: 18888  # HTTP (Tomcat) port
 
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: ts-gateway-service
   datasource:
