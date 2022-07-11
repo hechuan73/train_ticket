@@ -5,12 +5,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
+        server-addr: ${NACOS_ADDRS:nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local}
   application:
     name: ts-admin-route-service
 
 swagger:
   controllerPackage: adminroute.controller
-
-route-service:
-  url: http://${ROUTE_SERVICE_HOST:ts-route-service}:${ROUTE_SERVICE_PORT:11178}

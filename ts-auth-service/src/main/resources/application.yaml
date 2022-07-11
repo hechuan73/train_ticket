@@ -4,21 +4,18 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local
+        server-addr: ${NACOS_ADDRS:nacos-0.nacos-headless.default.svc.cluster.local,nacos-1.nacos-headless.default.svc.cluster.local,nacos-2.nacos-headless.default.svc.cluster.local}
   application:
     name: ts-auth-service
   datasource:
     url: jdbc:mysql://${AUTH_MYSQL_HOST:ts-auth-mysql}:${AUTH_MYSQL_PORT:3306}/${AUTH_MYSQL_DATABASE:ts-auth-mysql}?useSSL=false
     username: ${AUTH_MYSQL_USER:root}
-    password: ${AUTH_MYSQL_PASSWORD:root}
+    password: ${AUTH_MYSQL_PASSWORD:Abcd1234#}
     driver-class-name: com.mysql.jdbc.Driver
-    jpa:
-      hibernate:
-        ddl-auto: update
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 
 swagger:
   controllerPackage: auth.controller
-
-verification-code-service:
-  url: http://${VERIFICATION_CODE_SERVICE_HOST:ts-verification-code-service}:${VERIFICATION_CODE_SERVICE_PORT:15678}

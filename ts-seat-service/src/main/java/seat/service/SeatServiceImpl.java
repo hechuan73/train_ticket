@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,18 +28,20 @@ public class SeatServiceImpl implements SeatService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SeatServiceImpl.class);
 
-    @Value("${order-service.url}")
-    String order_service_url;
-    @Value("${order-other-service.url}")
-    String order_other_service_url;
-    @Value("${travel-service.url}")
-    String travel_service_url;
-    @Value("${travel2-service.url}")
-    String travel2_service_url;
-    @Value("${config-service.url}")
-    String config_service_url;
+    private String getServiceUrl(String serviceName) {
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
+        if(serviceInstances.size() > 0){
+            ServiceInstance serviceInstance = serviceInstances.get(0);
+            String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+            return service_url;
+        }
+        return "";
+    }
 
     @Override
     public Response distributeSeat(Seat seatRequest, HttpHeaders headers) {
@@ -57,6 +61,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the microservice to query all the station information for the train
             HttpEntity requestEntity = new HttpEntity(null);
+            String travel_service_url=getServiceUrl("ts-travel-service");
             re = restTemplate.exchange(
                     travel_service_url + "/api/v1/travelservice/routes/" + trainNumber,
                     HttpMethod.GET,
@@ -68,6 +73,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the microservice to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
+            String order_service_url=getServiceUrl("ts-order-service");
             re3 = restTemplate.exchange(
                     order_service_url + "/api/v1/orderservice/order/tickets",
                     HttpMethod.POST,
@@ -93,6 +99,7 @@ public class SeatServiceImpl implements SeatService {
             SeatServiceImpl.LOGGER.info("[distributeSeat][TrainNumber start][Other Capital Except D and G]");
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
+            String travel2_service_url=getServiceUrl("ts-travel2-service");
             re = restTemplate.exchange(
                     travel2_service_url + "/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
@@ -104,6 +111,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the microservice to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
+            String order_other_service_url=getServiceUrl("ts-order-other-service");
             re3 = restTemplate.exchange(
                     order_other_service_url + "/api/v1/orderOtherService/orderOther/tickets",
                     HttpMethod.POST,
@@ -198,6 +206,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
+            String travel_service_url=getServiceUrl("ts-travel-service");
             re = restTemplate.exchange(
                     travel_service_url + "/api/v1/travelservice/routes/" + trainNumber,
                     HttpMethod.GET,
@@ -209,6 +218,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the micro service to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
+            String order_service_url=getServiceUrl("ts-order-service");
             re3 = restTemplate.exchange(
                     order_service_url + "/api/v1/orderservice/order/tickets",
                     HttpMethod.POST,
@@ -236,6 +246,7 @@ public class SeatServiceImpl implements SeatService {
             SeatServiceImpl.LOGGER.info("[getLeftTicketOfInterval][TrainNumber start with other capital][trainNumber:{}]", trainNumber);
             //Call the micro service to query all the station information for the trains
             HttpEntity requestEntity = new HttpEntity(null);
+            String travel2_service_url=getServiceUrl("ts-travel2-service");
             re = restTemplate.exchange(
                     travel2_service_url + "/api/v1/travel2service/routes/" + seatRequest.getTrainNumber(),
                     HttpMethod.GET,
@@ -247,6 +258,7 @@ public class SeatServiceImpl implements SeatService {
 
             //Call the micro service to query for residual Ticket information: the set of the Ticket sold for the specified seat type
             requestEntity = new HttpEntity(seatRequest, null);
+            String order_other_service_url=getServiceUrl("ts-order-other-service");
             re3 = restTemplate.exchange(
                     order_other_service_url + "/api/v1/orderOtherService/orderOther/tickets",
                     HttpMethod.POST,
@@ -317,6 +329,7 @@ public class SeatServiceImpl implements SeatService {
 
         String configName = "DirectTicketAllocationProportion";
         HttpEntity requestEntity = new HttpEntity(null);
+        String config_service_url = getServiceUrl("ts-config-service");
         ResponseEntity<Response<Config>> re = restTemplate.exchange(
                 config_service_url + "/api/v1/configservice/configs/" + configName,
                 HttpMethod.GET,

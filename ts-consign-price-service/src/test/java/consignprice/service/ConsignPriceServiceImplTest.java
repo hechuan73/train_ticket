@@ -34,7 +34,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testGetPriceByWeightAndRegion1() {
-        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID(), 1, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID().toString(), 1, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(priceConfig);
         Response result = consignPriceServiceImpl.getPriceByWeightAndRegion(1.0, true, headers);
         Assert.assertEquals(new Response<>(1, "Success", 3.0), result);
@@ -42,7 +42,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testGetPriceByWeightAndRegion2() {
-        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID(), 1, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID().toString(), 1, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(priceConfig);
         Response result = consignPriceServiceImpl.getPriceByWeightAndRegion(3.0, true, headers);
         Assert.assertEquals(new Response<>(1, "Success", 6.5), result);
@@ -50,7 +50,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testGetPriceByWeightAndRegion3() {
-        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID(), 1, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID().toString(), 1, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(priceConfig);
         Response result = consignPriceServiceImpl.getPriceByWeightAndRegion(3.0, false, headers);
         Assert.assertEquals(new Response<>(1, "Success", 7.0), result);
@@ -58,7 +58,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testQueryPriceInformation() {
-        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID(), 1, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice priceConfig = new ConsignPrice(UUID.randomUUID().toString(), 1, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(priceConfig);
         Response result = consignPriceServiceImpl.queryPriceInformation(headers);
         String str = "The price of weight within 2.0 is 3.0. The price of extra weight within the region is 3.5 and beyond the region is 4.0\n";
@@ -67,7 +67,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testCreateAndModifyPrice1() {
-        ConsignPrice config = new ConsignPrice(UUID.randomUUID(), 1, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice config = new ConsignPrice(UUID.randomUUID().toString(), 1, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(config);
         Mockito.when(repository.save(Mockito.any(ConsignPrice.class))).thenReturn(null);
         Response result = consignPriceServiceImpl.createAndModifyPrice(config, headers);
@@ -76,7 +76,7 @@ public class ConsignPriceServiceImplTest {
 
     @Test
     public void testCreateAndModifyPrice2() {
-        ConsignPrice config = new ConsignPrice(UUID.randomUUID(), 0, 2.0, 3.0, 3.5, 4.0);
+        ConsignPrice config = new ConsignPrice(UUID.randomUUID().toString(), 0, 2.0, 3.0, 3.5, 4.0);
         Mockito.when(repository.findByIndex(0)).thenReturn(null);
         Mockito.when(repository.save(Mockito.any(ConsignPrice.class))).thenReturn(null);
         Response result = consignPriceServiceImpl.createAndModifyPrice(config, headers);
