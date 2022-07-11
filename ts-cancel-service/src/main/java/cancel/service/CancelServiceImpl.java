@@ -38,9 +38,12 @@ public class CancelServiceImpl implements CancelService {
 
     private String getServiceUrl(String serviceName) {
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
-        ServiceInstance serviceInstance = serviceInstances.get(0);
-        String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
-        return service_url;
+        if(serviceInstances.size() > 0){
+            ServiceInstance serviceInstance = serviceInstances.get(0);
+            String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
+            return service_url;
+        }
+        return "";
     }
 
     @Override
