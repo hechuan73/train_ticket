@@ -1,9 +1,11 @@
 package com.trainticket.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,11 +16,13 @@ import java.util.UUID;
  */
 @Data
 @Entity
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class Payment {
     @Id
     @NotNull
     @Valid
-    @Column(name = "payment_id")
+    @Column(name = "payment_id", length = 36)
+    @GeneratedValue(generator = "jpa-uuid")
     private String id;
 
     @NotNull
@@ -35,7 +39,7 @@ public class Payment {
     private String price;
 
     public Payment(){
-        this.id = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        this.id = UUID.randomUUID().toString();
         this.orderId = "";
         this.userId = "";
         this.price = "";
