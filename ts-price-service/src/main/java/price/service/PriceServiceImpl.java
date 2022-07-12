@@ -11,6 +11,7 @@ import price.repository.PriceConfigRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -59,7 +60,11 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceConfig findById(String id, HttpHeaders headers) {
         PriceServiceImpl.LOGGER.info("[findById][ID: {}]", id);
-        return priceConfigRepository.findById(UUID.fromString(id).toString()).get();
+        Optional<PriceConfig> op = priceConfigRepository.findById(UUID.fromString(id).toString());
+        if(op.isPresent()){
+            return op.get();
+        }
+        return null;
     }
 
     @Override
@@ -95,8 +100,8 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Response deletePriceConfig(PriceConfig c, HttpHeaders headers) {
-        PriceConfig priceConfig = priceConfigRepository.findById(c.getId()).get();
-        if (priceConfig == null) {
+        Optional<PriceConfig> op = priceConfigRepository.findById(c.getId());
+        if (!op.isPresent()) {
             PriceServiceImpl.LOGGER.error("[deletePriceConfig][Delete price config error][Price config not found][PriceConfigId: {}]",c.getId());
             return new Response<>(0, noThatConfig, null);
         } else {
@@ -113,11 +118,12 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public Response updatePriceConfig(PriceConfig c, HttpHeaders headers) {
-        PriceConfig priceConfig = priceConfigRepository.findById(c.getId()).get();
-        if (priceConfig == null) {
+        Optional<PriceConfig> op = priceConfigRepository.findById(c.getId());
+        if (!op.isPresent()) {
             PriceServiceImpl.LOGGER.error("[updatePriceConfig][Update price config error][Price config not found][PriceConfigId: {}]",c.getId());
             return new Response<>(0, noThatConfig, null);
         } else {
+            PriceConfig priceConfig = op.get();
             priceConfig.setId(c.getId());
             priceConfig.setBasicPriceRate(c.getBasicPriceRate());
             priceConfig.setFirstClassPriceRate(c.getFirstClassPriceRate());
