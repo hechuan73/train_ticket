@@ -42,7 +42,11 @@
 			<artifactId>ts-common</artifactId>
 			<version>0.1.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
