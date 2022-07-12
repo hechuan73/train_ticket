@@ -13,11 +13,8 @@ import javax.validation.Valid;
  * @author fdse
  */
 @Data
-@Entity
-@Table(schema = "ts-travel2-mysql")
 public class TrainType {
     @Valid
-    @Id
     @Column(name = "train_type_id")
     private String id;
 

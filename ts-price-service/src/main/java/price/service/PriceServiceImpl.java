@@ -43,11 +43,12 @@ public class PriceServiceImpl implements PriceService {
             priceConfigRepository.save(priceConfig);
         } else {
             // modify
-            priceConfig = priceConfigRepository.findById(createAndModifyPriceConfig.getId()).get();
-            if (priceConfig == null) {
+            Optional<PriceConfig> op = priceConfigRepository.findById(createAndModifyPriceConfig.getId());
+            if (!op.isPresent()) {
                 priceConfig = new PriceConfig();
                 priceConfig.setId(createAndModifyPriceConfig.getId());
             }
+            priceConfig = op.get();
             priceConfig.setBasicPriceRate(createAndModifyPriceConfig.getBasicPriceRate());
             priceConfig.setFirstClassPriceRate(createAndModifyPriceConfig.getFirstClassPriceRate());
             priceConfig.setRouteId(createAndModifyPriceConfig.getRouteId());

@@ -11,10 +11,9 @@ import javax.validation.Valid;
  * @author fdse
  */
 @Data
-@Entity
 public class TrainType {
     @Valid
-    @Id
+    @Column(name = "train_type_id")
     private String id;
 
     @Valid

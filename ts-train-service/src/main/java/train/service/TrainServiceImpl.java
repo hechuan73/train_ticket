@@ -21,6 +21,10 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public boolean create(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
+        if(trainType.getId().isEmpty()){
+            TrainServiceImpl.LOGGER.error("[create][Create train error][Train Type id not specified]");
+            return result;
+        }
         if (!repository.findById(trainType.getId()).isPresent()) {
             TrainType type = new TrainType(trainType.getId(), trainType.getEconomyClass(), trainType.getConfortClass());
             type.setAverageSpeed(trainType.getAverageSpeed());
