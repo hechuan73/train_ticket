@@ -74,11 +74,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response findOrderById(String id, HttpHeaders headers) {
-        Order order = orderRepository.findById(id).get();
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(id);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.warn("[findOrderById][Find Order By Id Fail][No content][id: {}] ",id);  //获取资源但资源为空
             return new Response<>(0, "No Content by this id", null);
         } else {
+            Order order = op.get();
             OrderServiceImpl.LOGGER.warn("[findOrderById][Find Order By Id Success][id: {}] ",id);  //获取资源但资源为空
             return new Response<>(1, success, order);
         }
@@ -103,11 +104,12 @@ public class OrderServiceImpl implements OrderService {
     public Response alterOrder(OrderAlterInfo oai, HttpHeaders headers) {
 
         String oldOrderId = oai.getPreviousOrderId();
-        Order oldOrder = orderRepository.findById(oldOrderId).get();
-        if (oldOrder == null) {
+        Optional<Order> op = orderRepository.findById(oldOrderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[alterOrder][Alter Order Fail][Order do not exist][OrderId: {}]", oldOrderId);
             return new Response<>(0, "Old Order Does Not Exists", null);
         }
+        Order oldOrder = op.get();
         oldOrder.setStatus(OrderStatus.CANCEL.getCode());
         saveChanges(oldOrder, headers);
         Order newOrder = oai.getNewOrderInfo();
@@ -216,12 +218,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response saveChanges(Order order, HttpHeaders headers) {
-
-        Order oldOrder = orderRepository.findById(order.getId()).get();
-        if (oldOrder == null) {
+        Optional<Order> op = orderRepository.findById(order.getId());
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[saveChanges][Modify Order Fail][Order not found][OrderId: {}]", order.getId());
             return new Response<>(0, orderNotFound, null);
         } else {
+            Order oldOrder = op.get();
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
             oldOrder.setTravelDate(order.getTravelDate());
@@ -245,11 +247,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response cancelOrder(String accountId, String orderId, HttpHeaders headers) {
-        Order oldOrder = orderRepository.findById(orderId).get();
-        if (oldOrder == null) {
+        Optional<Order> op = orderRepository.findById(orderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[cancelOrder][Cancel Order Fail][Order not found][OrderId: {}]", orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
+            Order oldOrder = op.get();
             oldOrder.setStatus(OrderStatus.CANCEL.getCode());
             orderRepository.save(oldOrder);
             OrderServiceImpl.LOGGER.info("[cancelOrder][Cancel Order Success][OrderId: {}]", orderId);
@@ -307,11 +310,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response modifyOrder(String orderId, int status, HttpHeaders headers) {
-        Order order = orderRepository.findById(orderId).get();
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(orderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[modifyOrder][Modify order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
+            Order order = op.get();
             order.setStatus(status);
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[modifyOrder][Modify order Success][OrderId: {}]",orderId);
@@ -321,11 +325,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response getOrderPrice(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(orderId).get();
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(orderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[getOrderPrice][Get order price Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, "-1.0");
         } else {
+            Order order = op.get();
             OrderServiceImpl.LOGGER.info("[getOrderPrice][Get Order Price Success][OrderId: {} , Price: {}]",orderId ,order.getPrice());
             return new Response<>(1, success, order.getPrice());
         }
@@ -333,11 +338,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response payOrder(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(orderId).get();
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(orderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[payOrder][Pay order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
+            Order order = op.get();
             order.setStatus(OrderStatus.PAID.getCode());
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[payOrder][Pay order Success][OrderId: {}]",orderId);
@@ -347,11 +353,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Response getOrderById(String orderId, HttpHeaders headers) {
-        Order order = orderRepository.findById(orderId).get();
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(orderId);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.warn("[getOrderById][Get Order By ID Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, orderNotFound, null);
         } else {
+            Order order = op.get();
             OrderServiceImpl.LOGGER.info("[getOrderById][Get Order By ID Success][OrderId: {}]",orderId);
             return new Response<>(1, "Success.", order);
         }
@@ -359,11 +366,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void initOrder(Order order, HttpHeaders headers) {
-        Order orderTemp = orderRepository.findById(order.getId()).get();
-        if (orderTemp == null) {
+        Optional<Order> op = orderRepository.findById(order.getId());
+        if (!op.isPresent()) {
             orderRepository.save(order);
             OrderServiceImpl.LOGGER.info("[initOrder][Init Order Success][OrderId: {}]", order.getId());
         } else {
+            Order orderTemp = op.get();
             OrderServiceImpl.LOGGER.error("[initOrder][Init Order Fail][Order Already Exists][OrderId: {}]", order.getId());
         }
     }
@@ -396,12 +404,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response deleteOrder(String orderId, HttpHeaders headers) {
         String orderUuid = UUID.fromString(orderId).toString();
-        Order order = orderRepository.findById(orderUuid).get();
 
-        if (order == null) {
+        Optional<Order> op = orderRepository.findById(orderUuid);
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[deleteOrder][Delete order Fail][Order not found][OrderId: {}]",orderId);
             return new Response<>(0, "Order Not Exist.", null);
         } else {
+            Order order = op.get();
             orderRepository.deleteById(orderUuid);
             OrderServiceImpl.LOGGER.info("[deleteOrder][Delete order Success][OrderId: {}]",orderId);
             return new Response<>(1, "Delete Order Success", order);
@@ -426,11 +435,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Response updateOrder(Order order, HttpHeaders headers) {
         LOGGER.info("[updateOrder][Admin Update Order][Order Info:{}] ", order.toString());
-        Order oldOrder = orderRepository.findById(order.getId()).get();
-        if (oldOrder == null) {
+        Optional<Order> op = orderRepository.findById(order.getId());
+        if (!op.isPresent()) {
             OrderServiceImpl.LOGGER.error("[updateOrder][Admin Update Order Fail][Order not found][OrderId: {}]",order.getId());
             return new Response<>(0, "Order Not Found, Can't update", null);
         } else {
+            Order oldOrder = op.get();
             //OrderServiceImpl.LOGGER.info("{}", oldOrder.toString());
             oldOrder.setAccountId(order.getAccountId());
             oldOrder.setBoughtDate(order.getBoughtDate());
