@@ -22,7 +22,7 @@ public class ConsignPrice {
     @Column(length = 36)
     private String id;
 
-    @Column(name = "idx")
+    @Column(name = "idx", unique = true)
     private int index;
     @Column(name = "initial_weight")
     private double initialWeight;
