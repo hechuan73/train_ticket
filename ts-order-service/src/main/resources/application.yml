@@ -11,14 +11,16 @@ spring:
   application:
     name: ts-order-service
   datasource:
-#    url: jdbc:mysql://localhost:3306/ts-order-mysql?useSSL=false
     url: jdbc:mysql://${ORDER_MYSQL_HOST:ts-order-mysql}:${ORDER_MYSQL_PORT:3306}/${ORDER_MYSQL_DATABASE:ts-order-mysql}?useSSL=false
     username: ${ORDER_MYSQL_USER:root}
-    password: ${ORDER_MYSQL_PASSWORD:root}
+    password: ${ORDER_MYSQL_PASSWORD:Abcd1234#}
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
 
 swagger:
   controllerPackage: order.controller
