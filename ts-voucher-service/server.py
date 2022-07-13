@@ -138,7 +138,7 @@ def initMysqlConfig():
     if(os.getenv("VOUCHER_MYSQL_HOST") is not None):
         host = os.getenv("VOUCHER_MYSQL_HOST")
     if(os.getenv("VOUCHER_MYSQL_PORT") is not None):
-        port = os.getenv("VOUCHER_MYSQL_PORT")
+        port = int(os.getenv("VOUCHER_MYSQL_PORT"))
     if(os.getenv("VOUCHER_MYSQL_USER") is not None):
         user = os.getenv("VOUCHER_MYSQL_USER")
     if(os.getenv("VOUCHER_MYSQL_PASSWORD") is not None):
