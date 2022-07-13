@@ -25,14 +25,12 @@ public class Station {
 
 
 
-    public Station(String id, String name) {
-        this.id = id;
+    public Station(String name) {
         this.name = name;
     }
 
 
-    public Station(String id, String name, int stayTime) {
-        this.id = id;
+    public Station(String name, int stayTime) {
         this.name = name;
         this.stayTime = stayTime;
     }

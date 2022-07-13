@@ -130,11 +130,11 @@ def initDatabase():
 
 def initMysqlConfig():
     global mysql_config
-    host = "10.176.122.1"
+    host = "ts-voucher-mysql"
     port = 3306
     user = "root"
     password = "Abcd1234#"
-    db = "ts"
+    db = "ts-voucher-mysql"
     if(os.getenv("VOUCHER_MYSQL_HOST") is not None):
         host = os.getenv("VOUCHER_MYSQL_HOST")
     if(os.getenv("VOUCHER_MYSQL_PORT") is not None):

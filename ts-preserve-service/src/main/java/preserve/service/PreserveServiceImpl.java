@@ -41,14 +41,7 @@ public class PreserveServiceImpl implements PreserveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PreserveServiceImpl.class);
 
     private String getServiceUrl(String serviceName) {
-        List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceName);
-        if(serviceInstances.size() > 0){
-            ServiceInstance serviceInstance = serviceInstances.get(0);
-            String service_url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort();
-            return service_url;
-        }
-        return "";
-    }
+        return "http://" + serviceName; }
 
     @Override
     public Response preserve(OrderTicketsInfo oti, HttpHeaders headers) {

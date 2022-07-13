@@ -13,7 +13,7 @@ spring:
     url: jdbc:mysql://${STATION_FOOD_MYSQL_HOST:ts-station-food-mysql}:${STATION_FOOD_MYSQL_PORT:3306}/${STATION_FOOD_MYSQL_DATABASE:ts-station-food-mysql}?useSSL=false
     username: ${STATION_FOOD_MYSQL_USER:root}
     password: ${STATION_FOOD_MYSQL_PASSWORD:root}
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
