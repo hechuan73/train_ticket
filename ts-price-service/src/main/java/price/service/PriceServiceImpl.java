@@ -47,8 +47,9 @@ public class PriceServiceImpl implements PriceService {
             if (!op.isPresent()) {
                 priceConfig = new PriceConfig();
                 priceConfig.setId(createAndModifyPriceConfig.getId());
+            }else{
+                priceConfig = op.get();
             }
-            priceConfig = op.get();
             priceConfig.setBasicPriceRate(createAndModifyPriceConfig.getBasicPriceRate());
             priceConfig.setFirstClassPriceRate(createAndModifyPriceConfig.getFirstClassPriceRate());
             priceConfig.setRouteId(createAndModifyPriceConfig.getRouteId());
