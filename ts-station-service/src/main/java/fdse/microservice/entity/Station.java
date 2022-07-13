@@ -1,8 +1,11 @@
 package fdse.microservice.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -10,32 +13,30 @@ import java.util.UUID;
 
 @Data
 @Entity
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 public class Station {
-    @Valid
-    @NotNull
     @Id
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 36)
     private String id;
 
     @Valid
     @NotNull
+    @Column(unique = true)
     private String name;
 
     private int stayTime;
 
     public Station(){
-        //Default Constructor
-        this.id = UUID.randomUUID().toString();
         this.name = "";
     }
 
-    public Station(String id, String name) {
-        this.id = id;
+    public Station(String name) {
         this.name = name;
     }
 
 
-    public Station(String id, String name, int stayTime) {
-        this.id = id;
+    public Station(String name, int stayTime) {
         this.name = name;
         this.stayTime = stayTime;
     }

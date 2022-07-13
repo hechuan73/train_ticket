@@ -26,7 +26,11 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public Response create(Station station, HttpHeaders headers) {
-        if (repository.findById(station.getId()) == null) {
+        if(station.getName().isEmpty()) {
+            StationServiceImpl.LOGGER.error("[create][Create station error][Name not specify]");
+            return new Response<>(0, "Name not specify", station);
+        }
+        if (repository.findByName(station.getName()) == null) {
             station.setStayTime(station.getStayTime());
             repository.save(station);
             return new Response<>(1, "Create success", station);
@@ -48,11 +52,12 @@ public class StationServiceImpl implements StationService {
     @Override
     public Response update(Station info, HttpHeaders headers) {
 
-        if (repository.findById(info.getId()) == null) {
+        Optional<Station> op = repository.findById(info.getId());
+        if (!op.isPresent()) {
             StationServiceImpl.LOGGER.error("[update][Update station error][Station not found][StationId: {}]",info.getId());
             return new Response<>(0, "Station not exist", null);
         } else {
-            Station station = new Station(info.getId(), info.getName());
+            Station station = op.get();
             station.setStayTime(info.getStayTime());
             repository.save(station);
             return new Response<>(1, "Update success", station);
@@ -61,9 +66,9 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public Response delete(Station info, HttpHeaders headers) {
-
-        if (repository.findById(info.getId()) != null) {
-            Station station = new Station(info.getId(), info.getName());
+        Optional<Station> op = repository.findById(info.getId());
+        if (op.isPresent()) {
+            Station station = op.get();
             repository.delete(station);
             return new Response<>(1, "Delete success", station);
         }
@@ -119,7 +124,7 @@ public class StationServiceImpl implements StationService {
     @Override
     public Response queryById(String stationId, HttpHeaders headers) {
         Optional<Station> station = repository.findById(stationId);
-        if (station != null) {
+        if (station.isPresent()) {
             return new Response<>(1, success, station.get().getName());
         } else {
             StationServiceImpl.LOGGER.error("[queryById][Find station name error][Station not found][StationId: {}]",stationId);
