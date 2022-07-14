@@ -174,6 +174,9 @@ public class TravelServiceImpl implements TravelService {
 
         //Check all train info
         List<Trip> allTripList = repository.findAll();
+        if(allTripList == null) {
+            return new Response<>(0, "No Trip info content", null);
+        }
         for (Trip tempTrip : allTripList) {
             //Get the detailed route list of this train
             Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);

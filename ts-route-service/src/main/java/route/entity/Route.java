@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Id;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import java.util.List;
 
@@ -18,9 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+@GenericGenerator(name = "jpa-uuid",strategy="uuid")
 public class Route {
 
     @Id
+    @GeneratedValue(generator = "jpa-uuid")
+    @Column(length = 36)
     private String id;
 
     @ElementCollection(targetClass = String.class)
