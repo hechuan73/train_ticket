@@ -174,23 +174,22 @@ public class TravelServiceImpl implements TravelService {
 
         //Check all train info
         List<Trip> allTripList = repository.findAll();
-        if(allTripList == null) {
-            return new Response<>(0, "No Trip info content", null);
-        }
-        for (Trip tempTrip : allTripList) {
-            //Get the detailed route list of this train
-            Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
-            //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
-            //Trains that meet the above criteria are added to the return list
-            if (tempRoute.getStations().contains(startingPlaceId) &&
-                    tempRoute.getStations().contains(endPlaceId) &&
-                    tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
-                TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
-                if (response == null) {
-                    TravelServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]", startingPlaceName, endPlaceName, info.getDepartureTime());
-                    return new Response<>(0, "No Trip info content", null);
+        if(allTripList != null) {
+            for (Trip tempTrip : allTripList) {
+                //Get the detailed route list of this train
+                Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
+                //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
+                //Trains that meet the above criteria are added to the return list
+                if (tempRoute.getStations().contains(startingPlaceId) &&
+                        tempRoute.getStations().contains(endPlaceId) &&
+                        tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
+                    TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
+                    if (response == null) {
+                        TravelServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]", startingPlaceName, endPlaceName, info.getDepartureTime());
+                        return new Response<>(0, "No Trip info content", null);
+                    }
+                    list.add(response);
                 }
-                list.add(response);
             }
         }
         return new Response<>(1, success, list);
@@ -250,10 +249,12 @@ public class TravelServiceImpl implements TravelService {
         List<Trip> allTripList = repository.findAll();
         List<Future<TripResponse>> futureList = new ArrayList<>();
 
-        for (Trip tempTrip : allTripList) {
-            MyCallable callable = new MyCallable(info, startingPlaceId, endPlaceId, tempTrip, headers);
-            Future<TripResponse> future = executorService.submit(callable);
-            futureList.add(future);
+        if(allTripList != null ){
+            for (Trip tempTrip : allTripList) {
+                MyCallable callable = new MyCallable(info, startingPlaceId, endPlaceId, tempTrip, headers);
+                Future<TripResponse> future = executorService.submit(callable);
+                futureList.add(future);
+            }
         }
 
         for (Future<TripResponse> future : futureList) {
@@ -497,13 +498,16 @@ public class TravelServiceImpl implements TravelService {
     public Response adminQueryAll(HttpHeaders headers) {
         List<Trip> trips = repository.findAll();
         ArrayList<AdminTrip> adminTrips = new ArrayList<>();
-        for (Trip trip : trips) {
-            AdminTrip adminTrip = new AdminTrip();
-            adminTrip.setTrip(trip);
-            adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));
-            adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(), headers));
-            adminTrips.add(adminTrip);
+        if(trips != null){
+            for (Trip trip : trips) {
+                AdminTrip adminTrip = new AdminTrip();
+                adminTrip.setTrip(trip);
+                adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));
+                adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(), headers));
+                adminTrips.add(adminTrip);
+            }
         }
+
         if (!adminTrips.isEmpty()) {
             return new Response<>(1, success, adminTrips);
         } else {

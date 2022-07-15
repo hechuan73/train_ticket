@@ -169,20 +169,22 @@ public class Travel2ServiceImpl implements Travel2Service {
 
         //Check all train info
         ArrayList<Trip> allTripList = repository.findAll();
-        for (Trip tempTrip : allTripList) {
-            //Get the detailed route list of this train
-            Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
-            //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
-            //Trains that meet the above criteria are added to the return list
-            if (tempRoute.getStations().contains(startingPlaceId) &&
-                    tempRoute.getStations().contains(endPlaceId) &&
-                    tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
-                TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
-                if (response == null) {
-                    Travel2ServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]",info.getStartingPlace(),info.getEndPlace(),info.getDepartureTime());
-                    return new Response<>(0, noCnontent, null);
+        if(allTripList != null){
+            for (Trip tempTrip : allTripList) {
+                //Get the detailed route list of this train
+                Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
+                //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
+                //Trains that meet the above criteria are added to the return list
+                if (tempRoute.getStations().contains(startingPlaceId) &&
+                        tempRoute.getStations().contains(endPlaceId) &&
+                        tempRoute.getStations().indexOf(startingPlaceId) < tempRoute.getStations().indexOf(endPlaceId)) {
+                    TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceId, endPlaceId, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
+                    if (response == null) {
+                        Travel2ServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]",info.getStartingPlace(),info.getEndPlace(),info.getDepartureTime());
+                        return new Response<>(0, noCnontent, null);
+                    }
+                    list.add(response);
                 }
-                list.add(response);
             }
         }
         return new Response<>(1, "Success Query", list);
@@ -427,13 +429,16 @@ public class Travel2ServiceImpl implements Travel2Service {
     public Response adminQueryAll(HttpHeaders headers) {
         List<Trip> trips = repository.findAll();
         ArrayList<AdminTrip> adminTrips = new ArrayList<>();
-        for (Trip trip : trips) {
-            AdminTrip adminTrip = new AdminTrip();
-            adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));
-            adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(), headers));
-            adminTrip.setTrip(trip);
-            adminTrips.add(adminTrip);
+        if(trips != null){
+            for (Trip trip : trips) {
+                AdminTrip adminTrip = new AdminTrip();
+                adminTrip.setRoute(getRouteByRouteId(trip.getRouteId(), headers));
+                adminTrip.setTrainType(getTrainType(trip.getTrainTypeId(), headers));
+                adminTrip.setTrip(trip);
+                adminTrips.add(adminTrip);
+            }
         }
+
         if (!adminTrips.isEmpty()) {
             return new Response<>(1, "Travel Service Admin Query All Travel Success", adminTrips);
         } else {
