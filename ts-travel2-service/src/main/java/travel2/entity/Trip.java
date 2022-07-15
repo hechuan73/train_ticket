@@ -13,8 +13,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Data
-@Entity
-@Table(schema = "ts-travel2-mysql")
 public class Trip {
     @Valid
     @Id
