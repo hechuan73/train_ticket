@@ -137,8 +137,8 @@ public class StationServiceImpl implements StationService {
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < idList.size(); i++) {
             Optional<Station> stationOld = repository.findById(idList.get(i));
-            Station station=stationOld.get();
-            if (station != null) {
+            if(stationOld.isPresent()){
+                Station station=stationOld.get();
                 result.add(station.getName());
             }
         }
