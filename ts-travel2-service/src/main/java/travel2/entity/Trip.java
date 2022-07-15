@@ -13,9 +13,13 @@ import java.util.UUID;
  * @author fdse
  */
 @Data
+@Entity
+@Table(name = "trip2")
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 public class Trip {
     @Valid
     @Id
+    @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 36)
     private String id;
 
