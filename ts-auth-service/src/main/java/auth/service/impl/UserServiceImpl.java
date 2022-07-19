@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public User createDefaultAuthUser(AuthDto dto) {
         LOGGER.info("[createDefaultAuthUser][Register User Info][AuthDto name: {}]", dto.getUserName());
         User user = User.builder()
-                .userId(UUID.fromString(dto.getUserId()).toString())
+                .userId(dto.getUserId())
                 .username(dto.getUserName())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .roles(new HashSet<>(Arrays.asList(AuthConstant.ROLE_USER)))
