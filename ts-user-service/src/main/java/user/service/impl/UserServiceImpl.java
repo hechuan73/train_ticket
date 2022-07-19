@@ -169,7 +169,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUserAuth(String userId, HttpHeaders headers) {
         LOGGER.info("[deleteUserAuth][DELETE USER BY ID][userId: {}]", userId);
 
-        HttpEntity<Response> httpEntity = new HttpEntity<>(null);
+        HttpHeaders newHeaders = new HttpHeaders();
+        String token = headers.getFirst(HttpHeaders.AUTHORIZATION);
+        newHeaders.set("AUTHORIZATION", token);
+
+        HttpEntity<Response> httpEntity = new HttpEntity<>(newHeaders);
+
         String auth_service_url = getServiceUrl("ts-auth-service");
         String AUTH_SERVICE_URI = auth_service_url + "/api/v1";
         restTemplate.exchange(AUTH_SERVICE_URI + "/users/" + userId,
