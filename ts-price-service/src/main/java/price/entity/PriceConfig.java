@@ -18,12 +18,10 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Entity
-@GenericGenerator(name = "jpa-uuid", strategy = "org.hibernate.id.UUIDGenerator")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PriceConfig {
 
     @Id
-    @GeneratedValue(generator = "jpa-uuid")
     @Column(length = 36)
     private String id;
 
@@ -37,6 +35,7 @@ public class PriceConfig {
 
     public PriceConfig() {
         //Empty Constructor
+        this.id = UUID.randomUUID().toString();
     }
 
 }
