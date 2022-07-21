@@ -27,9 +27,11 @@ public class Route {
     private String id;
 
     @ElementCollection(targetClass = String.class)
+    @OrderColumn
     private List<String> stations;
 
     @ElementCollection(targetClass = Integer.class)
+    @OrderColumn
     private List<Integer> distances;
 
     private String startStationId;
