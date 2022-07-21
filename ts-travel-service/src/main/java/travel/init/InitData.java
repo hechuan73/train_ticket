@@ -32,8 +32,8 @@ public class InitData implements CommandLineRunner{
         info.setStartStationName(shanghai);
         info.setStationsName(suzhou);
         info.setTerminalStationName(taiyuan);
-        info.setStartTime(new Date("Mon May 04 09:00:00 GMT+0800 2013")); //NOSONAR
-        info.setEndTime(new Date("Mon May 04 15:51:52 GMT+0800 2013")); //NOSONAR
+        info.setStartTime("2013-05-04 09:00:00"); //NOSONAR
+        info.setEndTime("2013-05-04 15:51:52"); //NOSONAR
         service.create(info,null);
 
         info.setTripId("G1235");
@@ -42,8 +42,8 @@ public class InitData implements CommandLineRunner{
         info.setStartStationName(shanghai);
         info.setStationsName(suzhou);
         info.setTerminalStationName(taiyuan);
-        info.setStartTime(new Date("Mon May 04 12:00:00 GMT+0800 2013")); //NOSONAR
-        info.setEndTime(new Date("Mon May 04 17:51:52 GMT+0800 2013")); //NOSONAR
+        info.setStartTime("2013-05-04 12:00:00"); //NOSONAR
+        info.setEndTime("2013-05-04 17:51:52"); //NOSONAR
         service.create(info,null);
 
         info.setTripId("G1236");
@@ -52,8 +52,8 @@ public class InitData implements CommandLineRunner{
         info.setStartStationName(shanghai);
         info.setStationsName(suzhou);
         info.setTerminalStationName(taiyuan);
-        info.setStartTime(new Date("Mon May 04 14:00:00 GMT+0800 2013")); //NOSONAR
-        info.setEndTime(new Date("Mon May 04 20:51:52 GMT+0800 2013")); //NOSONAR
+        info.setStartTime("2013-05-04 14:00:00"); //NOSONAR
+        info.setEndTime("2013-05-04 20:51:52"); //NOSONAR
         service.create(info,null);
 
         info.setTripId("G1237");
@@ -62,8 +62,8 @@ public class InitData implements CommandLineRunner{
         info.setStartStationName(shanghai);
         info.setStationsName(suzhou);
         info.setTerminalStationName(taiyuan);
-        info.setStartTime(new Date("Mon May 04 08:00:00 GMT+0800 2013")); //NOSONAR
-        info.setEndTime(new Date("Mon May 04 17:21:52 GMT+0800 2013")); //NOSONAR
+        info.setStartTime("2013-05-04 08:00:00"); //NOSONAR
+        info.setEndTime("2013-05-04 17:21:52"); //NOSONAR
         service.create(info,null);
 
         info.setTripId("D1345");
@@ -72,8 +72,8 @@ public class InitData implements CommandLineRunner{
         info.setStartStationName(shanghai);
         info.setStationsName(suzhou);
         info.setTerminalStationName(taiyuan);
-        info.setStartTime(new Date("Mon May 04 07:00:00 GMT+0800 2013")); //NOSONAR
-        info.setEndTime(new Date("Mon May 04 19:59:52 GMT+0800 2013")); //NOSONAR
+        info.setStartTime("2013-05-04 07:00:00"); //NOSONAR
+        info.setEndTime("2013-05-04 19:59:52"); //NOSONAR
         service.create(info,null);
     }
 }

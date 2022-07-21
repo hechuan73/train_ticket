@@ -15,6 +15,8 @@ public class TravelResult {
 
     private TrainType trainType;
 
+    private Route route;
+
     private Map<String,String> prices;
 
     public TravelResult(){

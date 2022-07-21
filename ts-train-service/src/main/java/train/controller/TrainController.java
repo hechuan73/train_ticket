@@ -58,7 +58,7 @@ public class TrainController {
     @GetMapping(value = "/trains/byName/{name}")
     public HttpEntity retrieveByName(@PathVariable String name, @RequestHeader HttpHeaders headers) {
         TrainController.LOGGER.info("[retrieveByName][Retrieve train][TrainTypeName: {}]", name);
-        TrainType trainType = trainService.retrieve(name, headers);
+        TrainType trainType = trainService.retrieveByName(name, headers);
         if (trainType == null) {
             return ok(new Response(0, "here is no TrainType with the trainType name: " + name, null));
         } else {

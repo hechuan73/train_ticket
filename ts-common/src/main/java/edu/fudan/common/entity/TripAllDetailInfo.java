@@ -1,5 +1,6 @@
 package edu.fudan.common.entity;
 
+import edu.fudan.common.util.StringUtils;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,6 +23,14 @@ public class TripAllDetailInfo {
 
     public TripAllDetailInfo() {
         //Default Constructor
+    }
+
+    public String getFrom() {
+        return StringUtils.String2Lower(this.from);
+    }
+
+    public String getTo() {
+        return StringUtils.String2Lower(this.to);
     }
 
 }

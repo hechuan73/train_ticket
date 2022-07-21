@@ -46,8 +46,10 @@ public class BasicServiceImpl implements BasicService {
         result.setStatus(true);
         response.setStatus(1);
         response.setMsg("Success");
-        boolean startingPlaceExist = checkStationExists(info.getStartPlace(), headers);
-        boolean endPlaceExist = checkStationExists(info.getEndPlace(), headers);
+        String start = info.getStartPlace();
+        String end = info.getEndPlace();
+        boolean startingPlaceExist = checkStationExists(start, headers);
+        boolean endPlaceExist = checkStationExists(end, headers);
         if (!startingPlaceExist || !endPlaceExist) {
             result.setStatus(false);
             response.setStatus(0);
@@ -58,47 +60,48 @@ public class BasicServiceImpl implements BasicService {
                 BasicServiceImpl.LOGGER.warn("[queryForTravel][End place not exist][end place: {}]", info.getEndPlace());
         }
 
-        TrainType trainType = queryTrainType(info.getTrip().getTrainTypeName(), headers);
+        TrainType trainType = queryTrainTypeByName(info.getTrip().getTrainTypeName(), headers);
         if (trainType == null) {
-            BasicServiceImpl.LOGGER.warn("[queryForTravel][traintype doesn't exist][trainTypeId: {}]", info.getTrip().getTrainTypeName());
+            BasicServiceImpl.LOGGER.warn("[queryForTravel][traintype doesn't exist][trainTypeName: {}]", info.getTrip().getTrainTypeName());
             result.setStatus(false);
             response.setStatus(0);
             response.setMsg("Train type doesn't exist");
+            return response;
         } else {
             result.setTrainType(trainType);
         }
 
         String routeId = info.getTrip().getRouteId();
-        String trainTypeString = "";
-        if (trainType != null){
-            trainTypeString = trainType.getId();
-        }
         Route route = getRouteByRouteId(routeId, headers);
-        PriceConfig priceConfig = queryPriceConfigByRouteIdAndTrainType(routeId, trainTypeString, headers);
+        if(route == null){
+            result.setStatus(false);
+            response.setStatus(0);
+            response.setMsg("Route doesn't exist");
+            return response;
+        }
 
-        String startingPlaceId = (String) queryForStationId(info.getStartPlace(), headers).getData();
-        String endPlaceId = (String) queryForStationId(info.getEndPlace(), headers).getData();
-
-        LOGGER.info("[queryForTravel][query start and end info][startingPlaceId: {} endPlaceId: {}]", startingPlaceId, endPlaceId);
-
+        //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
+        //Trains that meet the above criteria are added to the return list
         int indexStart = 0;
         int indexEnd = 0;
-        if (route != null) {
-            indexStart = route.getStations().indexOf(startingPlaceId);
-            indexEnd = route.getStations().indexOf(endPlaceId);
+        if (route.getStations().contains(start) &&
+                route.getStations().contains(end) &&
+                route.getStations().indexOf(start) < route.getStations().indexOf(end)){
+            indexStart = route.getStations().indexOf(start);
+            indexEnd = route.getStations().indexOf(end);
+            LOGGER.info("[queryForTravel][query start index and end index][indexStart: {} indexEnd: {}]", indexStart, indexEnd);
+            LOGGER.info("[queryForTravel][query stations and distances][stations: {} distances: {}]", route.getStations(), route.getDistances());
+        }else {
+            result.setStatus(false);
+            response.setStatus(0);
+            response.setMsg("Station not correct in Route");
+            return response;
         }
-
-        LOGGER.info("[queryForTravel][query start index and end index][indexStart: {} indexEnd: {}]", indexStart, indexEnd);
-        if (route != null){
-            LOGGER.info("[queryForTravel][route exists][route.getDistances().size: {}]", route.getDistances().size());
-        }
+        PriceConfig priceConfig = queryPriceConfigByRouteIdAndTrainType(routeId, trainType.getName(), headers);
         HashMap<String, String> prices = new HashMap<>();
         try {
             int distance = 0;
-            if (route != null){
-                distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
-            }
-
+            distance = route.getDistances().get(indexEnd) - route.getDistances().get(indexStart);
             /**
              * We need the price Rate and distance (starting station).
              */
@@ -107,12 +110,15 @@ public class BasicServiceImpl implements BasicService {
             prices.put("economyClass", "" + priceForEconomyClass);
             prices.put("confortClass", "" + priceForConfortClass);
         }catch (Exception e){
-            prices.put("economyClass", "95.0");
-            prices.put("confortClass", "120.0");
+                prices.put("economyClass", "95.0");
+                prices.put("confortClass", "120.0");
         }
+        result.setRoute(route);
         result.setPrices(prices);
         result.setPercent(1.0);
         response.setData(result);
+        BasicServiceImpl.LOGGER.info("[queryForTravel][all done][result: {}]", result);
+
         return response;
     }
 
@@ -149,12 +155,12 @@ public class BasicServiceImpl implements BasicService {
         return exist.getStatus() == 1;
     }
 
-    public TrainType queryTrainType(String trainTypeId, HttpHeaders headers) {
-        BasicServiceImpl.LOGGER.info("[queryTrainType][Query Train Type][Train Type id: {}]", trainTypeId);
+    public TrainType queryTrainTypeByName(String trainTypeName, HttpHeaders headers) {
+        BasicServiceImpl.LOGGER.info("[queryTrainTypeByName][Query Train Type][Train Type name: {}]", trainTypeName);
         HttpEntity requestEntity = new HttpEntity(null);
         String train_service_url=getServiceUrl("ts-train-service");
         ResponseEntity<Response> re = restTemplate.exchange(
-                train_service_url + "/api/v1/trainservice/trains/" + trainTypeId,
+                train_service_url + "/api/v1/trainservice/trains/byName/" + trainTypeName,
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);

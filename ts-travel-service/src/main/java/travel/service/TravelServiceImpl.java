@@ -3,6 +3,7 @@ package travel.service;
 import edu.fudan.common.entity.*;
 import edu.fudan.common.util.JsonUtils;
 import edu.fudan.common.util.Response;
+import edu.fudan.common.util.StringUtils;
 import org.apache.skywalking.apm.toolkit.trace.TraceCrossThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,10 +167,8 @@ public class TravelServiceImpl implements TravelService {
     public Response query(TripInfo info, HttpHeaders headers) {
 
         //Gets the start and arrival stations of the train number to query. The originating and arriving stations received here are both station names, so two requests need to be sent to convert to station ids
-        String startingPlaceName = info.getStartPlace();
+        String startPlaceName = info.getStartPlace();
         String endPlaceName = info.getEndPlace();
-        //String startingPlaceId = queryForStationId(startingPlaceName, headers);
-       // String endPlaceId = queryForStationId(endPlaceName, headers);
 
         //This is the final result
         List<TripResponse> list = new ArrayList<>();
@@ -179,17 +178,10 @@ public class TravelServiceImpl implements TravelService {
         if(allTripList != null) {
             for (Trip tempTrip : allTripList) {
                 //Get the detailed route list of this train
-                Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
-                //Check the route list for this train. Check that the required start and arrival stations are in the list of stops that are not on the route, and check that the location of the start station is before the stop
-                //Trains that meet the above criteria are added to the return list
-                if (tempRoute !=null && tempRoute.getStations().contains(startingPlaceName) &&
-                        tempRoute.getStations().contains(endPlaceName) &&
-                        tempRoute.getStations().indexOf(startingPlaceName) < tempRoute.getStations().indexOf(endPlaceName)) {
-                    TripResponse response = getTickets(tempTrip, tempRoute, startingPlaceName, endPlaceName, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
-                    if (response == null) {
-                        TravelServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]", startingPlaceName, endPlaceName, info.getDepartureTime());
-                        return new Response<>(0, "No Trip info content", null);
-                    }
+                TripResponse response = getTickets(tempTrip, null, startPlaceName, endPlaceName, info.getDepartureTime(), headers);
+                if (response == null) {
+                    TravelServiceImpl.LOGGER.warn("[query][Query trip error][Tickets not found][start: {},end: {},time: {}]", startPlaceName, endPlaceName, info.getDepartureTime());
+                }else{
                     list.add(response);
                 }
             }
@@ -202,14 +194,14 @@ public class TravelServiceImpl implements TravelService {
         private TripInfo info;
         private Trip tempTrip;
         private HttpHeaders headers;
-        private String startingPlaceName;
+        private String startPlaceName;
         private String endPlaceName;
 
-        MyCallable(TripInfo info, String startingPlaceName, String endPlaceName, Trip tempTrip, HttpHeaders headers) {
+        MyCallable(TripInfo info, String startPlaceName, String endPlaceName, Trip tempTrip, HttpHeaders headers) {
             this.info = info;
             this.tempTrip = tempTrip;
             this.headers = headers;
-            this.startingPlaceName = startingPlaceName;
+            this.startPlaceName = startPlaceName;
             this.endPlaceName = endPlaceName;
         }
 
@@ -217,18 +209,16 @@ public class TravelServiceImpl implements TravelService {
         public TripResponse call() throws Exception {
             TravelServiceImpl.LOGGER.debug("[call][Start to query][tripId: {}, routeId: {}] ", tempTrip.getTripId().toString(), tempTrip.getRouteId());
 
-            String startingPlaceName = info.getStartPlace();
+            String startPlaceName = info.getStartPlace();
             String endPlaceName = info.getEndPlace();
-            Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
+            //Route tempRoute = getRouteByRouteId(tempTrip.getRouteId(), headers);
 
             TripResponse response = null;
-            if (tempRoute.getStations().contains(startingPlaceName) &&
-                    tempRoute.getStations().contains(endPlaceName) &&
-                    tempRoute.getStations().indexOf(startingPlaceName) < tempRoute.getStations().indexOf(endPlaceName)) {
-                response = getTickets(tempTrip, tempRoute, startingPlaceName, endPlaceName, startingPlaceName, endPlaceName, info.getDepartureTime(), headers);
-            }
+
+            response = getTickets(tempTrip, null, startPlaceName, endPlaceName, info.getDepartureTime(), headers);
+
             if (response == null) {
-                TravelServiceImpl.LOGGER.warn("[call][Query trip error][Tickets not found][tripId: {}, routeId: {}, start: {}, end: {},time: {}]", tempTrip.getTripId().toString(), tempTrip.getRouteId(), startingPlaceName, endPlaceName, info.getDepartureTime());
+                TravelServiceImpl.LOGGER.warn("[call][Query trip error][Tickets not found][tripId: {}, routeId: {}, start: {}, end: {},time: {}]", tempTrip.getTripId().toString(), tempTrip.getRouteId(), startPlaceName, endPlaceName, info.getDepartureTime());
             } else {
                 TravelServiceImpl.LOGGER.info("[call][Query trip success][tripId: {}, routeId: {}] ", tempTrip.getTripId().toString(), tempTrip.getRouteId());
             }
@@ -239,9 +229,9 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public Response queryInParallel(TripInfo info, HttpHeaders headers) {
         //Gets the start and arrival stations of the train number to query. The originating and arriving stations received here are both station names, so two requests need to be sent to convert to station ids
-        String startingPlaceName = info.getStartPlace();
+        String startPlaceName = info.getStartPlace();
         String endPlaceName = info.getEndPlace();
-//        String startingPlaceId = queryForStationId(startingPlaceName, headers);
+//        String startingPlaceId = queryForStationId(startPlaceName, headers);
 //        String endPlaceId = queryForStationId(endPlaceName, headers);
 
         //This is the final result
@@ -253,7 +243,7 @@ public class TravelServiceImpl implements TravelService {
 
         if(allTripList != null ){
             for (Trip tempTrip : allTripList) {
-                MyCallable callable = new MyCallable(info, startingPlaceName, endPlaceName, tempTrip, headers);
+                MyCallable callable = new MyCallable(info, startPlaceName, endPlaceName, tempTrip, headers);
                 Future<TripResponse> future = executorService.submit(callable);
                 futureList.add(future);
             }
@@ -287,17 +277,13 @@ public class TravelServiceImpl implements TravelService {
             gtdr.setTrip(null);
             TravelServiceImpl.LOGGER.error("[getTripAllDetailInfo][Get trip detail error][Trip not found][TripId: {}]", gtdi.getTripId());
         } else {
-            String startingPlaceName = gtdi.getFrom();
+            String startPlaceName = gtdi.getFrom();
             String endPlaceName = gtdi.getTo();
-//            String startingPlaceId = queryForStationId(startingPlaceName, headers);
-//            String endPlaceId = queryForStationId(endPlaceName, headers);
-            Route tempRoute = getRouteByRouteId(trip.getRouteId(), headers);
-
-            TripResponse tripResponse = getTickets(trip, tempRoute, startingPlaceName, endPlaceName, startingPlaceName, endPlaceName, gtdi.getTravelDate(), headers);
+            TripResponse tripResponse = getTickets(trip, null, startPlaceName, endPlaceName, gtdi.getTravelDate(), headers);
             if (tripResponse == null) {
                 gtdr.setTripResponse(null);
                 gtdr.setTrip(null);
-                TravelServiceImpl.LOGGER.warn("[getTripAllDetailInfo][Get trip detail error][Tickets not found][start: {},end: {},time: {}]", startingPlaceName, endPlaceName, gtdi.getTravelDate());
+                TravelServiceImpl.LOGGER.warn("[getTripAllDetailInfo][Get trip detail error][Tickets not found][start: {},end: {},time: {}]", startPlaceName, endPlaceName, gtdi.getTravelDate());
             } else {
                 gtdr.setTripResponse(tripResponse);
                 gtdr.setTrip(repository.findByTripId(new TripId(gtdi.getTripId())));
@@ -306,18 +292,20 @@ public class TravelServiceImpl implements TravelService {
         return new Response<>(1, success, gtdr);
     }
 
-    private TripResponse getTickets(Trip trip, Route route, String startingPlaceId, String endPlaceId, String startingPlaceName, String endPlaceName, Date departureTime, HttpHeaders headers) {
+    private TripResponse getTickets(Trip trip, Route route1, String startPlaceName, String endPlaceName, Date departureTime, HttpHeaders headers) {
 
         //Determine if the date checked is the same day and after
         if (!afterToday(departureTime)) {
+            TravelServiceImpl.LOGGER.info("[getTickets][depaturetime not vailid][departuretime: {}]", departureTime);
             return null;
         }
 
         Travel query = new Travel();
         query.setTrip(trip);
-        query.setStartPlace(startingPlaceName);
+        query.setStartPlace(startPlaceName);
         query.setEndPlace(endPlaceName);
         query.setDepartureTime(departureTime);
+        TravelServiceImpl.LOGGER.info("[getTickets][before get basic][trip: {}]", trip);
 
         HttpEntity requestEntity = new HttpEntity(query, null);
         String basic_service_url = getServiceUrl("ts-basic-service");
@@ -326,47 +314,43 @@ public class TravelServiceImpl implements TravelService {
                 HttpMethod.POST,
                 requestEntity,
                 Response.class);
-        TravelServiceImpl.LOGGER.debug("[getTickets][Ts-basic-service ticket info is: {}]", re.getBody().toString());
+
+        Response r = re.getBody();
+        if(r.getStatus() == 0){
+            TravelServiceImpl.LOGGER.info("[getTickets][Ts-basic-service response status is 0][response is: {}]", r);
+            return null;
+        }
+
         TravelResult resultForTravel = JsonUtils.conveterObject(re.getBody().getData(), TravelResult.class);
-
-        //Ticket order _ high-speed train (number of tickets purchased)
-        requestEntity = new HttpEntity(null);
-        String order_service_url = getServiceUrl("ts-order-service");
-        ResponseEntity<Response<SoldTicket>> re2 = restTemplate.exchange(
-                order_service_url + "/api/v1/orderservice/order/" + departureTime + "/" + trip.getTripId().toString(),
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<Response<SoldTicket>>() {
-                });
-
-        Response<SoldTicket> result = re2.getBody();
-        TravelServiceImpl.LOGGER.debug("[getTickets][Order info is: {}]", result.toString());
-
 
         //Set the returned ticket information
         TripResponse response = new TripResponse();
         response.setConfortClass(50);
         response.setEconomyClass(50);
 
+        Route route = resultForTravel.getRoute();
+        List<String> stationList = route.getStations();
+
+        int firstClassTotalNum = resultForTravel.getTrainType().getConfortClass();
+        int secondClassTotalNum = resultForTravel.getTrainType().getEconomyClass();
+
         int first = getRestTicketNumber(departureTime, trip.getTripId().toString(),
-                startingPlaceName, endPlaceName, SeatClass.FIRSTCLASS.getCode(), headers);
+                startPlaceName, endPlaceName, SeatClass.FIRSTCLASS.getCode(), firstClassTotalNum, stationList, headers);
 
         int second = getRestTicketNumber(departureTime, trip.getTripId().toString(),
-                startingPlaceName, endPlaceName, SeatClass.SECONDCLASS.getCode(), headers);
+                startPlaceName, endPlaceName, SeatClass.SECONDCLASS.getCode(), secondClassTotalNum, stationList, headers);
         response.setConfortClass(first);
         response.setEconomyClass(second);
 
-        response.setStartStation(startingPlaceName);
+        response.setStartStation(startPlaceName);
         response.setTerminalStation(endPlaceName);
 
         //Calculate the distance from the starting point
-//        int indexStart = route.getStations().indexOf(startingPlaceId);
-//        int indexEnd = route.getStations().indexOf(endPlaceId);
-        int indexStart = route.getStations().indexOf(startingPlaceName);
+        int indexStart = route.getStations().indexOf(startPlaceName);
         int indexEnd = route.getStations().indexOf(endPlaceName);
         int distanceStart = route.getDistances().get(indexStart) - route.getDistances().get(0);
         int distanceEnd = route.getDistances().get(indexEnd) - route.getDistances().get(0);
-        TrainType trainType = getTrainType(trip.getTrainTypeName(), headers);
+        TrainType trainType = resultForTravel.getTrainType();
         //Train running time is calculated according to the average running speed of the train
         int minutesStart = 60 * distanceStart / trainType.getAverageSpeed();
         int minutesEnd = 60 * distanceEnd / trainType.getAverageSpeed();
@@ -383,7 +367,7 @@ public class TravelServiceImpl implements TravelService {
         response.setEndTime(calendarEnd.getTime());
         TravelServiceImpl.LOGGER.info("[getTickets][Calculate distance][calculate time：{}  time: {}]", minutesEnd, calendarEnd.getTime());
 
-        response.setTripId(new TripId(result.getData().getTrainNumber()));
+        response.setTripId(trip.getTripId());
         response.setTrainTypeName(trip.getTrainTypeName());
         response.setPriceForConfortClass(resultForTravel.getPrices().get("confortClass"));
         response.setPriceForEconomyClass(resultForTravel.getPrices().get("economyClass"));
@@ -437,6 +421,20 @@ public class TravelServiceImpl implements TravelService {
         return re.getBody().getData();
     }
 
+    private TrainType getTrainTypeByName(String trainTypeName, HttpHeaders headers) {
+        HttpEntity requestEntity = new HttpEntity(null);
+        String train_service_url = getServiceUrl("ts-train-service");
+        ResponseEntity<Response<TrainType>> re = restTemplate.exchange(
+                train_service_url + "/api/v1/trainservice/trains/byName/" + trainTypeName,
+                HttpMethod.GET,
+                requestEntity,
+                new ParameterizedTypeReference<Response<TrainType>>() {
+                });
+
+        return re.getBody().getData();
+    }
+
+
     private String queryForStationId(String stationName, HttpHeaders headers) {
         HttpEntity requestEntity = new HttpEntity(null);
         String station_service_url=getServiceUrl("ts-station-service");
@@ -474,17 +472,16 @@ public class TravelServiceImpl implements TravelService {
         return route1;
     }
 
-    private int getRestTicketNumber(Date travelDate, String trainNumber, String startStationName, String endStationName, int seatType, HttpHeaders headers) {
+    private int getRestTicketNumber(Date travelDate, String trainNumber, String startStationName, String endStationName, int seatType, int totalNum, List<String> stationList, HttpHeaders headers) {
         Seat seatRequest = new Seat();
 
-        String fromId = queryForStationId(startStationName, headers);
-        String toId = queryForStationId(endStationName, headers);
-
-        seatRequest.setDestStation(toId);
-        seatRequest.setStartStation(fromId);
+        seatRequest.setDestStation(endStationName);
+        seatRequest.setStartStation(startStationName);
         seatRequest.setTrainNumber(trainNumber);
         seatRequest.setTravelDate(travelDate);
         seatRequest.setSeatType(seatType);
+        seatRequest.setTotalNum(totalNum);
+        seatRequest.setStations(stationList);
 
         TravelServiceImpl.LOGGER.info("[getRestTicketNumber][Seat request][request: {}]", seatRequest.toString());
 
