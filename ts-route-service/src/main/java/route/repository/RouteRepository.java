@@ -49,10 +49,10 @@ public interface RouteRepository extends CrudRepository<Route, String> {
     /**
      * return route with id from StartStationId to TerminalStationId
      *
-     * @param startingId  Start Station Id
-     * @param terminalId  Terminal Station Id
+     * @param startStation  Start Station Name
+     * @param endStation  end Station Name
      * @return ArrayList<Route>
      */
-    ArrayList<Route> findByStartStationIdAndTerminalStationId(String startingId, String terminalId);
+    ArrayList<Route> findByStartStationAndEndStation(String startStation, String endStation);
 
 }

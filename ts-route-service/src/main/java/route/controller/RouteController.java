@@ -60,12 +60,12 @@ public class RouteController {
         return ok(routeService.getAllRoutes(headers));
     }
 
-    @GetMapping(path = "/routes/{startId}/{terminalId}")
-    public HttpEntity queryByStartAndTerminal(@PathVariable String startId,
-                                              @PathVariable String terminalId,
+    @GetMapping(path = "/routes/{start}/{end}")
+    public HttpEntity queryByStartAndTerminal(@PathVariable String start,
+                                              @PathVariable String end,
                                               @RequestHeader HttpHeaders headers) {
-        RouteController.LOGGER.info("[getRouteByStartAndTerminal][Query routes][startId : {}, terminalId: {}]", startId, terminalId);
-        return ok(routeService.getRouteByStartAndTerminal(startId, terminalId, headers));
+        RouteController.LOGGER.info("[getRouteByStartAndEnd][Query routes][start: {}, end: {}]", start, end);
+        return ok(routeService.getRouteByStartAndEnd(start, end, headers));
     }
 
 }

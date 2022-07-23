@@ -20,7 +20,7 @@ public interface RouteService {
      * @param headers headers
      * @return Response
      */
-    Response getRouteByStartAndTerminal(String startId, String terminalId, HttpHeaders headers);
+    Response getRouteByStartAndEnd(String startId, String terminalId, HttpHeaders headers);
 
     /**
      * get all routes
