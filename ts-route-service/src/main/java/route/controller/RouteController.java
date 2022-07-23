@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import route.entity.RouteInfo;
 import route.service.RouteService;
 
+import java.util.List;
+
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
@@ -44,6 +46,12 @@ public class RouteController {
     public HttpEntity queryById(@PathVariable String routeId, @RequestHeader HttpHeaders headers) {
         RouteController.LOGGER.info("[getRouteById][Query route by id][RouteId: {}]", routeId);
         return ok(routeService.getRouteById(routeId, headers));
+    }
+
+    @PostMapping(path = "/routes/byIds")
+    public HttpEntity queryByIds(@RequestBody List<String> routeIds, @RequestHeader HttpHeaders headers) {
+        RouteController.LOGGER.info("[getRouteById][Query route by id][RouteId: {}]", routeIds);
+        return ok(routeService.getRouteByIds(routeIds, headers));
     }
 
     @GetMapping(path = "/routes")

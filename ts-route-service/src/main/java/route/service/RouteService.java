@@ -4,6 +4,8 @@ import edu.fudan.common.util.Response;
 import org.springframework.http.HttpHeaders;
 import route.entity.*;
 
+import java.util.List;
+
 
 /**
  * @author fdse
@@ -36,6 +38,15 @@ public interface RouteService {
      * @return Response
      */
     Response getRouteById(String routeId, HttpHeaders headers);
+
+    /**
+     * get route by ids
+     *
+     * @param routeIds route ids
+     * @param headers headers
+     * @return Response
+     */
+    Response getRouteByIds(List<String> routeIds, HttpHeaders headers);
 
     /**
      * delete route by id

@@ -34,10 +34,6 @@ public class Route {
     @OrderColumn
     private List<Integer> distances;
 
-    private String startStationId;
-
-    private String terminalStationId;
-
     private String startStationName;
 
     private String terminalStationName;

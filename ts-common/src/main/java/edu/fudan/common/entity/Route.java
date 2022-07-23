@@ -23,10 +23,6 @@ public class Route {
 
     private String terminalStationName;
 
-    private String startStationId;
-
-    private String terminalStationId;
-
     public Route(){
         this.id = UUID.randomUUID().toString();
     }
