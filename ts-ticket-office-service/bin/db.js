@@ -1,12 +1,17 @@
 /**
  * Created by dingding on 2017/10/13.
  */
-var DB_CONN_STR = 'jdbc:mysql://10.176.122.1:3306/ts';
+var HOST=process.env.TICKET_OFFICE_MYSQL_HOST
+var PORT=process.env.TICKET_OFFICE_MYSQL_PORT
+var USER=process.env.TICKET_OFFICE_MYSQL_USER
+var PASSWORD=process.env.TICKET_OFFICE_MYSQL_PASSWORD
+var DATABASE=process.env.TICKET_OFFICE_MYSQL_DATABASE
+var DB_CONN_STR = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE;
 var MysqlClient = require('mysql').createConnection({
-    host: "10.176.122.1",
-    user: "root",
-    password: "Abcd1234#",
-    database: "ts"
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE
 });
 var fs = require('fs');
 var path = require('path');
