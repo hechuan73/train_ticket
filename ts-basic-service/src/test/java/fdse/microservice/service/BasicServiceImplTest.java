@@ -116,11 +116,11 @@ public class BasicServiceImplTest {
         Response response = new Response<>(1, null, null);
         ResponseEntity<Response> re = new ResponseEntity<>(response, HttpStatus.OK);
         Mockito.when(restTemplate.exchange(
-                "http://ts-train-service:14567/api/v1/trainservice/trains/" + "trainTypeId",
+                "http://ts-train-service:14567/api/v1/trainservice/trains/byName/" + "trainTypeName",
                 HttpMethod.GET,
                 requestEntity,
                 Response.class)).thenReturn(re);
-        TrainType result = basicServiceImpl.queryTrainType("trainTypeId", headers);
+        TrainType result = basicServiceImpl.queryTrainTypeByName("trainTypeId", headers);
         Assert.assertNull(result);
     }
 

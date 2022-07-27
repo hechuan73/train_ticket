@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author fdse
@@ -34,6 +35,10 @@ public class Seat {
     @NotNull
     private int seatType;
 
+    private int totalNum;
+
+    private List<String> stations;
+
     public Seat(){
         //Default Constructor
         this.travelDate = new Date();
@@ -41,6 +46,8 @@ public class Seat {
         this.startStation = "";
         this.destStation = "";
         this.seatType = 0;
+        this.totalNum = 0;
+        this.stations = null;
     }
 
 }

@@ -58,11 +58,23 @@ public class TrainController {
     @GetMapping(value = "/trains/byName/{name}")
     public HttpEntity retrieveByName(@PathVariable String name, @RequestHeader HttpHeaders headers) {
         TrainController.LOGGER.info("[retrieveByName][Retrieve train][TrainTypeName: {}]", name);
-        TrainType trainType = trainService.retrieve(name, headers);
+        TrainType trainType = trainService.retrieveByName(name, headers);
         if (trainType == null) {
             return ok(new Response(0, "here is no TrainType with the trainType name: " + name, null));
         } else {
             return ok(new Response(1, "success", trainType));
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(value = "/trains/byNames")
+    public HttpEntity retrieveByName(@RequestBody List<String> names, @RequestHeader HttpHeaders headers) {
+        TrainController.LOGGER.info("[retrieveByNames][Retrieve train][TrainTypeNames: {}]", names);
+        List<TrainType> trainTypes = trainService.retrieveByNames(names, headers);
+        if (trainTypes == null) {
+            return ok(new Response(0, "here is no TrainTypes with the trainType names: " + names, null));
+        } else {
+            return ok(new Response(1, "success", trainTypes));
         }
     }
 

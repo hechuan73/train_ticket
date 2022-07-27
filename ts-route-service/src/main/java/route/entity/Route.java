@@ -16,7 +16,6 @@ import java.util.UUID;
  * @author fdse
  */
 @Data
-@AllArgsConstructor
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @GenericGenerator(name = "jpa-uuid", strategy = "org.hibernate.id.UUIDGenerator")
@@ -27,36 +26,34 @@ public class Route {
     private String id;
 
     @ElementCollection(targetClass = String.class)
+    @OrderColumn
     private List<String> stations;
 
     @ElementCollection(targetClass = Integer.class)
+    @OrderColumn
     private List<Integer> distances;
 
-    private String startStationId;
+    private String startStation;
 
-    private String terminalStationId;
-
-    private String startStationName;
-
-    private String terminalStationName;
+    private String endStation;
 
     public Route(){
         this.id = UUID.randomUUID().toString();
     }
 
-    public Route(String id, List<String> stations, List<Integer> distances, String startStationName, String terminalStationName) {
+    public Route(String id, List<String> stations, List<Integer> distances, String startStation, String endStation) {
         this.id = id;
         this.stations = stations;
         this.distances = distances;
-        this.startStationName = startStationName;
-        this.terminalStationName = terminalStationName;
+        this.startStation = startStation;
+        this.endStation = endStation;
     }
 
-    public Route(List<String> stations, List<Integer> distances, String startStationName, String terminalStationName) {
+    public Route(List<String> stations, List<Integer> distances, String startStation, String endStation) {
         this.id = UUID.randomUUID().toString();
         this.stations = stations;
         this.distances = distances;
-        this.startStationName = startStationName;
-        this.terminalStationName = terminalStationName;
+        this.startStation = startStation;
+        this.endStation = endStation;
     }
 }

@@ -1,5 +1,6 @@
 package edu.fudan.common.entity;
 
+import edu.fudan.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,22 +18,34 @@ public class TravelInfo {
 
     private String tripId;
 
-    private String trainTypeId;
     private String trainTypeName;
 
     private String routeId;
 
-    private String startStationId;
     private String startStationName;
 
-    private String stationsId;
     private String stationsName;
 
-    private String terminalStationId;
     private String terminalStationName;
 
-    private Date startTime;
+    private String startTime;
 
-    private Date endTime;
+    private String endTime;
+
+    public Date getStartTime(){
+        return StringUtils.String2Date(this.startTime);
+    }
+
+    public Date getEndTime(){
+        return StringUtils.String2Date(this.endTime);
+    }
+
+    public String getStartStationName() {
+        return StringUtils.String2Lower(this.startStationName);
+    }
+
+    public String getTerminalStationName() {
+        return StringUtils.String2Lower(this.terminalStationName);
+    }
 
 }
