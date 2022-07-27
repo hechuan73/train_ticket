@@ -55,6 +55,7 @@
         <module>ts-delivery-service</module>
         <module>ts-train-food-service</module>
         <module>ts-gateway-service</module>
+        <module>ts-food-delivery-service</module>
     </modules>
 
 
