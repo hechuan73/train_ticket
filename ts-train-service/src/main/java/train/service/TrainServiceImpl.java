@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import train.entity.TrainType;
 import train.repository.TrainTypeRepository;
 
@@ -70,11 +71,12 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
+    @Transactional
     public boolean update(TrainType trainType, HttpHeaders headers) {
         boolean result = false;
         if (repository.findById(trainType.getId()).isPresent()) {
-            TrainType type = new TrainType(trainType.getName(), trainType.getEconomyClass(), trainType.getConfortClass());
-            type.setAverageSpeed(trainType.getAverageSpeed());
+            TrainType type = new TrainType(trainType.getName(), trainType.getEconomyClass(), trainType.getConfortClass(), trainType.getAverageSpeed());
+            type.setId(trainType.getId());
             repository.save(type);
             result = true;
         }
