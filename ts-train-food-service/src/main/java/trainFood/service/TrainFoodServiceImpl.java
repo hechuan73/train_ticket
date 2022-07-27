@@ -51,6 +51,11 @@ public class TrainFoodServiceImpl implements TrainFoodService{
 
     @Override
     public Response listTrainFoodByTripId(String tripId, HttpHeaders headers) {
-        return null;
+        TrainFood tf = trainFoodRepository.findByTripId(tripId);
+        if(tf == null){
+            return new Response<>(0, noContent, null);
+        }else{
+            return new Response<>(1, success, tf.getFoodList());
+        }
     }
 }

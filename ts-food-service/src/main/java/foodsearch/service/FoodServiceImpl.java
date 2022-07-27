@@ -1,5 +1,6 @@
 package foodsearch.service;
 
+import edu.fudan.common.entity.Food;
 import edu.fudan.common.entity.StationFoodStore;
 import edu.fudan.common.entity.TrainFood;
 import edu.fudan.common.util.JsonUtils;
@@ -219,20 +220,22 @@ public class FoodServiceImpl implements FoodService {
         }
 
         // need return this tow element
-        List<TrainFood> trainFoodList = null;
+        List<Food> trainFoodList = null;
         Map<String, List<StationFoodStore>> foodStoreListMap = new HashMap<>();
 
         /**--------------------------------------------------------------------------------------*/
         HttpEntity requestEntityGetTrainFoodListResult = new HttpEntity(null);
         String train_food_service_url = getServiceUrl("ts-train-food-service");
-        ResponseEntity<Response<List<TrainFood>>> reGetTrainFoodListResult = restTemplate.exchange(
+        ResponseEntity<Response<List<Food>>> reGetTrainFoodListResult = restTemplate.exchange(
                 train_food_service_url + "/api/v1/trainfoodservice/trainfoods/" + tripId,
                 HttpMethod.GET,
                 requestEntityGetTrainFoodListResult,
-                new ParameterizedTypeReference<Response<List<TrainFood>>>() {
+                new ParameterizedTypeReference<Response<List<Food>>>() {
                 });
 
-        List<TrainFood> trainFoodListResult = reGetTrainFoodListResult.getBody().getData();
+
+
+        List<Food> trainFoodListResult = reGetTrainFoodListResult.getBody().getData();
 
         if (trainFoodListResult != null) {
             trainFoodList = trainFoodListResult;
@@ -259,18 +262,8 @@ public class FoodServiceImpl implements FoodService {
             //去除不经过的站，如果起点终点有的话
             if (null != startStation && !"".equals(startStation)) {
                 /**--------------------------------------------------------------------------------------*/
-                HttpEntity requestEntityStartStationId = new HttpEntity(null);
-                String station_service_url = getServiceUrl("ts-station-service");
-                ResponseEntity<Response<String>> reStartStationId = restTemplate.exchange(
-                        station_service_url + "/api/v1/stationservice/stations/id/" + startStation,
-                        HttpMethod.GET,
-                        requestEntityStartStationId,
-                        new ParameterizedTypeReference<Response<String>>() {
-                        });
-                Response<String> startStationId = reStartStationId.getBody();
-
                 for (int i = 0; i < stations.size(); i++) {
-                    if (stations.get(i).equals(startStationId.getData())) {
+                    if (stations.get(i).equals(startStation)) {
                         break;
                     } else {
                         stations.remove(i);
@@ -279,18 +272,8 @@ public class FoodServiceImpl implements FoodService {
             }
             if (null != endStation && !"".equals(endStation)) {
                 /**--------------------------------------------------------------------------------------*/
-                HttpEntity requestEntityEndStationId = new HttpEntity(null);
-                String station_service_url = getServiceUrl("ts-station-service");
-                ResponseEntity<Response<String>> reEndStationId = restTemplate.exchange(
-                        station_service_url + "/api/v1/stationservice/stations/id/" + endStation,
-                        HttpMethod.GET,
-                        requestEntityEndStationId,
-                        new ParameterizedTypeReference<Response<String>>() {
-                        });
-                Response endStationId = reEndStationId.getBody();
-
                 for (int i = stations.size() - 1; i >= 0; i--) {
-                    if (stations.get(i).equals(endStationId.getData())) {
+                    if (stations.get(i).equals(endStation)) {
                         break;
                     } else {
                         stations.remove(i);
@@ -308,11 +291,11 @@ public class FoodServiceImpl implements FoodService {
                     });
             List<StationFoodStore> stationFoodStoresListResult = reFoodStoresListResult.getBody().getData();
             if (stationFoodStoresListResult != null && !stationFoodStoresListResult.isEmpty()) {
-                for (String stationId : stations) {
+                for (String station : stations) {
                     List<StationFoodStore> res = stationFoodStoresListResult.stream()
-                            .filter(stationFoodStore -> (stationFoodStore.getStationId().equals(stationId)))
+                            .filter(stationFoodStore -> (stationFoodStore.getStationName().equals(station)))
                             .collect(Collectors.toList());
-                    foodStoreListMap.put(stationId, res);
+                    foodStoreListMap.put(station, res);
                 }
             } else {
                 FoodServiceImpl.LOGGER.error("[getAllFood][Get the Get Food Request Failed!][foodStoresListResult is null][date: {}, tripId: {}]", date, tripId);

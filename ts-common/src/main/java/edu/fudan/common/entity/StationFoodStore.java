@@ -11,7 +11,7 @@ public class StationFoodStore implements Serializable{
 
     private UUID id;
 
-    private String stationId;
+    private String stationName;
 
     private String storeName;
 
