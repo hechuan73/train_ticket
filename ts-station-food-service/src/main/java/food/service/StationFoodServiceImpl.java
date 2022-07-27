@@ -107,4 +107,15 @@ public class StationFoodServiceImpl implements StationFoodService {
             return new Response<>(0, noContent, null);
         }
     }
+
+    @Override
+    public Response getStaionFoodStoreById(String id) {
+        StationFoodStore stationFoodStore = stationFoodRepository.findById(id).orElse(null);
+        if (stationFoodStore == null) {
+            LOGGER.error("no such staionFoodStoreId: {}", id);
+            return new Response<>(0, noContent, null);
+        } else {
+            return new Response<>(1, success, stationFoodStore);
+        }
+    }
 }

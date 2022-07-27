@@ -23,5 +23,8 @@ public interface StationFoodService {
 
 //    Response listTrainFoodByTripId(String tripId, HttpHeaders headers);
 
+    Response getStaionFoodStoreById(String id);
+
     Response getFoodStoresByStationNames(List<String> stationNames);
+
 }
