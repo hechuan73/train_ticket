@@ -40,7 +40,7 @@ public class StationFoodControllerTest {
 
     @Test
     public void testHome() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/foodstores/welcome"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/stationfoodstores/welcome"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Welcome to [ Food store Service ] !"));
     }
@@ -48,7 +48,7 @@ public class StationFoodControllerTest {
     @Test
     public void testGetAllFoodStores() throws Exception {
         Mockito.when(stationFoodService.listFoodStores(Mockito.any(HttpHeaders.class))).thenReturn(response);
-        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/foodstores"))
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/stationfoodstores"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
@@ -57,7 +57,7 @@ public class StationFoodControllerTest {
     @Test
     public void testGetFoodStoresOfStation() throws Exception {
         Mockito.when(stationFoodService.listFoodStoresByStationName(Mockito.anyString(), Mockito.any(HttpHeaders.class))).thenReturn(response);
-        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/foodstores/station_id"))
+        String result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/foodmapservice/stationfoodstores/station_id"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
@@ -68,7 +68,7 @@ public class StationFoodControllerTest {
         List<String> stationIdList = new ArrayList<>();
         Mockito.when(stationFoodService.getFoodStoresByStationNames(Mockito.anyList())).thenReturn(response);
         String requestJson = JSONObject.toJSONString(stationIdList);
-        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/foodmapservice/foodstores").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+        String result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/foodmapservice/stationfoodstores").contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         Assert.assertEquals(response, JSONObject.parseObject(result, Response.class));
